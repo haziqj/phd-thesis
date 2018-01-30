@@ -1,0 +1,29 @@
+\documentclass[a4paper,showframe,11pt]{report}
+\usepackage{standalone}
+\standalonetrue
+\ifstandalone
+  \usepackage{../../haziq_thesis}
+  \usepackage{../../haziq_maths}
+  \usepackage{../../haziq_glossary}
+  \usepackage{../../knitr}
+  \addbibresource{../../bib/haziq.bib}
+  \externaldocument{../01/.texpadtmp/introduction}
+\fi
+
+\begin{document}
+\hChapterStandalone[5]{I-priors for Categorical Responses}
+
+\section{Preliminary}
+\input{05star.tex}
+
+%\section{Introduction}
+%\input{05a}
+%
+%\section{Estimation}
+%\input{05b}
+%
+%\section{Variational inference}
+%\input{05c}
+
+%\hClosingStuffStandalone
+\end{document}

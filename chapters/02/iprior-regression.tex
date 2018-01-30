@@ -1,0 +1,34 @@
+\documentclass[a4paper,showframe,11pt,draft]{report}
+\usepackage{standalone}
+\standalonetrue
+\ifstandalone
+  \usepackage{../../haziq_thesis}
+  \usepackage{../../haziq_maths}
+  \usepackage{../../haziq_glossary}
+  \addbibresource{../../bib/haziq.bib}
+  \externaldocument{../01/.texpadtmp/introduction}
+\fi
+
+\begin{document}
+\hChapterStandalone[2]{Regression using I-priors}
+
+Regression using I-priors. Test equation reference \eqref{eq:model1}.
+
+\section{Some functional analysis}
+\input{02a}
+
+\section{The Fisher information}
+\input{02b}
+
+\section{The I-prior}
+\input{02c}
+
+\section{Kernel functions}
+\input{02d}
+
+\section{Comparison to Gaussian process priors}
+\input{02e}
+
+
+\hClosingStuffStandalone
+\end{document}

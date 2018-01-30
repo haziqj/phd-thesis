@@ -1,0 +1,86 @@
+## ---- prelim ----
+
+# Packages
+library(iprior)
+library(iprobit)
+library(ipriorBVS)
+library(knitr)
+library(devtools)
+library(R2MLwiN)
+library(lme4)
+library(jmcm)
+library(caret)
+library(tidyverse)
+library(ggplot2)
+library(directlabels)
+library(reshape2)
+library(kableExtra)
+library(cowplot)
+library(ElemStatLearn)
+library(spatstat)
+library(stringr)
+
+# knitr settings
+knitr::opts_chunk$set(fig.align = "center", prompt = TRUE)
+knitr::knit_theme$set("bclear")
+options(prompt = "R> ", continue = "+  ", width = 70,
+        knitr.table.format = "latex")
+# knit_hooks$set(move.fig = function(before, options, envir) {
+#   if (!before) {
+#     move_fig_to_chapter()
+#   }
+# })
+
+# BibLaTeX with Biber backend
+system(paste("biber", sub("\\.Rnw$", "", current_input())))
+
+# Cut str
+options(str = strOptions(strict.width = "cut"), width = 70)
+
+# Move .tex file to correct chapter
+move_tex_to_chapter <- function() {
+  this.file <- sub("\\.Rnw$", "\\.tex", current_input())
+  chapter.no <- sub("[a-z]\\.tex", "", this.file)
+  file.copy(file.path(this.file), file.path(paste0("../", chapter.no), this.file),
+            overwrite = TRUE)
+}
+
+# Move figures
+move_fig_to_chapter <- function() {
+  this.file <- sub("\\.Rnw$", "\\.tex", current_input())
+  # chapter.no <- sub("[a-z]\\.tex", "", this.file)
+  files <- list.files("figure/")
+  # figure.path <- paste0("../", chapter.no, "/figure")
+  # if (!file.exists(figure.path)) {
+  #   dir.create(file.path(figure.path))
+  # }
+  # file.copy(file.path("figure", files), file.path(figure.path, files),
+  #           overwrite = TRUE)
+  file.copy(file.path("figure", files), file.path("../../figure", files),
+            overwrite = TRUE)
+}
+
+# Combine both
+move_files_to_chapter <- function() {
+  move_fig_to_chapter()
+  move_tex_to_chapter()
+}
+
+# Delete auxiliary files
+delete_files <- function() {
+  file.types <- c("*.bbl", "*.bcf", "*.glo", "*.glo-abr", "*.idx", "*.ilg",
+                  "*.ind", "*.ist", "*.log", "*.run.xml", "*.slo", "*.pdf",
+                  "*.synctex.gz", "*concordance.tex", "*.mw")
+  for (i in seq_along(file.types)) {
+    file.remove(dir(pattern = file.types[i], full.names = TRUE))
+  }
+}
+delete_files()
+
+
+
+# Function to specify decimal places
+decPlac <- function(x, k = 2) format(round(x, k), nsmall = k)
+
+# Function to determine even numbers
+isEven <- function(x) x %% 2 == 0

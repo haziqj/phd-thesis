@@ -1,0 +1,234 @@
+%%!TEX root = main.Rnw
+%\documentclass[english, 11pt]{article}
+%\usepackage{haziq_article}
+%\begin{document}
+
+<<include = FALSE, cache = FALSE>>=
+# patchDVI options
+patchDVI::useknitr()
+#.SweaveFiles <- "main.Rnw"
+.TexRoot <- "main.tex"
+.SweaveMake <- 2
+
+# knitr options
+# options(prompt = "> ")
+knitr::opts_chunk$set(prompt = FALSE, fig.align = "center", fig.width = 7, fig.height = 5)
+knitr::knit_theme$set("bclear")
+
+# Libraries
+library(knitr)
+library(iprior)
+library(devtools)
+library(R2MLwiN)
+library(lme4)
+library(jmcm)
+library(caret)
+@
+
+We illustrate the prediction of a real valued response when one of the covariates is a function using a widely analysed data set for quality control in the food industry. The data\footnotemark contain samples of spectrometric curve of absorbances of 215 pieces of finely chopped meat, along with their water, fat and protein content. These data are recorded on a Tecator Infratec Food and Feed Analyzer working in the wavelength range 850 - 1050 nm by the Near Infrared Transmission (NIT) principle. Absorption data has not been measured continuously, but instead 100 distinct wavelengths were obtained. Figure \ref{fig:dataset3} shows a sample of 10 such spectrometric curves.
+
+\footnotetext{Used with permission from Tecator (see \url{http://lib.stat.cmu.edu/datasets/tecator} for details). We used the version made available in the dataframe \code{tecator} from the \proglang{R} package \pkg{caret} for our analyses.}
+
+<<dataset3, echo = FALSE, cache = TRUE, fig.height = 4.5, out.width = "12.2cm", fig.cap = "Sample of spectrometric curves used to predict fat content of meat. For each meat sample the data consists of a 100 channel spectrum of absorbances and the contents of moisture (water), fat and protein. The absorbance is $- \\log 10$ of the transmittance measured by the spectrometer. The three contents, measured in percent, are determined by analytic chemistry.", fig.pos = "H">>=
+data(tecator)
+endpoints <- as.data.frame(endpoints)
+colnames(endpoints) <- c("water", "fat", "protein")
+
+# Plot of 10 random spectra predicting fat content
+# (reproduced from package caret, v6.0-68)
+set.seed(1)
+inSubset <- sample(1:dim(endpoints)[1], 10)
+
+absorpSubset <- absorp[inSubset,]
+endpointSubset <- endpoints$fat[inSubset]
+
+newOrder <- order(absorpSubset[,1])
+absorpSubset <- absorpSubset[newOrder,]
+endpointSubset <- endpointSubset[newOrder]
+
+plotColors <- rainbow(10)
+
+plot(absorpSubset[1,], type = "n", ylim = range(absorpSubset), xlim = c(0, 105),
+     xlab = "Wavelength index", ylab = "Absorption")
+for (i in 1:10) {
+   points(absorpSubset[i, ], type = "l", col = plotColors[i], lwd = 2)
+   text(105, absorpSubset[i, 100], endpointSubset[i], col = plotColors[i])
+}
+title("Fat content predictor profiles for 10 random samples")
+
+# Prepare data for iprior
+# n = 215, use first 160 for training
+absorpTrain <- -t(diff(t(absorp)))	# this takes first differences using diff()
+absorpTest <- absorpTrain[161:215,]
+absorpTrain <- absorpTrain[1:160,]
+
+# Other variables
+fatTrain <- endpoints$fat[1:160]
+fatTest <- endpoints$fat[161:215]
+waterTrain <- endpoints$water[1:160]
+waterTest <- endpoints$water[161:215]
+@
+
+For our analyses and many others' in the literature, the first 160 observations in the data set are used as a training sample for model fitting, and the remaining 55 observations as a test sample to evaluate the predictive performance of the fitted model. A summary of the various statistical methods applied to this data set, including various I-prior models, can be found in \cite{bergsma2016}. The focus here is to use the \pkg{iprior} package to fit various I-prior models to the Tecator data set.
+
+Before we began, we preprocessed the spectral curves by taking their first differences. This leaves us with the 99-dimensional covariate, which is saved in the matrix object named \code{absorpTrain}. Our first modelling attempt is to estimate a linear effect by regressing the responses \code{fatTrain} against only a single high-dimensional covariate \code{absorpTrain} using the canonical RKHS. The model is loaded as an \code{ipriorKernel} object as follows:
+
+<<ipriorkernel1, eval = FALSE>>=
+# Model 1: canonical RKHS (linear)
+(mod1 <- kernL(y = fatTrain, absorpTrain))
+@
+<<ipriorkernel1.print, echo = FALSE, cache = TRUE, cache.lazy = FALSE>>=
+mod1 <- kernL(y = fatTrain, absorpTrain)
+print(mod1, strict.width = "cut", width = 69)
+@
+
+Here, we have used the non-formula syntax because each object after the \code{y} argument is treated as a single covariate, even if it is multi-dimensional, i.e., a matrix. We could have also used the formula syntax and used the \code{model} option \code{one.lam = TRUE}. Note that the canonical RKHS is used by default.
+
+Our second and third model uses a polynomial-type construction of the canonical RKHS, which allows us to add quadratic and cubic terms of the spectral curves. The syntax is as before with the addition of \verb@absorpTrain^b@, which element-wise raises the entries of the matrix  \code{absorpTrain} to the power \code{b}. To date, the only method to fit these models parsimoniously in \pkg{iprior} is by using non-formula syntax with \code{model} option \code{order} to control the scale parameters of the RKHS. Both models only have a single parameter. Without specifying the \code{order} option, additional scale parameters would be fitted, one for each quadratic and cubic term.
+
+<<ipriorkernel2, eval = TRUE, cache = TRUE, cache.lazy = FALSE>>=
+# Model 2: canonical RKHS (quadratic)
+mod2 <- kernL(y = fatTrain, absorpTrain, absorpTrain^2,
+              model = list(order = c("1", "1^2")))
+@
+<<ipriorkernel3, eval = TRUE, cache = TRUE, cache.lazy = FALSE>>=
+# Model 3: canonical RKHS (cubic)
+mod3 <- kernL(y = fatTrain, absorpTrain, absorpTrain^2, absorpTrain^3,
+              model = list(order = c("1", "1^2", "1^3")))
+@
+
+Next, we fitted a smooth dependence of fat content on the spectrometric curves using the FBM RKHS. By default, the Hurst coefficient for the FBM RKHS is set to be 0.5. However, we can use the function \code{fbmOptim()} which is able to compute the maximum likelihood estimate for the Hurst coefficient.
+
+<<ipriorkernel4, eval = TRUE, cache = TRUE, cache.lazy = FALSE>>=
+# Model 4: FBM RKHS (Hurst = 0.5 by default)
+mod4 <- kernL(y = fatTrain, absorpTrain, model = list(kernel = "FBM"))
+@
+
+Finally, we add an extra covariate (meat moisture content) which is assumed to have a linear effect on fat content. Doing so adds one extra parameter to the model. To specify multiple kernels, we need to include the \code{model} option \code{kernel = c("FBM", "Canonical")} to indicate the effect of the respective covariates on the response. This is verified by inspecting the \code{print} output of the \code{ipriorKernel} object, and indeed we see that there are now two scale parameters, and the kernel loader correctly assigns the FBM and canonical RKHS to the spectrometric curves and moisture content respectively.
+
+<<ipriorkernel5, eval = FALSE>>=
+# Model 5: FBM RKHS + extra covariate
+(mod5 <- kernL(y = fatTrain, absorpTrain, waterTrain,
+               model = list(kernel = c("FBM", "Canonical"))))
+@
+<<ipriorkernel5.print, echo = FALSE, cache = TRUE, cache.lazy = FALSE>>=
+mod5 <- kernL(y = fatTrain, absorpTrain, waterTrain,
+              model = list(kernel = c("FBM", "Canonical")))
+print(mod5, strict.width = "cut", width = 70)
+@
+
+<<ipriorfit, echo = FALSE, cache = TRUE, cache.lazy = FALSE>>=
+mod1.fit <- ipriorOptim(mod1, control = list(silent = TRUE))  # linear
+mod2.fit <- ipriorOptim(mod2, control = list(silent = TRUE))  # quadratic
+mod3.fit <- ipriorOptim(mod3, control = list(silent = TRUE))  # cubic
+mod4.fit <- ipriorOptim(mod4, control = list(silent = TRUE))  # smooth
+mod5.fit <- fbmOptim(mod4, silent = TRUE)  # smooth, MLE
+mod6.fit <- fbmOptim(mod5, silent = TRUE)  # smooth, MLE with extra covariate
+@
+
+All of the above models were fitted using \code{ipriorOptim}, except for the last two model, where we used \code{fbmOptim} in order to obtain the maximum likelihood estimate for the Hurst coefficient of the FBM RKHS. Predicted values of the test data set can be obtained using the \code{predict} function
+
+<<ipriorpredict>>=
+fatTestPredicted <- predict(mod1.fit, list(absorpTest))
+head(fatTestPredicted)
+@
+
+and the root mean squared error (RMSE) calculated for each of the models. It was noted that for some models, different EM starting values gave slightly different results, and we suspect this is a due to numerical issues with the computation of the variance of marginal I-prior distribution. Nonetheless, the predicted values, and hence the RMSE, remain fairly robust.
+
+<<ipriorcompare, echo = FALSE, results = "hide">>=
+RMSE.Train1 <- mod1.fit$sigma
+fatTestPredicted1 <- predict(mod1.fit, list(absorpTest))
+RMSE.Test1 <- sqrt(mean((fatTestPredicted1 - fatTest) ^ 2))
+
+RMSE.Train2 <- mod2.fit$sigma
+fatTestPredicted2 <- predict(mod2.fit, list(absorpTest, absorpTest ^ 2))
+RMSE.Test2 <- sqrt(mean((fatTestPredicted2 - fatTest) ^ 2))
+
+RMSE.Train3 <- mod3.fit$sigma
+fatTestPredicted3 <- predict(mod3.fit,
+                             list(absorpTest, absorpTest ^ 2, absorpTest ^ 3))
+RMSE.Test3 <- sqrt(mean((fatTestPredicted3 - fatTest) ^ 2))
+
+RMSE.Train4 <- mod4.fit$sigma
+fatTestPredicted4 <- predict(mod4.fit, list(absorpTest))
+RMSE.Test4 <- sqrt(mean((fatTestPredicted4 - fatTest) ^ 2))
+
+RMSE.Train5 <- mod5.fit$sigma
+fatTestPredicted5 <- predict(mod5.fit, list(absorpTest))
+RMSE.Test5 <- sqrt(mean((fatTestPredicted5 - fatTest) ^ 2))
+
+RMSE.Train6 <- mod6.fit$sigma
+fatTestPredicted6 <- predict(mod6.fit, list(absorpTest, waterTest))
+RMSE.Test6 <- sqrt(mean((fatTestPredicted6 - fatTest) ^ 2))
+
+# tab <- c(mod1.fit$log.lik, RMSE.Train1, RMSE.Test1)
+# tab <- rbind(tab, c(mod2.fit$log.lik, RMSE.Train2, RMSE.Test2))
+# tab <- rbind(tab, c(mod3.fit$log.lik, RMSE.Train3, RMSE.Test3))
+# tab <- rbind(tab, c(mod4.fit$log.lik, RMSE.Train4, RMSE.Test4))
+# tab <- rbind(tab, c(mod5.fit$log.lik, RMSE.Train5, RMSE.Test5))
+# tab <- rbind(tab, c(mod6.fit$log.lik, RMSE.Train6, RMSE.Test6))
+# rownames(tab) <- c("Linear", "Quadratic", "Cubic", "FBM gam=0.50",
+#                    paste0("FBM gam=", mod5.fit$ipriorKernel$model$Hurst),
+#                    paste0("FBM gam=", mod6.fit$ipriorKernel$model$Hurst[1],
+#                           " + extra cov."))
+# colnames(tab) <- c("Log-lik", "Training RMSE", "Test RMSE")
+# tab
+
+# Likelihood ratio test
+# G <- 2 * (mod6.fit$log.lik - mod5.fit$log.lik)
+# (pval <- pchisq(G, 1))
+@
+
+The results are summarised in Table \ref{tab:tecator}. Models 1-3 have the same number of parameters, so a direct comparison can be done, with the model giving the highest likelihood value preferred. In this case, it is the model with a quadratic effect, giving a test RMSE of \Sexpr{round(RMSE.Test2, 2)}. Models with the FBM RKHS gave better prediction still. A smooth effect (Hurst = 0.5) yields a test RMSE of \Sexpr{round(RMSE.Test4, 2)}, and this is improved only slightly by using the maximum likelihood estimate for the Hurst coefficient of \Sexpr{round(mod5.fit$ipriorKernel$model$Hurst, 3)}. The best predictive model obtained was the final model, i.e., a smooth effect (Hurst = \Sexpr{round(mod6.fit$ipriorKernel$model$Hurst[1], 3)}) with an additional covariate, giving a test RMSE of 0.68.
+
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+\begin{table}[ht]
+\centering
+\begin{tabular}{ll R{1.7cm} rr}
+\hline
+&&{{Log-}}&\multicolumn{2}{c}{RMSE} \\
+\cline{4-5}
+Model
+&I-prior effect
+&{likelihood}
+&{\small Train}
+&{\small Test} \\
+\hline
+1     & Linear
+& \Sexpr{round(mod1.fit$log.lik, 2)}
+& \Sexpr{round(RMSE.Train1, 2)}
+& \Sexpr{round(RMSE.Test1, 2)} \\
+2     & Quadratic
+& \Sexpr{round(mod2.fit$log.lik, 2)}
+& \Sexpr{round(RMSE.Train2, 2)}
+& \Sexpr{round(RMSE.Test2, 2)} \\
+3     & Cubic
+& \Sexpr{round(mod3.fit$log.lik, 2)}
+& \Sexpr{round(RMSE.Train3, 2)}
+& \Sexpr{round(RMSE.Test3, 2)} \\
+4     & Smooth (Hurst = 0.5)
+& \Sexpr{round(mod4.fit$log.lik, 2)}
+& \Sexpr{round(RMSE.Train4, 3)}
+& \Sexpr{round(RMSE.Test4, 2)} \\
+4a     & Smooth (Hurst = \Sexpr{round(mod5.fit$ipriorKernel$model$Hurst, 3)})
+& -\Sexpr{format(-round(mod5.fit$log.lik, 2), nsmall = 2)}
+& \Sexpr{round(RMSE.Train5, 3)}
+& \Sexpr{round(RMSE.Test5, 2)} \\
+5     & Smooth (Hurst = \Sexpr{round(mod6.fit$ipriorKernel$model$Hurst[1], 3)}) with additional covariate
+& \Sexpr{round(mod6.fit$log.lik, 2)}
+& \Sexpr{round(RMSE.Train6, 2)}
+& \Sexpr{round(RMSE.Test6, 2)} \\
+\hline
+\end{tabular}
+\caption{A summary of the I-prior models fitted on the Tecator data set.}
+\label{tab:tecator}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% REFERENCES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\nocite{*}
+%\bibliographystyle{apalike}
+%\bibliography{haziq}
+%\end{document}
+

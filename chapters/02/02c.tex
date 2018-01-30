@@ -1,0 +1,107 @@
+For our linear model in \eqref{eq:linmod2} with $f$ belonging to a RKHS $\mathcal F$ with kernel $h$ over the set $\mathcal X$, define the subspace
+\[
+	\mathcal F_n = \Bigg\{f:\mathcal X \rightarrow \mathbb R \ \Bigg|\ f(x)=\sum_{i=1}^n h(x,x_i), \text{ for some } w_1, \dots, w_n \in \mathbb R, \text{ and } x \in \mathcal X\Bigg\}
+\]
+for which the Fisher information exists. Effectively, our functions $f \in \mathcal F_n$ are parameterized by $w=(w_1, \dots, w_n)^\top \in \mathbb R^n$, so we need only consider priors over $\mathbb R^n$. The entropy of a prior $\pi$ relative to a Lebesgue measure over $\mathbb R^n$ is defined as
+\[
+	\text{H}(\pi) = -\int_{\mathbb R^n} \pi(w)\log \pi(w) \d w.
+\]
+Maximising this entropy subject to a suitable constraint gives us the I-prior definition.
+
+\begin{definition}[I-prior] {\normalfont [\citealp{Bergsma2014}].}
+Let $\mathcal{F}$ be a Krein space and let $Y \in \mathbb{R}^n$ be a random variable whose distribution depends on $f \in \mathcal{F}$. Denote the Fisher information for $f$ by $I[f]$, and suppose it exists. For a given $f_0 \in \mathcal{F}$, let $\pi$ be a probability distribution independent of $Y$ such that $\text{\normalfont Cov}_\pi(f) = I_{f_0}[f]$. Then $\pi$ is called an I-prior for $f$ with hyperparameter $f_0$.
+\end{definition}
+
+\begin{definition}[I-prior]
+A prior $\pi$ for $f$ for the linear model in \eqref{eq:linmod2} with $f$ belonging to a RKHS $\mathcal F$ is called an I-prior if $\pi(\mathcal F_n) = 1$, and conditionally on $f \in \mathcal F_n$,
+\[
+	\pi = \arg\max \, \text{H}(\pi) \ \text{ subject to } \ \E_\pi ||f||_{\mathcal F_n}^2 = 1.
+\]
+\end{definition}
+
+The following theorem associates I-priors with the Fisher information.
+
+\begin{theorem}[I-prior for linear models is Gaussian with mean $f_0$ and covariance matrix the Fisher information]{\normalfont [\citealp{Bergsma2014}].}\label{theorem:iprior}
+	Consider the linear model in \eqref{eq:linmod2} with $f$ belonging to a RKHS $\mathcal F$ with kernel $h:\mathcal X \times \mathcal X \rightarrow \mathbb R$. Then an I-prior $\pi$ for $f$ is Gaussian with a hyperparameter $f_0$ (the prior mean) and covariance matrix as defined by
+	\[
+		\Cov_\pi(f(x), f(x')) = I[f(x),f(x')]
+	\]
+	where
+	\[
+		I[f(x),f(x')] = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(x,x_i)h(x',x_j)
+	\]
+	is the Fisher information for $f$, and $\psi_{ij}$ is the $(i,j)$-th entry of the precision matrix $\Psi$ of the errors. An I-prior for $f$ will then have the random effect representation
+	\begin{align*}
+	\begin{gathered}
+		f(x) = f_0(x) + \sum_{i=1}^n h(x, x_i)w_i \\
+		(w_1,\dots,w_n) \sim \N(0, \Psi).
+	\end{gathered}
+	\end{align*}
+	For convenience, we can write the I-prior for $f$ in the more compact matrix notation
+	\begin{align*}
+	\begin{gathered}
+		\mathbf f = \mathbf f_0 + \mathbf H \mathbf w \\
+		\mathbf w \sim \N(\mathbf 0, \boldsymbol\Psi) \\
+	\end{gathered}
+	\end{align*}
+	where $\mathbf H$ is the $n\times n$ symmetric kernel matrix whose $(i,j)$-th entries contain $h(x_i, x_j)$, for $i,j=1,\dots,n$.
+\end{theorem}
+
+For the model defined in \eqref{eq:linmod2}, an I-prior on $f$ is a Gaussian distribution with prior mean $f_0$ and covariance matrix equal to the Fisher information for $f$. For this model, the Fisher information does not depend on $f_0$ and can be simply written as $I[f]$. We can also write the I-prior for $f$ in a random effect representation, given by the following theorem:
+\begin{theorem}[I-prior for linear models]{\normalfont [\citealp{Bergsma2014}].}\label{theorem:iprior}
+For the linear regression model stated in \eqref{eq:linmod2}, let $\mathcal F$ be the RKKS over $\mathcal{X}$ with kernel $h: \mathcal X \times \mathcal X \rightarrow \mathbb R$. The Fisher information $I[f] \in \mathcal F \otimes \mathcal F$ for $f$ is given by
+$$
+I[f](\mathbf x_i, \mathbf x_i') = \sum_{k=1}^n \sum_{l=1}^n \psi_{kl} h(\mathbf x_i, \mathbf x_k) h(\mathbf x_i', \mathbf x_l)
+$$
+where $\psi_{kl}$ is the $(k,l)$-th entry of the precision matrix $\boldsymbol\Psi$ of the errors. Denote by $\pi$ be the Gaussian distribution mean $f_0$ and covariance kernel $I[f]$. Then by definition, $\pi$ is an I-prior for $f$. Thus, a random vector $f \sim \pi$ will have the covariance matrix as defined by $\text{\normalfont Cov}_\pi(f(\mathbf x_i), f(\mathbf x_i')) = I[f](\mathbf x_i, \mathbf x_i')$, and that the I-prior for $f$ will have the random effect representation
+\begin{align*}
+\begin{gathered}
+f(\mathbf x_i) = f_0(\mathbf x_i) + \sum_{k=1}^n h(\mathbf x_i, \mathbf x_k)w_k \\
+(w_1,\dots,w_n) \sim \text{N}(\mathbf 0, \boldsymbol\Psi).\\
+\end{gathered}
+\end{align*}
+For convenience, we can write the I-prior for $f$ in the more compact matrix notation
+\begin{align*}
+\begin{gathered}
+\mathbf f = \mathbf f_0 + \mathbf H \mathbf w \\
+\mathbf w \sim \text{N}(\mathbf 0, \boldsymbol\Psi)\\
+\end{gathered}
+\end{align*}
+where the boldface $\mathbf f$ represents the vector of functional evaluations $(f(\mathbf x_1), \dots, f(\mathbf x_n))$, and $\mathbf H$ is the symmetric kernel matrix whose $(i,j)$-th entries contain $h(\mathbf x_i, \mathbf x_j)$.
+\end{theorem}
+
+The proof for this theorem can be found in \cite{Bergsma2014}. The prior mean $f_0$ is a hyperparameter of the I-prior model, and can be given a fixed value such as 0. \cite{Bergsma2014} derives the closed form expression for the posterior distribution of the I-prior regression function $f$, for which the posterior mean is used as an estimate. An EM algorithm can be employed to find the maximum likelihood estimators of the hyperparameters of the I-prior model, or alternatively the random effects can be integrated out and the marginal likelihood maximised directly. These consist of the intercept $\alpha$, the error precision $\Psi$, and any other parameters that the kernel may depend on (more on this in Section \ref{sec:toolbox}). While the intercept can be viewed as being part of the regression function $f$ (technically, it would be a function in the RKHS of constant functions), practically it is much easier to treat it as a separate fixed parameter to be estimated. Hence the reason for segregating the intercept from the regression function in our models thus far.
+
+\subsection{Example of I-prior modelling: Multiple regression}
+\label{sec:iprioreg}
+
+Now let us take a look at an example of regression modelling with I-priors on the familiar standard linear model as described in \eqref{eq:linmod1}. For this model, we can compute the Fisher information for the regression coefficients $\boldsymbol\beta$, by twice differentiating the log-likelihood function and taking negative expectations. This is found to be 
+\[
+	I[\boldsymbol\beta] = \psi \mathbf X^\top \mathbf X.
+\]
+Thus, an I-prior for $\boldsymbol\beta$ with prior mean $\boldsymbol\beta_0$ is
+\[
+	\boldsymbol\beta \sim \text{N}(\boldsymbol\beta_0, \psi \mathbf X^\top \mathbf X).
+\] 
+An equivalent way of writing this I-prior would be
+\begin{align*}
+	\begin{gathered}
+		\boldsymbol\beta = \boldsymbol\beta_0 + \mathbf X^\top\mathbf w \\
+		\mathbf w \sim \text{N}(\mathbf 0, \psi\mathbf I_n)
+	\end{gathered}
+\end{align*}
+where $\mathbf w = (w_1, \dots, w_n)$ are the so called I-prior random effects as described in the second part of Theorem \ref{theorem:iprior} above. Substituting the above back into model \eqref{eq:linmod1} we arrive at the I-prior random effects representation
+\begin{align}\label{eq:linmod3}
+	\begin{gathered}
+		\mathbf y = \boldsymbol\alpha +
+		{\color{gray} \overbrace{{\color{black} \, \mathbf X\boldsymbol\beta_0}}^{\mathbf f_0} }
+		+
+		{\color{gray} \overbrace{{\color{black} \, \mathbf X\mathbf X^\top \mathbf w}}^{\mathbf H \mathbf w} \, } + \boldsymbol\epsilon \\
+		\boldsymbol\epsilon \sim \text{N}(\mathbf 0, \psi^{-1}\mathbf I_n)  \\
+		\mathbf w \sim \text{N}(\mathbf 0, \psi\mathbf I_n).
+	\end{gathered}
+\end{align}
+
+\begin{remark}
+	The multiple regression model relates to the I-prior methodology by considering the regression function $f(\mathbf x) = \mathbf x^\top\boldsymbol\beta$, for some $\boldsymbol\beta \in \mathbb R^p$. Lemma \ref{lem:fisher} tells us the form of the Fisher information for $f$, while Theorem \ref{theorem:iprior} sets the I-prior for $f$ as Gaussian with prior mean $f_0$ and covariance matrix the Fisher information. Deriving the I-prior this way gives similar results to the above.
+\end{remark}

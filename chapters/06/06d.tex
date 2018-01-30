@@ -1,0 +1,125 @@
+\hltodo[Is this variational EM... or CAVI?]{}
+
+Since there is a cyclic dependence of the parameters on each other, we employ a sequential update algorithm. In what follows, a tilde on the parameters indicate that these are the expectations of the parameters given the optimal factorised distributions $\tilde q$ derived earlier.
+\begin{enumerate}[label={STEP \arabic*:}, leftmargin=2cm]
+  \item Update $\tilde\by^{*(t+1)}$ given $\tilde\bw^{(t)}$, $\tilde\lambda^{(t)}$, and $\tilde\alpha^{(t)}$
+  \item Update $\tilde\bw^{(t+1)}$ given $\tilde\by^{*(t+1)}$, $\tilde\lambda^{(t)}$, and $\tilde\alpha^{(t)}$
+  \item Update $\tilde\lambda^{(t+1)}$ given $\tilde\by^{*(t+1)}$, $\tilde\bw^{(t+1)}$, and $\tilde\alpha^{(t)}$
+  \item Update $\tilde\alpha^{(t+1)}$ given $\tilde\by^{*(t+1)}$, $\tilde\bw^{(t+1)}$, and $\tilde\lambda^{(t+1)}$
+\end{enumerate}
+
+\algrenewcommand{\algorithmiccomment}[1]{{\color{gray}\hskip2em$\triangleright$ #1}}
+\begin{algorithm}[H]
+\caption{VB-EM algorithm for the probit I-prior model}\label{alg:VBEM}
+\begin{algorithmic}[1]
+\Procedure{Initialise}{}
+  \For{$j=1,\dots,m$}
+    \State $\tilde\bw_j^{(0)} \gets \bzero_{n}$ %\Comment{or draw $w_i^{(0)} \ \sim \N(0,1)$ for $i=1,\dots,n$.}
+    \State $\tilde\alpha_j^{(0)} \gets \N(0,1)$
+    \State $\tilde\lambda_j^{(0)} \gets \N(0,1)$
+    \State $\tilde\lambda_j^{sq(0)} \gets (\tilde\lambda_j^{(0)})^2$ \Comment{this is $\E[\lambda_j^2]$}    
+    \State $\bH_{\lambda_j}^{(0)} \gets \tilde\lambda_j^{(0)}\bH$  
+    \State $\bH_{\lambda_j}^{sq(0)} \gets \tilde\lambda_j^{sq(0)}\bH^2$
+  \EndFor
+\EndProcedure
+\Statex
+\Procedure{Update for $\tilde \bff$ } {time $t$}
+  \For{$j=1,\dots,m$}
+    \State $\tilde \bff_j^{(t+1)} \gets \tilde\alpha_j^{(t)}\bone_{n} + \bH_{\lambda_j}\tilde\bw_j^{(t)}$
+  \EndFor
+  \State $\tilde \bff^{(t+1)} \gets \big( \tilde \bff_1^{(t+1)}, \dots, \tilde \bff_m^{(t+1)} \big)^\top$
+\EndProcedure
+\Statex
+\Procedure{Update for $y_{ij}^*$ }{time $t$}
+  \For{$i=1,\dots,n$}
+    \State $j \gets y_i$
+    \State $C_i^{(t+1)} \gets \prod_{k \neq j} \Phi\left( (\tilde f_{ij}^{(t+1)} - \tilde f_{ik}^{(t+1)}) / \surd 2 \right)$ \vspace{1mm}   
+    \For{$k=1,\dots,j-1,j+1,\dots,m$} \vspace{1mm}  
+      \State $D_{ik} \gets \E_Z\left[\phi_k(Z + \tilde f_{ij}^{(t+1)} - \tilde f_{ik}^{(t+1)}) \prod_{l \neq k,j} \Phi_l(Z + \tilde f_{ij}^{(t+1)} - \tilde f_{ik}^{(t+1)}) \right]$ \vspace{1mm}
+      \State $\tilde y_{ik}^{*(t+1)} \gets \tilde f_{ik}^{(t+1)} - D_{ik} / C_i^{(t+1)}$
+    \EndFor
+    \State $\tilde y_{ij}^{*(t+1)} \gets \tilde f_{ij}^{(t+1)} - \sum_{k \neq j} \big(\tilde y_{ik}^{*(t+1)} - \tilde f_{ik}^{(t+1)} \big)$
+  \EndFor
+\EndProcedure
+\algstore{VBEMbreak}	
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\begin{algorithmic}[1]
+\algrestore{VBEMbreak}
+\Procedure{Update for $\bw_j$ }{time $t$}
+  \For{$j = 1,\dots,m$}
+    \State $\tilde\by_j^{*(t+1)} \gets (\tilde y_{1j}^{(t+1)}, \dots, \tilde y_{nj}^{(t+1)})^\top$
+    \State $\bA_j \gets \bH_{\lambda_j}^{sq(t)} + \bI_{n}$ \vspace{0.8mm}
+    \State $\ba_j \gets \bH_\lambda(\tilde\by_j^{*(t+1)} - \tilde\alpha_j^{(t)}\bone_{n})$
+    \State $\tilde\bw_j^{(t+1)} \gets \bA_j^{-1}\ba_j$
+    \State $\btW_j^{(t+1)} \gets \bA_j^{-1}(\bI_{n} + \ba_j\ba_j^\top\bA_j^{-1})$\
+    \State $\text{logdetA}_j^{(t+1)} \gets \log \abs{\bA_j}$
+  \EndFor
+\EndProcedure
+\Statex
+\Procedure{Update for $\lambda$ }{time $t$}
+  \For{$j = 1,\dots,m$}
+    \State $c_j^{(t+1)} \gets \tr \left(  \bH^2 \btW_j \right) $
+    \State $d_j \gets (\tilde\by_j^{*(t+1)} - \tilde\alpha_j^{(t)}\bone_{n})^\top \bH \tilde\bw_j^{(t+1)}$
+    \State $\tilde\lambda_j^{(t+1)} \gets d_j / c_j^{(t+1)}$
+    \State $\tilde\lambda_j^{sq(t+1)} \gets 1/c_j^{(t)} + (d_i / c_i^{(t+1)})^2$          
+  \EndFor
+    \If{single $\lambda$} $\forall j$
+      \State $\tilde\lambda_j^{(t+1)} \gets \sum_j d_j \Big/ \sum_j c_j^{(t+1)}$
+      \State $\tilde\lambda_j^{sq(t+1)} \gets 1 \Big/ \sum_j c_j^{(t+1)} + \Big( \sum_j d_j \Big/ \sum_j c_j^{(t+1)} \Big)^2$  
+  \EndIf
+  \State \textbf{call} \Call{Update kernel matrices}{}
+\EndProcedure
+\Statex
+\Procedure{Update kernel matrices }{time $t$}
+  \For{$j = 1,\dots,m$}
+    \State $\bH_{\lambda_j}^{(t+1)} \gets \tilde\lambda_j^{(t+1)}\bH$  
+    \State $\bH_{\lambda_j}^{sq(t+1)} \gets \tilde\lambda_j^{sq(t+1)}\bH^2$     
+  \EndFor
+\EndProcedure
+\algstore{VBEMbreak1}	
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+\begin{algorithmic}[1]
+\algrestore{VBEMbreak1}
+\Procedure{Update for $\alpha$ }{time $t$}
+  \If{single $\alpha$}
+    \State $\tilde\alpha^{(t+1)} \gets \frac{1}{nm} \sum\limits_{j=1}^m \sum\limits_{i=1}^n \big(\tilde y_{ij}^{*(t+1)} - \tilde\lambda_j^{(t+1)} \bH_i \tilde\bw_j^{(t+1)}\big)$
+  \Else
+    \For{$j=1,\dots,m$}
+      \State $\tilde\alpha_j^{(t+1)} \gets \frac{1}{n} \sum\limits_{i=1}^n \big(\tilde y_{ij}^{*(t+1)} - \tilde\lambda_j^{(t+1)} \bH_i \tilde\bw_j^{(t+1)}\big)$
+    \EndFor
+  \EndIf
+\EndProcedure	
+\Statex
+\Procedure{Calculate lower bound }{time $t$}
+  \State $\cL^{(t)} \gets \half \big(nm - \log nm + 3(1 + \log 2\pi) \big) 
+  - \half \left( \text{logdetA}^{(t)} + \tr \btW^{(t)} + \sum\limits_{i=1}^2 \log c_i^{(t)} \right) + \sum_{i=1}^n \log C_i^{(t)}$
+\EndProcedure	
+\Statex
+\Procedure{The VB-EM algorithm}{}
+  \State $t \gets 0$
+  \While{$\cL^{(t+1)} - \cL^{(t)} > \delta$ \textbf{or} $t < t_{max}$}{}
+    \State \textbf{call} \Call{Update for $\by^*$}{}
+    \State \textbf{call} \Call{Update for $\bw$}{}
+    \State \textbf{call} \Call{Update for $\lambda$}{}
+    \State \textbf{call} \Call{Update for $\alpha$}{}
+    \State \textbf{call} \Call{Calculate lower bound}{}
+    \State $t \gets t + 1$
+  \EndWhile
+\EndProcedure
+\Statex
+\State \Return $(\hat\by^*, \hat\bw, \hat\lambda, \hat\alpha) \gets (\tilde\by^{*(t)}, \tilde\bw^{(t)}, \tilde\lambda^{(t)}, \tilde\alpha^{(t)}) \vspace{1mm}$ \Comment{converged parameter estimates}
+\State \Return $(\hat y_1, \dots, \hat y_n) \gets \left(\argmax\limits_{k=1}^m \, \hat y_{1k}^*, \dots, \argmax\limits_{k=1}^m \, \hat y_{nk}^* \right) \vspace{1mm}$ \Comment{predicted classes}
+\For{$i=1,\dots,n$} 
+  \For{$j=1,\dots,m$}
+    \State \Return $\hat p_{ij} \gets \mathop{\prod\limits_{k=1}^m}\limits_{k\neq j} \Phi \left(\frac{\hat y_{ij}^* - \hat y_{ik}^*}{\surd 2} \right) $ \Comment{predicted probabilities}
+  \EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}

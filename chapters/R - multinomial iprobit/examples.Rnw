@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{standalone}
+\standalonetrue
+\ifstandalone
+  \usepackage{../../../haziq_article}
+  \addbibresource{../../../bib/library.bib}
+\fi
+
+<<setup, include = FALSE, cache = FALSE>>=
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", size = "small",
+                      prompt = TRUE)
+options(prompt = "R> ")
+
+# Load external .R file
+knitr::read_chunk("multinomial-iprobit.R")
+
+# BibLaTeX with Biber backend
+system(paste("biber", sub("\\.Rnw$", "", current_input())))
+@
+
+<<prelim, include = FALSE>>=
+@
+
+\begin{document}
+
+\subsection{Iris data set}
+
+<<iris.data, echo = FALSE, fig.show = "hold", fig.width = 5, fig.height = 5, out.width = "6cm", out.height = "6cm">>=
+@
+
+<<iris.mod, cache = TRUE, fig.height = 5, fig.width = 7>>=
+@
+
+\subsection{Vowel recognition data set}
+
+<<vowel.data, echo = FALSE>>=
+@
+<<vowel.mod, cache = TRUE, fig.height = 5, fig.width = 7>>=
+@
+<<vowel.tab, echo = FALSE, results = "asis">>=
+@
+
+\end{document}
+
+<<move, include = FALSE>>=
+files <- list.files("figure/")
+file.copy(file.path("figure", files), file.path("../figure", files),
+          overwrite = TRUE)
+@

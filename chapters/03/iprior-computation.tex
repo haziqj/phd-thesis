@@ -1,0 +1,60 @@
+\documentclass[a4paper,showframe,11pt,draft]{report}
+\usepackage{standalone}
+\standalonetrue
+\ifstandalone
+  \usepackage{../../haziq_thesis}
+  \usepackage{../../haziq_maths}
+  \usepackage{../../haziq_glossary}
+  \addbibresource{../../bib/haziq.bib}
+  \externaldocument{../01/.texpadtmp/introduction}
+\fi
+
+\begin{document}
+\hChapterStandalone[3]{Computational methods for I-priors}
+
+\lipsum[1]
+
+\begin{theorem}[Euclid] \label{thm:euclid}%For every prime $p$, there is a prime $p’>p$.In particular, the list of primes,\begin{equation}\label{eq:1}  2,3,5,7,\dots\end{equation}is infinite.\end{theorem}
+
+\begin{proof}
+My proof is complete.
+\end{proof}
+
+\lipsum[2]
+
+\begin{lemma}[Something]  For every prime $p$, there is a prime $p’>p$.  In particular, there are infinitely many primes.\end{lemma}
+
+\begin{remark}
+Actually, this is a remark.  
+\end{remark}
+
+\lipsum[3]
+
+\begin{restatable}[Anything]{corollary}{firstcor} This is my corollary.\end{restatable}
+
+\lipsum[4]
+
+A restatement of the theorem is as follows.
+
+\firstcor*
+
+\begin{definition}[Apple]
+An apple is a fruit.
+\end{definition}
+
+\lipsum[5]
+
+\begin{theorem}[name=Keyed theorem,  label=thm:key]  This is a  key-val theorem.\end{theorem}
+\begin{theorem}[continues=thm:key]  And it’s spread out.\end{theorem}
+
+\section{Direct maximisation}
+
+\section{EM algorithm}
+\input{03a}
+
+\section{Markov chain Monte Carlo methods}
+
+\section{Low-rank matrix approximation (Nystr\"om method)}
+
+\hClosingStuffStandalone
+\end{document}

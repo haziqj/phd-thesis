@@ -1,0 +1,68 @@
+\documentclass[class=article, crop=false]{standalone}
+\ifstandalone
+\usepackage{../../haziq_article}
+\fi
+
+<<include = FALSE, cache = FALSE>>=
+knitr::opts_chunk$set(prompt = FALSE, fig.align = "center", fig.width = 7, fig.height = 5)
+knitr::knit_theme$set("bclear")
+
+# Load external .R file
+knitr::read_chunk("iprior-binary.R")
+@
+<<prelim, include = FALSE>>=
+@
+<<variational.bayes, include = FALSE>>=
+@
+
+\begin{document}
+
+\subsection{Fisher's iris data}
+
+We will look at Fisher's iris data set as a toy example. There are originally three categories, but we combined the last two categories, so it is now only Setosa flowers and the rest. The four covariates give various measurements of the flowers.
+
+<<iris.data, echo = FALSE, cache = TRUE>>=
+@
+<<iris.plot1, echo = FALSE, cache = TRUE, fig.caption = "Plot of Fisher's iris data set">>=
+@
+
+Fitting the probit I-prior model doesn't long at all (almost instantly). The VB-EM algorithm was run for 100 iterations. However, it is seen that it converges after just 30 iterations.
+
+<<iris.res, cache = TRUE, message = "FALSE">>=
+@
+
+<<iris.plot2, echo = FALSE, cache = TRUE, fig.caption = "Plot of Fisher's iris data set">>=
+@
+
+\subsection{Ionosphere data}
+
+Data was obtained from \url{https://archive.ics.uci.edu/ml/datasets/Ionosphere}. This radar data was collected by a system in Goose Bay, Labrador. This system consists of a phased array of 16 high-frequency antennas with a total transmitted power on the order of 6.4 kW. The targets were free electrons in the ionosphere. ``Good'' radar returns are those showing evidence of some type of structure in the ionosphere. ``Bad'' returns are those that do not; their signals pass through the ionosphere. Received signals were processed using an autocorrelation function whose arguments are the time of a pulse and the pulse number. There were 17 pulse numbers for the Goose Bay system. Instances in this databse are described by 2 attributes per pulse number, corresponding to the complex values returned by the function resulting from the complex electromagnetic signal.
+
+In total, there are 350 observations, and 34 covariates. Of the 350 observations, 126 were bad signals and the rest were good. Convergence was achieved pretty quickly $-$ only after about 12 iterations.
+
+<<ionosphere.data, cache = TRUE, echo = FALSE>>=
+@
+
+We randomly split the data into a training set of size 200, and the remaining is used for validation. We obtain a training error rate of zero, but also a test error rate of 7.33\%. The FBM kernel was used.
+
+<<ionosphere.res, cache = TRUE>>=
+@
+<<ionosphere.plot, cache = TRUE>>=
+@
+
+\subsection{Cardiac data}
+
+Data was obtained from \url{https://archive.ics.uci.edu/ml/datasets/Arrhythmia}. This database contains 279 attributes, 206 of which are linear valued and the rest are nominal. Concerning the study of H. Altay Guvenir: "The aim is to distinguish between the presence and absence of cardiac arrhythmia and to classify it in one of the 16 groups. Class 1 refers to normal ECG, whereas classes 2 to 15 refers to different classes of arrhythmia, and class 16 refers to the rest of unclassified ones. For the time being, there exists a computer program that makes such a classification. However there are differences between the cardiolog's and the programs classification. Taking the cardiolog's as a gold standard we aim to minimise this difference by means of machine learning  tools."
+
+We combined the 15 of the arrhythmia classes into a single class, and normal being a class on its own. Out of the 451 ECG observations, 245 were classed as normal, and 206 as having some form of arrhythmia. To test predictions, we split the data set into a training set of size 300, and the remaining was left for validation. We fit a probit I-prior model with an FBM kernel.
+
+<<cardiac.data, cache = TRUE, echo = FALSE>>=
+@
+
+<<cardiac.res, cache = TRUE>>=
+@
+
+<<cardiac.plot, cache = TRUE>>=
+@
+
+\end{document}

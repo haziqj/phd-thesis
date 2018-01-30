@@ -1,0 +1,116 @@
+\documentclass[a4paper,showframe,11pt]{report}
+\usepackage{standalone}
+\standalonetrue
+\ifstandalone
+  \usepackage{../../haziq_thesis}
+  \usepackage{../../haziq_maths}
+  \usepackage{../../haziq_glossary}
+  \addbibresource{../../bib/haziq.bib}
+  \externaldocument{../01/.texpadtmp/introduction}
+\fi
+
+<<setup, include = FALSE, cache = FALSE>>=
+# Load external .R file
+knitr::read_chunk("00-prelim.R")
+knitr::read_chunk("04-03-functional_covariates.R")
+@
+<<prelim, include = FALSE>>=
+@
+
+\begin{document}
+
+We illustrate the prediction of a real valued response when one of the covariates is a function using a widely analysed data set for quality control in the food industry. The data\footnotemark contain samples of spectrometric curve of absorbances of 215 pieces of finely chopped meat, along with their water, fat and protein content. These data are recorded on a Tecator Infratec Food and Feed Analyzer working in the wavelength range 850 - 1050 nm by the Near Infrared Transmission (NIT) principle. Absorption data has not been measured continuously, but instead 100 distinct wavelengths were obtained. Figure \ref{fig:tecator_data} shows a sample of 10 such spectrometric curves.
+
+\footnotetext{Used with permission from Tecator (see \url{http://lib.stat.cmu.edu/datasets/tecator} for details). We used the version made available in the dataframe \code{tecator} from the \proglang{R} package \pkg{caret} for our analyses.}
+
+<<tecator_data, echo = FALSE, cache = TRUE, fig.height = 4, out.width = "0.9\\linewidth", fig.cap = "Sample of spectrometric curves used to predict fat content of meat. For each meat sample the data consists of a 100 channel spectrum of absorbances and the contents of moisture, fat (numbers shown in boxes) and protein measured in percent. The absorbance is $- \\log 10$ of the transmittance measured by the spectrometer. The three contents, measured in percent, are determined by analytic chemistry.", fig.pos = "h">>=
+@
+
+For our analyses and many others' in the literature, the first 160 observations in the data set are used as a training sample for model fitting, and the remaining 55 observations as a test sample to evaluate the predictive performance of the fitted model. A summary of the various statistical methods applied to this data set, including various I-prior models, can be found in cite{bergsma2016}. The focus here is to use the \pkg{iprior} package to fit various I-prior models to the Tecator data set.
+
+\hltodo[Necessary for functional covariates - approximation of the Sobolev-Hilbert space inner product]{Before we began, we preprocessed the spectral curves by taking their first differences}. This leaves us with the 99-dimensional covariate, which is saved in the matrix object named \code{absorpTrain}. Our first modelling attempt is to estimate a linear effect by regressing the responses \code{fatTrain} against only a single high-dimensional covariate \code{absorpTrain} using the canonical RKHS. The model is loaded as an \code{ipriorKernel} object as follows:
+
+<<tecator_1, eval = TRUE, cache = TRUE, cache.lazy = FALSE>>=
+@
+
+Here, we have used the non-formula syntax because each object after the \code{y} argument is treated as a single covariate, even if it is multi-dimensional, i.e., a matrix. We could have also used the formula syntax and used the \code{model} option \code{one.lam = TRUE}. Note that the canonical RKHS is used by default.
+
+Our second and third model uses a polynomial-type construction of the canonical RKHS, which allows us to add quadratic and cubic terms of the spectral curves. The syntax is as before with the addition of \verb@absorpTrain^b@, which element-wise raises the entries of the matrix  \code{absorpTrain} to the power \code{b}. To date, the only method to fit these models parsimoniously in \pkg{iprior} is by using non-formula syntax with \code{model} option \code{order} to control the scale parameters of the RKHS. Both models only have a single parameter. Without specifying the \code{order} option, additional scale parameters would be fitted, one for each quadratic and cubic term.
+
+<<tecator_2, eval = TRUE, cache = TRUE, cache.lazy = FALSE>>=
+@
+<<tecator_3, eval = TRUE, cache = TRUE, cache.lazy = FALSE>>=
+@
+
+Next, we fitted a smooth dependence of fat content on the spectrometric curves using the FBM RKHS. By default, the Hurst coefficient for the FBM RKHS is set to be 0.5. However, we can use the function \code{fbmOptim()} which is able to compute the maximum likelihood estimate for the Hurst coefficient.
+
+<<tecator_4, eval = TRUE, cache = TRUE, cache.lazy = FALSE>>=
+@
+
+Finally, we add an extra covariate (meat moisture content) which is assumed to have a linear effect on fat content. Doing so adds one extra parameter to the model. To specify multiple kernels, we need to include the \code{model} option \code{kernel = c("FBM", "Canonical")} to indicate the effect of the respective covariates on the response. This is verified by inspecting the \code{print} output of the \code{ipriorKernel} object, and indeed we see that there are now two scale parameters, and the kernel loader correctly assigns the FBM and canonical RKHS to the spectrometric curves and moisture content respectively.
+
+<<tecator_5, eval = TRUE, cache = TRUE, cache.lazy = FALSE>>=
+@
+<<tecator_fit, echo = FALSE, cache = TRUE, cache.lazy = FALSE>>=
+@
+
+All of the above models were fitted using \code{ipriorOptim}, except for the last two model, where we used \code{fbmOptim} in order to obtain the maximum likelihood estimate for the Hurst coefficient of the FBM RKHS. Predicted values of the test data set can be obtained using the \code{predict} function
+
+<<>>=
+fatTestPredicted <- predict(mod1.fit, list(absorpTest))
+head(fatTestPredicted)
+@
+
+and the root mean squared error (RMSE) calculated for each of the models. It was noted that for some models, different EM starting values gave slightly different results, and we suspect this is a due to numerical issues with the computation of the variance of marginal I-prior distribution. Nonetheless, the predicted values, and hence the RMSE, remain fairly robust.
+
+The results are summarised in Table \ref{tab:tecator}. Models 1-3 have the same number of parameters, so a direct comparison can be done, with the model giving the highest likelihood value preferred. In this case, it is the model with a quadratic effect, giving a test RMSE of \Sexpr{decPlac(RMSE.Test2, 2)}. Models with the FBM RKHS gave better prediction still. A smooth effect (Hurst = 0.5) yields a test RMSE of \Sexpr{decPlac(RMSE.Test4, 2)}, and this is improved only slightly by using the maximum likelihood estimate for the Hurst coefficient of \Sexpr{decPlac(mod5.fit$ipriorKernel$model$Hurst, 3)}. The best predictive model obtained was the final model, i.e., a smooth effect (Hurst = \Sexpr{decPlac(mod6.fit$ipriorKernel$model$Hurst[1], 3)}) with an additional covariate, giving a test RMSE of 0.68.
+
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+\begin{table}[ht]
+\centering
+\begin{tabular}{ll R{1.7cm} rr}
+\toprule
+&&{{Log-}}&\multicolumn{2}{c}{RMSE} \\
+\cline{4-5}
+Model
+&I-prior effect
+&{likelihood}
+&{\small Train}
+&{\small Test} \\
+\midrule
+1     & Linear
+& $-$\Sexpr{decPlac(-mod1.fit$log.lik, 2)}
+& \Sexpr{decPlac(RMSE.Train1, 2)}
+& \Sexpr{decPlac(RMSE.Test1, 2)} \\
+2     & Quadratic
+& $-$\Sexpr{decPlac(-mod2.fit$log.lik, 2)}
+& \Sexpr{decPlac(RMSE.Train2, 2)}
+& \Sexpr{decPlac(RMSE.Test2, 2)} \\
+3     & Cubic
+& $-$\Sexpr{decPlac(-mod3.fit$log.lik, 2)}
+& \Sexpr{decPlac(RMSE.Train3, 2)}
+& \Sexpr{decPlac(RMSE.Test3, 2)} \\
+4     & Smooth (Hurst = 0.5)
+& $-$\Sexpr{decPlac(-mod4.fit$log.lik, 2)}
+& \Sexpr{decPlac(RMSE.Train4, 2)}
+& \Sexpr{decPlac(RMSE.Test4, 2)} \\
+4a     & Smooth (Hurst = \Sexpr{decPlac(mod5.fit$ipriorKernel$model$Hurst, 3)})
+& $-$\Sexpr{decPlac(-mod5.fit$log.lik, 2)}
+& \Sexpr{decPlac(RMSE.Train5, 2)}
+& \Sexpr{decPlac(RMSE.Test5, 2)} \\
+5     & Smooth (Hurst = \Sexpr{decPlac(mod6.fit$ipriorKernel$model$Hurst[1], 3)}) with additional covariate
+& $-$\Sexpr{decPlac(-mod6.fit$log.lik, 2)}
+& \Sexpr{decPlac(RMSE.Train6, 2)}
+& \Sexpr{decPlac(RMSE.Test6, 2)} \\
+\bottomrule
+\end{tabular}
+\caption{A summary of the I-prior models fitted on the Tecator data set.}
+\label{tab:tecator}
+\end{table}
+
+\end{document}
+
+<<include = FALSE>>=
+move_files_to_chapter()
+delete_files()
+@

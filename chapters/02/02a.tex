@@ -1,0 +1,254 @@
+For a cleaner read, we do not use boldface type to denote vectors and matrices in this subsection. We begin by recalling that a vector space is a set endowed with two special operations: addition and scalar multiplication. A normed vector space is a vector space whose vectors have lengths, as induced by its norm.
+
+\begin{definition}[Norms]
+	Let $\mathcal F$ be a vector space over $\mathbb R$. A non-negative function $||\cdot||_{\mathcal F}:\mathcal F \times \mathcal F \rightarrow \mathbb [0,\infty)$ is said to be a norm  on $\mathcal F$ if all of the following are satisfied:
+	\begin{itemize}
+	\item \textbf{Absolute homogeneity:} $||\lambda f||_{\mathcal F} = |\lambda| ||f||_{\mathcal F}$, $\forall \lambda \in \mathbb R$, $\forall f \in \mathcal F$
+	\item \textbf{Triangle inequality:} $||f+g||_{\mathcal F} \leq ||f||_{\mathcal F} + ||g||_{\mathcal F}$, $\forall f,g \in \mathcal F$
+	\item \textbf{Separates points:} $||f||_{\mathcal F} = 0 \Leftrightarrow f=0$
+	\end{itemize}
+	The norm $||\cdot||_{\mathcal F}$ induces a metric (a notion of distance) on $\mathcal F$: $d(f,g) = ||f-g||_{\mathcal F}$.
+\end{definition}
+
+We can then define a Cauchy sequence.
+
+\begin{definition}[Cauchy sequence]
+	A sequence $\{f_n\}_{n=1}^\infty$ of elements of a normed vector space $(\mathcal F, ||\cdot ||_{\mathcal F})$ is said to be a Cauchy sequence if for every $\epsilon > 0$, $\exists N=N(\epsilon) \in \mathbb N$, such that $\forall n,m > N$, $||f_n - f_m||_{\mathcal F} < \epsilon$.
+\end{definition}
+
+Another important structure of vector spaces is the inner product, which allows us to study various geometrical notions such as orthogonality, among other things.
+%We begin with the definition of an inner product. 
+
+\begin{definition}[Inner products]
+	Let $\mathcal F$ be a vector space over $\mathbb R$. A function $\langle\cdot,\cdot\rangle_{\mathcal F}:\mathcal F \times \mathcal F \rightarrow \mathbb R$ is said to be an inner product on $\mathcal F$ if all of the following are satisfied:
+	\begin{itemize}
+	\vspace{-1mm}
+	\item \textbf{Symmetry:} $\langle f, g\rangle_{\mathcal F} = \langle g, f	\rangle_{\mathcal F}$, $\forall f,g \in \mathcal F$
+	\vspace{-1mm}
+	\item \textbf{Linearity:} $\langle a f_1 + b f_2, g\rangle_{\mathcal F} = a\langle f_1,g \rangle_{\mathcal F} + b\langle f_2,g \rangle_{\mathcal F}$, $\forall f_1, f_2, g \in \mathcal F$ and $\forall a,b \in \mathbb R$
+	\vspace{-1mm}
+	\item \textbf{Non-degeneracy:} $\langle f, f\rangle_{\mathcal F} = 0 \Leftrightarrow f=0$
+	\vspace{-1mm}
+	\item \textbf{Positive-definiteness:} $\langle f, f\rangle_{\mathcal F} \geq 0$, $\forall f \in \mathcal F$
+	\end{itemize}
+	\vspace{-1mm}	
+	We can always define a norm on $\mathcal F$ using the inner product as $||f||_{\mathcal F} = \sqrt{\langle f, f\rangle_{\mathcal F}}$.
+	Additionally, an inner product is said to be positive definite if $\langle f, f\rangle_{\mathcal F} \geq 0$, $\forall f \in \mathcal F$, and we can always define a norm on $\mathcal F$ using this inner product as $||f||_{\mathcal F} = \sqrt{\langle f, f\rangle_{\mathcal F}}$ . Conversely, an inner product is said to be negative definite if $\langle f, f\rangle_{\mathcal F} \leq 0$, $\forall f \in \mathcal F$. An inner product is said to be indefinite it is neither positive nor negative definite.
+\end{definition}
+
+A vector space equipped with a positive definite inner product that is also complete (contains the limits of all Cauchy sequences) is known as a Hilbert space. We now define a reproducing kernel Hilbert space.
+
+A generalisation of a Hilbert space, one which is equipped with an indefinite inner product, is known as a Krein space.
+
+\begin{definition}[Krein space]\label{def:krein}
+	A vector space $\mathcal F$ for which an inner product $\langle\cdot,\cdot\rangle_{\mathcal F}$ is defined is called a Krein space if there are two Hilbert spaces $\mathcal{F}_+$ and $\mathcal{F}_-$ spanning $\mathcal F$ such that
+	\begin{itemize}
+		\item All $f \in \mathcal F$ can be decomposed as $f = f_+ + f_-$ where $f_+ \in \mathcal{F}_+$ and $f_- \in \mathcal{F}_-$; and
+		\item $\forall f, f' \in \mathcal F$, $\langle f, f' \rangle_{\mathcal F} = \langle f_+, f'_+ \rangle_{\mathcal{F_+}} - \langle f_-, f'_- \rangle_{\mathcal{F_-}}$.
+	\end{itemize}
+%	Denote by $\overline{\mathcal F}$ the associated Hilbert space defined by
+%	$$
+%	\overline{\mathcal F} = \mathcal{F_+} \oplus \mathcal{F_-} \text{ hence } \langle f, f' \rangle_{\overline{\mathcal F}} = \langle f_+, f'_+ \rangle_{\mathcal{F_+}} + \langle f_-, f'_- \rangle_{\mathcal{F_-}}.
+%	$$
+%	Then $\overline{\mathcal F}$ is the smallest Hilbert space majorizing the Krein space $\mathcal F$ and one defines the strong topology on $\mathcal F$ as the Hilbertian topology of $\overline{\mathcal F}$.
+\end{definition}
+
+Any Hilbert space can be seen as a Krein space by taking $\mathcal{F_-} = \{0\}$.
+As we are dealing with function spaces, it might seem unusual in defining functions from $\mathcal F$ to $\mathbb R$, as the elements of $\mathcal F$ are themselves functions. For a space of functions $\mathcal F$ on $\mathcal X$, we define the evaluation functional that assigns a value to $f \in \mathcal F$ for each $x \in \mathcal X$.
+
+\begin{definition}[Evaluation functional]
+	Let $\mathcal F$ be a vector space of functions $f:\mathcal X \rightarrow \mathbb R$, defined on a non-empty set $\mathcal X$. For a fixed $x \in \mathcal X$, the function $\delta_x:\mathcal F \rightarrow \mathbb R$ as defined by $\delta_x(f) = f(x)$ is called the (Dirac) evaluation functional at $x$. Evaluation functionals are always linear.
+\end{definition}
+
+There are two more concepts that we need to cover before defining a reproducing kernel Hilbert/Krein space.
+
+\begin{definition}[Linear operator]
+	A function $A:\mathcal F \rightarrow \mathcal G$, where $\mathcal F$ and $\mathcal G$ are both normed vector spaces over $\mathbb R$, is called a linear operator if and only if it satisfies the following properties:
+	\begin{itemize}
+		\item \textbf{Homogeneity}: $A(af) = a A(f)$, $\forall a \in \mathbb R$, $\forall f \in \mathcal F$
+		\item \textbf{Additivity}: $A(f+g) = A(f) + A(f')$, $\forall f,f' \in \mathcal F$.
+	\end{itemize}	
+\end{definition}
+
+\begin{definition}[Bounder operator]
+	The linear operator $A:\mathcal F \rightarrow \mathcal G$ between two normed spaces $(\mathcal F, ||\cdot||_{\mathcal F})$ and $(\mathcal G, ||\cdot||_{\mathcal G})$ is said to be a bounded operator if $\exists \lambda \in [0,\infty)$ such that
+	$$
+	||A(f)||_{\mathcal G} < \lambda||f||_{\mathcal F}.
+	$$
+\end{definition}
+
+Now we define a reproducing kernel Hilbert space.
+
+\begin{definition}[Reproducing kernel Hilbert space]\label{def:rkhs}
+	A Hilbert space of real-valued functions $f:\mathcal X \rightarrow \mathbb R$ on a non-empty set $\mathcal X$ is called a reproducing kernel Hilbert space if the evaluation functional $\delta_x: f \mapsto f(x)$ is bounded (equivalently, continuous\footnotemark), i.e. $\exists \lambda_x \geq 0$ such that $\forall f \in \mathcal F$,
+	\[
+		|f(x)| = |\delta_x(f)| \leq \lambda_x||f||_{\mathcal F}.
+	\]
+\end{definition}
+
+\footnotetext{For any two function $f,g \in \mathcal F$, $|f(x)-g(x)| = |\delta_x(f) - \delta_x(g)| = |\delta_x(f-g)| \leq \lambda_x||f-g||_{\mathcal F}$ for some $\lambda_x \geq 0$, thus is said to be Lipschitz continuous, which implies uniform continuity. This property implies pointwise convergence from norm convergence in $\mathcal F$.}
+
+The definition is similar for Krein spaces, but there is a slight technical condition regarding strong topologies (see \citeauthor{Ong2004}). 
+Interestingly, the definition above has no mention of what a reproducing kernel is. Let us define it below. 
+
+\begin{definition}[Reproducing kernel Krein space]
+	A Krein space of real-valued functions $f:\mathcal X \rightarrow \mathbb R$ on a non-empty set $\mathcal X$ is called a reproducing kernel Krein space (RKKS) if the evaluation functional $\delta_x$ is a bounded linear operator $\forall x \in \mathcal X$, endowed with its strong topology.
+\end{definition}
+
+\begin{definition}[Kernels]
+	Let $\mathcal X$ be a non-empty set. A function $h:\mathcal X\times\mathcal X\rightarrow\mathbb R$ is called a kernel if there exists a real Hilbert space $\mathcal F$ and a map $\phi:\mathcal X \rightarrow \mathcal F$ such that $\forall x,x' \in \mathcal X$,
+$$
+h(x,x') = \langle \phi(x), \phi(x') \rangle.
+$$
+\end{definition}
+
+Such a map $\phi:\mathcal X \rightarrow \mathcal F$ is known as the \textit{feature map}, and the space $\mathcal F$ as the \textit{feature space}. Out of interest, a given kernel may correspond to more than one feature map.
+
+\begin{definition}[Reproducing kernels]\label{def:repkern}
+	Let $\mathcal F$ be a Hilbert space of functions over a non-empty set $\mathcal X$. A function $h:\mathcal X\times\mathcal X\rightarrow\mathbb R$ is called a reproducing kernel of $\mathcal F$ if $h$ satisfies
+	\begin{itemize}
+	\vspace{-1mm}
+	\item $\forall x \in \mathcal X,\, h(\cdot, x) \in \mathcal F$; and
+	\vspace{-1mm}
+	\item $\forall x \in \mathcal X, \, f \in \mathcal F, \, \langle f, h(\cdot, x) \rangle_{\mathcal F} = f(x)$ (the reproducing property).
+	\end{itemize}
+	\vspace{-1mm}
+	In particular, for any $x, x' \in \mathcal X$,
+	\[
+		h(x,x') = \langle h(\cdot, x), h(\cdot, x') \rangle_{\mathcal F}.
+	\]
+\end{definition}
+
+\vspace{-1mm}
+The connection between the definition of a RKHS and reproducing kernels is this: $\mathcal F$ is a RKHS space if and only if $\mathcal F$ has a reproducing kernel. It can also be proven that if this kernel exists, it is unique. We now turn to the one of the most important properties of the kernel function: positive-definiteness.
+
+By the definition of symmetry and positive definiteness of inner products on Hilbert spaces, it follows that kernel functions are symmetric and positive definite, and the following lemma is easily proven.
+
+\begin{lemma}[Positive-definiteness]\label{lemma:posdef}
+	Let $\mathcal F$ be a Hilbert space (not necessarily a RKHS), $\mathcal X$ a non-empty set and $\phi:\mathcal X \rightarrow \mathcal F$. Then $h(x,x') := \langle \phi(x), \phi(x') \rangle_{\mathcal F}$ is a symmetric and positive definite function, where a symmetric function $h:\mathcal X\times\mathcal X\rightarrow\mathbb R$ is said to be  positive definite if
+	\[
+		\sum_{i=1}^n\sum_{k=1}^n a_ia_jh(x_i, x_k) \geq 0.
+	\]
+	$\forall n \geq 1$, $\forall a_1, \dots, a_n \in \mathbb R$, and $\forall x_1, \dots, x_n \in \mathcal X$.
+\end{lemma}
+
+\begin{proof}
+	\begin{align*}
+		\sum_{i=1}^n\sum_{k=1}^n a_ia_jh(x_i, x_k)	
+		&= \sum_{i=1}^n\sum_{k=1}^n \langle a_i\phi(x_i), a_k\phi(x_k) \rangle_{\mathcal F} \\
+		&= \Bigg\langle \sum_{i=1}^n a_i\phi(x_i), \sum_{k=1}^n a_k\phi(x_k) \Bigg\rangle_{\mathcal F} \\
+		&= \Bigg|\Bigg| \sum_{i=1}^n a_i\phi(x_i) \Bigg|\Bigg|_{\mathcal F}^2 \\
+		& \geq 0
+	\end{align*}
+\end{proof}
+
+\begin{corollary}
+	Reproducing kernels of a RKHS are positive definite. For an RKKS, the reproducing kernel can be shown to be the difference between two positive definite kernels, but need not be itself positive definite.
+\end{corollary}
+
+\begin{proof}
+	Take $\phi: x \mapsto h(\cdot,x)$. By Lemma \ref{lemma:posdef}, one has $h(x,x') = \langle h(\cdot, x), h(\cdot, x') \rangle_{\mathcal F}$, which is the reproducing property of the kernel in a RKHS. The second statement follows by a similar argument and by definition of a RKKS (see Definition \ref{def:krein}).
+\end{proof}
+
+Remarkably, the reverse direction also holds: a positive definite function is guaranteed to be the inner product in a Hilbert space between features $\phi(x)$ (Theorem 4.16 pp.118, Steinward and Christman, 2008). This proof is a bit technical so will not be shown here. What's important though, is 
+By Definition \ref{def:repkern} and Lemma \ref{lemma:posdef} above, we can see how a reproducing kernel Hilbert space defines a reproducing kernel function that is both symmetric and positive definite. The celebrated Moore-Aronszajn theorem goes the other direction by stating that every symmetric, positive-definite function is a reproducing kernel\footnotemark \ and defines a unique RKHS, thus establishing a bijection between the set of all positive definite functions on $\mathcal X \times \mathcal X$ and the set of all reproducing kernel Hilbert spaces. For Krein spaces it is slightly different: 1) The reproducing kernel of a RKKS can be shown to be the difference between two positive definite kernels, so need not be positive definite itself; and 2) Every RKKS has a unique reproducing kernel, but a given reproducing kernel may have more than one RKKS associated with it.
+
+Thus far, we have seen that given a RKHS $\mathcal F$, we may define a unique reproducing kernel associated with $\mathcal F$ which is symmetric and positive definite. The celebrated Moore-Aronszajn theorem goes the other direction by stating that every symmetric, positive-definite function is a reproducing kernel and defines a unique RKHS, thus establishing a bijection between the set of all positive definite functions on $\mathcal X \times \mathcal X$ and the set of all reproducing kernel Hilbert spaces. In other words, the kernel completely determines the function space. It is not quite the same with Krein spaces, however. Every RKKS has a unique reproducing kernel, but a given reproducing kernel may have more than one RKKS associated with it.
+
+\footnotetext{Basically every positive definite function is a reproducing kernel, and every reproducing kernel is a kernel, and every kernel is positive definite, so all three notions are exactly the same.}
+
+So why the fascination with reproducing kernel Hilbert/Krein spaces? In our case, it is the possibility of representing a regression analysis as functions in a RKKS. This greatly helps facilitate interpretation of models.
+
+\begin{lemma}[Regression functions in a RKKS]
+	$\mathcal F$ is an RKKS if and only if there exists a feature space $\mathcal B$ for which a feature map of $\mathcal F$ maps onto. 
+\end{lemma}
+
+\begin{proof}
+	We first define a feature space and a feature map of $\mathcal F$.
+	
+	\begin{definition}[Features]
+		Consider a Krein space $\mathcal F$ of real functions over $\mathcal X$ with reproducing kernel $h$.	Let $\mathcal B$ be a real Krein space over $\mathcal X$, and $\phi$ a map from $\mathcal X$ to $\mathcal B$, such that for every $f \in \mathcal F$, $\exists \beta \in \mathcal B$ such that 
+		\begin{align}\label{featurecond1}
+			f(x) = \langle \phi(x), \beta \rangle_{\mathcal B}, \forall x \in \mathcal X
+		\end{align}
+		and
+		\begin{align}\label{featurecond2}
+			\langle f, f' \rangle_{\mathcal F} = \langle \beta, \beta' \rangle_{\mathcal B}.
+		\end{align}
+	Then $\mathcal B$ is called a \textit{feature space} and $\phi$ a \textit{feature map} of $\mathcal F$. 
+	\end{definition}
+	
+	Now suppose $\mathcal F$ is a Krein space of real functions over $\mathcal X$ with a feature space $\mathcal B$ and a feature map $\phi$. Then by defining the kernel function as $h(x, x') = \langle \phi(x), \beta \rangle_{\mathcal B}$, we show the reproducing property
+	$$
+	\langle f, h(\cdot,x) \rangle_{\mathcal F} = \langle \phi(x), \beta \rangle_{\mathcal B} = f(x),
+	$$
+	where the first equality is by \eqref{featurecond2} and the second by \eqref{featurecond1}. Hence $h$ is a reproducing kernel of $\mathcal F$ and $\mathcal F$ is a RKKS. The other direction is proven by Definition 8.
+\end{proof}
+
+A consequence of the proof of the Moore-Aronszajn theorem \citep[see][]{Hein2004} is that we can  show that any function $f$ in a RKHS $\mathcal F$ with kernel $h$ can be written in the form $f(x)=\sum_{i=1}^n h(x, x_i)w_i$ for some $n \in \mathbb N$ (i.e. $\mathcal F$ is spanned by the functions $h(\cdot,x)$). More precisely, $\mathcal F$ is the completion of the space $\mathcal G = \text{span}\{h(\cdot,x) \, | \, x \in \mathcal X \}$ endowed with the inner product
+\[
+	\Bigg\langle \sum_{i=1}^n w_i h(\cdot, x_i), \sum_{j=1}^n w_j h(\cdot, x_j) \Bigg\rangle_{\mathcal G} = \sum_{i=1}^n\sum_{j=1}^n w_iw_jh(x_i,x_j).
+\]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

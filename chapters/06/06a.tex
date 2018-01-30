@@ -1,0 +1,17 @@
+\begin{align*}
+  p(\by|\by^*) &= \prod_{i=1}^n \prod_{j=1}^m p_{ij} 
+  = \prod_{i=1}^n \prod_{j=1}^m \ind[y_{ij}^* = \max_k y_{ik}^*]^{\ind[y_i = j]} \\
+  \\
+  p(\by^*|\bff) &= \prod_{i=1}^n \prod_{j=1}^m \N(f_{ij},1) \\
+  &= \exp \left[-\half[nm]\log 2\pi - \half \sum_{i=1}^n \sum_{j=1}^m (y_{ij}^* - f_{ij})^2 \right] \\
+  &= \exp \left[-\half[nm]\log 2\pi - \half \norm{\by^* - \bff}^2 \right] \\
+  \\
+  f_{ij} &= \alpha_j + \sum_{k=1}^n  h_{\lambda_j}(x_i, x_k)w_{kj} \\
+  \\
+  p(\bw) &= \prod_{i=1}^n \prod_{j=1}^m p(w_{ij}) \\
+  &= \prod_{i=1}^n \prod_{j=1}^m \N(0,1) \\
+  &= \exp \left[-\half[nm]\log 2\pi - \half \sum_{i=1}^n \sum_{j=1}^m w_{ij}^2 \right] \\
+  &= \exp \left[-\half[nm]\log 2\pi - \half \bw^\top \bw \right] \\
+  \\
+p(\lambda,\alpha) &\propto \const  
+\end{align*}

@@ -1,0 +1,96 @@
+\subsection{Other commonly used models: A toolbox of kernels}
+\label{sec:toolbox}
+
+%\vspace{-1mm} 
+In the above multiple regression example, the regression function are straight line functions over the set of reals. This is a reproducing kernel space with the Euclidean space inner product/dot product as its kernel, i.e. $h(\mathbf x_i, \mathbf x_j) = \langle\mathbf x_i, \mathbf x_j\rangle = \mathbf x_i \cdot \mathbf x_j$, which is what makes up the entries of $\mathbf H$ in \eqref{eq:linmod3}. This is known as the Canonical kernel (\citealp{Bergsma2014}). As it turns out, exchanging this canonical kernel with a different kernel, hence a different RKHS of functions, we can perform various types of modelling. Some commonly used models can be achieved using the following kernels:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{m{1.4cm} m{3.8cm} m{3.5cm} m{3.8cm}}
+\toprule
+Type 	
+&Description of $\mathcal X \!\!=\!\! \{x_i\} $		
+&Name of space		
+&Kernel $h( x_i,  x_j)$ \\
+\midrule
+
+Nominal		
+&\footnotesize{1) Categorical covariates; \newline 2) In a multilevel setting, $x_i$ = group no. of unit $i$.} 
+&Pearson	
+&$\frac{\ind[x_i=x_j]}{p_i} - 1$ \newline \footnotesize{where $p_i = \P[X = x_i]$} 
+\\
+
+Real		
+&\footnotesize{In a classical regression setting, $x_i$ = covariate associated with unit $i$.} 
+&Canonical / \newline Centred Canonical	&$x_ix_j$ / \newline $x_ix_j - \bar x$ 
+\\
+
+Real		&\footnotesize{In 1-dim smoothing, $x_i$ = data point associated with observation $y_i$.}
+&Fractional Brownian Motion (FBM)	&\footnotesize{$|x_i|^{2\gamma} + |x_j|^{2\gamma} - |x_i - x_j|^{2\gamma}$ with Hurst index $\gamma \in (0,1)$}
+\\
+
+\bottomrule
+\end{tabular}
+\label{tab:toolbox} \vspace{-0.5mm} 
+\caption{A toolbox of kernels - Names and descriptions of some useful RKHS of functions.}
+\end{table}
+
+\vspace{-1.5mm} 
+\begin{remark}
+	The origin of a Hilbert space over a set $\mathcal X$ may be arbitrary, in which case a centering may be appropriate. Hence, the centred Canonical kernel. 
+\end{remark}
+
+\vspace{-1.5mm} 
+New reproducing kernel spaces can be constructed from existing ones. An example is the so-called ANOVA kernel constructed from a Canonical and Pearson kernel applied to the two-dimensional vector $\mathbf x_i= (x_{i1}, x_{i2})$, where the first component is real-valued, and the second component consists of nominal values. The ANOVA kernel is constructed as
+\[
+	h(\mathbf x_i, \mathbf x_j) = h_1(x_{i1}, x_{j1}) + h_2(x_{i2}, x_{j2}) + h_1(x_{i1}, x_{j1})h_2(x_{i2}, x_{j2}).
+\] 
+This kernel is particularly useful to model interaction effects. Take for example a random slope model. The effect of a covariate is assumed to be different for each group. This can be thought of as having an interaction present between the real-valued covariate $x_{i1}$ and the grouping $x_{i2}$, which is captured by the product of the two kernels $h_1h_2$.
+
+%\begin{sidewaysfigure}
+%	\centering
+%	\fbox{\includegraphics[scale=0.168]{figures/mod1}}
+%	\fbox{\includegraphics[scale=0.168]{figures/mod2}}
+%	\\ \vspace{3pt} 
+%	\fbox{\includegraphics[scale=0.168]{figures/mod3}}
+%	\caption{Three examples of modelling with I-priors. L-R clockwise starting top left: (a) The simple linear regression model is an I-prior function in a Canonical kernel RKKS; (b) An example of a one-dimensional smoothing model is an I-prior function in a Fractional Brownian Motion (FBM) kernel RKKS; and (c) The multi-level model, or the random intercept and random slope model, is an I-prior function in an ANOVA kernel RKKS.}
+%	\label{fig:ipriormod}
+%\end{sidewaysfigure}
+
+\vspace{3mm}
+\begin{remark}
+	We are able to circumvent the positive definite restriction of inner products (and kernels which define them in the reproducing kernel space) by working in a Krein space, and hence a reproducing kernel Krein space (RKKS). Krein spaces generalise Hilbert spaces by dropping the positive-definiteness requirement of inner products. Inner products may turn out to be not positive definite when scale parameters for the space are considered (which may be negative) and new kernels are constructed by way of adding and multiplying kernels together, as in the ANOVA kernel above. For a review of RKKSs, see \cite{alpay1991} and \cite{Ong2004}. RKKSs are actively being researched, and is out of the scope of this paper for now. 
+\end{remark}
+
+\subsection{The RKHS scale parameter}
+\label{sec:scale}
+
+The scale of an RKHS $\mathcal{F}$ over a set $\mathcal{X}$ with kernel $h:\mathcal X \times \mathcal X \rightarrow \mathbb R$ may be arbitrary. To resolve this, a scale parameter $\lambda \in \mathbb{R}$ is introduced, resulting in the RKHS denoted by $\mathcal{F}_\lambda$ with kernel $h_\lambda = \lambda h$. This results in at most $p$ scale parameters $\lambda_1, \dots, \lambda_p$ - one for each of the function space over the set of $p$ covariates. If there are several covariates which are known to be measured on the same scale, e.g. repeated measures of weight, then these may share the same scale parameter (technically, the same RKHS $\mathcal{F}_\lambda$).
+
+\vspace{3mm}
+\begin{remark}
+	For the ANOVA kernel described above, there are two possible ways of introducing scale parameters. Since the ANOVA kernel is constructed from two existing kernels, the Canonical kernel $h_1$ and Pearson kernel $h_2$, each with their own scale parameter $\lambda_1$ and $\lambda_2$ respectively, then the interaction effect or the product between the two kernels has the scale parameter equal to the product of the two scale parameters $\lambda_1\lambda_2$. This is the more parsimonious method. Another valid way is to introduce a separate scale parameter for the interactions, $\lambda_{12}$ say. This is the less parsimonious method, and in this case, there will be at most $p(p-1)/2$ scale parameters when a model with $p$ covariates and all its two-way interactions are considered.
+\end{remark}
+
+In the example of multiple regression in Section \ref{sec:iprioreg}, the canonical kernel with scale parameters $\lambda_1, \dots, \lambda_p$ can be written as
+\[
+	\mathbf H = \mathbf H_{\boldsymbol\lambda} := \mathbf X \boldsymbol\Lambda \mathbf X^\top
+\]
+where $\boldsymbol\Lambda = \text{diag}[\lambda_1, \dots, \lambda_p]$. This corresponds to the scaled Canonical RKHS with kernel $h_\lambda(\mathbf x_i, \mathbf x_j) = \lambda_1 x_{i1} x_{j1} + \dots + \lambda_p x_{ip} x_{jp}$, and the covariance matrix for the I-prior on $\boldsymbol\beta$ is adjusted to be $\psi\boldsymbol\Lambda \mathbf X ^\top \mathbf X \boldsymbol\Lambda$.
+
+\begin{proof}
+	In the I-prior method, our model is $\mathbf y = \boldsymbol{\alpha} + \mathbf H\mathbf w + \boldsymbol{\epsilon}$ where $f_0$ has been assumed to be zero for simplicity. Replacing the canonical kernel matrix $\mathbf H$ with the scaled canonical kernel matrix, we have
+	\begin{align*}
+		\mathbf y &= \boldsymbol{\alpha} 
+		+ \mathbf X {\color{gray} \overbrace{{\color{black} \, \boldsymbol\Lambda \mathbf X^\top \mathbf w}}^{\boldsymbol{\beta}} \, } 
+		+ \boldsymbol{\epsilon}
+	\end{align*}
+	with $\mathbf w \sim \N(\mathbf 0, \psi\mathbf I_n)$. Equivalently, $\boldsymbol{\beta}$ is normally distributed with mean and variance
+	\begin{align*}
+		\begin{gathered}
+			\E\boldsymbol{\beta} = \E[\boldsymbol\Lambda \mathbf X^\top \mathbf w] = \mathbf 0 \\
+			\text{and} \\
+			\Var\boldsymbol{\beta} = \Var[\boldsymbol\Lambda \mathbf X^\top \mathbf w] = \psi\boldsymbol\Lambda \mathbf X ^\top \mathbf X \boldsymbol\Lambda.
+		\end{gathered}	
+	\end{align*}
+\end{proof}

@@ -1,0 +1,227 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% PACKAGES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Structure
+\usepackage[a4paper, centering]{geometry}
+\usepackage{standalone}
+\usepackage{subfiles}
+\usepackage{import}
+\usepackage{morewrites} % see https://tex.stackexchange.com/questions/289734/special-package-combination-gives-no-room-for-new-write
+
+% Typeset and appearance
+\usepackage[english]{babel}   % manages structure of paper better
+\usepackage[]{xcolor}  % options: usenames, dvipsnames, svgnames, table
+\usepackage{soul}  % for highlighting text
+\usepackage{url}
+\usepackage{hyperref}
+%\usepackage{fancyhdr}  % headers and footers
+%	\pagestyle{fancy}
+%	\renewcommand{\headrulewidth}{0pt} \renewcommand{\footrulewidth}{0pt}
+% 	\lhead{} 
+% 	\rhead{}
+% 	\chead{\leftmark}
+\usepackage[utf8]{inputenc}  % To get accents on letters
+\usepackage[T1]{fontenc}     % e.g. \"a
+\usepackage{fontspec}  % phonetics
+\newfontfamily\dsil{Doulos SIL}
+\usepackage{nicefrac}   % To get nice typography for units
+\usepackage{units}      % and fractions
+\let\proglang=\textsf
+\newcommand{\pkg}[1]{{\fontseries{b}\selectfont #1}}
+\usepackage{enumitem}  % replacing enumerate
+\usepackage{xr}  % Cross-referencing between files
+
+% Colour-blind safe pallete
+\definecolor{colblu}{RGB}{51,102,170}
+\definecolor{colcya}{RGB}{17,170,153}
+\definecolor{colgre}{RGB}{102,170,85}
+\definecolor{colgyl}{RGB}{204,204,85}
+\definecolor{colgry}{RGB}{119,119,119}
+\definecolor{colpur}{RGB}{153,34,136}
+\definecolor{colred}{RGB}{238,51,51}
+\definecolor{colora}{RGB}{238,119,34}
+\definecolor{colyel}{RGB}{255,238,51}
+
+% Coding
+%\usepackage{verbatim}
+%\usepackage{moreverb}
+%	\let\verbatiminput=\verbatimtabinput
+%	\def\verbatimtabsize{4\relax} 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+%\usepackage{algorithmicx}
+\newcommand{\code}[1]{\texttt{#1}}
+
+% Bibliography
+%\usepackage[longnamesfirst]{natbib}
+%  \bibpunct{(}{)}{;}{a}{,}{,~}
+%  \addto\captionsenglish{\renewcommand{\bibname}{References}}  % change the name of Bibliography section
+\usepackage[style=authoryear, firstinits=true, maxcitenames=2, maxbibnames=99, backend=biber,natbib]{biblatex}
+\setlength\bibitemsep{1.5\itemsep}
+
+% Paragraph settings
+\usepackage{parskip}  
+\setlength{\parindent}{15pt}  % default indentation
+
+% Line spacing
+\usepackage{setspace}\onehalfspacing % or \singlespacing, \onehalfspacing or \doublespacing
+
+% Figures
+\usepackage{float}  
+\usepackage{graphicx}
+%\usepackage{subfig} 
+\usepackage{subcaption}  % an alternative package for sub-figures (preferred)
+	\newcommand{\subfloat}[2][need a sub-caption]{\subcaptionbox{#1}{#2}}  % knitr
+\usepackage{rotfloat}	
+\usepackage{tikz}
+\usetikzlibrary{fit,positioning,calc}
+
+% Tables
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{multirow}
+%\usepackage{dcolumn}  % align columns on a decimal point
+\newcommand{\Top}{\rule{0pt}{2.6ex}}  % Top strut for tables
+\newcommand{\Bot}{\rule[-1.2ex]{0pt}{0pt}}  % Top strut for tables
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{lscape}  % landscape tables
+
+% Margin notes
+\usepackage{marginnote}
+\usepackage{mparhack}  % these two packages provides some fixes to marginnote
+\usepackage{marginfix}
+
+% Miscellaneous
+\usepackage{lipsum} 
+\usepackage{ifthen}
+\usepackage{xparse}
+\usepackage[linecolor=yellow, backgroundcolor=yellow!25, bordercolor=yellow, textsize=footnotesize]{todonotes}
+  \newcounter{todocounter}
+  \newcommand{\todonum}[2][To-do in Section \thesubsection]{\stepcounter{todocounter}\todo[caption={\thetodocounter. #1}]{\thetodocounter. #2}{}}
+  \newcommand{\notodo}[1][To-do in Section \thesubsection]{\stepcounter{todocounter}\todo[caption={\thetodocounter. #1},noline,backgroundcolor=white, bordercolor=white]{}{}}
+  \DeclareDocumentCommand{\hltodo}{omo}{\IfNoValueTF{#1}{\IfNoValueTF{#3}{\hl{#2}\notodo[#2]}{\hl{#2}\notodo[#3]}}{\IfNoValueTF{#3}{\hl{#2}\todonum[#1]{#1}}{\hl{#2}\todonum[#3]{#1}}}}
+\usepackage{pifont}
+  \newcommand{\cmark}{\ding{51}}  % check mark
+  \newcommand{\xmark}{\ding{55}}  % x mark
+
+% Glossary, abbreviations and indices
+\usepackage{imakeidx}
+\usepackage[abbreviations,counter=chapter,nopostdot=false,symbols,autoseeindex=true,indexcrossrefs=true]{glossaries-extra}
+%\renewcommand*{\glossarypreamble}{\emph{Numbers refer to the \textbf{chapter} where the entry was referenced.}}
+\makeglossaries
+\makeindex[columns=2]
+
+% Create new macro \indx and \newabbreviationindex
+\newcommand{\indx}[1]{{#1}\index{#1}}
+\newcommand{\newabbreviationindex}[4]{
+  \newabbreviation[#4]{#1}{#2}{#3}
+  \index{#3|see{#2}}
+}
+
+% Automatically index the location of entry in the glossary
+% for those entries that are in the "general" category:
+%\glssetcategoryattribute{general}{indexname}{textbf}
+%\glssetcategoryattribute{general}{dualindex}{true}
+
+% Only index first use for the glossary location lists
+% (doesn't affect the indexing from "dualindex" attribute):
+%\glssetcategoryattribute{general}{indexonlyfirst}{true}
+
+% Automatically index the location of entry in the glossary
+% for those entries that are in the "abbreviation" category
+% and use "textbf" as the encap:
+\glssetcategoryattribute{abbreviation}{indexname}{textbf}
+\glssetcategoryattribute{abbreviation}{dualindex}{true}
+
+% Only index first use for the glossary location lists
+% (doesn't affect the indexing from "dualindex" attribute):
+%\glssetcategoryattribute{abbreviation}{indexonlyfirst}{true}
+
+% Convert the first letter of the name to upper case in the 
+% glossary for abbreviation entries:
+%\glssetcategoryattribute{abbreviation}{glossname}{firstuc}
+
+% Allow "format" key to override "dualindex" attribute.
+\GlsXtrEnableIndexFormatOverride
+
+% use first field instead of name field
+%\renewcommand*{\glsxtrautoindexentry}[1]{\string\glsentryfirst{#1}}
+
+% use long form for the sort value, if provided:
+%\renewcommand*{\glsxtrautoindexassignsort}[2]{%
+%  \ifglshaslong{#2}%
+%  {\glsletentryfield{#1}{#2}{long}}%
+%  {\glsletentryfield{#1}{#2}{sort}}%
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% MY THESIS SPECIFIC MACROS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% For my thesis - adds a chapter heading, including to-do list and TOC (STANDALONE VERSION)
+\newcommand{\hChapterStandalone}[2][1]{
+  \ifstandalone
+  {
+    \begingroup
+    \let\clearpage\relax  % Don't allow page break
+    \pagenumbering{roman}
+    \listoftodos[\vspace{-2.8cm}To-do list]
+    \tableofcontents
+    \endgroup
+    
+    \newpage
+    \pagenumbering{arabic}
+    \let\clearpage\relax
+    \noindent
+    Haziq Jamil \\
+    {\it\small Department of Statistics} \\
+    {\it\small London School of Economics and Political Science} \\
+    \small\today
+    \vspace{-3\baselineskip}
+    
+    \setcounter{chapter}{#1-1}
+    \chapter{#2}
+  }
+  \fi
+}
+
+% Adds Bibliography to TOC
+\newcommand{\hPrintBibliography}{
+  \printbibliography
+  \addcontentsline{toc}{chapter}{Bibliography}
+}
+
+% List of figures, tables, symbols, and abbreviations
+\newcommand{\hLists}{
+  \listoffigures
+  \addcontentsline{toc}{chapter}{List of Figures}
+  \listoftables
+  \addcontentsline{toc}{chapter}{List of Tables}
+  \listoftheorems[ignoreall,onlynamed={theorem,lemma,corollary}, numwidth=2.7em]
+  \addcontentsline{toc}{chapter}{List of Theorems}
+  \renewcommand{\listtheoremname}{List of Definitions}
+  \listoftheorems[ignoreall,show={definition}, numwidth=2.7em]
+  \addcontentsline{toc}{chapter}{List of Definitions}
+  \glsaddall[types=symbols]
+  \printabbreviations[title={List of Abbreviations},style=long,nogroupskip,nonumberlist]
+  \printsymbols[title={List of Symbols},style=long,nonumberlist]
+}
+
+% Adds the closing stuff (STANDALONE VERSION)
+\newcommand{\hClosingStuffStandalone}{
+  \ifstandalone
+    \hPrintBibliography
+    \hLists
+    \printindex
+  \fi
+}
+
+% Adds TOC and lists (MAIN VERSION)
+\newcommand{\hTOCandLists}{
+  \listoftodos[To-do list]
+  \tableofcontents
+  \hLists
+}
+

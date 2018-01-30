@@ -1,0 +1,85 @@
+\documentclass[a4paper,11pt,showframe]{report}
+\usepackage{haziq_thesis}
+\usepackage{haziq_maths}
+\usepackage{haziq_glossary}
+\usepackage{knitr}
+%\graphicspath{{figure/}{../figure/}}
+\addbibresource{bib/haziq.bib}
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% TITLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Regression modelling using priors with Fisher information covariance kernels (I-priors)}
+\author{	Haziq Jamil\\
+			\normalsize{\it{Department of Statistics}}\\
+			\normalsize{\it{London School of Economics \& Political Science}}
+}
+\date{\normalsize\today}
+\maketitle
+%{\let\newpage\relax\maketitle}  % if need some text before the title use this
+\pagenumbering{roman}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% FRONT MATTER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter*{Abstract} \input{chapters/frontmatter/abstract}
+%\chapter*{Dedication} To Naqiyyah.
+\chapter*{Declaration} \input{chapters/frontmatter/declaration}
+%\chapter*{Acknowledgements} \input{chapters/frontmatter/acknowledgments}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% TOC & VARIOUS LISTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hTOCandLists
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% BODY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagenumbering{arabic}
+
+\chapter{Introduction} \input{chapters/01/introduction}
+
+\chapter{Regression using I-priors}
+\subimport{chapters/02/}{iprior-regression}
+
+\chapter{Estimation and computational methods for I-prior models}
+\subimport{chapters/03/}{iprior-computation}
+
+\chapter{Examples of I-prior models}
+\subimport{chapters/04/}{iprior-examples}
+
+\chapter{I-priors for categorical responses}
+\subimport{chapters/05/}{iprobit}
+
+\chapter{Estimation of I-probit models using variational inference}
+\subimport{chapters/06/}{iprobit-variational}
+
+\chapter{Examples of I-probit models}
+\subimport{chapters/07/}{iprobit-examples}
+
+\chapter{Variable selection using I-priors}
+\subimport{chapters/08/}{iprior-varsel}
+
+\chapter{Conclusion}
+\input{chapters/09/conclusion}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% REFERENCES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\nocite{*}
+\hPrintBibliography
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% APPENDIX %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+
+\chapter{Appendix for I-probit}
+\subimport{chapters/appendix/}{iprobit-proofs}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\printindex
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

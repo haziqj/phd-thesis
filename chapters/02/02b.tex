@@ -1,0 +1,87 @@
+Let $Y$ be a random variable with density in the parameteric family $\{p(\cdot \ ;f) | f \in \mathcal F \}$ with $f$ belonging to a Hilbert space $\mathcal F$. If $p(Y;f) > 0$, the log-likelihood function of $f$ is denoted $l(f|Y) = \log p(Y;f)$. Assuming existence, the score is defined as the gradient\footnotemark \ $\nabla l(f|Y)$.  The Fisher information $I[f] \in \mathcal F \otimes \mathcal F$ for $f \in \mathcal F$ is
+\[
+	I[f] = -\E[\nabla^2 l(f|Y) | f].
+\]
+Specifically for our regression function as defined in \eqref{eq:linmod2} subject to $f$ belonging to a RKHS, we can derive the Fisher information for $f$ to be 
+\[
+	I[f] = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(\cdot,x_i) \otimes h(\cdot,x_j),
+\]
+where $\psi_{ij}$ are the $(i,j)$-th entries of the precision matrix $\Psi$.
+
+\footnotetext{Let $k:\mathcal F \rightarrow \mathbb R$. Denote the directional derivate of $k$ in the direction $g$ by $\nabla_g k$, that is, 
+	\[
+		\nabla_g k(f) = \lim_{\delta \rightarrow 0} \frac{k(f+\delta g) - k(f)}{\delta}.
+	\]
+	The gradient of $k$, denoted by $\nabla k$, is the unique vector field satisfying 
+	\[
+		\langle \nabla k(f), g \rangle_{\mathcal F} = \nabla_g k(f), \ \ \ \forall f,g \in \mathcal F.
+	\]
+}
+
+\begin{proof}
+	For $x \in \mathcal X$, let $k_x:\mathcal F \rightarrow \mathbb R$ be defined by $k_x(f) = \langle h(\cdot,x), f \rangle_{\mathcal F}$. By the reproducing property, $k_x(f) = f(x)$. The directional derivative of $k_x(f)$ in the direction $g$ is
+	\begin{align*}
+		\nabla_g k_x(f)	
+		&= \lim_{\delta \rightarrow 0} \frac{k(f+\delta g) - k(f)}{\delta} \\
+		&= \lim_{\delta \rightarrow 0} \frac{\langle h(\cdot,x), f+\delta g \rangle_{\mathcal F} - \langle h(\cdot,x), f \rangle_{\mathcal F}}{\delta} \\
+		&= \lim_{\delta \rightarrow 0} \frac{\delta\langle h(\cdot,x), g \rangle_{\mathcal F}}{\delta} = \langle h(\cdot,x), g \rangle_{\mathcal F}.
+	\end{align*}
+	Thus, the gradient is $\nabla k_x(f) = h(\cdot,x)$ by definition. The log-likelihood of $f$ is given by
+	\begin{align*}
+		l(f|y,\alpha,\Psi) %&= C - \frac{1}{2} \sum_{i=1}^n\sum_{j=1}^n \psi_{ij}\big(y_i - \alpha - f(x_i)\big)\big(y_j \alpha - f(x_j)\big) \\
+		&= C - \frac{1}{2} \sum_{i=1}^n\sum_{j=1}^n \psi_{ij}\big(y_i - \alpha - k_{x_i}(f)\big)\big(y_j - \alpha - k_{x_j}(f)\big)
+	\end{align*}
+	for some constant $C$, and the score by
+	\begin{align*}
+		\nabla l(f|y,\alpha,\Psi) 
+		&= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij}\big(y_i - \alpha - k_{x_i}(f)\big)\nabla k_{x_j}(f).
+	\end{align*}
+	We can then calculate the Fisher information as
+	\begin{align*}
+		I[f] = -\E[\nabla^2 l(f|Y) | f] 
+		&=\E \left[ \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \nabla k_{x_i}(f) \otimes \nabla k_{x_j}(f) \ \Bigg | \ f \right] \\
+		&=\sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(\cdot,x_i) \otimes h(\cdot,x_j). \\
+		&\rlap {\color{gray}\text{by substituting $\nabla k_x(f) = h(\cdot,x)$, the expectation}} \\
+		&\rlap {\color{gray}\text{is free of $f$}} 
+	\end{align*}	 	
+\end{proof}
+
+\vspace{-3mm} 
+We can also compute the Fisher information for a linear functional of $f$, or between two linear functionals of $f$. We quote the following lemma \citep{Bergsma2014}:
+
+\begin{lemma}[Fisher information for linear functionals of elements in a Hilbert space]\label{lemma:fisher}
+	Let $\mathcal F$ be a Hilbert space. Denote the Fisher information for $f \in \mathcal F$ as $I[f]$. The Fisher information for $\langle f, g \rangle$ is given as
+	\[
+		I[\langle f, g \rangle_{\mathcal F}] = \langle I[f], g \otimes g \rangle_{\mathcal F \otimes \mathcal F}
+	\]
+	and more generally, the Fisher information between $\langle f, g \rangle_{\mathcal F}$ and $\langle f, g' \rangle_{\mathcal F}$ is given as
+	\[
+		I[\langle f, g \rangle_{\mathcal F}, \langle f, g' \rangle_{\mathcal F}] = \langle I[f], g \otimes g' \rangle_{\mathcal F \otimes \mathcal F}
+	\]
+\end{lemma}
+
+The proof of Lemma \ref{lemma:fisher} will not be shown here, but in involves the use of Parseval's identity in an inner product space. Using Lemma \ref{lemma:fisher}, we can derive the Fisher information for our regression function as defined in \eqref{eq:linmod2} subject to $f$ belonging to a RKHS.
+
+\begin{corollary}[Fisher information for regression function]
+	For our regression model as defined in \eqref{eq:linmod2} subject to $f$ belonging to a RKHS $\mathcal F$, the Fisher information $I[f(x),f(x')]$ is given by
+	\[
+		I[f(x),f(x')] = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(x,x_i)h(x',x_j).
+	\]
+\end{corollary}
+
+\begin{proof}
+	Note that in a RKHS $\mathcal F$, the reproducing property gives $f(x) = \langle f, h(\cdot, x) \rangle_{\mathcal F}$ and in particular, $\langle h(\cdot,x), h(\cdot, x') \rangle_{\mathcal F} = h(x,x')$. By Lemma \ref{lemma:fisher}, we have
+	\begin{align*}
+		I[f(x),f(x')] &= I[\langle f, h(\cdot, x) \rangle_{\mathcal F},\langle f, h(\cdot, x') \rangle_{\mathcal F}] \\
+		&= \big\langle I[f], h(\cdot, x) \otimes h(\cdot, x') \big\rangle_{\mathcal F \otimes \mathcal F} \\
+		&= \Bigg\langle \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(\cdot,x_i) \otimes h(\cdot,x_j) \ , \ h(\cdot, x) \otimes h(\cdot, x') \Bigg\rangle_{\mathcal F \otimes \mathcal F} \\
+		&= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \big\langle h(\cdot,x_i), h(\cdot, x) \big\rangle_{\mathcal F} \big\langle h(\cdot,x_j), h(\cdot, x') \big\rangle_{\mathcal F } \\
+		&{\color{gray}\text{(by using the fact that inner products are linear, and that $\forall a_1, a_2 \in \mathcal A$}} \\
+		&{\color{gray}\text{and $\forall b_1, b_2 \in \mathcal B$, $\langle a_1 \otimes b_1, a_2 \otimes b_2 \rangle_{\mathcal A \otimes \mathcal B} = \langle a_1, a_2 \rangle_{\mathcal A}\langle b_1, b_2 \rangle_{\mathcal B}$)}} \\
+		&= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(x,x_i) h(x', x_j).
+		\ \ \ \rlap {\color{gray}\text{(by the reproducing property)}} 
+	\end{align*}
+\end{proof}
+
+Note that any regression function $f\in \mathcal F$ can be decomposed into $f = f_n + r$, with $f \in \mathcal F_n$ and $r \in \mathcal R$ where $\mathcal F = \mathcal F_n + \mathcal R$ and $\mathcal F_n \perp \mathcal R$. Fisher information exists only on the $n$-dimensional subspace $\mathcal F_n$, while there is no information for $\mathcal R$. Thus, we will only ever consider the RKHS $\mathcal F_n \subset \mathcal F$ where there is Fisher information. Let $h$ be a real symmetric and positive definite function over $\mathcal X$ defined by $h(x,x') = I[f(x),f(x')]$. As we saw earlier, $h$ defines a RKHS, and it can be shown that the RKHS induced is in fact $\mathcal F_n$ spanned by the reproducing kernel on the dataset with the squared norm $||f||_{\mathcal F_n}^2 = w^\top\Psi^{-1}w$.
+

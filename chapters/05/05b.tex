@@ -1,0 +1,52 @@
+The parameters to estimate in the probit I-prior model are $\btheta = (\alpha_1, \dots, \alpha_m, \lambda_1, \dots, \lambda_m)$. The likelihood function $L(\cdot)$ for $\btheta$ is obtained by integrating out the I-prior from the multinomial likelihood, as follows:
+\begin{align*}
+  L(\btheta) 
+  &= \int \prod_{i=1}^n \prod_{j=1}^m p(y_i | f_{ij} ) \, p(f_{ij}|\alpha_j, \lambda_j) \d \bff \\
+  &= \idotsint \prod_{i=1}^n \prod_{j=1}^m p_{ij}^{\ind[y_i = j]} \, p(\bff_j | \alpha_j, \lambda_j) \d \bff_1 \dots \d \bff_m .
+\end{align*}
+From \eqref{eqn:probit-link}, we know that $p_{ij}$ is related to the $f_{ij}$ via the integral involving the CDF and PDF of a standard normal. Thus, the intractable integral above presents a practical challenge which makes estimation via direct maximisation of the likelihood difficult to accomplish. Several approximations are considered, and discussed below.
+
+The parameters to be estimated are the intercept $\alpha$ and the RKHS scale parameters $\lambda$. Denote these collectively by $\theta = (\alpha, \lambda)$, and by $p$ the relevant density/probability mass functions. The likelihood from a single observation $y_i$ is given by
+\begin{align*}
+L(\theta | \mathbf y) 
+&= \int p(\mathbf y | \mathbf w, \theta) p(\mathbf w) \, \text{d}\mathbf w \\
+&= \int \frac{e^{-\sum_{i=1}^n w_i/2}}{(2\pi)^{n/2}} \prod_{i=1}^n p(y_i | \mathbf w, \theta) \, \text{d}\mathbf w 
+\end{align*}
+which cannot be evaluated analytically. We try five strategies:
+\begin{enumerate}
+  \item Naive MC integral \emph{(\textbf{BAD}), too high dimensionality}
+  \item MC-EM integral \emph{(\textbf{BAD}), no convergence}
+  \item Laplace approximation of the integral \emph{(\textbf{GOOD}, but slow)}
+  \item Modified EM using modes \emph{(\textbf{GOOD}, fast, but not sure why it works. Convergence issues)}
+  \item Fully Bayes estimation using HMC \emph{(\textbf{GOOD}, slow, not as accurate)}
+\end{enumerate}
+
+\hltodo{Cleanup this section - brought over from binary I-probit}
+
+In I-prior models with continuous responses, the EM algorithm provided a stable way of obtaining MLEs. However, in the binary case, the E-step involves the conditional density $p(\mathbf w|\mathbf y)$ which is difficult to deal with. Some ways to overcome this was to estimate the E-step via MCMC (method 2), or use the posterior modes of $p(\mathbf w|\mathbf y)$ instead of the posterior means. Out of all the methods, Laplace approximation gave reasonable results, and can be used as a benchmark. 
+
+\hltodo{Now understand that modified EM using modes = Laplace}
+
+\subsection{Location and scale of $\epsilon_i$}
+
+For simplicity, we can assume the errors $\epsilon_i$ to have a known variance equal to one. If the variance is scaled by $\psi'$, then
+\begin{align*}
+  y_i^* &= \alpha + f(x_i) + \psi'\epsilon_i \\
+  \Rightarrow \frac{y_i^*}{\psi'} &= \frac{\alpha}{\psi'} + \frac{f(x_i)}{\psi'} + \epsilon_i
+\end{align*}
+then the model is unchanged since now the $y_i^*$ and the function $f$ similarly scaled. Note that the value of $y_i$ (0 or 1) depends on the sign of $y_i^*$ and not the scale.
+
+Similarly, the threshold does not matter, because moving the threshold means just moving the location of the function $f$.
+
+\subsection{Laplace approximation}
+
+\hltodo{Add section for Laplace's method}
+
+\subsection{Quadrature methods}
+
+\hltodo{Decide whether to talk in depth about this... maybe not?}
+
+\subsection{Markov chain Monte Carlo methods}
+
+\hltodo{Add section for MCMC}
+

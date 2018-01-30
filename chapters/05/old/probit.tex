@@ -1,0 +1,625 @@
+%\documentclass[class=article, crop=false]{standalone}
+\documentclass{article}
+%\ifstandalone
+\usepackage{../../haziq_article}
+\usepackage{../../knitr}
+%\fi
+
+\begin{document}
+
+{\centering
+Haziq Jamil \\
+\emph{Department of Statistics} \\
+\emph{London School of Economics and Political Science} \\
+}
+
+\section{Binary probit I-prior models}
+
+Consider binary response variables $y_1, \dots, y_n$
+\[
+  y_i \sim \Bern(p_i).
+\]
+We also assume that there exists some continuous underlying latent variables $y_1^*, \dots, y_n^*$ such that
+\[
+  y_i =
+  \begin{cases}
+    1 &\text{if } y_i^* \geq 0 \\
+    0 &\text{if } y_i^* < 0
+  \end{cases}
+\]
+We consider modelling these latent variables according to the regression problem
+\[
+  y_i^* = \alpha + f(x_i) + \epsilon_i,
+\]
+where $\alpha$ is an intercept and the $\epsilon_i$s are iid normal with mean zero and some variance $1/\psi$. We can model these underlying latent variables with an I-prior. Let $x_i = (x_{i1}, \dots, x_{ip})$ be a set of covariates for each of the $i$ observations. Define the kernel matrix as $\mathbf H$, where the $(i,j)$ entries of this matrix are
+\[
+  \mathbf H(i,j) = h(x_i, x_j)
+\]
+with some positive definite kernel function $h$ defined on the set of covariates. An I-prior on the regression function $f$ is then 
+\[
+  f(x_i) = \lambda \sum_{j=1}^n h(x_i, x_j) w_j
+\]
+where $\lambda$ is the scale parameter of the RKHS with $h$ as the reproducing kernel, and the $w_j$ are iid normal with mean zero and variance $\psi$. In this case, we can show that
+\begin{align*}
+  p_i &= \Prob[y_i = 1] \\
+  &= \Prob[y_i^* \geq 0] \\
+  &= \Prob[\alpha + f(x_i) + \epsilon_i \geq 0 ] \\
+  &= \Prob[\epsilon_i < \alpha + f(x_i)] \\
+  &= \Phi\left(\psi^{1/2} \left(  \alpha + \lambda \sum\nolimits_{j=1}^n h(x_i, x_j) w_j \right) \right)
+\end{align*}
+where $\Phi$ is the cdf of a standard normal density.
+
+\subsection{Estimation}
+
+The parameters to be estimated are the intercept $\alpha$ and the RKHS scale parameters $\lambda$. Denote these collectively by $\theta = (\alpha, \lambda)$, and by $p$ the relevant density/probability mass functions. The likelihood from a single observation $y_i$ is given by
+\begin{align*}
+L(\theta | \mathbf y) 
+&= \int p(\mathbf y | \mathbf w, \theta) p(\mathbf w) \, \text{d}\mathbf w \\
+&= \int \frac{e^{-\sum_{i=1}^n w_i/2}}{(2\pi)^{n/2}} \prod_{i=1}^n p(y_i | \mathbf w, \theta) \, \text{d}\mathbf w 
+\end{align*}
+which cannot be evaluated analytically. We try five strategies:
+\begin{enumerate}
+  \item Naive MC integral \emph{(\textbf{BAD}), too high dimensionality}
+  \item MC-EM integral \emph{(\textbf{BAD}), no convergence}
+  \item Laplace approximation of the integral \emph{(\textbf{GOOD}, but slow)}
+  \item Modified EM using modes \emph{(\textbf{GOOD}, fast, but not sure why it works. Convergence issues)}
+  \item Fully Bayes estimation using HMC \emph{(\textbf{GOOD}, slow, not as accurate)}
+\end{enumerate}
+
+In I-prior models with continuous responses, the EM algorithm provided a stable way of obtaining MLEs. However, in the binary case, the E-step involves the conditional density $p(\mathbf w|\mathbf y)$ which is difficult to deal with. Some ways to overcome this was to estimate the E-step via MCMC (method 2), or use the posterior modes of $p(\mathbf w|\mathbf y)$ instead of the posterior means. Out of all the methods, Laplace approximation gave reasonable results, and can be used as a benchmark. 
+
+\subsection{Location and scale of $\epsilon_i$}
+
+For simplicity, we can assume the errors $\epsilon_i$ to have a known variance equal to one. If the variance is scaled by $\psi'$, then
+\begin{align*}
+  y_i^* &= \alpha + f(x_i) + \psi'\epsilon_i \\
+  \Rightarrow \frac{y_i^*}{\psi'} &= \frac{\alpha}{\psi'} + \frac{f(x_i)}{\psi'} + \epsilon_i
+\end{align*}
+then the model is unchanged since now the $y_i^*$ and the function $f$ similarly scaled. Note that the value of $y_i$ (0 or 1) depends on the sign of $y_i^*$ and not the scale.
+
+Similarly, the threshold does not matter, because moving the threshold means just moving the location of the function $f$.
+
+\section{Variational inference for probit I-prior models}
+
+\subsection{Some theory}
+
+Variational inference is a deterministic approximation of finding maximum likelihood estimates when the likelihood involves intractable integrals. The term `variational' comes from variational calculus - the mathematical analysis that deals with optimising functionals. 
+
+In standard calculus, we deal with input variables ($\theta$, say) and a function of $\theta$ ($p$, say). We are then interested in solving the maximisation problem 
+\[
+  \argmax_\theta p(\theta).
+\]
+In the case where $p$ is a likelihood function then the solution to this problem is the maximum likelihood estimate. Typically we derive this by solving first-order conditions ($\delta p(\theta)/\delta\theta = 0$).
+
+Variational calculus allows us to solve maximisation problems involving functionals. In this case, the inputs are functions $p$, and functionals are merely mappings from a set of functions to the real numbers. An example of a functional is the entropy of a pdf
+\[
+  \cH(p) = - \int p(x) \log p(x) \d x.
+\]
+We can pose similar optimisation problems with functionals, such as
+\[
+  \argmax_p \cH(p),
+\]
+for which the solution is a probability distribution which maximises the entropy function over all possible set of functions $p$. Variational calculus itself is not in any way a form of approximation. However, it can prove to be unfeasible to explore the set of all possible functions, in which case some restrictions have to be made. For example, we could consider only a certain family of functions, or as we will see later, that the function factorises easily.
+
+\subsubsection{The KL divergence}
+
+Let us consider an inferential problem for which we have $n$ (assumed) iid observations $y = (y_1,\dots,y_n)$, and perhaps also some latent variables $z = (z_1, \dots, z_n)$ that requires taking care of. In a fully Bayesian model, we can think of the $z$ as containing the parameters to be estimated as well. The goal is to find an approximation for the posterior distribution $p(z|y)$ as well as for the likelihood $p(y)$ (the model evidence, in Bayesian terminology).
+
+Consider the Kullback–Leibler divergence between any distribution $q$ of the latent variables $z$, and the posterior $p(z|y)$
+\[
+  \KL(q \Vert p) = \E_q \left[ \log \frac{q(z)}{p(z|y)} \right]
+  = \int q(z) \log \frac{q(z)}{p(z|y)} \d z.
+\]
+It is interesting to note that the log-likelihood $\log p(y)$ can be decomposed into a term which involves a KL divergence between some distribution $q$ and the posterior, and a linear functional of $q$:
+\begin{align*}
+  \log p(y) &= \log p(y,z) - \log p(z|y) \\
+  \log p(y) &= \log p(y,z) - \log p(z|y) - \log q(z) + \log q(z) \\
+  \int \log p(y) q(z) \d z&= \int \left\{ \log \frac{p(y,z)}{q(z)} - \log \frac{p(z|y)}{q(z)} \right\} q(z) \d z \\
+  \log p(y) &= \cL(q) + \KL(q \Vert p) \\  
+  &\phantom{.}{\color{gray} \geq \cL(q)}
+\end{align*}
+
+From the properties of the KL divergence, we know that it is a positive quantity. Thus, the functional $\cL$ is typically referred to as the \emph{lower bound}, and this serves as the proxy objective function in the likelihood maximisation problem. Note that maximising the lower bound is equivalent to minimising the KL-divergence. Of course $\KL(q \Vert p) \geq 0$ and achieves equality if and only if $q \equiv p$, but for whatever reason we cannot work with the posterior distribution $p(z|y)$ and instead must make some approximation to it in the form of $q(z)$. Incidentally, the EM algorithm is a special case of the variational inference in which $q \equiv p$. In such cases, one can either get closed-form estimates of the E-step involving the posterior distribution, or find ways around it by other estimation techniques.
+
+\subsubsection{Factorised distributions}
+
+In order to proceed with variational inference, we first make some assumptions about the distribution $q$. Our goal really is to restrict the form of $q$ such that computations become tractable. Suppose we partition the elements of $z$ into $m$ disjoint groups $z = (z^{(1)}, \dots, z^{(m)})$. We consider a restriction on $q$ such that
+\begin{align}\label{eq:meanfieldtheory}
+  q(z) = \prod_{i=1}^m q_i(z^{(i)}),
+\end{align}
+i.e., the distribution $q$ factorises with respect to the $m$ groups. \hl{This type of approximation has also been studied in Physics under mean-field theory}. Among all distributions $q$ which have the form $\eqref{eq:meanfieldtheory}$, we seek to find one which maximises the lower bound $\cL(q)$. Consider first the impact of this mean field assumption on the functional $\cL(q)$:
+\begin{align*}
+  \cL(q) &= \int \prod_{i=1}^m (q_i \d z_i) \log \left( \frac{p(y,z)}{\prod_{i=1}^m q_i} \right)  \\
+  &= \int \prod_{i=1}^m (q_i \d z_i) \left( \log p(y,z) - \sum_{i=1}^m\log  q_i \right) \\
+  &= \int q_k \prod_{i \neq k} (q_i \d z_i) \left( \log p(y,z) - \log q_k - \sum_{i \neq k} \log  q_i \right) \d z_k \\
+  &= \int q_k  \left(\int \prod_{i \neq k} (q_i \d z_i) \log p(y,z) \right) \d z_k - \int q_k \log q_k  \d z_k + \const \\
+  &= \int q_k \log \tilde p(y,z_k) \d z_k - \int q_k \log q_k  \d z_k + \const \\
+  &= -\KL (q_k \Vert \tilde p) + \const
+\end{align*}
+where we have defined a new distribution $\tilde p(y,z_k)$ by the relation
+\begin{align*}
+  \log \tilde p(y,z_k) 
+  &= \int \prod_{i \neq k} (q_i \d z_i) \log p(y,z) + \const \\
+  &= \E_{-k}\left[ \log p(y,z) \right] + \const
+\end{align*}
+That is, $\tilde p(y,z_k)$ proportional to the exponent of the expectation of the joint distribution $p(y,z)$ under the factorised distribution $q$ as in \eqref{eq:meanfieldtheory}, but excluding factor $k$. The task of maximising $\cL$ is then equivalent to minimising the KL divergence $\KL (q_k \Vert \tilde p)$ $-$ for which the solution is $q_j \equiv \tilde p(y,z_j)$ for all $j \in \{1, \dots, m \}$.
+
+In practice the normalising constant does not need to be calculated explicitly, because it can be found by inspection (if the kernel of the density $\tilde p$ is a recognisable form). It should be emphasised that the factorisation is the only assumption made to restrict the family of $q$, and that no explicit assumption about the functional form of $q$ is made.
+
+\subsection{DAG for the probit I-prior model}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\tikzstyle{main}=[circle, minimum size = 10mm, thick, draw =black!80, node distance = 16mm]
+\tikzstyle{connect}=[-latex, thick]
+\tikzstyle{box}=[rectangle, draw=black!100]
+  \node[main, fill = black!10] (H) [] {$\mathbf H$};
+  \node[main] (eta) [right=of H] {$\eta$};
+  \node[main] (ystar) [right=of eta] {$y^*$};
+  \node[main] (lambda) [above=of H, xshift=0.8cm, yshift=-0.5cm] {$\lambda$};
+  \node[main] (alpha) [above=of eta, xshift=1.2cm, yshift=-0.5cm] {$\alpha$};  
+  \node[main, fill = black!10] (y) [right=of ystar] {$y$};
+  \node[main] (w) [below=of eta, yshift=0.5cm] {$w$};
+%  \node[main, fill = black!10] (x) [below=of eta,label=below:$x$] { };
+  \path (alpha) edge [connect] (eta)
+        (lambda) edge [connect] (eta)
+		(H) edge [connect] (eta)
+		(eta) edge [connect] (ystar)
+		(ystar) edge [connect] (y)
+		(w) edge [connect] (eta);
+  \node[rectangle, inner sep=4.4mm, draw=black!100, fit= (w) (y)] {}; 
+  \node[rectangle, inner sep=4.4mm, fit= (w) (y), label=below right:N, xshift=1cm] {};  % the label
+\end{tikzpicture}
+\end{figure}
+
+\subsection{Distributions}
+
+\subsubsection{Priors}
+
+\begin{align*}
+  \begin{gathered}
+    p(w_1,\dots,w_n) \equiv [\N(0,1)]^n \\
+    p(\lambda,\alpha) \propto \const
+  \end{gathered}
+\end{align*}
+
+\subsubsection{Joint data and latent}
+
+\begin{align*}
+  p(\by, \by^*, \bw, \alpha, \lambda) 
+  &= p(\by | \by^*, \bw, \alpha, \lambda) p(\by^*, \bfeta, \bw, \alpha, \lambda) \\
+  &= p(\by | \by^*) p(\by^* | \bfeta) p(\bw) p(\lambda) p(\alpha)
+\end{align*}
+where
+\[
+  \bfeta = \balpha + \lambda \bH \bw 
+\]
+\subsubsection{pdf/pmf}
+
+\begin{align*}
+  p(y_i | y_i^*)
+  &= \ind[y_i^* \geq 0]^{y_i} \ind[y_i^* < 0]^{1 - y_i} 
+\end{align*}
+
+\begin{align*}
+  \log p(\by^* | \bfeta) 
+  &= \log \N(\bfeta, \mathbf I_n) \\
+  &= -\half[n] \log 2\pi - \half \Vert \by^* - \bfeta \Vert^2 \\
+  &= -\half[n] \log 2\pi - \half \Vert \by^* - \balpha - \lambda \bH \bw \Vert^2 \\
+  &= -\half[n] \log 2\pi - \half \sum_{i=1}^n \left( y_i^* - \alpha - \lambda \bH_i \bw \right)^2 \\
+  &= -\half[n] \log 2\pi - \half \sum_{i=1}^n \left( y_i^* - \alpha -  \lambda {\textstyle \sum\nolimits_{j=1}^n} h(x_i, x_j) w_j \right)^2 \\
+  \\
+  \log p(\bw) 
+  &= \log \N(\bzero, \mathbf I_n) \\
+  &= -\half[n] \log 2\pi - \half \Vert \bw \Vert^2 \\
+  &= -\half[n] \log 2\pi - \half \sum_{i=1}^n w_i^2 \\
+\end{align*}
+
+\subsection{Mean field approximation}
+
+\begin{align*}
+  q(\by^*, \bw, \alpha, \lambda) 
+  &\equiv q(\by^*)q(\bw)q(\alpha)q(\lambda) \\
+  &\equiv \prod_{i=1}^n q(y_i^*)q(\bw)q(\alpha)q(\lambda)
+\end{align*}
+
+The first line is by assumption, while the second line follows from an induced factorisation, as we will see later. Denote by $\tilde q$ the distributions which minimise the KL divergence (maximises the lower bound). Then, for each of $\xi \in \{ \by^*, \bw, \alpha, \lambda \}$, $\tilde q$ satisfies
+\[
+  \log \tilde q(\xi) = \E_{-\xi} [\log p(\by, \by^*, \bw, \alpha, \lambda)] + \const
+\]
+
+\subsubsection{Distribution of $\tilde q(\by^*)$}
+
+\underline{Case: $y_i = 1$}
+
+\begin{align*}
+  \log \tilde q(y_i^*) 
+  &=  \ind[y_i^* \geq 0] \cdot \E_{\bw, \alpha, \lambda} \left[ -\half (y_i^* - \alpha - \lambda \bH_i \bw)^2  \right] + \const \\
+  &= \ind[y_i^* \geq 0] \cdot \left[ -\half \Big( y_i^{*2} - 2\E_{\bw, \alpha, \lambda} [\alpha + \lambda \bH_i \bw] y_i \Big)  \right] + \const \\
+  &= \ind[y_i^* \geq 0]  \left[ -\half (y_i^* - \tilde\eta_i)^2  \right] + \const \\
+  &\equiv 
+  \begin{cases}
+    \N(\tilde\eta_i, 1) & \text{if } y_i^* \geq 0 \\
+    0             & \text{if } y_i^* < 0
+  \end{cases}
+\end{align*}
+where 
+\[
+  \tilde\eta_i = \E\alpha + \E\lambda \bH_i \E\bw
+\]
+by independence of $q(\bw)$, $q(\alpha)$ and $q(\lambda)$. $\tilde q(y_i^*)$ is recognised as being the upper-tail of a one-sided normal distribution truncated at zero. The mean is 
+\[
+  \E[y_i^* | y_i^* \geq 0] = \tilde\eta_i + \frac{\phi(\tilde\eta_i)}{\Phi(\tilde\eta_i)}
+\]
+where $\phi$ and $\Phi$ are, respectively, the pdf and cdf of a standard normal distribution.
+
+\underline{Case: $y_i = 0$}
+
+Following the same argument, we can deduce that $q(y_i^*)$ in this case would be the lower-tail of a one-sided normal distribution truncated at zero. The mean is
+\[
+  \E[y_i^* | y_i^* < 0] = \tilde\eta_i + \frac{\phi(\tilde\eta_i)}{\Phi(\tilde\eta_i) - 1}.
+\]
+
+\subsubsection{Distribution of $\tilde q(\bw)$}
+
+\begin{align*}
+  \log \tilde q(\bw) 
+  &= \E_{\by^*, \alpha, \lambda} \left[ - \half \Vert \by^* - \balpha - \lambda \bH \bw \Vert^2 - \half \Vert \bw \Vert^2 \right] + \const \\
+  &= -\half \E_{\by^*, \alpha, \lambda} \left[ \lambda^2 \bw^\top \mathbf H^2 \bw + \bw^\top\bw - 2\lambda(\by^* - \balpha)^\top\bH\bw \right] + \const \\
+  &= -\half \Big(  \bw^\top (\E(\lambda^2)\mathbf H^2 + \bI_n) \bw - 2\E\lambda(\E\by^* - \E\balpha)^\top\bH\bw \Big) + \const
+\end{align*}
+
+Let $\bA = \E(\lambda^2)\mathbf H^2 + \bI_n$ and $\ba = \E\lambda(\E\by^* - \E\balpha)$. Then, using the fact that
+\[
+  \bw^\top \bA \bw - 2 \ba^\top\bw = (\bw - \bA^{-1}\ba)^\top\bA(\bw - \bA^{-1}\ba),
+\]
+we see the $\tilde q(\bw)$ is quadratic in $\bw$, and we recognise this as the kernel of a multivariate normal density. Therefore,
+\[
+  \tilde q(\bw) \equiv \N(\bA^{-1}\ba, \bA^{-1})
+\]
+
+For convenience later in deriving the lower bound, we note that the second moment of $\tilde q(\bw)$ is equal to $\E[\bw\bw^\top] = \bA^{-1}(\bI_n + \ba\ba^\top\bA^{-1}) =: \btW$.
+
+\subsubsection{Distribution of $\tilde q(\lambda)$}
+
+\begin{align*}
+  \log \tilde q(\lambda) 
+  &= \E_{\by^*, \bw, \alpha} \left[ - \half \Vert \by^* - \balpha - \lambda \bH \bw \Vert^2  \right] + \const \\
+  &= - \half \E_{\by^*, \bw, \alpha} \left[ \lambda^2 \tr(\bH^2\bw\bw^\top) - 2\lambda(\by^* -\balpha)^\top\bH\bw \right] + \const \\
+  &= - \half \Big[ \lambda^2 \tr\left(\bH^2\E[\bw\bw^\top]\right) - 2\lambda(\E\by^* - \E\balpha)^\top\bH\E(\bw) \Big] + \const
+\end{align*}
+
+By completing the square, we get that $\tilde q(\lambda) \equiv \N(d/c, 1/c)$, where
+\[
+  c = \tr\left(\bH^2\E[\bw\bw^\top]\right) \ \text{ and } \ d = (\E\by^* - \E\balpha)^\top\bH\E(\bw)
+\]
+
+\subsubsection{Distribution of $\tilde q(\alpha)$}
+
+\begin{align*}
+  \log \tilde q(\alpha) 
+  &= \E_{\by^*, \bw, \lambda} \left[ - \half \Vert \by^* - \balpha - \lambda \bH \bw \Vert^2  \right] + \const \\
+  &= - \half \E_{\by^*, \bw, \alpha} \left[ n\alpha^2 - 2\sum_{i=1}^n (y_i^* - \lambda\bH_i\bw)\alpha \right] + \const \\
+  &= - \half[n] \left[ \alpha^2 - \frac{2\alpha}{n}\sum_{i=1}^n \big(\E y_i^* - \E(\lambda)\bH_i\E(\bw)\big) \right] + \const \\
+  &\equiv \N\left(\frac{1}{n}\sum\limits_{i=1}^n \big(\E y_i^* - \E(\lambda)\bH_i\E(\bw)\big), 1/n \right)
+\end{align*}
+
+\subsection{Monitoring the lower bound}
+
+A convergence criterion would be when there is no more significant increase in the lower bound $\cL$, as defined by
+\begin{align*}
+  \cL &= \int q(\by^*,\bw,\lambda,\alpha) \log \left[ \frac{p(\by,\by^*,\bw,\lambda,\alpha)}{q(\by^*,\bw,\lambda,\alpha)} \right] \d\by^* \d\bw \d\lambda \d\alpha \\
+  &= \E[\log p(\by,\by^*,\bw,\lambda,\alpha)] - \E[\log q(\by^*,\bw,\lambda,\alpha)] \\[8pt]
+  &= \cancel{\E\left[\log \prod_{i=1}^n p(y_i|y_i^*)\right]}
+  + \E\left[ \log p(\by^* | \bfeta) \right]
+  + \E\left[ \log p(\bw) \right] 
+  + \cancel{\E\left[ \log p(\lambda) \right]}
+  + \cancel{\E\left[ \log p(\alpha) \right]}  \\
+  &\phantom{==} - \E\left[ \log q(\by^*) \right]
+  - \E\left[ \log q(\bw) \right]
+  - \E\left[ \log q(\lambda) \right]
+  - \E\left[ \log q(\alpha) \right]
+\end{align*}
+
+With the exception of $q(\by^*)$, all of the distributions are Gaussian. The following results will be helpful.
+
+\begin{defn}[Differential entropy]
+  The differential entropy $\cH$ of a pdf $p(x)$ is given by
+  \[
+    \cH(p) = -\int p(x) \log p(x) \d x = -\E_p[\log p(x)].
+  \]
+\end{defn}
+
+\begin{lem}\label{thm:normentropy}
+  Let $p(x)$ be the pdf of a random variable $x$. Then if
+  \begin{enumerate}[label=(\roman*)]
+    \item $p$ is a univariate normal distribution with mean $\mu$ and variance $\sigma^2$,
+    \[
+      \cH(p) = \half (1 + \log 2\pi) + \half \log \sigma^2
+    \]
+    \item $p$ is a $d$-dimensional normal distribution with mean $\mu$ and variance $\Sigma$,
+    \[
+      \cH(p) = \half[d] (1 + \log 2\pi) + \half \log \vert \Sigma \vert 
+    \]
+    \item $p$ is distribution of the \textbf{upper-tail} of a univariate, one-sided normal distribution truncated at zero with mean $\mu$ and variance 1,
+    \[
+      \cH(p) = \half \log 2\pi + \half \left( \E [x^2] + \mu^2 - 2\mu\E [x] \right) + \log \Phi(\mu)
+    \]
+    \item $p$ is distribution of the \textbf{lower-tail} of a univariate, one-sided normal distribution truncated at zero with mean $\mu$ and variance 1,
+    \[
+      \cH(p) = \half \log 2\pi + \half \left( \E x^2 + \mu^2 - 2\mu\E x \right) + \log \big(1 - \Phi(\mu)\big)
+    \]
+  \end{enumerate}
+\end{lem}
+
+
+\subsubsection{Terms involving distributions of $\by^*$}
+
+\begin{align*}
+  \E\left[ \log p(\by^* | \bfeta) \right] - \E\left[ \log q(\by^*) \right]
+  &= \sum_{i=1}^n \E \left[ \log p(y_i^* | \eta_i) \right] + \sum_{i=1}^n \cH\big(q(y_i^*)\big) \\
+  &= \cancel{\sum_{i=1}^n \E \left( -\half\log 2\pi -\half \E(y_i^* - \eta_i)^2 \right)} \\
+  &\phantom{==} \cancel{+ \sum_{i=1}^n \left( \half \log 2\pi + \half \left( \E y_i^{*2} + \tilde\eta_i^2 - 2\tilde\eta_i\E y_i^* \right) \right)} \\
+  &\phantom{==} + \sum_{i=1}^n \left( \ind[y_i^* \geq 0]\log \Phi(\tilde\eta_i) + \ind[y_i^* < 0] \log \big(1 - \Phi(\tilde\eta_i)\big) \right) \\
+  &= \sum_{i=1}^n \Big(y_i \log \Phi(\tilde\eta_i) + (1-y_i)\log \big(1 - \Phi(\tilde\eta_i)\big) \Big)
+\end{align*}
+
+\subsubsection{Terms involving distributions of $\bw$}
+
+\begin{align*}
+  \E\left[ \log p(\bw) \right] - \E\left[ \log q(\bw) \right]
+  &= -\half[n] \log 2\pi - \half \sum_{i=1}^n \E (w_i^2) + \cH\big(q(\bw)\big) \\
+  &= \cancel{-\half[n] \log 2\pi} - \half\tr\left( \E[\bw\bw^\top]\right) + \half[n] (1 + \cancel{\log 2\pi}) - \half \log \vert \bA \vert \\
+  &= \half[n] - \half\tr \btW - \half \log \vert \bA \vert
+\end{align*}
+
+\subsubsection{Terms involving distribution of $q(\lambda)$}
+
+\begin{align*}
+  -\E\left[ \log q(\lambda) \right] &= \cH\big(q(\lambda)\big) \\
+  &= \half (1 + \log 2\pi) - \half \log \left[\tr\left(\bH^2\btW\right)\right]
+\end{align*}
+
+\subsubsection{Terms involving distribution of $q(\alpha)$}
+
+\begin{align*}
+  -\E\left[ \log q(\alpha) \right] &= \cH\big(q(\alpha)\big) \\
+  &= \half (1 + \log 2\pi) - \half \log n
+\end{align*}
+
+\subsection{Prediction}
+
+Upon obtaining estimates for the parameters and latent variables $(\hat\by^*, \hat\bw, \hat\lambda, \hat\alpha)$, we are interested in the fitted values $\hat y_i, \dots, \hat y_n$ and also the fitted probabilities $(\hat p_1, \dots, \hat p_n)$. These can be obtained as follows.
+\begin{align*}
+  \begin{gathered}
+    (\hat y_i, \dots, \hat y_n) = \big(\ind[\hat y_1^* \geq 0], \dots, \ind[\hat y_n^* \geq 0] \big) \\
+    \\
+    (\hat p_1, \dots, \hat p_n) = \Phi(\hat\alpha\bone + \hat\lambda \bH \hat\bw)
+  \end{gathered}
+\end{align*}
+Note the slight abuse of notation: the standard normal cdf $\Phi$ as a function of the vector $\hat\alpha\bone + \hat\lambda \bH \hat\bw$ is simply $\Phi$ applied element-wise to the input vector.
+
+Suppose instead we wish to predict the classes of a new data set $(\tilde x_1, \dots, \tilde x_m)$. Firstly, we calculate the predicted $m \times n$ kernel matrix $\tilde \bH$ whose $(i,j)$ elements consist of $h(\tilde x_i, x_j)$. In this case, set
+\[
+  (\hat y_i^*, \dots, \hat y_m^*) = \hat\alpha\bone + \hat\lambda \tilde\bH \hat\bw
+\]
+and then the predicted values $\hat y_i, \dots, \hat y_m$ and probabilities $(\hat p_1, \dots, \hat p_m)$ are as above, replacing the kernel matrix with the predicted kernel matrix $\tilde \bH$.
+
+\subsection{New findings 8/4/2017}
+
+Suppose we know the posterior predictive distribution $p(f_{new} | y)$. Interested in the posterior predictive distribution of the latent variables $p(y^*_{new}|y)$.
+\begin{align*}
+  p(y^*_{new}|y) &= \int p(y^*_{new}|f_{new}, y) p(f_{new} | y) \d f_{new} \\
+  &= \int \N(f_{new}, 1) \N(\mu, \sigma^2) \d f_{new} \\
+  &= \int \frac{1}{\sqrt{2\pi}}\exp \left(-\half (y^*_{new} - f_{new}) ^ 2 \right) \frac{1}{\sqrt{2\pi\sigma^2}}\exp \left(-\frac{1}{2\sigma^2} (f_{new} - \mu) ^ 2 \right)\d f_{new} \\
+\end{align*}
+
+In the exponent:
+
+\begin{align*}
+  &\left( y^2 + f^2 - 2fy + \psi(f^2 + \mu^2 - 2\mu f) \right) \\
+  &= \left( (1 + \psi) f^2 - 2(y + \psi\mu)f + y^2  + \psi\mu^2 \right) \\
+  &= (1 + \psi)\left( f^2 - 2\frac{y + \psi\mu}{1 + \psi}f \right) +\left( y^2  + \psi\mu^2 \right) \\
+  &= (1 + \psi)\left( f - \frac{y + \psi\mu}{1 + \psi} \right) ^2 - \frac{(y + \psi\mu)^2}{1 + \psi} + \left( y^2  + \psi\mu^2 \right) \\
+  &= (1 + \psi)\left( f - \frac{y + \psi\mu}{1 + \psi} \right) ^2 + \frac{(1 + \psi)(y^2  + \psi\mu^2)-(y + \psi\mu)^2}{1 + \psi} \\
+  &=(1 + \psi)\left( f - \frac{y + \psi\mu}{1 + \psi} \right) ^2 + \frac{\cancel{y^2}  + \psi\mu^2 + \psi y^2  + \cancel{\psi^2\mu^2} - \cancel{y^2} - \cancel{\psi^2\mu^2} - 2\psi\mu y}{1 + \psi} \\
+  &=(1 + \psi)\left( f - \frac{y + \psi\mu}{1 + \psi} \right) ^2 + \frac{ \psi(y^2 + \mu^2 - 2\mu y)}{1 + \psi} \\
+  &=(1 + \psi)\left( f - \frac{y + \psi\mu}{1 + \psi} \right) ^2 + \frac{ \psi(y - \mu)^2}{1 + \psi} \\  
+\end{align*}
+
+Thus
+
+\begin{align*}
+  p(y^*_{new}|y) &= \int p(y^*_{new}|f_{new}, y) p(f_{new} | y) \d f_{new} \\
+  &=  \frac{1}{\sqrt{2\pi}} \frac{\sqrt{\psi}}{\sqrt{2\pi}} \sqrt{\frac{1+\psi}{1+\psi}} \int
+  \exp \left(-\half[1 + \psi]\left( f - \frac{y + \psi\mu}{1 + \psi} \right) ^2 \right) \exp \left( -\half[\psi/(1+\psi)] (y - \mu)^2\right) \d f \\
+  &= \frac{\sqrt{\psi/(1+\psi)}}{\sqrt{2\pi}} \exp \left( -\half[\psi/(1+\psi)] (y - \mu)^2\right) \cancelto{1}{\int \frac{\sqrt{1+\psi}} {\sqrt{2\pi}} \exp \left(-\half[1 + \psi]\left( f - \frac{y + \psi\mu}{1 + \psi} \right) ^2 \right) \d f} \\
+  &\equiv \N(\mu, \sigma^2 + 1)
+\end{align*}
+
+The fitted probabilities are $\Phi(\mu / \sqrt{\sigma^2+1})$.
+
+An alternative derivation is by studying $p(y_{new}|y)$ (straight to the Bernoullis)
+
+\begin{align*}
+  p(y_{new}|y) &= \int p(y_{new}|y,f_{new}) p(f_{new}|y) \d f_{new} \\
+  &= \int \Phi(f_{new}) \N(\mu, \sigma^2) \d f_{new} \\
+  &= \Phi(\mu / \sqrt{\sigma^2+1}) \\
+\end{align*}
+
+and we get the same results. 
+
+Replace $\mu = \E[f|y] = \E_q[f]$ and $\sigma^2 = \Var[f|y] = \Var_q[f]$ the approximated posterior for $f$.
+
+\newpage
+\subsection{The variational Bayes EM algorithm}
+
+Since there is a cyclic dependence of the parameters on each other, we employ a sequential update algorithm. In what follows, a tilde on the parameters indicate that these are the expectations of the parameters given the optimal factorised distributions $\tilde q$ derived earlier.
+\begin{enumerate}[label={STEP \arabic*:}, leftmargin=2cm]
+  \item Update $\tilde\by^{*(t+1)}$ given $\tilde\bw^{(t)}$, $\tilde\lambda^{(t)}$, and $\tilde\alpha^{(t)}$
+  \item Update $\tilde\bw^{(t+1)}$ given $\tilde\by^{*(t+1)}$, $\tilde\lambda^{(t)}$, and $\tilde\alpha^{(t)}$
+  \item Update $\tilde\lambda^{(t+1)}$ given $\tilde\by^{*(t+1)}$, $\tilde\bw^{(t+1)}$, and $\tilde\alpha^{(t)}$
+  \item Update $\tilde\alpha^{(t+1)}$ given $\tilde\by^{*(t+1)}$, $\tilde\bw^{(t+1)}$, and $\tilde\lambda^{(t+1)}$
+\end{enumerate}
+
+
+\algrenewcommand{\algorithmiccomment}[1]{{\color{gray}\hskip2em$\triangleright$ #1}}
+\begin{algorithm}[H]
+\caption{VB-EM algorithm for the probit I-prior model}\label{alg:VBEM}
+\begin{algorithmic}[1]
+\Procedure{Initialise}{}
+  \State $\tilde\lambda^{(0)} \gets 1$
+  \State $\tilde\lambda^{sq(0)} \gets 1$ \Comment{this is $\E[\lambda^2]$}
+  \State $\tilde\alpha^{(0)} \gets 0$
+  \State $\tilde\bw^{(0)} \gets \bzero_n$ \Comment{or draw $w_i^{(0)} \ \sim \N(0,1)$ for $i=1,\dots,n$.}
+\EndProcedure
+\Statex
+\Procedure{Update for $y_1^*, \dots, y_n^*$ }{time $t$}
+  \State $\tilde\bfeta^{(t+1)} \gets \tilde\alpha^{(t)}\bone_n + \tilde\lambda^{(t)}\bH\tilde\bw^{(t)}$
+  \For{$i=1,\dots,n$}
+    \If{$y_i = 1$}
+      \State $\tilde y_i^{*(t+1)} \gets \tilde\eta_i^{(t+1)} + \frac{\phi\big(\tilde\eta_i^{(t+1)}\big)}{\Phi\big(\tilde\eta_i^{(t+1)}\big)}$
+    \EndIf
+    \If{$y_i = 0$}
+      \State $\tilde y_i^{*(t+1)} \gets \tilde\eta_i^{(t+1)} + \frac{\phi\big(\tilde\eta_i^{(t+1)}\big)}{\Phi\big(\tilde\eta_i^{(t+1)}\big) - 1}$
+    \EndIf
+  \EndFor
+\EndProcedure
+\Statex
+\Procedure{Update for $\bw$ }{time $t$}
+  \State $\bA \gets \tilde\lambda^{sq(t)}\bH^2 + \bI_n$
+  \State $\ba \gets \tilde\lambda^{(t)}\bH(\by^{*(t+1)} - \tilde\alpha^{(t)})$
+  \State $\tilde\bw^{(t+1)} \gets \bA^{-1}\ba$
+  \State $\btW^{(t+1)} \gets \bA^{-1}(\bI_n + \ba\ba^\top\bA^{-1})$\
+  \State $\text{logdetA}^{(t+1)} \gets \log \vert \bA \vert$
+\EndProcedure
+\Statex
+\Procedure{Update for $\lambda$ }{time $t$}
+  \State $c \gets \tr\left(\bH^2\btW^{(t+1)}\right)$
+  \State $d \gets (\by^{*(t+1)} - \tilde\alpha^{(t)})^\top\bH\tilde\bw^{(t+1)}$
+  \State $\tilde\lambda^{(t+1)} \gets d / c$
+\EndProcedure
+\algstore{VBEMbreak}	
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+\begin{algorithmic}[1]
+\algrestore{VBEMbreak}
+\Procedure{Update for $\alpha$ }{time $t$}
+  \State $\tilde\alpha^{(t+1)} \gets \frac{1}{n}\sum\limits_{i=1}^n \big(\tilde y_i^{*(t+1)} - \tilde\lambda^{(t+1)}\bH_i\tilde\bw^{(t+1)}\big)$
+\EndProcedure	
+\Statex
+\Procedure{Calculate lower bound }{time $t$}
+  \State $\cL^{(t)} \gets \half(n + 2 - \log n) + \log 2\pi + \sum_{i=1}^n \Big(y_i \log \Phi(\tilde\eta_i^{(t)}) + (1-y_i)\log \big(1 - \Phi(\tilde\eta_i^{(t)})\big) \Big) - \half \left(\tr \btW^{(t)} +  \text{logdetA}^{(t)} + \log \left[\tr\left(\bH^2\btW^{(t)}\right)\right] \right) $
+\EndProcedure	
+\Statex
+\Procedure{The VB-EM algorithm}{}
+  \State $t \gets 0$
+  \While{$\cL^{(t+1)} - \cL^{(t)} > \delta$ \textbf{or} $t < t_{max}$}{}
+    \State \textbf{call} \Call{Update for $y_1^*, \dots, y_n^*$}{}
+    \State \textbf{call} \Call{Update for $\bw$}{}
+    \State \textbf{call} \Call{Update for $\lambda$}{}
+    \State \textbf{call} \Call{Update for $\alpha$}{}
+    \State \textbf{call} \Call{Calculate lower bound}{}
+    \State $t \gets t + 1$
+  \EndWhile
+\EndProcedure
+\Statex
+\State \Return $(\hat\by^*, \hat\bw, \hat\lambda, \hat\alpha) \gets (\tilde\by^{*(t)}, \tilde\bw^{(t)}, \tilde\lambda^{(t)}, \tilde\alpha^{(t)}) \vspace{1mm}$ \Comment{converged parameter estimates}
+\State \Return $(\hat y_1, \dots, \hat y_n) \gets \left(\ind[\hat y_1^* \geq 0], \dots, \ind[\hat y_n^* \geq 0] \right) \vspace{1mm}$ \Comment{predicted classes}
+\State \Return $(\hat p_1, \dots, \hat p_n) \gets \Phi\left( \hat\alpha\bone + \hat\lambda \bH \hat\bw \right) $ \Comment{predicted probabilities}
+\end{algorithmic}
+\end{algorithm}
+
+\appendix
+\section{Proof of Lemma \ref{thm:normentropy}}
+
+\begin{proof}
+\hspace{1cm}
+
+Case (i): $-\log p(x) = \half\log 2\pi + \half\log \sigma^2 + \half(x - \mu)^2$. Then 
+
+\begin{align*}
+  \cH(p) &= \E_x\left[\half\log 2\pi + \half\log \sigma^2 + \frac{1}{2\sigma^2}(x - \mu)^2\right] \\
+  &= \half\log 2\pi + \half\log \sigma^2 + \frac{1}{2\sigma^2} \cancelto{\sigma^2}{\E (x - \mu)^2} \\
+  &= \half (1 + \log 2\pi) + \half \log \sigma^2
+\end{align*}
+
+Case (ii): $-\log p(x) = \half[d]\log 2\pi + \half\log \vert \Sigma \vert+ \half(x - \mu)^\top\Sigma^{-1}(x - \mu)$. Then
+
+\begin{align*}
+  \cH(p) &= \half[d]\log 2\pi + \half\log \vert \Sigma \vert + \half \E_x \left[ (x - \mu)^\top\Sigma^{-1}(x - \mu) \right] \\
+  &= \half[d]\log 2\pi + \half\log \vert \Sigma \vert + \half \tr \Big(\Sigma^{-1} \cancelto{\Sigma}{\E_x \left[ (x - \mu)(x - \mu)^\top \right]} \Big) \\
+  &= \half[d] (1 + \log 2\pi) + \half\log \vert \Sigma \vert 
+\end{align*}
+
+For the next two cases, we state the following properties of a truncated normal distribution without proof.
+\begin{lem}\label{thm:entropytruncatednormal}
+    Let $x \sim \N(\mu,\sigma^2)$ with $x$ lying in the interval $(a,b)$. Then we say that $x$ follows a truncated normal distribution, and
+    \begin{enumerate}[label=(\roman*)]
+      \item the mean of $x$ (conditional on $a<x<b$) is
+      \[
+        \E[x] = \mu + \sigma\frac{\phi(\alpha) - \phi(\beta)}{Z},
+      \]
+      \item the variance of $x$ (conditional on $a<x<b$) is
+      \[
+        \Var[x] = \sigma^2\left[1 + \frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{Z} - \left( \frac{\phi(\alpha) - \phi(\beta)}{Z}\right)^2 \right], \text{and}
+      \]
+      \item the entropy of the pdf of $x$ (conditional on $a<x<b$) is
+      \[
+        \cH = \half \log 2\pi + \half \log \sigma^2 + \log Z  + \half + 
+        \frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{2Z},
+      \]
+    \end{enumerate}
+    where $\alpha = (a - \mu)/\sigma$, $\beta = (b - \mu)/\sigma$, and $Z = \Phi(\beta) - \Phi(\alpha)$, and $\phi$ and $\Phi$ are the pdf and cdf of a standard normal distribution respectively.
+\end{lem}
+
+In the special case when $\sigma = 1$ (the case we are interested in), then with some manipulation, one arrives at the following expression for the entropy of the pdf $p$ of a truncated normal distribution:
+\begin{align*}
+  \cH(p) &= \half \log 2\pi + \cancel{\half \log \sigma^2} + \log Z  + \half \left( 1 + \frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{Z} \right) \\
+  &=\half \log 2\pi + \log Z  + \half \left( \Var[x] + \left( \frac{\phi(\alpha) - \phi(\beta)}{Z}\right)^2 \right) \\
+  &=\half \log 2\pi + \log Z  + \half \left( \E[x^2] - \E^2[x] + \left( \E[x] - \mu \right)^2 \right) \\  
+  &= \half \log 2\pi + \log Z  + \half \left( \E[x^2] + \mu^2 - 2\mu\E[x] \right)
+\end{align*}
+
+We now continue with the proof.
+
+Case (iii): Using Lemma \ref{thm:entropytruncatednormal} with $a = 0$, $b = +\infty$, and $\sigma = 1$, we get that $Z = 1 - \Phi(-\mu) = \Phi(\mu)$. Therefore, the entropy of $p$ is given by
+\begin{align*}
+  \cH(p) = \half \log 2\pi + \half \left( \E[x^2] + \mu^2 - 2\mu\E[x] \right) + \log \Phi(\mu) 
+\end{align*}
+
+Case (iv): Again, using Lemma \ref{thm:entropytruncatednormal} with $a = -\infty$, $b = 0$, and $\sigma = 1$, we get that $Z = \Phi(-\mu) = 1 -\Phi(\mu)$. Therefore, the entropy of $p$ is given by
+\begin{align*}
+  \cH(p) = \half \log 2\pi + \half \left( \E[x^2] + \mu^2 - 2\mu\E[x] \right) +  \log \big(1 - \Phi(\mu)\big)
+\end{align*}
+
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% REFERENCES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\ifstandalone
+%\nocite{*}
+%\bibliographystyle{apalike}
+%\bibliography{haziq}
+%\fi
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

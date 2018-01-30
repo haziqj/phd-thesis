@@ -1,0 +1,203 @@
+\newpage
+
+\section{Regression and regularised least squares}
+
+The task of regression modelling is to choose the most appropriate regression function $f \in \cF$. 
+It would be helpful if we had a measure of the quality of our choice of $f$. 
+Define the risk functional $R:\cF \to \bbR$ as
+\begin{align}
+  R[f] = \E[L\big(y,f(x)\big)] = \int L\big(y,f(x)\big) \d \Prob(y,x),
+\end{align}
+where $L:\bbR \times \bbR \to [0,\infty)$ is some loss function, and $\Prob(y,x)$ is the probability measure of the observed sample.
+In most cases, this probability measure is unknown, and an empirical risk measure is used instead:
+\begin{align}
+  R[f] = \frac{1}{n} \sum_{i=1}^n L\big(y_i,f(x_i)\big).
+\end{align}
+The squared loss function given by
+\begin{align}
+  L\big(y_i,f(x_i)\big) = \sum_{j=1}^n \psi_{ij} \big(y_i - f(x_i)\big)\big(y_j - f(x_j)\big),
+\end{align} 
+when used, defines the least squares regression. 
+It is worthwhile noting that for the normal regression model, a solution obtained by minimising the squared loss function is equivalent to the maximum likelihood estimator.
+ 
+This problem may be ill-posed, in the sense that if the space of functions is relatively unconstrained, then there is likely to be more than one solution to the regression problem. 
+In fact, any function which passes through all the data points is an acceptable solution. 
+This clearly leads to overfitting and poor generalisations. 
+ 
+ 
+The most common method to overcome this issue is Tikhonov regularisation. 
+A regularisation term is added to the risk function, with the aim of imposing a penalty on the complexity of $f$.
+Concrete notions of complexity penalties can be introduced if $\cF$ is a normed space, though \gls{rkhs} are typically used as it gives great conveniences (see Section 2).   
+In particular, smoothness assumptions on $f$ encoded by a suitable \gls{rkhs} can be represented by using the \gls{rkhs} norm $\norm{\cdot}_\cF:\cF \to \bbR$ as the regularisation term. 
+Therefore, the solution to the regularised least squares problem $f_{\text{reg}}$ is the minimiser of the function from $\cF$ to $\bbR$ defined by the mapping
+\begin{align}\label{eq:penfunctional}
+  f \mapsto \sum_{i=1}^n \sum_{j=1}^n \psi_{ij} \big(y_i - f(x_i)\big)\big(y_j - f(x_j)\big) + n\lambda \norm{f}^2_\cF,
+\end{align}
+which also happens to be the penalised maximum likelihood solution. The $\lambda > 0$ parameter - known as the regularisation parameter - controls the trade-off between the data-fit term and the penalty term, and is not usually known a priori and must be estimated from the data.
+
+
+Tikhonov regularisation also has a well-known Bayesian interpretation, whereby the regularisation term encodes prior information about the function $f$. For the regression model stated earlier in \eqref{eq:model1} subject to the assumption in \eqref{eq:model1ass}, let $\cF$ be an \gls{rkhs} equipped with the positive definite kernel $h:\cX \times \cX \to \bbR$. Then, it can be shown that $f_{\text{reg}}$ is the posterior mean of $f$ given a Gaussian process prior with zero mean and covariance kernel $H_\lambda = \big(\frac{1}{n\lambda} h(x_i, x_j)\big)_{i,j=1}^n$. This 
+
+
+\hltodo[Is it fair to say that most processes that we want to estimate hardly come about from realisations of smooth functions? I.e. Brownian motion paths (rough) are more likely to occur in ``nature'' than very, very smooth paths (say squared exponential paths).]{}[Thoughts on undersmoothing]
+There are two drawbakcs to Tikhonov regularisation, and the first is that it can systematically undersmooth.
+From a Bayesian viewpoint, undersmoothing can be said to occur if the support of the prior consists of functions that are rougher than those in $\cF$. 
+In particular, at least for certain \gls{rkhs}s, the sample paths of the Gaussian process with the reproducing kernel of the \gls{rkhs} as the covariance kernel are rougher (by some margin) than the roughest functions in the \gls{rkhs}. 
+Undersmoothing can then adversely impact the estimation of $f$, and in real terms might even show features and artefacts that are not really there.
+
+
+The second drawback is in regards to estimation of the regularisation parameters.
+Estimation of these parameters requires either minimisation of some cross-validation error criterion, or a direct minimisation of the penalised functional \eqref{eq:penfunctional}. 
+The latter of these two methods can be seen as obtaining an empirical Bayes estimate by maximising the marginal likelihood in the Bayesian interpretation of regularisation.
+Either way, estimation can prove difficult when there are a lot of regularisation parameters to estimate.
+
+
+The I-prior methodology does not suffer from these two drawbacks.
+According to \citet{bergsma2017}, \hltodo[Complete this]{...}
+
+
+\section{The I-prior and its advantages}
+
+As alluded to earlier, \glspl{rkhs} has many desirable properties.
+For the regression model \eqref{eq:model1} subject to \eqref{eq:model1ass}, let $\cF$ be an \gls{rkhs}. 
+Every \gls{rkhs} defines a reproducing kernel function that is both symmetric and positive definite, and the converse is also true.
+
+
+There are three main types of \gls{rkhs} studied in this thesis, allowing linear and smooth effects of Euclidean covariates as well as the incorporation of categorical covariates: the {\em canonical} \gls{rkhs}, consisting of linear functions of the covariates; the \gls{fbm} \gls{rkhs}, consisting of smooth functions of the covariates; and the {\em Pearson} \gls{rkhs} for nominal or categorical covariates. 
+The fBm \gls{rkhs} has smoothness parameter $\gamma \in (0,1)$, called the Hurst coefficient.
+The most common value for this parameter is $1/2$, which for a real covariate gives a fitted function close to the familiar cubic spline smoother, although this could be treated as an unknown parameter to be estimated. 
+More on these kernels later.
+
+
+We can build upon these kernels by adding or multiplying them, and the result is still a positive definite kernel which induces a new \gls{rkhs}.
+This is particularly useful because we can think of our regression function as being decomposed of functions belonging to different \gls{rkhs}, depending on the effect of the covariate desired.
+As an example, suppose that each $x \in \cX$ is 2-dimensional, so that $x = (x_1, x_2)$.
+We can assume that the regression function decomposes as follows:
+\[
+  f(x) = f(x_1, x_2) = f_1(x_1) + f_2(x_2) + f_{12}(x_1, x_2)
+\]
+This is possible because $\cF$ is a vector space over $\bbR$. 
+Here, we have assumed that the function $f$ partitions into two main effects $f_1$ and $f_2$ and an \emph{interaction effect} $f_{12}$. 
+Each of the main effects are in some \gls{rkhs}, depending on the effect of the corresponding covariate (linear, smooth, or nominal), and thus would have a kernel $h_j:\cX_j \times \cX_j \to \bbR$.
+As the scale of an \gls{rkhs} over a set $\cX$ may be arbitrary, each of the kernels are multiplied by a scale parameter $\lambda_j$.
+The space of functions for the interaction effects are then assumed to be in the so-called tensor product space of the corresponding main effect functions.
+In our case, $f_{12} \in \cF_{12}$, where $\cF_{12}$ is an \gls{rkhs} with kernel equal to the product of kernels $h_{12}\big((x_1, x_2),(x_1',x_2')\big) = \lambda_1\lambda_2 \cdot h_1(x_1,x_1')h_2(x_2,x_2')$.
+
+
+Suppose that we have a multilevel data set, where $x_1$ is real-valued, $x_2$ is nominal-valued indicating the level to which the observation belongs to. 
+We can model these data by choosing the canonical kernel on $x_1$ and the Pearson kernel for the $x_2$, and the interaction effect represents the varying effect of $x_1$ in each level $x_2$. 
+If instead we had a time covariate $x_1$ and a categorical covariate $x_2$ representing treatment effect say, then we can build a longitudinal model with either a linear or smooth effect of time. 
+Again, the interaction effect will convey $x_2$ as time-varying. 
+Of course, we can partition the function as is necessary, such as excluding the interaction effect or including additional terms such as three-way interactions. Now suppose that we have functional data, i.e. the set $\cX$ consists of functions. 
+If we assume that the $x$s lie in some Hilbert space (not necessarily an \gls{rkhs}) then we have an inner-product (and also a norm) defined on $\cX$.
+As we will see later, the canonical and fBm kernels make use of the inner-product on $\cX$ so we are able to proceed as we did before.
+We can see that this framework provides a unifying approach to various regression models.
+
+
+We discussed earlier that regularisation has a Bayesian interpretation, whereby a prior distribution is assigned to the regression function.
+Specifically, it is a Gaussian process prior with mean zero and covariance kernel equal to the reproducing kernel of the \gls{rkhs} that $f$ belongs to. 
+The I-prior for $f$ is a also a zero mean Gaussian prior but has a different covariance kernel, namely the Fisher information for $f$. If $h$ is the reproducing kernel for the \gls{rkhs}, then the Fisher information between $f(x)$ and $f(x')$ is given as
+\begin{align}\label{eq:fisherinformation}
+  \cI[f(x),f(x')] = \sum_{i=1}^n \sum_{j=1}^n \psi_{ij}h(x,x_i)h(x',x_j).   
+\end{align} 
+Hence, $f$ follows an I-prior distribution if it can be written in the form
+\begin{align}%\label{eq:iprior-re}
+  f(x) = \sum_{i=1}^n h(x,x_j)w_j,
+\end{align}
+where 
+\[
+  (w_1, \dots, w_n)^\top \sim \N_n(0, \Psi).  
+\]
+Note that, of course, a non-zero value or function for the prior mean could be taken as well.
+The I-prior is a class of objective priors - it is the distribution for which  entropy is maximised (subject to certain constraints).
+In this sense, it is considered the prior which gives the least amount of information a priori - then perhaps the term I-prior is somewhat of a misnomer, since the `I' stands for (Fisher) information.
+
+
+An intuitively attractive property of the I-prior is that if much information about a linear functional of $f$ (e.g. a regression coefficient) is available, its prior variance is large, and the data have a relatively large influence on the posterior, while if little information about a linear functional is available, the posterior will be largely determined by the prior mean, which serves as a `best guess' of $f$. 
+
+
+\section{Estimation}
+
+
+The I-prior methodology consists of estimation of the regression function by its posterior distribution under the I-prior, where we take the posterior mean as the summary measure. 
+Write $\bff = \big(f(x_1), \dots, f(x_n)\big)^\top$. 
+From \eqref{eq:fisherinformation}, the Fisher covariance kernel for $f$ is $H_\lambda \Psi H_\lambda$, where $H_\lambda = \big( h_\lambda(x_i,x_j) \big)_{i,j=1}^n$ and $h_\lambda$ is the (scaled) reproducing kernel of $\cF$.
+The I-prior on $f$ for model \eqref{eq:model1} subject to \eqref{eq:model1ass} is
+\[
+  \bff \sim \N_n(\bff_0, H_\lambda \Psi H_\lambda)
+\]
+where $\bff_0 = \big(f_0(x_1), \dots, f_0(x_n)\big)^\top$ is some prior mean typically set to zero. 
+We are then interested in two main things:
+\begin{enumerate}
+  \item The posterior distribution for the regression function
+  \[
+    p(\bff|\by) = \frac{p(\by|\bff)p(\bff)}{\int p(\by|\bff)p(\bff) \d \bff}
+  \]
+  \item The posterior predictive distribution for new data $x_\new$
+  \[
+    p(y_\new|\by) = \int p(y_\new|f_\new,\by) p(f_\new|\by) \d \by,
+  \]
+  where $f_\new = f(x_\new)$.
+\end{enumerate}
+It can be shown that for any $x \in \cX$, the posterior distribution of $f$ is normal with mean and variance given by
+\begin{gather*}
+  \E[f(x)|\by] = f_0(x) + \bh_\lambda(x)\Psi H_\lambda(H_\lambda\Psi H_\lambda + \Psi^{-1})^{-1}\big(y - f_0(x)\big) \\
+  \text{and} \\
+  \Var[f(x)|\by] = \bh_\lambda(x)^\top (H_\lambda\Psi H_\lambda + \Psi^{-1})^{-1} \bh_\lambda(x),
+\end{gather*}
+where $\bh_\lambda(x) = \big(h_\lambda(x, x_1), \dots, h_\lambda(x, x_n)\big)^\top$.
+
+
+There is the matter of estimating the model (hyper-)parameters - the error precision $\Psi$, the \gls{rkhs} scale parameters $\lambda$, and any other parameters that might be associated with the kernel (e.g. the smoothing parameter in an fBm kernel). These may be estimated in a variety of ways. The first is by maximum marginal likelihood, which is also known as the empirical Bayes approach. The marginal distribution $p(y) = \int p(\by|\bff)p(\bff) \d \bff$ is easily obtained in the case of the normal model, and it is
+\[
+  \by = (y_1,\dots,y_n)^\top \sim \N_n\big(f_0(x), H_\lambda\Psi H_\lambda + \Psi^{-1}\big).
+\]
+The marginal likelihood can be maximised in the usual way (e.g. Newton-type methods) with respect to the model parameters, but for complex models involving a lot of parameters, this may be challenging.
+Instead, a better approach is the expectation-maximisation (EM) algorithm. 
+The I-prior model emits a simple E- and M-step which makes this method favourable. 
+For most models, a closed-form solution to the M-step is available thereby reducing the EM algorithm to an iterative updating scheme of the parameters.
+Finally, a fully Bayesian approach may be taken as well, whereby prior distributions are assigned to the model parameters and posterior samples obtained via Markov chain Monte Carlo (MCMC) methods. 
+
+
+Regardless of the estimation procedure, computational complexity is dominated by the inversion of the $n \times n$ matrix $V_y = H_\lambda\Psi H_\lambda + \Psi^{-1}$ as a function of the model parameters. 
+In the case of Newton-type approaches to likelihood maximisation, $V_y^{-1}$ appears in the kernel of the marginal Gaussian density for $\by$.
+In the case of the EM algorithm, every update cycle also involves a similar calculation, and this is quite similar to the calculations required from a Gibbs-sampling approach for stochastic MCMC sampling. 
+
+
+I-priors, while being philosophically different from Gaussian process priors, do share the same computational hurdle. 
+As such, several methods exist in the machine learning literature to overcome this issue. 
+Amongst others, is a method to approximate the covariance kernel by a low-rank matrix, so that the most expensive operation of inverting a $n \times n$ matrix is greatly reduced. 
+Our approach is to apply the Nystr\"om method of low-rank matrix approximation, and we find that this works reasonably well for the fBm \gls{rkhs}. 
+
+
+Another computational hurdle is to ensure numerical stability. We find that due to the structure of the marginal covariance $V_y$, numerical instabilities can and are likely to occur - which may give rise to embarrassments such as negative covariances. 
+We employ a stable eigendecomposition regime which allows us to efficiently calculate matrix squares and inverses by making use of the spectral theorem.
+
+
+\section{I-priors for classification}
+
+Suppose now we are interested in a regression model where the responses are categorical. Assume a categorical distribution on the responses with certain probabilities for each class and for each observation. This is of course a generalisation of the Bernoulli distribution to more than two possible outcomes. The question is how can we relate the effect of the covariates through the function, which has unrestricted range, to the responses, which may only take one of m several outcomes? In the spirit of generalised linear models, we answer this by making use of an appropriate link function, and our case, the probit link function. In the binary case, this amounts to squashing our regression function through the (inverse) probit link function in order to model probabilities which are between zero and one. This idea is then extended to the multinoulli case, giving rise to a multinomial probit I-prior model, which we call I-probit.
+
+The main issue with estimation now is that because our responses no longer follow a Gaussian distribution, the relevant marginal distribution, on which the posterior depends, can no longer be found in closed form. The integral required to perform the calculation is intractable, and the focus now is on methods to adequately approximate the integral.
+
+In the Bayesian literature, the Laplace approximation amounts to approximating the posterior distribution with a normal distribution centred around the mode of the integrand. Additionally, the covariance matrix is equal to the inverse (negative) Hessian. Having approximated the posterior by a Gaussian distribution, one could then proceed to find the marginal easily, which is then maximised. Due to the Newton step in the Laplace step, the whole procedure scales cubicly with both the sample size and the number of outcomes, which makes it undesirable to implement.
+
+MCMC methods such as Gibbs sampling or Hamiltonian Monte Carlo can also provide a stochastic approximation to the integral. Unfortunately, the difficulties faced in the continuous case for MCMC methods also present themselves in the categorical case.
+
+Deterministic approaches such as quadrature methods prove unfeasible. Quadrature methods scale exponentially with the variables of integration, in our case, is the sample size.
+
+We consider a type of approximation based on minimising the Kullback-Leibler (KL) divergence from the approximating density to the true posterior density. This is done without making any distributional assumptions, only that the our approximating density factorises over its components (ie an independence assumption) - this is known as the mean-field approximation, which has its roots in the physics literature. As an aside, the term ‘variational’ stems from the fact that a minimisation of a functional, rather than a function, is involved, and this requires the calculus of variations.
+
+By working in a fully Bayesian setting, we append the model parameters to the list of unknowns in which to estimate, and employ the variational approximation to find a suitable approximation to the required posterior density. The result is an iterative algorithm, similar to the EM.
+
+As this variational EM works harmoniously with exponential family distributions, the probit link is much preferred over the logit. Most of the EM updating cycles which could be found in closed form are also applicable in the variational EM. Unlike Gaussian process priors, the variational method does not typically result in closed-form updates for the \gls{rkhs} scale parameters. In such cases, an additional step such as importance sampling is required, which arguably reduces efficiency of the whole variational scheme.
+
+The variational EM is implemented in the R package iprobit. This has been shown to work well for several toy examples as well as real world applications. In the binary case, the I-prior outperforms other popular classication methods including k-nearest neighbours, support vector machines, and Gaussian process classification.
+
+\section{I-priors for Model selection}
+ 
+As mentioned earlier, model selection can easily be done by comparing likelihoods (empirical Bayes factors). However, with a large number of variables, these pairwise comparisons quickly become unfeasible to perform. We suggest a fully Bayesian approach to estimating posterior model probabilities, and selecting models based on these quantities. For example, one may choose the model which gives the largest posterior model probability (maximum probability model). These are done using MCMC methods (Gibbs sampling).
+
+We restrict ourselves to linear models only. We can easily derive an equivalent I-prior representation by working in the feature space of the betas (linear effects). As a side note, if the dimensions of the linear effects is much, much less than the sample size, then it is worth working in this representation.
+
+We believe the I-prior performs superiorly in cases where there is multicollinearity. This is evidenced by the simulation results that we conducted on a 100-variate experiment, and also in the real-data examples comparing our method with others such as greedy selection, g-priors, and regularisation (\indx{ridge} and \gls{lasso}).
