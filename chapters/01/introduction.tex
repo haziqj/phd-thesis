@@ -24,7 +24,7 @@ This thesis has three main chapters which we hope to present as methodological i
 Chapter 3 describes computational methods relating to the estimation of I-prior models.
 Chapter 4 extends the I-prior methodology to fit discrete outcome models.
 Chapter 5 discusses the use of I-priors for model selection. 
-This short chapter provides an outline of the thesis, in addition to introducing the statistical model of interest.
+This short chapter ultimately provides an outline of the thesis, in addition to introducing the statistical model of interest.
 
 \section{Regression models}
 
@@ -69,10 +69,15 @@ Models of this nature still fall under the remit of the normal regression model 
 
 \section{Vector space of functions}
 
-It would be beneficial to prescribe some sort of structure from which we may choose a regression function appropriately. 
-This is given to us by assuming that our regression function for the normal model lies in some reproducing kernel Hilbert space (RKHS) $\cF$, with reproducing kernel $h:\cX \times \cX \to \bbR$.
+It would be beneficial to prescribe some sort of structure for which 1) we may choose a regression function appropriately, and 2) this function will generalise well to unseen data (prediction). 
+This needed structure is given to us by assuming that our regression function for the normal model lies in some \gls{rkhs} $\cF$, with reproducing kernel $h:\cX \times \cX \to \bbR$.
 Often, the reproducing kernel (or simply kernel, for short) is indexed by one or more parameters which we shall denote as $\eta$.
 Correspondingly, the kernel is rightfully denoted as $h_\eta$ to indicate the dependence of the parameters on the kernels, though where this is seemingly obvious, might be omitted.
+Throughout this thesis we shall make the assumption that our regression function lies in a reproducing kernel Hilbert space $\cF$.
+
+RKHSs provides a geometrical advantage to learning algorithms: Projections of the inputs to a richer and more informative (and higher dimensional) feature space, where learning is more likely to be successful, need not be figured out explicitly.
+Instead, the feature maps are implicitly calculated by the use of kernel functions. 
+This is known as the ``kernel trick'' in the machine learning literature, and it has facilitated the success of kernel methods for learning, particularly in algorithms with inner products involving the transformed inputs. 
 
 Due to the one-to-one mapping between the set of kernel functions and the set of RKHSs, choosing a regression function is equivalent to choosing a kernel function, and this is chosen according to the desired effects of the covariates on the regression function.
 An in-depth discussion on kernels and RKHSs will be provided later in Chapter 2, but for now, it suffices to say that kernels which invoke a linear, smooth and categorical dependence, are of interest.
@@ -80,24 +85,68 @@ This would allow us to fit the various models described earlier within this RKHS
 
 \section{Estimating the regression function}
 
-Tikhonov regularisation, Bayesian interpretation, priors
+Having decided on a functional structure for $f$, we now turn to the task of choosing the best $f \in \cF$ that fits the data sample $\cS$.
+`Best' here could mean a great deal of things, such as choosing $f$ which minimises an empirical risk measure\footnotemark~defined by
+%
+\[
+  \text{ER}[f] = \frac{1}{n} \sum_{i=1}^n \Lambda\big( y_i, f(x_i) \big)
+\]
+%
+for some loss function $\Lambda:\bbR^2 \to [0,\infty)$.
+A common choice for the loss function is the \emph{squared loss function}
+%
+\[
+  \Lambda\big(y_i,f(x_i)\big) = \sum_{j=1}^n \psi_{ij} \big(y_i - f(x_i)\big)\big(y_j - f(x_j)\big),
+\]
+%
+and when used, defines the \emph{least squares regression}.
+For the normal model, the minimiser of the empirical risk measure under the squared loss function is also the maximum likelihood (ML) estimate of $f$, since $\text{ER}[f]$ would be twice the negative log-likelihood of $f$, up to a constant.
 
-Having decided on a functional structure for $f$, we now turn to the task of estimating $f$.
-%In doing so, we undertake a Bayesian approach of prescribing prior information for our regression function, and then work out the posterior regression function given the data.
+\footnotetext{
+More appropriately, the risk functional $\text{R}[f] = \int \Lambda(y,f(x)) \d \Prob(y,x)$, i.e., the expectation of the loss function under some probability measure of the observed sample, should be used.
+Often the true probability measure is not known, so the empirical risk measure is used instead.
+}
 
-\hltodo{Remark on dimensionality}.
+The ML estimator of $f$ interpolates the data if the dimension of $\cF$ is at least $n$, so is of little use.
+The most common method to overcome this issue is \emph{Tikhonov regularisation}, whereby a regularisation term is added to the risk function, with the aim of imposing a penalty on the complexity of $f$. 
+In particular, smoothness assumptions on $f$ 
+%encoded by a suitable \gls{rkhs}% 
+can be represented by using its \gls{rkhs} norm $\norm{\cdot}_\cF:\cF \to \bbR$ as the regularisation term\footnotemark. 
+Therefore, the solution to the regularised least squares problem---call this $f_{\text{reg}}$---is the minimiser of the function from $\cF$ to $\bbR$ defined by the mapping
+\begin{align}\label{eq:penfunctional}
+  f \mapsto \frac{1}{n}\sum_{i=1}^n \sum_{j=1}^n \psi_{ij} \big(y_i - f(x_i)\big)\big(y_j - f(x_j)\big) + \lambda^{-1} \norm{f-f_0}^2_\cF,
+\end{align}
+which also happens to be the \emph{penalised maximum likelihood} solution. 
+Here $f_0 \in \cF$ can be thought of a prior `best guess' for the function $f$.
+The $\lambda^{-1} > 0$ parameter---known as the regularisation parameter---controls the trade-off between the data-fit term and the penalty term, and is not usually known a priori and must be estimated from the data.
+
+An attractive consequence of the representer theorem \citep{kimeldorf1970correspondence} for Tikhonov regularisation implies that $f_\text{reg}$ admits the form
+\begin{align}\label{eq:repform}
+  f_\text{reg} = f_0 + \sum_{i=1}^n h(\cdot,x_i)w_i, \hspace{0.5cm} w_i \in \bbR, \ \forall i=1,\dots,n, 
+\end{align}
+even if $\cF$ is infinite-dimensional.
+This simplifies the original minimisation problem from a search for $f$ over a possibly infinite-dimensional domain to a search for the optimal coefficients $w_i$ in $n$ dimensions.
+
+\footnotetext{
+Concrete notions of complexity penalties can be introduced if $\cF$ is a normed space, though RKHSs are typically used as it gives great conveniences (see Chapter 2).  
+}
+
+Tikhonov regularisation also has a well-known Bayesian interpretation, whereby the regularisation term encodes prior information about the function $f$. 
+For the normal regression model with $f \in \cF$, an RKHS, it can be shown that $f_{\text{reg}}$ is the posterior mean of $f$ given a \emph{Gaussian process prior} with mean $f_0$ and covariance kernel $\Cov\big(f(x_i),f(x_j)\big) = \lambda h(x_i, x_j)$. 
+The exact solution for the coefficients $\bw = (w_1,\dots,w_n)^\top$ are in fact $\bw = \big(\bH + \bPsi^{-1}\big)^{-1}(\by - \bff_0)$, where $\bH = \big(h(x_i,x_j) \big)_{i,j=1}^n$ (often referred to as the Gram matrix or kernel matrix) and $(\by - \bff_0) = (y_1 - f_0(x_1), \dots, y_n - f_0(x_n))^\top$.
 
 \section{Regression using I-priors}
 
-The definition of an RKHS entails that any function in $\cF$ can be approximated arbitrarily well by functions of the form
-%
-\begin{align}\label{eq:ipriorre}
-  f(x) = f_0(x) + \sum_{i=1}^n h_\eta(x,x_i)w_i
-\end{align}
-%
-where $w_1,\dots,w_n$ are real-valued\footnotemark.
-Here, $f_0 \in \cF$ is some function chosen a priori which represents the `best guess' of the regression function.
-The \emph{I-prior} for our regression function $f$ in \eqref{eq:model1} subject to \eqref{eq:model1ass} is defined as the distribution of a random function of the form \eqref{eq:ipriorre} when the $w_i$ are distributed according to 
+Building upon the Bayesian interpretation of regularisation, \citet{bergsma2017} proposes a prior distribution for the regression function such that its realisations admit the form for the solution given in the representer theorem.
+%Denoting the I-prior by $\pi$, we say that the function $f$ follows an I-prior $f \sim \pi$.
+%The definition of an RKHS entails that any function in $\cF$ can be approximated arbitrarily well by functions of the form
+%%
+%\begin{align}\label{eq:ipriorre}
+%  f(x) = f_0(x) + \sum_{i=1}^n h_\eta(x,x_i)w_i
+%\end{align}
+%%
+%where $w_1,\dots,w_n$ are real-valued. %\footnotemark.
+The \emph{I-prior} for the regression function $f$ in \eqref{eq:model1} subject to \eqref{eq:model1ass} is defined as the distribution of a random function of the form \eqref{eq:repform} when the $w_i$ are distributed according to 
 %
 \[
   (w_1,\dots,w_n)^\top \sim \N_n(\bzero,\bPsi),
@@ -112,15 +161,15 @@ As a result, we may view the I-prior for $f$ as having the Gaussian process dist
 \end{align}
 %
 with $\bH_{\eta}$ an $n \times n$ matrix with $(i,j)$ entries equal to $h_\eta(x_i,x_j)$, and $\bff_0$ a vector containing the $f_0(x_i)$'s.
-The covariance matrix of this multivariate normal prior is related to the Fisher information for $f$ \citep{bergsma2017}, and hence the name I-prior---the `I' stands for information.
-Furthermore, the I-prior happens to be an entropy-maximising prior, subject to certain \hltodo[which are?]{constraints}.
+The covariance matrix of this multivariate normal prior is related to the Fisher information for $f$, and hence the name I-prior---the `I' stands for information.
+Furthermore, the I-prior happens to be an entropy-maximising prior, subject to certain constraints.
 More on the I-prior in Chapter 2.
 
-\footnotetext{
-That is to say, $\cF$ is spanned by the functions $h(\cdot,x)$. 
-More precisely, $\cF$ is the completion of the space $\cG = \text{span}\{h(\cdot,x) | x \in \cX \}$ endowed with the squared norm $\norm{f}^2_\cG = \sum_{i=1}^n\sum_{i=1}^n w_i w_j h(x_i,x_j)$ for $f$ of the form \eqref{eq:ipriorre}. 
-See, for example, \cite{berlinet2011reproducing} for details.
-}
+%\footnotetext{
+%That is to say, $\cF$ is spanned by the functions $h(\cdot,x)$. 
+%More precisely, $\cF$ is the completion of the space $\cG = \text{span}\{h(\cdot,x) | x \in \cX \}$ endowed with the squared norm $\norm{f}^2_\cG = \sum_{i=1}^n\sum_{i=1}^n w_i w_j h(x_i,x_j)$ for $f$ of the form \eqref{eq:ipriorre}. 
+%See, for example, \cite{berlinet2011reproducing} for details.
+%}
 
 As with Gaussian process regression (GPR), the function $f$ is estimated by its posterior mean.
 For the normal model, the posterior distribution for the regression function conditional on the responses $\by = (y_1,\dots,y_n)$,
@@ -140,7 +189,7 @@ The posterior mean for $f$ evaluated at a point $x \in \cX$ is given by
 \end{align}
 %
 where we have defined $\bh_\eta(x)$ to be the vector of length $n$ with entries $h_\eta(x,x_i)$ for $i=1,\dots,n$.
-Incidentally, the elements of the $n$-vector $\tilde \bw$ defined in \eqref{eq:postmean} are the posterior means of the random variables $w_i$ in the formulation \eqref{eq:ipriorre}.
+Incidentally, the elements of the $n$-vector $\tilde \bw$ defined in \eqref{eq:postmean} are the posterior means of the random variables $w_i$ in the formulation \eqref{eq:repform}.
 The point-evaluation posterior variance for $f$ is given by
 %
 \begin{align}\label{eq:postvar}
@@ -155,7 +204,7 @@ Prediction for a new data point $x_\new \in \cX$ then concerns obtaining the \em
 %
 where we had defined $f_\new := f(x_\new)$.
 This is again a normal distribution in the case of the normal model, with the same mean\footnotemark~as in \eqref{eq:postmean}, but a slightly different variance.
-These are of course well-known results in Gaussian process literature---see, for example, \cite{rasmussen2006gaussian} for details.
+These are of course well-known results in Gaussian process literature---see, for example, \citet{rasmussen2006gaussian} for details.
 
 \footnotetext{
 The fact that it is the same is inconsequential.
@@ -163,8 +212,7 @@ It happens to be that the mean of the predictive distribution $\E[y_\new|\by]$ f
 \cite{rasmussen2006gaussian} points out that this is due to symmetries in the model and the posterior.
 }
 
-There is also the matter of optimising model parameters $\theta$.
-In our case, $\theta$ collectively refers to the kernel parameters $\eta$ and the precision matrix of the errors $\bPsi$.
+There is also the matter of optimising model parameters $\theta$, which in our case, collectively refers to the kernel parameters $\eta$ and the precision matrix of the errors $\bPsi$.
 $\theta$ may be estimated in several ways, either by likelihood-based methods or fully Bayesian methods.
 The former includes methods such as direct maximisation of the (marginal) likelihood, $L(\theta) = \int p(\by|\theta,\bff)p(\bff)\d\bff$, and the expectation-maximisation (EM) algorithm.
 Both are seen as a form of \emph{empirical Bayes} estimation.
@@ -182,21 +230,14 @@ The I-prior methodology has the following advantages:
   
   \item \textbf{Simple estimation procedure.}
   
-  Estimation of model parameters using the aforementioned methods are very 
-  \hltodo[Why/How is it simple?]{simple} 
-  to implement, barring any computational and numerical hurdles, which will be discussed.
+  Estimation of model parameters using the aforementioned methods are very simple to implement, barring any computational and numerical hurdles, which will be discussed.
+  This encourages parsimony, as the I-prior allows complex models to be specified by just a handful of model parameters.
   
   \item \textbf{Prevents over-fitting and under-smoothing.}
   
-  When considering functions that minimise the squared loss function\footnote{For the normal model, this is in fact twice the negative log-likelihood of $f$, up to a constant.}
-  \[
-    \Lambda\big(y_i,f(x_i)\big) = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \big(y_i - f(x_i)\big)\big(y_j - f(x_j)\big),
-  \]
-  over-fitting is a genuine concern.
-  In fact, any function $f$ that passes through the data points minimises $\Lambda$.
-  Regularising the problem with the use of I-priors prevents over-fitting.
-  Though over-fitting can be solved using Tikhonov regularisation, the posterior solution under an 
-  \hltodo[Cite or show later?]{I-prior does not tend to under-smooth as much as Tikhonov regularisation does}.
+  As alluded to earlier, the process of inferring $f$ from data is an ``ill-posed'' problem.
+  In fact, any function $f$ that passes through the data points is a solution.
+  Regularising the problem with the use of I-priors prevents over-fitting, with the added advantage that the posterior solution under an I-prior does not tend to under-smooth as much as Tikhonov regularisation does (see Chapter 2 for details).
   Under-smoothing can adversely impact the estimate of $f$, and in real terms might even show features and artefacts that are not really there.
   
   \item \textbf{Better prediction.}
@@ -207,6 +248,10 @@ The I-prior methodology has the following advantages:
   
   Marginal likelihoods after integrating out the I-prior are easily obtained, making model selection via comparison of likelihood a viable option.
   This method of comparing marginal likelihood with maximum likelihood estimate plug-ins of the model parameters, is viewed as comparing empirical Bayes factors in the Bayesian literature.
+  
+  \item \textbf{Proper prior and posterior}
+  
+  \hltodo[Is this an advantage?]{Both the I-prior for $f$ and the posterior solution lies in $\cF$.}
   
 \end{enumerate}
 
@@ -223,12 +268,31 @@ Deviating from the normality assumption would require approximation techniques t
 
 \section{Outline of thesis}
 
+This thesis is structured as follows:
 
-\input{old.tex}
+\begin{itemize}
+  \item Following this introductory chapter, \textbf{Chapter 2} gives a brief overview of functional analysis. 
+  This allows us to better explain and derive the I-prior for the normal regression model. 
+  Note that the reader does not require any in-depth knowledge of RKHSs nor functional analysis to perform I-prior modelling.
+  
+  \item The aforementioned computational methods relating to the estimation of I-prior models are explored in \textbf{Chapter 3}, namely the direct optimisation of the log-likelihood, the EM algorithm, and MCMC methods.
+  The goal is to describe a stable and efficient algorithm for estimating I-prior models.
+  The \proglang{R} package \pkg{iprior} is the culmination of the effort put in towards completing this chapter, which has been made publicly available on the Comprehensive \proglang{R} Archive Network (CRAN).
+  \hltodo{This chapter has also been submitted for publication to Computational Statistics and Data Analysis.}
 
+  \item Many models of interest involve response variables of a categorical nature.
+  A naïve implementation of the I-prior model is certainly possible, but there is certainly a more proper way to account for non-normality of errors.
+  \textbf{Chapter 4} extends the I-prior methodology to discrete outcomes.
+  There, the non-Gaussian likelihood that arises in the posteriors are approximated by way of variational inference.
+  The advantages of the I-prior in normal regression models carry over into categorical response models.
 
+  \item \textbf{Chapter 5} attempts to contribute to the field of model selection.
+  The use of I-priors in the normal model, like Gaussian process priors, allow model comparison to be done easily.
+  Specifically for linear models with $p$ variables to select from, model comparison requires elucidation of $2^p$ marginal likelihoods, and this becomes infeasible when $p$ is large.
+  We use a stochastic search method to choose models that have high posterior probabilities of occurring, equivalent to choosing models that have large Bayes factors.
+\end{itemize}
 
-
+Chapters 3--5 contain computer implementations of the statistical methodologies described therein, and the code for replication are made available at \url{http://myphdcode.haziqj.ml}.
 
 \hClosingStuffStandalone
 \end{document}
