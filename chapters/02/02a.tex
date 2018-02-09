@@ -1,42 +1,3 @@
-For a cleaner read, we do not use boldface type to denote vectors and matrices in this subsection. We begin by recalling that a vector space is a set endowed with two special operations: addition and scalar multiplication. A normed vector space is a vector space whose vectors have lengths, as induced by its norm.
-
-\begin{definition}[Norms]
-	Let $\mathcal F$ be a vector space over $\mathbb R$. A non-negative function $||\cdot||_{\mathcal F}:\mathcal F \times \mathcal F \rightarrow \mathbb [0,\infty)$ is said to be a norm  on $\mathcal F$ if all of the following are satisfied:
-	\begin{itemize}
-	\item \textbf{Absolute homogeneity:} $||\lambda f||_{\mathcal F} = |\lambda| ||f||_{\mathcal F}$, $\forall \lambda \in \mathbb R$, $\forall f \in \mathcal F$
-	\item \textbf{Triangle inequality:} $||f+g||_{\mathcal F} \leq ||f||_{\mathcal F} + ||g||_{\mathcal F}$, $\forall f,g \in \mathcal F$
-	\item \textbf{Separates points:} $||f||_{\mathcal F} = 0 \Leftrightarrow f=0$
-	\end{itemize}
-	The norm $||\cdot||_{\mathcal F}$ induces a metric (a notion of distance) on $\mathcal F$: $d(f,g) = ||f-g||_{\mathcal F}$.
-\end{definition}
-
-We can then define a Cauchy sequence.
-
-\begin{definition}[Cauchy sequence]
-	A sequence $\{f_n\}_{n=1}^\infty$ of elements of a normed vector space $(\mathcal F, ||\cdot ||_{\mathcal F})$ is said to be a Cauchy sequence if for every $\epsilon > 0$, $\exists N=N(\epsilon) \in \mathbb N$, such that $\forall n,m > N$, $||f_n - f_m||_{\mathcal F} < \epsilon$.
-\end{definition}
-
-Another important structure of vector spaces is the inner product, which allows us to study various geometrical notions such as orthogonality, among other things.
-%We begin with the definition of an inner product. 
-
-\begin{definition}[Inner products]
-	Let $\mathcal F$ be a vector space over $\mathbb R$. A function $\langle\cdot,\cdot\rangle_{\mathcal F}:\mathcal F \times \mathcal F \rightarrow \mathbb R$ is said to be an inner product on $\mathcal F$ if all of the following are satisfied:
-	\begin{itemize}
-	\vspace{-1mm}
-	\item \textbf{Symmetry:} $\langle f, g\rangle_{\mathcal F} = \langle g, f	\rangle_{\mathcal F}$, $\forall f,g \in \mathcal F$
-	\vspace{-1mm}
-	\item \textbf{Linearity:} $\langle a f_1 + b f_2, g\rangle_{\mathcal F} = a\langle f_1,g \rangle_{\mathcal F} + b\langle f_2,g \rangle_{\mathcal F}$, $\forall f_1, f_2, g \in \mathcal F$ and $\forall a,b \in \mathbb R$
-	\vspace{-1mm}
-	\item \textbf{Non-degeneracy:} $\langle f, f\rangle_{\mathcal F} = 0 \Leftrightarrow f=0$
-	\vspace{-1mm}
-	\item \textbf{Positive-definiteness:} $\langle f, f\rangle_{\mathcal F} \geq 0$, $\forall f \in \mathcal F$
-	\end{itemize}
-	\vspace{-1mm}	
-	We can always define a norm on $\mathcal F$ using the inner product as $||f||_{\mathcal F} = \sqrt{\langle f, f\rangle_{\mathcal F}}$.
-	Additionally, an inner product is said to be positive definite if $\langle f, f\rangle_{\mathcal F} \geq 0$, $\forall f \in \mathcal F$, and we can always define a norm on $\mathcal F$ using this inner product as $||f||_{\mathcal F} = \sqrt{\langle f, f\rangle_{\mathcal F}}$ . Conversely, an inner product is said to be negative definite if $\langle f, f\rangle_{\mathcal F} \leq 0$, $\forall f \in \mathcal F$. An inner product is said to be indefinite it is neither positive nor negative definite.
-\end{definition}
-
-A vector space equipped with a positive definite inner product that is also complete (contains the limits of all Cauchy sequences) is known as a Hilbert space. We now define a reproducing kernel Hilbert space.
 
 A generalisation of a Hilbert space, one which is equipped with an indefinite inner product, is known as a Krein space.
 
@@ -54,39 +15,6 @@ A generalisation of a Hilbert space, one which is equipped with an indefinite in
 \end{definition}
 
 Any Hilbert space can be seen as a Krein space by taking $\mathcal{F_-} = \{0\}$.
-As we are dealing with function spaces, it might seem unusual in defining functions from $\mathcal F$ to $\mathbb R$, as the elements of $\mathcal F$ are themselves functions. For a space of functions $\mathcal F$ on $\mathcal X$, we define the evaluation functional that assigns a value to $f \in \mathcal F$ for each $x \in \mathcal X$.
-
-\begin{definition}[Evaluation functional]
-	Let $\mathcal F$ be a vector space of functions $f:\mathcal X \rightarrow \mathbb R$, defined on a non-empty set $\mathcal X$. For a fixed $x \in \mathcal X$, the function $\delta_x:\mathcal F \rightarrow \mathbb R$ as defined by $\delta_x(f) = f(x)$ is called the (Dirac) evaluation functional at $x$. Evaluation functionals are always linear.
-\end{definition}
-
-There are two more concepts that we need to cover before defining a reproducing kernel Hilbert/Krein space.
-
-\begin{definition}[Linear operator]
-	A function $A:\mathcal F \rightarrow \mathcal G$, where $\mathcal F$ and $\mathcal G$ are both normed vector spaces over $\mathbb R$, is called a linear operator if and only if it satisfies the following properties:
-	\begin{itemize}
-		\item \textbf{Homogeneity}: $A(af) = a A(f)$, $\forall a \in \mathbb R$, $\forall f \in \mathcal F$
-		\item \textbf{Additivity}: $A(f+g) = A(f) + A(f')$, $\forall f,f' \in \mathcal F$.
-	\end{itemize}	
-\end{definition}
-
-\begin{definition}[Bounder operator]
-	The linear operator $A:\mathcal F \rightarrow \mathcal G$ between two normed spaces $(\mathcal F, ||\cdot||_{\mathcal F})$ and $(\mathcal G, ||\cdot||_{\mathcal G})$ is said to be a bounded operator if $\exists \lambda \in [0,\infty)$ such that
-	$$
-	||A(f)||_{\mathcal G} < \lambda||f||_{\mathcal F}.
-	$$
-\end{definition}
-
-Now we define a reproducing kernel Hilbert space.
-
-\begin{definition}[Reproducing kernel Hilbert space]\label{def:rkhs}
-	A Hilbert space of real-valued functions $f:\mathcal X \rightarrow \mathbb R$ on a non-empty set $\mathcal X$ is called a reproducing kernel Hilbert space if the evaluation functional $\delta_x: f \mapsto f(x)$ is bounded (equivalently, continuous\footnotemark), i.e. $\exists \lambda_x \geq 0$ such that $\forall f \in \mathcal F$,
-	\[
-		|f(x)| = |\delta_x(f)| \leq \lambda_x||f||_{\mathcal F}.
-	\]
-\end{definition}
-
-\footnotetext{For any two function $f,g \in \mathcal F$, $|f(x)-g(x)| = |\delta_x(f) - \delta_x(g)| = |\delta_x(f-g)| \leq \lambda_x||f-g||_{\mathcal F}$ for some $\lambda_x \geq 0$, thus is said to be Lipschitz continuous, which implies uniform continuity. This property implies pointwise convergence from norm convergence in $\mathcal F$.}
 
 The definition is similar for Krein spaces, but there is a slight technical condition regarding strong topologies (see \citeauthor{Ong2004}). 
 Interestingly, the definition above has no mention of what a reproducing kernel is. Let us define it below. 

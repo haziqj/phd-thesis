@@ -13,7 +13,7 @@
 \title{Regression modelling using priors with Fisher information covariance kernels (I-priors)}
 \author{	Haziq Jamil\\
 			\normalsize{\it{Department of Statistics}}\\
-			\normalsize{\it{London School of Economics \& Political Science}}
+			\normalsize{\it{London School of Economics and Political Science}}
 }
 \date{\normalsize\today}
 \maketitle
@@ -39,31 +39,35 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \pagenumbering{arabic}
 
-\chapter{Introduction} \input{chapters/01/introduction}
+\chapter{Introduction} 
+\subimport{chapters/01/}{introduction}
 
-\chapter{Regression using I-priors}
-\subimport{chapters/02/}{iprior-regression}
+\chapter{Reproducing kernel Hilbert and Krein spaces}
+\subimport{chapters/02/}{rkks}
 
-\chapter{Estimation and computational methods for I-prior models}
-\subimport{chapters/03/}{iprior-computation}
+\chapter{Fisher information and the I-prior}
+\subimport{chapters/02/}{fisher-iprior}
 
-\chapter{Examples of I-prior models}
-\subimport{chapters/04/}{iprior-examples}
-
-\chapter{I-priors for categorical responses}
-\subimport{chapters/05/}{iprobit}
-
-\chapter{Estimation of I-probit models using variational inference}
-\subimport{chapters/06/}{iprobit-variational}
-
-\chapter{Examples of I-probit models}
-\subimport{chapters/07/}{iprobit-examples}
-
-\chapter{Variable selection using I-priors}
-\subimport{chapters/08/}{iprior-varsel}
-
-\chapter{Conclusion}
-\input{chapters/09/conclusion}
+%\chapter{Estimation and computational methods for I-prior models}
+%\subimport{chapters/03/}{iprior-computation}
+%
+%\chapter{Examples of I-prior models}
+%\subimport{chapters/04/}{iprior-examples}
+%
+%\chapter{I-priors for categorical responses}
+%\subimport{chapters/05/}{iprobit}
+%
+%\chapter{Estimation of I-probit models using variational inference}
+%\subimport{chapters/06/}{iprobit-variational}
+%
+%\chapter{Examples of I-probit models}
+%\subimport{chapters/07/}{iprobit-examples}
+%
+%\chapter{Variable selection using I-priors}
+%\subimport{chapters/08/}{iprior-varsel}
+%
+%\chapter{Conclusion}
+%\input{chapters/09/conclusion}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% REFERENCES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -77,7 +81,7 @@
 \appendix
 
 \chapter{Appendix for I-probit}
-\subimport{chapters/appendix/}{iprobit-proofs}
+%\subimport{chapters/appendix/}{iprobit-proofs}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \printindex

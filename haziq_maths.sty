@@ -38,6 +38,8 @@
 \declaretheorem[sibling=theorem,style=hTheoremStyle]{conjecture}
 \declaretheorem[style=remark]{remark} 
 \declaretheorem[numberwithin=chapter,style=hDefinitionStyle]{definition}
+\declaretheorem[numberwithin=chapter,style=hDefinitionStyle]{example}
+
  
 \usepackage{dsfont}  % for indicator variables \mathsds{1}
 \usepackage{bm}  % for better bold script
@@ -233,6 +235,7 @@
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
 \DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclarePairedDelimiter{\ip}{\langle}{\rangle}
 \newcommand{\new}{{\text{new}}}
 \newcommand{\Hlam}{\mathbf H_\lambda}
 \newcommand{\blam}{\boldsymbol\lambda}

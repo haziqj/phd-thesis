@@ -1,0 +1,344 @@
+\documentclass[a4paper,showframe,11pt,draft]{report}
+\usepackage{standalone}
+\standalonetrue
+\ifstandalone
+  \usepackage{../../haziq_thesis}
+  \usepackage{../../haziq_maths}
+  \usepackage{../../haziq_glossary}
+  \addbibresource{../../bib/haziq.bib}
+  \externaldocument{../01/.texpadtmp/introduction}
+\fi
+
+\begin{document}
+\hChapterStandalone[2]{Reproducing kernel Krein spaces}
+
+This chapter provides a concise review of functional analysis, especially on topic of reproducing kernel Hilbert and Krein spaces.
+In addition, this chapter also describes several \glspl{rkhs} of interest for the purpose of I-prior modelling.
+Choosing the appropriate \gls{rkhs} allows us to fit various models of interest.
+In I-prior modelling, the kernel defining the \gls{rkhs} turn out to be negative.
+In such a case, it is necessary to consider \emph{Krein spaces}, in order to give us the required mathematical platform for I-prior modelling.
+Krein spaces are simply a generalisation of Hilbert spaces for which the kernels allowed to be non-positive definite it its reproducing kernel space.
+It is emphasised that a deep knowledge of functional analysis is not necessary for I-prior modelling; the advanced reader may wish to skip Sections 2.1--2.3. 
+Section 2.4 describes the RKHSs and RKKSs of interest.
+
+\section{Preliminaries}
+
+The core study of functional analysis revolves around the treatment of functions as objects in vector spaces over a field\footnote{In this thesis, this will be $\bbR$ exclusively.}.
+Vector spaces, or linear spaces as it is known, are sets for which its elements adhere to a set of rules (axioms) relating to additivity and multiplication by a constant.
+Additionally, vector spaces are endowed with some kind of structure so as to allow ideas such as closeness and limits to be conceived.
+Of particular interest to us is the structure brought about by \emph{inner products}, which allow the rigorous mathematical study of various geometrical concepts such as lengths, directions, and orthogonality, among other things.
+We begin with the definition of an inner product. 
+
+\begin{definition}[Inner products]
+	Let $\mathcal F$ be a vector space over $\mathbb R$. A function $\langle\cdot,\cdot\rangle_{\mathcal F}:\mathcal F \times \mathcal F \rightarrow \mathbb R$ is said to be an inner product on $\mathcal F$ if all of the following are satisfied:
+	\begin{itemize}
+	\vspace{-1mm}
+	\item \textbf{Symmetry:} $\langle f, g\rangle_{\mathcal F} = \langle g, f	\rangle_{\mathcal F}$, $\forall f,g \in \mathcal F$
+	\vspace{-1mm}
+	\item \textbf{Linearity:} $\langle a f_1 + b f_2, g\rangle_{\mathcal F} = a\langle f_1,g \rangle_{\mathcal F} + b\langle f_2,g \rangle_{\mathcal F}$, $\forall f_1, f_2, g \in \mathcal F$ and $\forall a,b \in \mathbb R$
+	\vspace{-1mm}
+	\item \textbf{Non-degeneracy:} $\langle f, f\rangle_{\mathcal F} = 0 \Leftrightarrow f=0$
+	\vspace{-1mm}
+	\item \textbf{Positive-definiteness:} $\langle f, f\rangle_{\mathcal F} \geq 0$, $\forall f \in \mathcal F$
+	\end{itemize}
+	\vspace{-1mm}	
+%	Additionally, an inner product is said to be \emph{positive definite} if $\langle f, f\rangle_{\mathcal F} \geq 0$, $\forall f \in \mathcal F$, and we can always define a norm on $\mathcal F$ using this inner product as $||f||_{\mathcal F} = \sqrt{\langle f, f\rangle_{\mathcal F}}$. 
+%	Conversely, an inner product is said to be \emph{negative definite} if $\langle f, f\rangle_{\mathcal F} \leq 0$, $\forall f \in \mathcal F$. 
+%	An inner product is said to be \emph{indefinite} it is neither positive nor negative definite.
+\end{definition}
+
+We can always define a \emph{norm} on $\cF$ using the inner product as $\norm{f}_\cF = \sqrt{\ip{f,f}_\cF}$.
+%In the above definition we had used the term \emph{norm}.
+Norms are another form of structure that specifically describes the notion of length. 
+This is defined below.
+
+\begin{definition}[Norms]
+	Let $\mathcal F$ be a vector space over $\mathbb R$. A non-negative function $||\cdot||_{\mathcal F}:\mathcal F \times \mathcal F \rightarrow \mathbb [0,\infty)$ is said to be a norm  on $\mathcal F$ if all of the following are satisfied:
+	\begin{itemize}
+	\item \textbf{Absolute homogeneity:} $||\lambda f||_{\mathcal F} = |\lambda| \, ||f||_{\mathcal F}$, $\forall \lambda \in \mathbb R$, $\forall f \in \mathcal F$
+	\item \textbf{Subadditivity:} $||f+g||_{\mathcal F} \leq ||f||_{\mathcal F} + ||g||_{\mathcal F}$, $\forall f,g \in \mathcal F$
+	\item \textbf{Point separating:} $||f||_{\mathcal F} = 0 \Leftrightarrow f=0$
+	\end{itemize}
+\end{definition}
+
+The norm $||\cdot||_{\mathcal F}$ induces a metric (a notion of distance) on $\mathcal F$: $d(f,g) = ||f-g||_{\mathcal F}$.
+%Instead of $\bbR$, norms can be defined on any subfield of the complex numbers $\bbC$.
+The subadditivity property is also known as the \emph{triangle inequality}.
+Also note that since $\norm{-f}_\cF = \norm{f}_\cF$, and by the triangle inequality and point separating property we have that $\norm{f}_\cF + \norm{-f}_\cF \geq \norm{f - f}_\cF = \norm{0}_\cF = 0$, which implies non-negativity of norms.
+
+A vector space endowed with an inner product (c.f. norm) is called an inner product space (c.f. normed vector space).
+%A normed vector space is a vector space whose vectors have lengths, as induced by its norm.
+As a remark, inner product spaces can always be equipped with a norm, but not always the other way around.
+With these notions of distances we can then define \emph{Cauchy sequences}.
+A sequence is said to be Cauchy if the elements of the sequence become arbitrarily close to one another as the sequence progresses.
+
+\begin{definition}[Cauchy sequence]
+	A sequence $\{f_n\}_{n=1}^\infty$ of elements of a normed vector space $(\mathcal F, ||\cdot ||_{\mathcal F})$ is said to be a Cauchy sequence if for every $\epsilon > 0$, $\exists N=N(\epsilon) \in \mathbb N$, such that $\forall n,m > N$, $||f_n - f_m||_{\mathcal F} < \epsilon$.
+\end{definition}
+
+If the limit of the Cauchy sequence exists within the vector space, then the sequence converges to it.
+If the vector space contains the limits of all Cauchy sequences (or in other words, if every Cauchy sequence converges), then it is said to be \emph{complete}.
+
+A vector space equipped with a (positive definite) inner product that is also complete is known as a \emph{Hilbert space}. 
+Out of interest, an incomplete inner product space is known as a \emph{pre-Hilbert space}, since its completion with respect to the norm induced by the inner product is a Hilbert space.
+A complete normed space is called a \emph{Banach space}.
+
+The next few definitions are introduced as a necessary precursor to defining a reproducing kernel Hilbert space.
+Firstly,
+
+
+%As we are dealing with function spaces, it might seem unusual in defining functions from $\mathcal F$ to $\mathbb R$, as the elements of $\mathcal F$ are themselves functions. 
+For a space of functions $\mathcal F$ on $\mathcal X$, we define the evaluation functional that assigns a value to $f \in \mathcal F$ for each $x \in \mathcal X$.
+
+\begin{definition}[Evaluation functional]
+	Let $\mathcal F$ be a vector space of functions $f:\mathcal X \rightarrow \mathbb R$, defined on a non-empty set $\mathcal X$. For a fixed $x \in \mathcal X$, the function $\delta_x:\mathcal F \rightarrow \mathbb R$ as defined by $\delta_x(f) = f(x)$ is called the (Dirac) evaluation functional at $x$. Evaluation functionals are always linear.
+\end{definition}
+
+There are two more concepts that we need to cover before defining a reproducing kernel Hilbert/Krein space.
+
+\begin{definition}[Linear operator]
+	A function $A:\mathcal F \rightarrow \mathcal G$, where $\mathcal F$ and $\mathcal G$ are both normed vector spaces over $\mathbb R$, is called a linear operator if and only if it satisfies the following properties:
+	\begin{itemize}
+		\item \textbf{Homogeneity}: $A(af) = a A(f)$, $\forall a \in \mathbb R$, $\forall f \in \mathcal F$
+		\item \textbf{Additivity}: $A(f+g) = A(f) + A(g)$, $\forall f \in \mathcal F, g \in \cG$.
+	\end{itemize}	
+\end{definition}
+
+\begin{definition}[Bounder operator]
+	The linear operator $A:\mathcal F \rightarrow \mathcal G$ between two normed spaces $(\mathcal F, ||\cdot||_{\mathcal F})$ and $(\mathcal G, ||\cdot||_{\mathcal G})$ is said to be a bounded operator if $\exists \lambda \in [0,\infty)$ such that
+	$$
+	||A(f)||_{\mathcal G} < \lambda||f||_{\mathcal F}.
+	$$
+\end{definition}
+
+Now we define a reproducing kernel Hilbert space.
+
+\begin{definition}[Reproducing kernel Hilbert space]\label{def:rkhs}
+	A Hilbert space of real-valued functions $f:\mathcal X \rightarrow \mathbb R$ on a non-empty set $\mathcal X$ is called a reproducing kernel Hilbert space if the evaluation functional $\delta_x: f \mapsto f(x)$ is bounded (equivalently, continuous\footnotemark), i.e. $\exists \lambda_x \geq 0$ such that $\forall f \in \mathcal F$,
+	\[
+		|f(x)| = |\delta_x(f)| \leq \lambda_x||f||_{\mathcal F}.
+	\]
+\end{definition}
+
+\footnotetext{For any two function $f,g \in \mathcal F$, $|f(x)-g(x)| = |\delta_x(f) - \delta_x(g)| = |\delta_x(f-g)| \leq \lambda_x||f-g||_{\mathcal F}$ for some $\lambda_x \geq 0$, thus is said to be Lipschitz continuous, which implies uniform continuity. This property implies pointwise convergence from norm convergence in $\mathcal F$.}
+
+
+
+\begin{theorem}[Representation theorem]
+  Every continuous linear functional $f$ on a Hilbert space $\cH$ has the form
+  \[
+    f(x) = \ip{x,y}
+  \]
+  with a unique $y \in \cM$ and $\norm{f} = \norm{y}_\cH$.
+\end{theorem}
+
+\begin{theorem}[Orthogonal decomposition]
+  Let $\cH$ be a Hilbert space and $\cM \subset \cH$ be a closed subspace.
+  For every $x \in \cH$, we can write
+  \[
+    x = y + z
+  \]
+  where $y \in \cM$ and $z \in \cM^\bot$, and $y$ and $z$ are uniquely determined by $x$.
+\end{theorem}
+
+\begin{corollary}
+  Let $\cM$ be a subspace of a Hilbert space $\cH$. Then, $\cM^\bot = \{0\}$ if and only if $\cM$ is dense in $\cH$.
+\end{corollary}
+
+\url{https://en.wikibooks.org/wiki/Functional_Analysis/Hilbert_spaces}
+
+In infinite-dimensional Hilbert spaces, some subspaces are not closed, but all orthogonal complements are closed. 
+In such spaces, the orthogonal complement of the orthogonal complement of $\cH$ is the closure of $\cH$, i.e. $(\cH^\bot)^\bot = \overline \cH$.
+If $\cM$ is a closed linear subspace of $\cH$, then $\cH = \cM \oplus \cM^\bot$.
+
+\section{Reproducing kernel Hilbert spaces}
+
+\section{Reproducing kernel Krein spaces}
+
+%\section{Scale and centering of RKHS/RKKS}
+
+\section{RKHS building blocks}
+
+In what follows, each of the kernel functions will have its associated scale parameter denoted by $\lambda$.
+Further, to make the distinction between centred and non-centred versions of the kernels, we use the notation $h$ to denote the uncentred version, and $\bar h$ to denote the centred version.
+
+\subsection{The RKHS of constant functions}
+
+The vector space of constant functions $\cF$ over a set $\cX$ contains the functions $f:\cX \to \bbR$ such that $f(x) = c_f \in \bbR$, $\forall x \in \cX$.
+These functions would be useful to model an overall average, i.e. an ``intercept effect''.
+The space $\cF$ can be equipped with a norm to form an RKHS, as shown in the following lemma.
+
+\begin{proposition}[RKHS of constant functions]
+%  Let $\cF$ be the RKHS of functions over a set $\cX$ with reproducing kernel $h:\cX\times\cX\to\bbR$ as defined rather simply by
+%  \[
+%    h(x,x') = 1.
+%  \]
+%  Then $\cF$ consists of constant functions over $\cX$.
+%  Furthermore, if $f(x) = c_f \in \bbR$, $\forall x \in \cX$, then $\norm{f}_\cF = \vert c_f \vert$.
+  The space $\cF$ as described above endowed with the norm $\norm{f}_\cF = \vert c_f \vert$ forms an RKHS with the reproducing kernel $h:\cX\times\cX\to\bbR$ as defined, rather simply by,
+  \[
+    h(x,x') = 1,
+  \]
+  known as the constant kernel.
+\end{proposition}
+
+\begin{proof}
+  If $\cF$ is an RKHS with kernel $h$ as described, then $\cF$ is spanned by the  functions $h(\cdot,x) = 1$, so it is clear that $\cF$ consists of constant functions over $\cX$.
+  On the other hand, if the space $\cF$ is equipped with the inner product $\ip{f,f'}_\cF = c_f c_{f'}$, then the reproducing property follows, since $\ip{f,h(\cdot,x)}_\cF = c_f = f(x)$.
+  Hence, $\norm{f}_\cF = \sqrt{\ip{f,f}_\cF} = \vert c_f \vert$.
+\end{proof}
+
+In I-prior modelling, one need not consider any scale parameter on reproducing kernel, as the scale parameter would not be identified otherwise.
+See later chapter for details.
+\hltodo{I think the scale parameter $\lambda$ would just be absorbed by the norm, which is a single value of interest and that is what is ``observed'', and the decomposition $\lambda\cdot c_f$ is not so interesting.}
+
+\subsection{The canonical (linear) RKHS}
+
+Consider a function space $\cF$ over $\cX$ which consists of functions of the form $f_\beta:\cX\to\bbR$, $f_\beta: x \mapsto \ip{x,\beta}_\cX$ for some $\beta\in\bbR$.
+Suppose that $\cX \equiv \bbR^p$, then $\cF$ consists of the linear functions $f_\beta(x) = x^\top\beta$.
+More generally, if $\cX$ is a Hilbert space, then its continuous dual consists of elements of the form $f_\beta = \ip{\cdot,\beta}_\cX$.
+We can show that the continuous dual space of $\cX$ is a RKHS which consists of these linear functions.
+
+\begin{proposition}[The canonical RKHS]
+  The continuous dual space a Hilbert space $\cX$, denoted by $\cX'$, is a RKHS of linear functions over $\cX$ of the form $\ip{\cdot,\beta}_\cX$, $\beta\in\cX$. Its reproducing kernel $h:\cX\times\cX\to\bbR$ is defined by
+  \[
+    h(x,x') = \ip{x,x'}_{\cX}.
+  \]
+\end{proposition}
+
+\begin{proof}
+  Define $f_\beta := \ip{\cdot,\beta}_\cX$ for some $\beta \in \cX$.
+  Clearly this is linear and continuous, so $f_\beta\in\cX'$, and so $\cX'$ is a Hilbert space containing functions $f:\cX\to\bbR$ of the form $f_\beta(x) = \ip{x,\beta}_\cX$.
+  By the Riesz representation theorem, every element of $\cX'$ has the form $f_\beta$.
+  It also gives us a natural isometric isomorphism such that the following is true:
+  \[
+    \ip{\beta,\beta'}_\cX = \ip{f_\beta,f_{\beta'}}_{\cX'}.
+  \]
+  Hence, for any $f_\beta\in\cX'$, 
+  \begin{align*}
+    f_\beta(x) 
+    &= \ip{x,\beta}_\cX \\
+    &= \ip{f_x,f_{\beta}}_{\cX'} \\
+    &= \big\langle \ip{\cdot,x}_\cX,f_{\beta} \big\rangle_{\cX'}.
+  \end{align*}
+  Thus, $h:\cX\times\cX\to\bbR$ as defined by $h(x,x') = \ip{x,x'}_\cX$ is the reproducing kernel of $\cX'$.
+\end{proof}
+
+In many other literature, the kernel $h(x,x') = \ip{x,x'}_\cX$ is also known as the \emph{linear kernel}.
+The use of the term `canonical' is fitting not just due to the relation between a Hilbert space and its continuous dual space.
+Let $\phi:\cX\to\cV$ be the feature map from the space of covariates (inputs) to some feature space $\cV$.
+Suppose both $\cX$ and $\cV$ is a Hilbert space, then a kernel is defined as 
+\[
+  h(x,x') = \ip{\phi(x),\phi(x')}_\cV.
+\]
+Taking the feature map to be $\phi(x) = \ip{\cdot,x}_\cX$, we can prove the reproducing property to obtain $h(x,x') = \ip{x,x'}_\cX$, which implies $\phi(x) = h(\cdot,x)$, and thus $\phi$ is the \emph{canonical feature map} \citep[Lemma 4.19]{steinwart2008support}.
+
+The origin of a Hilbert space may be arbitrary, in which case a centring may be appropriate.
+We define the centred canonical RKHS as follows.
+
+\begin{definition}[Centred canonical RKHS]
+  Let $\cX$ be a Hilbert space, $\Prob$ be a probability measure over $\cX$, and $\mu\in\cX$ be the mean (i.e. $\E\ip{x,x'}_{\cX}  = \ip{\mu,x'}_{\cX}$ for all $x' \in \cX$) with respect to this probability measure.
+  Define $(\cX - \mu)'$, the continuous dual space of $\cX - \mu$, to be the \emph{centred canonical RKHS}.
+  $(\cX - \mu)'$ consists of the centred linear functions $f_\beta(x)=\ip{x-\mu,\beta}_\cX$, for $\beta\in\cX$, such that $\E f_\beta(x) = 0$.
+  The reproducing kernel of $(\cX - \mu)'$ is
+  \[
+    h(x,x') = \ip{x-\mu,x'-\mu}_\cX.
+  \]
+\end{definition}
+
+\begin{proof}
+  Proof of the claim $\E f_\beta(x) = 0$:
+  \begin{align*}
+    \E f_\beta(x) 
+    &= \E \ip{x-\mu,\beta}_\cX \\
+    &= \E \ip{x,\beta}_\cX - \ip{\mu,\beta}_\cX,
+  \end{align*}
+  and since $\E \ip{x,\beta}_\cX = \ip{\mu,\beta}_\cX$ for any $\beta\in\cX$, the results follows.
+\end{proof}
+
+\begin{remark}
+  In practice, the probability measure $\Prob$ over $\cX$ is unknown, so we may use the empirical distribution over $\cX$, so that $\cX$ is centred by the sample mean $\hat\mu = \frac{1}{n}\sum_{i=1}^n x_i$.  
+\end{remark}
+
+
+\subsection{The fractional Brownian motion RKHS}
+
+Suppose $B_\gamma(t)$ is a continuous-time Gaussian process on $[0,T]$, i.e. for any finite set of indices $t_1,\dots,t_k$, where each $t_j \in [0,T]$, $\big(B_\gamma(t_1),\dots,B_\gamma(t_k)\big)$ is a multivariate normal random variable.
+$B_\gamma(t)$ is said to be a \emph{fractional Brownian motion} (fBm) if $\E B_\gamma(t) = 0$ for all $t \in [0,T]$ and 
+\[
+  \Cov\big(B_\gamma(t),B_\gamma(s) \big) = \half\big( |t|^{2\gamma} + |s|^{2\gamma} + |t-s|^{2\gamma} \big) \hspace{1cm} \forall t,s \in [0,T],
+\]
+where $\gamma \in (0,1)$ is called the Hurst index or Hurst parameter.
+Introduced by \citet{mandelbrot1968fractional}, fBms are a generalisation of Brownian motion.
+The Hurst parameter plays two roles: 1) It describes the raggedness of the resultant motion, with higher values leading to smoother motion; and 2) it determines the type of process the fBm is, as past increments of $B_\gamma(t)$ are weighted by $(t-s)^{\gamma-1/2}$.
+When $\gamma=1/2$ exactly, then the fBm is a Brownian motion and its increments are independent; when $\gamma > 1/2$ ($\gamma < 1/2$) its increments are positively (negatively) correlated.
+
+%\citet{schoenberg1937certain} has shown that, for $0 < \gamma\leq 1$, there exists a Hilbert space $\cB$ and a function $\phi_\gamma:\cX\to\cB$ such that $\forall x,x' \in \cX$,
+%\[
+%  \big\Vert \phi_\gamma(x) - \phi_\gamma(x') \big\Vert_\cB = \norm{x-x'}_\cX^\gamma.
+%\]
+
+Let $\cX$ be a Hilbert space. 
+Defining a kernel function $h:\cX\times\cX\to\bbR$ identical to the fBm covariance kernel yields the so-called \emph{fractional Brownian motion RKHS}.
+
+\begin{definition}[Fractional Brownian motion (fBm) RKHS]
+  The fractional Brownian motion RKHS $\cF$ is the space of functions on the Hilbert space $\cX$ possessing the reproducing kernel $h:\cX\times\cX\to\bbR$ defined by
+  \[
+    h(x,x') = \half\big( \norm{x}_\cX^{2\gamma} + \norm{x'}_\cX^{2\gamma} + \norm{x-x'}_\cX^{2\gamma} \big),
+  \]
+  which depends on the Hurst coefficient $\gamma \in (0,1)$.
+\end{definition}
+
+It is clear that the fBm kernel is positive definite by construction, and thus induces an RKHS.
+That the fBm RKHS describes a space of functions is proved in \citet{cohen2002}, who studied this space in depth. 
+It is also noted in the collection of examples of \citet[pp.71 \& 319]{berlinet2011reproducing}.
+
+
+
+
+
+
+
+
+
+\subsection{The squared exponential RKHS}
+
+Are SE smoother than fBm? Mainly used because of the ``universal approximation'' property of SE kernels.
+
+\subsection{The Pearson RKHS}
+
+\section{Constructing RKKS from existing RKHS}
+
+\subsection{Scale of an RKHS}
+
+\subsection{The polynomial RKHS}
+
+\subsection{The ANOVA RKKS}
+
+
+\section{The Sobolev-Hilbert inner product}
+
+\section{Discussion}
+
+
+
+
+
+%\section{Some functional analysis}
+%\input{02a}
+
+%\section{The Fisher information}
+%\input{02b}
+%
+%\section{The I-prior}
+%\input{02c}
+%
+%\section{Kernel functions}
+%\input{02d}
+%
+%\section{Comparison to Gaussian process priors}
+%\input{02e}
+
+
+\hClosingStuffStandalone
+\end{document}

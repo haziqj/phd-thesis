@@ -9,14 +9,14 @@
 \fi
 
 \begin{document}
-\hChapterStandalone{Introduction}
-
-Regression analysis is undoubtedly one of the most important tools available at a practitioner's disposal to understand the relationship between one or more explanatory variables $x$, and the independent variable of interest, $y$.
+\hChapterStandalone[1]{Introduction}
+                
+Regression\index{regression} analysis is undoubtedly one of the most important tools available at a practitioner's disposal to understand the relationship between one or more explanatory variables $x$, and the independent variable of interest, $y$.
 This relationship is usually expressed as $y \approx f(x;\theta)$, where $f$ is called the \emph{regression function}, and this is   dependent on one or more parameters denoted by $\theta$.
 Regression analysis concerns the estimation of said regression function, and once a suitable estimate $\hat f$ has been found, post-estimation procedures such as prediction, and inference surrounding $f$ or $\theta$, may be performed.
 
 Estimation of the regression function may be done in many ways.
-This thesis concerns the use of \emph{I-priors} \citep{bergsma2017}, in a semi-Bayesian manner, for regression modelling.
+This thesis concerns the use of \emph{I-priors} \citep{bergsma2017}, in a semi-Bayesian\index{Bayes} manner, for regression modelling.
 The I-prior is an objective, entropy-maximising prior for the regression function which makes use of its Fisher information.
 The essence of regression modelling using I-priors is introduced briefly below, but as the development of I-priors is fairly recent, and we dedicate a full chapter (Chapter 2) to describe the concept fully.
 
@@ -70,7 +70,7 @@ Models of this nature still fall under the remit of the normal regression model 
 \section{Vector space of functions}
 
 It would be beneficial to prescribe some sort of structure for which 1) we may choose a regression function appropriately, and 2) this function will generalise well to unseen data (prediction). 
-This needed structure is given to us by assuming that our regression function for the normal model lies in some \gls{rkhs} $\cF$, with reproducing kernel $h:\cX \times \cX \to \bbR$.
+This needed structure is given to us by assuming that our regression function for the normal model lies in some \gls{rkhs} $\cF$ equipped with the reproducing kernel $h:\cX \times \cX \to \bbR$.
 Often, the reproducing kernel (or simply kernel, for short) is indexed by one or more parameters which we shall denote as $\eta$.
 Correspondingly, the kernel is rightfully denoted as $h_\eta$ to indicate the dependence of the parameters on the kernels, though where this is seemingly obvious, might be omitted.
 Throughout this thesis we shall make the assumption that our regression function lies in a reproducing kernel Hilbert space $\cF$.

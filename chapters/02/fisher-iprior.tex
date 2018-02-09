@@ -1,0 +1,608 @@
+\documentclass[a4paper,showframe,11pt,draft]{report}
+\usepackage{standalone}
+\standalonetrue
+\ifstandalone
+  \usepackage{../../haziq_thesis}
+  \usepackage{../../haziq_maths}
+  \usepackage{../../haziq_glossary}
+  \addbibresource{../../bib/haziq.bib}
+  \externaldocument{../01/.texpadtmp/introduction}
+\fi
+
+\begin{document}
+\hChapterStandalone[3]{Fisher information and the I-prior}
+
+The main aim of this chapter is to derive the I-prior for the normal regression model stated earlier in \eqref{eq:model1}.
+
+In this section, we derive the Fisher information for the regression function $f$ in the model stated in \eqref{eq:model1} subject to \eqref{eq:model1ass}.
+Traditionally, Fisher information are calculated for unknown parameters $\theta$ of probability distribution from observable random variables.
+In a similar light, we can treat the regression function $f$ as the unknown quantity for which we would like information to be measured from the random variables for which $f$ is assumed to model.
+
+\section{The traditional Fisher information}
+
+It was \citet{ra1922mathematical} who introduced the method of maximum likelihood as an objective way of obtaining parameter estimates of a statistical model.
+The purpose of maximum likelihood estimation extended to include this view of capturing uncertainty about parameter estimates, especially through the likelihood function as a whole and also a derivative of it known as the Fisher information.
+
+Suppose $Y$ is a random variable whose density function $p(\cdot|\theta)$ depends on the parameter $\theta$.
+Write the log-likelihood function of $\theta$ as $L(\theta) = \log p(Y|\theta)$, and the gradient function of the log-likelihood  (the \emph{score function}) as $S(\theta) = \partial L(\theta)/\partial\theta$.
+The \emph{Fisher information} about a the parameter $\theta$ is defined to be expectation of the second moment of the score function, 
+%$\cI(\theta) = \E[S(\theta)^2] = \int S(\theta)^2 \, p(y|\theta) \d y$.
+\[
+  \cI(\theta) = \E\left[\left(\frac{\partial}{\partial\theta} \log p(Y|\theta)\right)^2\right].
+\]
+Here, expectation is taken with respect to the random variable $Y$ under its true distribution.
+Under certain regularity conditions, it can be shown that $\E[S(\theta)] = 0$, and thus the Fisher information is in fact the variance of the score function, since $\Var[S(\theta)] = \E[S(\theta)^2] - \E^2[S(\theta)]$.
+Further, if $\log p(Y|\theta)$ is twice differentiable with respect to $\theta$, then it can be shown that under certain regularity conditions,
+\[
+  \cI(\theta) = \E\left[-\frac{\partial ^ 2}{\partial\theta^2} \log p(Y|\theta)\right].
+\]
+Many textbooks provides a proof of this fact---see, for example, \citet{wasserman2013all}.
+
+From the last equation above, we see that the Fisher information is related to the curvature or concavity of the graph of the log-likelihood function, averaged over the random variable $Y$.
+The curvature, defined as the second derivative on the graph\footnote{Formally, the graph of a function $g$ is the set of all ordered pairs $(x, g(x))$.}~of a function, measures how quickly the function changes with changes in its input values.
+This then gives an intuition regarding the uncertainty surrounding $\theta$ at its maximal value; high Fisher information is indicative of a sharp peak at the maxima and therefore small variance, while low Fisher information is indicative of a shallow maxima for which many $\theta$ share similar log-likelihood values.
+
+\hltodo{Initially, I wrote about observed vs expected Fisher information and total vs unit Fisher information, but realised it does not contribute to the later discussion. We need the true and total Fisher information.}
+
+%For many applications, it is of interest to evaluate the (total) Fisher information at the maximum likelihood estimate under a sampling scenario.
+%However, the expectation required to calculate the Fisher information above cannot be done without knowing the true value of $\theta$.
+%As a point of clarification, we ought to make the distinction between the \emph{expected} Fisher information and the \emph{observed} Fisher information under a sampling scenario.
+%There are two quantities that are typically used as an approximation, and these are explained below.
+%Let $y = \{y_1,\dots,y_n\}$ represent an independent and identically distributed observed sample from $p(\cdot|\theta)$.
+%The maximum likelihood (ML) estimator $\hat\theta = \argmax_\theta L(\theta)$ for $\theta$ satisfies the first order conditions $S(\hat\theta) = 0$, where the log-likelihood function and the score function makes use of all of the observed samples, i.e. $L(\theta) = \sum_{i=1}^n \log p(y_i|\theta)$.
+%In a sampling experiment, the total Fisher information (denoted $\cI_n(\theta)$) is just $n$ times the unit Fisher information, i.e. $\cI_n(\theta) = n\cI(\theta)$.
+%Following \citet{efron1978assessing}, the expected Fisher information is defined to be $\cI_n(\hat\theta)$, while the observed Fisher information is
+%\[
+%  \hat\cI_n = -\sum_{i=1}^n \frac{\partial ^ 2}{\partial\theta^2} \log p(y_i|\theta) \bigg|_{\theta = \hat\theta} \ .
+%\]
+%%which is also by definition the negative Hessian. 
+%Note that 
+%%\[
+%%  \cJ(\theta) = -\frac{1}{n} \sum_{i=1}^n \frac{\partial ^ 2}{\partial\theta^2} \log p(y_i|\theta) 
+%%\]
+%$\frac{1}{n}\hat\cI_n \to \cI(\hat\theta)$ in probability as $n\to\infty$ by the weak law of large numbers.
+%Both of these quantities are used as replacements of the actual Fisher information about the ``true'' parameter.
+%In the context of measuring curvatures, the expected Fisher information would be used \citep{pawitan2001all}, but in the context of efficient variance for ML estimates, the observed Fisher information is favoured \citep{efron1978assessing}.
+%which by the law of large numbers, converges in probability to the expected Fisher information $\cI(\theta)$ as defined above.
+%In practice, one would not be able to calculate $\cI$ without knowing the true value for $\theta$, so replacing occurrences of $\theta$ with  (the MLE)
+
+%In particular, near the MLE, low Fisher information indicates a shallow maxima, while high observed information indicates a ``sharp'' maxima.
+%A shallow maxima is an indication that many nearby values have similar log-likelihood, but a sharp maxima is indicative of a high confidence surrounding the MLE.
+
+\section{Fisher information for Hilbert space objects}
+
+We extend the idea beyond thinking about parameters as merely numbers, to abstract objects in Hilbert spaces. 
+This generalisation allows us to extend the concept of Fisher information to regression functions in RKHSs later.
+
+Let $Y$ be a random variable with density in the parametric family $\{p(\cdot|\theta) \,|\, \theta \in \Theta \}$, where $\Theta$ is assumed to be a Hilbert space with inner product $\ip{\cdot,\cdot}_\Theta$.
+If $p(Y|\theta) > 0$\hltodo[Why wouldn't it be >0 ?]{}, the log-likelihood function of $\theta$ is denoted $L(\theta) = \log p(Y|\theta)$. 
+The score and Fisher information is derived in a familiar manner, but a extra care is required when taking derivatives with respect to Hilbert space objects.  
+In particular, we require \emph{directional derivatives} and \emph{gradients} concerning inner product space objects.
+
+\begin{definition}[Directional derivative and gradient]
+  Let ($\cH$, $\ip{\cdot,\cdot}_\cH$) be an inner product space, and consider a function $g:\mathcal H \rightarrow \mathbb R$. 
+  Denote the directional derivate of $g$ in the direction $z$ by $\nabla_z g$, that is, 
+	\[
+		\nabla_z g(x) = \lim_{\delta \rightarrow 0} \frac{g(x + \delta z) - g(x)}{\delta}.
+	\]
+	The gradient of $g$, denoted by $\nabla g$, is the unique vector field satisfying 
+	\[
+		\langle \nabla g(x), z \rangle_{\mathcal H} = \nabla_z g(x), \ \ \ \forall x,z \in \mathcal H.
+	\]
+\end{definition}
+
+\begin{definition}
+  Let $\cX$ and $\cY$ be two Hilbert spaces.
+  A functional $\phi$ is a map from $\cX$ to $\bbR$, and we denote its action on a function $f$ as $\phi(f)$.
+  An operator $F$ is a map from $\cX$ to $\cY$, and we denote its action on a function $f$ as $Ff$.
+  We say that a functional $\phi$ is Fréchet differentiable at $f \in \cX$ when there exists a linear functional $A:\cX\to\bbR$ such that
+  \[
+    \lim_{h\to 0} \frac{\big\vert \phi(f+h) - \phi(f) - A(h) \big\vert}{\norm{h}_\cX} = 0
+  \]
+  If this relation holds, we say that $A$ is the functional derivative, or Fréchet derivative, of $\phi$ at $f$, and we denote it as 
+  \[
+    A = \frac{\partial\phi}{\partial f}[f].
+  \]
+  The differential ratio formula $\partial\phi/\partial f$ is called the Gâteaux derivative
+  \[
+    \frac{\partial\phi}{\partial f}[f](h) = A(h) = \lim_{t\to 0} \frac{\phi(f+th)-\phi(f)}{t}
+  \]
+  which corresponds to the idea of directational derivatives.
+\end{definition}
+
+So $\frac{\partial\phi}{\partial f}[f](h) \equiv A(h) \equiv \nabla_h \phi(f)$ and the gradient $\nabla\phi$ satisfies
+\[
+  \ip{\nabla\phi(f),h} = \nabla_h \phi(f) =  A(h) = \ip{A,h}
+\]
+thus $\nabla\phi(f) = A$.
+
+\newpage
+We can now define the score, assuming existence, as the gradient of $L(\theta)$, i.e. $S(\theta) = \nabla L(\theta)$.  
+The Fisher information $\cI(\theta) \in \mathcal \cH \otimes \mathcal \cH$ for $\theta \in \Theta$ is
+\[
+	\cI(\theta) = \E[\nabla L(\theta) \otimes \nabla L(\theta)],
+\]
+or equivalently,
+\[
+	\cI(\theta) = -\E[\nabla^2 L(\theta)],
+\]
+where again, stated for clarity, expectations are taken with respect to the random variable $Y$ under the true distribution $p(\cdot|\theta)$.
+In the above definitions, $\nabla^2$ is the second-order gradient, and the operation $\otimes:\cH \times \cH \to \cH \otimes \cH$ is the tensor product, mapping elements from $\cH^2$ to the tensor product space $\cH \otimes \cH$.
+
+Taking this concept further, we can also define the Fisher information for a linear functional of $\theta$, or between two linear functionals of $\theta$.
+This is essence of the next lemma.
+
+\begin{lemma}[Fisher information for linear functionals]\label{thm:fisherlinfunc}
+	Following the above definitions, suppose that the Fisher information for $\theta \in \Theta$ is $\cI(\theta)$, with $\Theta$ a Hilbert space with inner product $\ip{\cdot,\cdot}_\Theta$.
+	For some $b\in\Theta$, denote $\theta_b = \ip{\theta,b}_\Theta$.
+	Then, the Fisher information for $\theta_b$ is given as
+	\[
+		\cI(\theta_b) = \ip{\cI(\theta), b \otimes b}_{\Theta \otimes \Theta},
+	\]
+	and, more generally, the Fisher information between $\theta_b$ and $\theta_{b'}$ is given as
+	\[
+		\cI(\theta_b,\theta_{b'}) = \ip{\cI(\theta), b \otimes b'}_{\Theta \otimes \Theta}
+	\]
+\end{lemma}
+
+\begin{proof}
+  Let $\cB$ be a set containing an orthonormal sequence of points in $\Theta$, i.e. $\cB$ is a Hilbert basis for the Hilbert space $\Theta$. 
+  Then, by definition, every $\theta \in \Theta$ can be written as
+  \[
+    \theta = \sum_{\beta \in \cB} \ip{\theta,\beta}_\Theta \beta.
+  \]
+  Now, the score function with respect to the linear functional $\theta_b = \ip{\theta,b}_\Theta$ is
+  \begin{align*}
+    \frac{\partial}{\partial\theta_b} L(\theta) 
+    &= \dots \\
+    &= \nabla_b L(\theta) \\
+    %\frac{\partial}{\partial\theta_b} L\big(\textstyle\sum_{\beta \in \cB} \theta_\beta \beta\big) \\
+    &= \langle \nabla L(\theta), b \rangle_{\Theta}
+  \end{align*}
+  Differentiating again gives
+  \begin{align*}
+    \frac{\partial^2}{\partial\theta_b\partial\theta_{b'}} L(\theta) 
+    &= \langle \nabla L^2(\theta), b \otimes b' \rangle_{\Theta \otimes \Theta}
+  \end{align*}  
+%  Provided $\E \norm{\nabla L^2(\theta)}_{\Theta \otimes \Theta} < \infty$, then it follows from Fubini's theorem that taking expectations and multiplying both sides by minus one gives the desired result.
+  Note that by the bilinear property of tensor products,
+    \begin{align*}
+    -\frac{\partial^2}{\partial\theta_b\partial\theta_{b'}} L(\theta)
+    &= (-1) \cdot \langle \nabla L^2(\theta), b \otimes b' \rangle_{\Theta \otimes \Theta} \\
+    &= \langle -\nabla L^2(\theta), b \otimes b' \rangle_{\Theta \otimes \Theta}.
+  \end{align*}  
+  Provided $\E \norm{\nabla L^2(\theta)}_{\Theta \otimes \Theta} < \infty$, taking expectations of both sides gives the desired result, since $b\otimes b'$ is free of $Y$ and is therefore constant under the expectation. 
+  \hltodo{Not really convinced of this proof.}
+\end{proof}
+
+\section{Fisher information for regression functions}
+
+We are now equipped to derive the Fisher information for our regression function.
+For convenience, we restate the regression model and its assumptions.
+The regression model relating response variables $y_i \in \bbR$ and the covariates $x_i \in \cX \subseteq \bbR^p$, for $i=1,\dots,n$ is
+\begin{align}
+  y_i = \alpha + f(x_i) + \epsilon_i \tag{\ref{eq:model1}},
+\end{align}
+subject to
+\begin{align}
+  (\epsilon_1, \dots, \epsilon_n)^\top \sim \N_n(0, \bPsi^{-1}) \tag{\ref{eq:model1ass}}
+\end{align}
+where $\alpha \in \bbR$ is an intercept and $f$ is in an RKHS $\cF$ with kernel $h_\eta:\cX \times \cX \to \bbR$.
+
+\begin{lemma}[Fisher information for regression function]\label{thm:fisherregf}
+  For the regression model stated in \eqref{eq:model1} subject to \eqref{eq:model1ass} and $f \in \cF$ where $\cF$ is an RKHS with kernel $h$, the Fisher information for $f$ is given by
+  \[
+    \cI(f) = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(\cdot,x_i) \otimes h(\cdot,x_j)
+  \]
+  where $\psi_{ij}$ are the $(i,j)$-th entries of the precision matrix $\bPsi$ of the normally distributed model errors.
+  More generally, suppose that $\cF$ has a feature space $\cV$ such that the mapping $\phi:\cX \to \cV$ is its feature map, and if $f(x)=\ip{\phi(x),v}_\cV$, then the Fisher information $I(v) \in \cV \otimes \cV$ for $v$ is
+  \[
+    \cI(v) = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \phi(x_i) \otimes \phi(x_j).
+  \]
+\end{lemma}
+
+\begin{proof}
+	For $x \in \mathcal X$, let $k_x:\mathcal V \rightarrow \mathbb R$ be defined by $k_x(v) = \langle \phi(x), v \rangle_{\mathcal V}$. 
+	Clearly, $k_x$ is linear and continuous.
+%	By the reproducing property, $k_x(f) = f(x)$. 
+	Hence, the directional derivative of $k_x(v)$ in the direction $u$ is
+	\begin{align*}
+		\nabla_u k_x(v)	
+		&= \lim_{\delta \rightarrow 0} \frac{k(v+\delta u) - k(v)}{\delta} \\
+		&= \lim_{\delta \rightarrow 0} \frac{\langle \phi(x), v+\delta u \rangle_{\cV} - \langle \phi(x), v \rangle_{\cV}}{\delta} \\
+		&= \lim_{\delta \rightarrow 0} \frac{\delta\langle \phi(x), u \rangle_{\cV}}{\delta} \\
+		&= \langle \phi(x), u \rangle_{\cV}.
+	\end{align*}
+	Thus, the gradient is $\nabla k_x(f) = \phi(x)$ by definition. 
+	Let $\by = \{y_1,\dots,y_n\}$, and denote the hyperparameters of the regression model by $\btheta = \{ \alpha,\bPsi,\eta \}$.
+	The log-likelihood of $v$ is given by
+	\begin{align*}
+		L(v|\by,\btheta) 
+		&= \const - \frac{1}{2} \sum_{i=1}^n\sum_{j=1}^n \psi_{ij}\big(y_i - \alpha - k_{x_i}(v)\big)\big(y_j - \alpha - k_{x_j}(v)\big)
+	\end{align*}
+	and the score by
+	\begin{align*}
+		\nabla L(v|\by,\btheta)
+		&= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij}\big(y_i - \alpha - k_{x_i}(v)\big)\nabla k_{x_j}(v).
+	\end{align*}
+	Differentiating again gives
+	\[
+	  \nabla^2 L(v|\by,\btheta) = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \nabla k_{x_i}(v) \otimes \nabla k_{x_j}(v).
+	\]
+	We can then calculate the Fisher information to be
+	\begin{align*}
+		\cI(v) = -\E[\nabla^2 L(v|\by,\btheta)] 
+		&=\E \left[ \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \nabla k_{x_i}(v) \otimes \nabla k_{x_j}(v) \right] \\
+		&=\sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \phi(x_i) \otimes \phi(x_j).
+%		&\rlap {\color{gray}\text{by substituting $\nabla k_x(f) = h(\cdot,x)$, the expectation}} \\
+%		&\rlap {\color{gray}\text{is free of $f$}} 
+	\end{align*}	 	
+	where we had made the substitution $\nabla k_x(v) = \phi(x)$.
+	By taking the canonical feature $\phi(x)=h(\cdot,x)$, the formula for $\cI(f)$ follows.
+\end{proof}
+
+The above lemma gives the form of the Fisher information for $f$ in a rather abstract fashion.
+Consider the following example of applying Lemma \eqref{thm:fisherregf} to obtain the Fisher information for a standard linear regression model.
+
+\begin{example}[Fisher information for linear regression]
+  As before, suppose model \eqref{eq:model1} subject to its assumptions hold.
+  For simplicity, we assume iid errors, i.e. $\bPsi = \psi \bI_n$.
+  Let $\cX = \bbR^p$, and the feature space $\cV = \bbR^p$ be equipped with the usual dot product $\ip{\cdot,\cdot}_\cV:\cV \otimes \cV \to \bbR$ defined by $v^\top v$.
+  Consider also the feature map $\phi:\cX \to \cV$ defined by $\phi(x)=x$.
+  For some $\beta \in \cV$, the linear regression model is such that $f(x) = x^\top \beta = \ip{\phi(x),\beta}_\cV$.
+  Therefore, according to Lemma \eqref{thm:fisherregf}, the Fisher information for $\beta$ is
+  \begin{align*}
+    \cI(\beta) 
+    &= \sum_{i=1}^n\sum_{j=1}^n \psi \phi(x_i) \otimes \phi(x_j) \\
+    &= \psi \sum_{i=1}^n\sum_{j=1}^n x_i \otimes x_j \\
+    &= \psi \bX^\top \bX,
+  \end{align*}
+  where $\bX$ is a $n \times p$ matrix containing the entries $x_1^\top,\dots,x_n^\top$ row-wise.
+  This is of course recognised as the Fisher information for the regression coefficients in the standard linear regression model.
+\end{example}
+
+Lemma \ref{thm:fisherlinfunc} enables us to also compute the Fisher information for a linear functionals of $f$, and in particular for point evaluation functionals of $f$, thereby allowing us to compute the Fisher information between two points $f(x)$ and $f(x')$.
+
+\begin{corollary}[Fisher information between two linear functionals of the regression function]\label{thm:fisherreglinfunc}
+	For our regression model as defined in \eqref{eq:model1} subject to \eqref{eq:model1ass} and $f$ belonging to a RKHS $\mathcal F$ with kernel $h$, the Fisher information between two points $f(x)$ and $f(x')$ is given by
+	\[
+		\cI\big(f(x),f(x')\big) = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(x,x_i)h(x',x_j).
+	\]
+\end{corollary}
+
+\begin{proof}
+	In a RKHS $\mathcal F$, the reproducing property gives $f(x) = \langle f, h(\cdot, x) \rangle_{\mathcal F}$ and in particular, $\langle h(\cdot,x), h(\cdot, x') \rangle_{\mathcal F} = h(x,x')$. 
+	By Lemma \ref{thm:fisherlinfunc}, we have that
+	\begin{align*}
+		\cI\big(f(x),f(x')\big) 
+		&= \cI\big(\langle f, h(\cdot, x) \rangle_{\cF},\langle f, h(\cdot, x') \rangle_{\cF} \big) \\
+		&= \big\langle \cI(f), h(\cdot, x) \otimes h(\cdot, x') \big\rangle_{\mathcal F \otimes \mathcal F} \\
+		&= \Bigg\langle \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(\cdot,x_i) \otimes h(\cdot,x_j) \ , \ h(\cdot, x) \otimes h(\cdot, x') \Bigg\rangle_{\mathcal F \otimes \mathcal F} \\
+		&= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \big\langle h(\cdot,x_i), h(\cdot, x) \big\rangle_{\mathcal F} \big\langle h(\cdot,x_j), h(\cdot, x') \big\rangle_{\mathcal F } \\
+		&{\color{gray}\text{(by using the fact that inner products are linear, and that $\forall a_1, a_2 \in \mathcal A$}} \\
+		&{\color{gray}\text{and $\forall b_1, b_2 \in \mathcal B$, $\langle a_1 \otimes b_1, a_2 \otimes b_2 \rangle_{\mathcal A \otimes \mathcal B} = \langle a_1, a_2 \rangle_{\mathcal A}\langle b_1, b_2 \rangle_{\mathcal B}$)}} \\
+		&= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(x,x_i) h(x', x_j).
+		\ \ \ \rlap {\color{gray}\text{(by the reproducing property)}} 
+	\end{align*}
+\end{proof}
+
+An inspection of the formula in Corollary \eqref{thm:fisherreglinfunc} reveals the fact that the Fisher information for $f(x)$ is positive if and only if $h(x,x_i)\neq 0$ for at least one $i \in \{1,\dots,n \}$.
+\hltodo[Rewrite]{In practice, this condition is often satisfied for all $x$, so this result might be considered both remarkable and reassuring, because it suggests we can estimate $f$ over its entire domain, no matter how big, even though we only have a finite amount of data points.}
+
+\section{The induced Fisher information RKHS}
+
+\hltodo[Rewrite]{Next, let us see for which linear functionals of $f$ there is Fisher information.}
+Let 
+\begin{align}
+\cF_n = \left\{ f:\cX \to \bbR \, \bigg| \, f(x) = \sum_{i=1}^n h(x,x_i)w_i, \ w_i \in \bbR, \ i=1,\dots,n \right\}.  
+\end{align}
+Since $h(\cdot,x_i) \in \cF$, then any $f \in \cF_n$ is also in $\cF$ by linearity, and thus $\cF_n$ is a subset of $\cF$.
+Further, $\cF_n$ is closed under addition and multiplication by a scalar, and is therefore a subspace of $\cF$.
+Let $\cF_n^\bot$ be the orthogonal complement of $\cF_n$ in $\cF$.
+Then, any $r \in \cF_n^\bot$ is orthogonal to each of the $h(\cdot,x_i)$, so by the reproducing property of $h$, $r(x_i) = \ip{r,h(\cdot,x_i)}_\cF = 0$.
+
+\begin{corollary}
+  With $g \in \cF$, the Fisher information for $g$ is zero if and only if $g\in\cF_n^\bot$, i.e. if and only if $g(x_1) = \cdots = g(x_n) = 0$.
+\end{corollary}
+
+Hence, $r$ cannot be estimated from the data and has to be estimated by a prior guess.
+
+\hltodo{[OLD], but some stuff relevant here.}
+Note that any regression function $f\in \mathcal F$ can be decomposed into $f = f_n + r$, with $f \in \mathcal F_n$ and $r \in \mathcal R$ where $\mathcal F = \mathcal F_n + \mathcal R$ and $\mathcal F_n \perp \mathcal R$. Fisher information exists only on the $n$-dimensional subspace $\mathcal F_n$, while there is no information for $\mathcal R$. Thus, we will only ever consider the RKHS $\mathcal F_n \subset \mathcal F$ where there is Fisher information. Let $h$ be a real symmetric and positive definite function over $\mathcal X$ defined by $h(x,x') = I[f(x),f(x')]$. As we saw earlier, $h$ defines a RKHS, and it can be shown that the RKHS induced is in fact $\mathcal F_n$ spanned by the reproducing kernel on the dataset with the squared norm $||f||_{\mathcal F_n}^2 = w^\top\Psi^{-1}w$.
+
+\begin{lemma}
+  Let $\cF_n$ be equipped with the inner product
+  \[
+    \ip{f_w, f_{w'}}_{\cF_n} = \bw^\top \bPsi^{-1} \bw',
+  \]
+  where $\bw = (w_1,\dots,w_n)$ and $f_w(x)=\sum_{i=1}^n h(x,x_i)w_i$.
+  Then, $h_n$ defined by
+  \[
+    h_n(x,x') = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij}h(x,x_i)h(x',x_j)
+  \]
+  is the reproducing kernel of $\cF_n$.
+\end{lemma}
+
+\begin{proof}
+  \hltodo{Prove $\cF_n$ is a Hilbert space?}
+  \begin{align*}
+    f_j = \sum h(\cdot,x_i)w_{ij}
+  \end{align*}
+  \begin{align*}
+    \norm{f_j-f}_{\cF_n}^2 &= \ip{f_j-f,f_j-f} \\
+    &\leq \ip{f_j,f_j} + \ip{f,f} \\
+    &= w_j\Psi w_j + w\Psi w \\
+    &= \Psi(w_jw_j^\top + ww^\top)
+  \end{align*}
+  Note that by defining $w_j(x) = \sum_{k=1}^n \psi_{jk} h(x,x_k)$, we see that
+  \begin{align*}
+    h_n(\cdot,x) 
+    &= \sum_{j=1}^n\sum_{k=1}^n \psi_{jk} h(\cdot,x_j) h(x,x_k) \\
+    &= \sum_{j=1}^n w_j(x)h(\cdot,x_j)
+  \end{align*}
+  is an element of $\cF_n$.
+  Now, we just need to prove the reproducing property. 
+  Denote by $\psi_{ij}^{-}$ the $(i,j)$th element of $\bPsi^{-1}$.
+  \hltodo[How?]{Since $\ip{h(\cdot,x_i), h(\cdot,x_j)}_{\cF_n} = \psi_{ij}^{-}$}, we have
+  \begin{align*}
+    \ip{f_w, h_n(\cdot,x)}_{\cF_n}
+    &= \left\langle 
+    \sum_{i=1}^n h(\cdot,x_i)w_i ,
+    \sum_{j=1}^n\sum_{k=1}^n \psi_{jk} h(\cdot,x_j) h(x,x_k)
+    \right\rangle_{\cF_n} \\
+    &= \sum_{i=1}^n w_i \sum_{j=1}^n\sum_{k=1}^n \psi_{jk}h(x,x_k) 
+    \big\langle h(\cdot,x_i)w_i , h(\cdot,x_j) \big\rangle_{\cF_n} \\
+    &= \sum_{i=1}^n w_i \sum_{j=1}^n\sum_{k=1}^n \psi_{jk}h(x,x_k)\psi_{ij}^{-} \\
+    &= \sum_{i=1}^n w_i \sum_{k=1}^n \delta_{ik}h(x,x_k) \\
+    &= \sum_{i=1}^n w_i h(x,x_i) \\
+    &= f_w(x)
+  \end{align*}
+  Therefore, $h_n$ is a reproducing kernel for $\cF_n$.
+\end{proof}
+
+1
+
+\hltodo{Is the Fisher information metric and semi-norm over $\cF$ useful?}
+
+
+\newpage
+\section{The I-prior}
+
+Here we consider data dependent priors---seemingly data dependent (i.e. dependent on X) but the whole model is conditional on $X$ implicitly, so there is no issue.
+If prior depended on $y$ then there is a problem, at least, violates Bayesian first principles (using the data twice such that a priori and a posteriori same amount of information).
+Rather, more of a principled prior. One that is based on objectivity of maximum entropy---if one does not know anything, best to choose prior which maximises uncertainty.
+We see that it coincides with the Fisher information induced RKHS.
+
+Goal is always to estimate $f \in \cF$ based on finite amount of data points.
+We know MLE is not so good, so want regularise by some prior.
+Unfortunately, $\cF$ might be huge such that data don't provide enough information for $f$ to be estimated sufficiently well.
+We ask: What is the smallest subset for which there is full information coming from the data? 
+Intuitively, it must be of $n$-dimensions, the sample size of the data.
+Rather separately, we found out what the Fisher information for $f$ looks like, and deduced that there is Fisher information only on an orthogonal projection of $\cF$ on to $\cF_n$.
+There is this flavour of dimension reduction---no need to consider the entire space, because this is futile, but just consider functions in the smaller subspace, as this is the best we can do anyway.
+Therefore, we just look in this subspace $\cF_n$ for an appropriate approximation to $f$. 
+In particular, what prior should I use? On the basis of maximum entropy principle, I figure out that the form of our I-prior.
+The connection of $\cF_n$ to Fisher information is this: $\cF_n$ is the subspace of $\cF$ for which Fisher information exists. Equipping this space with a particular inner product reveals that $\cF_n$ is a RKHS with reproducing kernel equal to the Fisher information for $f$.
+
+The set $\cF$ is potentially ``too big'' for the purpose of estimating $f$, that is, for certain pairs of functions $\cF$, the data do not allow an assessment of whether one is closer to the truth than the other.
+In particular, the data do not contain information to distinguish betwen any $f$ and $f'$ for which $f(x_i) = f'(x_i), i=1,\dots,n$.
+  \hltodo[If data do not provide enough information, isn't the purpose of the prior to provide the missing information?]{A prior for $f$ therefore need not have support $\cF$, instead it is sufficient to consider priors with support $f_0 + \cF_n$}, where $f_0 \in \cF$ is fixed and chosen a priori as a ``best guess'' of $f$.
+Since the Fisher information for $\ip{g,f}_\cF$ is non-zero for any non-zero $g \in \cF_n$, there is information to allow a comparison between any pair of functions in $f_0 + \cF_n$.
+
+Key questions:
+\begin{itemize}
+  \item What does it mean to say that the measure space $(\cF,\nu)$ has a probability density function $\pi$? A probability density function $p$ on $(\cF, \nu)$ is a $\nu$-measurable function from $\cF$ to $[0, \infty)$ such that $p \d\nu$ is a probability measure on $\cF$.
+  \item What does it mean for $f \in \cF$ to be Gaussian?
+\end{itemize}
+
+Let $(\Theta,D)$ be a metric space and let $\nu = \nu_D$ be a volume measure induced by $D$ (e.g. Hausdorff measure).
+  Denote by $\pi$ a density of $\Theta$ relative to $\nu$, i.e. if $\theta$ is a random variable with density $\pi$, then for any measurable subset $A \subset \Theta$, $\Prob(\theta \in A) = \int_A \pi(t)\nu(\d t)$.
+
+
+\begin{definition}[Entropy]
+  The entropy of a distribution $\pi$ over $\cF$ relative to a measure $\nu$ is defined as
+  \[
+    \cE(\pi) = - \int_\cF \pi(f) \log \pi(f) \, \d\nu(f).
+  \]
+  This converges if $\pi \log\pi$ is Lebesgue integrable, i.e. $\pi\log\pi \in \text{L}^1(\cF,\nu)$.
+\end{definition}
+
+\begin{definition}[Functional derivative]
+  Given a manifold $M$ representing continuous/smooth functions $\rho$ with certain boundary conditions, and a functional $F:M\to\bbR$, the functional derivative of $F[\rho]$ with respect to $\rho$, denoted $\partial F/\partial\rho$, is defined by
+  \begin{align*}
+    \int \frac{\partial F}{\partial\rho}(x)\phi(x)\d x
+    &= \lim_{\epsilon\to 0} \frac{F[\rho + \epsilon\phi] - F[\rho]}{\epsilon} \\
+    &= \left[ \frac{\d}{\d \epsilon} F[\rho + \epsilon\phi] \right]_{\epsilon=0},
+  \end{align*}
+  where $\phi$ is an arbitrary function.
+  The function $\partial F/\partial\rho$ as the gradient of $F$ at the point $\rho$, and
+  \[
+    \partial F(\rho,\phi) = \int \frac{\partial F}{\partial\rho}(x)\phi(x) \d x
+  \]
+  as the directional derivative at point $\rho$ in the direction of $\phi$.
+  Analogous to vector calculus, the inner product with the gradient gives the directional derivative.
+\end{definition}
+
+\begin{example}[Functional derivative of entropy]
+  Let $X$ be a discrete random variable with probability mass function $p(x) \geq 0$, for $\forall x \in \Omega$, a finite set.
+  The entropy is a functional of $p$, namely
+  \[
+    \cE[p] = - \sum_{x\in\Omega} p(x)\log p(x).
+  \]
+  Equivalently, using the counting measure $\nu$ on $\Omega$, we can write
+  \[
+    \cE[p] = -\int_\Omega p(x) \log p(x) \d\nu(x).
+  \]
+  \begin{align*}
+    \int_\Omega \frac{\partial\cE}{\partial p}(x)\phi(x) 
+    &= \left[ \frac{\d}{\d \epsilon} \cE[p +  \epsilon\phi] \right]_{\epsilon=0} \\
+    &= \left[ -\frac{\d}{\d \epsilon} 
+    \big( p(x) + \epsilon\phi(x) \big) 
+    \log \big(p(x) + \epsilon\phi(x) \big) 
+    \right]_{\epsilon=0} \\
+    &= -\int_\Omega \left( 
+    \frac{p(x)\phi(x)}{p(x)+\epsilon\phi(x)}
+    + \frac{\epsilon\phi(x)}{p(x) + \epsilon\phi(x)}
+    + \phi(x)\log\big( p(x) + \epsilon\phi(x) \big)
+    \right) \d x \\
+    &= -\int_\Omega \left( 1 + \log p(x) \right) \phi(x) \d x.
+  \end{align*}
+  Thus, $(\partial\cE/\partial p)(x) = -1 -\log p(x)$.
+\end{example}
+
+\begin{lemma}[Maximum entropy distribution]\label{thm:maxentr}
+  Let $(\cX,d)$ be a metric space and let $\nu=\nu_d$ be a volume measure induced by $d$.
+  Let $p$ be a probability density function on $(\cX,d)$.
+  The entropy maximising density, which satisfies
+  \[
+    \argmax_{p} \cE(p) = - \int_\cX p(x) \log p(x) \, \d\nu(x),
+  \]
+  subject to the constraints
+  \begin{align*}
+    \begin{gathered}
+      \E\big[d(x,x_0)^2\big] = \int_\cX d(x,x_0)^2 p(x) \d\nu(x) = \const, \hspace{1cm} 
+      \int_\cX p(x) \d\nu(x) = 1, \\
+      \text{and} \hspace{0.5cm} p(x) \geq 0,
+    \end{gathered}
+  \end{align*}
+  is the density given by
+  \[
+    \tilde p(x) \propto \exp \left(-\half d(x,x_0)^2 \right),
+  \]
+  for some $x_0\in\cX$.
+  If $(\cX,d)$ is a Euclidean space and $\nu$ a flat (Lebesgue) measure then $\tilde p$ represent a (multivariate) normal density.
+\end{lemma}
+
+\begin{proof}
+  This follows from standard calculus of variations.
+  We provide a sketch proof here.
+  Set up the Langrangian
+  \begin{align*}
+      \cL(p,\gamma_1,\gamma_2) &= 
+      - \int_\cX p(x) \log p(x) \, \d\nu(x) +
+      \gamma_1 \left(\int_\cX d(x,x_0)^2 p(x) \d\nu(x) - \const \right) \\
+      &\phantom{==} + \gamma_2 \left( \int_\cX p(x) \d\nu(x) - 1 \right).
+  \end{align*}
+  From the above lemma and example, taking derivatives with respect to $p$ yields
+  \begin{align*}
+    \frac{\partial}{\partial p} \cL(p,\gamma_1,\gamma_2)(x)
+    = - 1 - \log p(x) + \gamma_1 d(x,x_0)^2 + \gamma_2.
+  \end{align*}
+  Set this to zero, and solve for $p$:
+  \begin{align*}
+    p(x) &= \exp \left( \gamma_1 d(x,x_0)^2 + \gamma_2 - 1 \right) \\
+    &\propto \exp \left( \gamma_1 d(x,x_0)^2 \right)
+  \end{align*}
+  which is positive for any values of $\gamma_1$ (and $\gamma_2$).
+  This density normalises to one if $\gamma_1 < 0$, so we choose $\gamma_1=-1/2$.
+  If $\cX = \bbR^n$ and that $\nu$ is the Lebesgue measure then $d(x,x_0) = \norm{x-x_0}_{\bbR^n}$, so $\tilde p$ is recognised as a multivariate normal density centred at $x_0$ with identity covariance matrix.
+\end{proof}
+
+\begin{theorem}[The I-prior]
+  Let $\cF$ be an RKHS with kernel $h$, and consider the finite dimensional affine subspace $\cF_n$ of $\cF$ equipped with an inner product as in Lemma 2.5.
+%  Suppose $\Theta$ is a finite dimensional affine subspace of a Hilbert space with norm $\norm{\cdot}_\Theta$. 
+%  We have a metric space $(\cF_n,d)$, where $d(f,f')^2 = \ip{f-f',f-f'}$.
+  Let $\nu$ be a volume measure induced by the norm $\norm{\cdot}_{\cF_n} = \sqrt{\ip{\cdot,\cdot}_{\cF_n}}$.
+  With $f_0 \in \cF$, let $\Pi_0$ be the class of distributions $p$ such that 
+  \[
+    \E[\norm{f-f_0}^2_{\cF_n}] = \int_{\cF_n} \norm{f-f_0}^2_{\cF_n} \ p(f) \d\nu(f) = \const
+  \]
+  Denote by $\tilde p$ the density of the entropy maximising distribution among the class of distributions within $\Pi_0$.
+  Then, $\tilde p$ is Gaussian over $\cF$ with mean $f_0$ and covariance kernel equal to the reproducing kernel of $\cF_n$, i.e.
+  \[
+    \Cov\big(f(x),f(x')\big) = h_n(x,x').
+  \]
+  We call $\tilde p$ the I-prior for $f$.
+\end{theorem}
+
+\begin{proof}
+  Recall the fact that any $f \in \cF$ can be decomposed into $f = f_n + r_n$, with $f_n \in \cF_n$ and $r_n \in \cR_n$, the orthogonal complement of $\cF_n$.
+  Also recall that there is no Fisher information about any $r \in \cR_n$, and therefore it is not possible to estimate $r_n$ from the data.
+  Therefore, $p(r_n) = 0$, and one needs only consider distributions over $\cF_n$ when building distributions over $\cF$.
+  
+  The norm on $\cF_n$ induces the metric $d(f,f') = \norm{f - f'}_{\cF_n}$.
+  Thus, for $f \in \cF$ of the form $f = \sum_{i=1}^n h(\cdot,x_i)w_i$ (i.e., $f \in \cF_n$) and provided $f_0 \in \cF_n \subset \cF$,
+  \begin{align*}
+    d(f,f_0)^2 
+    &= \norm{f - f_0}_{\cF_n}^2 \\
+    &= \left\Vert \sum_{i=1}^n h(\cdot,x_i)w_i - \sum_{i=1}^n h(\cdot,x_i)w_{i0} \right\Vert_{\cF_n}^2 \\
+    &= \left\Vert \sum_{i=1}^n h(\cdot,x_i)(w_i - w_{i0}) \right\Vert_{\cF_n}^2 \\
+    &= (\bw - \bw_0)^\top\bPsi^{-1} (\bw - \bw_0) \\
+%    &= \bw^\top\bPsi^{-1}\bw - 2\bw^\top\bPsi^{-1}\bw' + \bw'^\top\bPsi^{-1}\bw'j
+  \end{align*}
+  Thus, by Lemma \ref{thm:maxentr}, the maximum entropy distribution for $f = \sum_{i=1}^n h(\cdot,x_i)w_i$ is
+  \[
+    (w_1,\dots,w_n)^\top \sim \N_n(\bw_0,\bPsi).
+  \]
+  This implies that $f$ is Gaussian, since
+  \begin{align*}
+    \langle f,f' \rangle_{\cF}
+    = \left\langle \sum_{i=1}^n h(\cdot,x_i)w_i, f' \right\rangle_{\cF} 
+    = \sum_{i=1}^n w_i \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF}  
+  \end{align*}
+  is a sum of normal random variables, and therefore $\langle f,f' \rangle_{\cF}$ is normally distributed for any $f' \in \cF$.
+  The mean $\mu\in\cF$ of this random vector $f$ satisfies $\E\ip{f,f'}_{\cF}  = \ip{\mu,f'}_{\cF}$ for all $f'\in\cF_n$, but
+  \begin{align*}
+    \E\ip{f,f'}_{\cF}  
+    &= \E \left\langle \sum_{i=1}^n h(\cdot,x_i)w_i, f' \right\rangle_{\cF} \\
+    &= \E \left[ \sum_{i=1}^n w_i \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF} \right] \\
+    &= \sum_{i=1}^n w_{i0} \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF} \\
+    &= \left\langle \sum_{i=1}^n h(\cdot,x_i)w_{i0}, f' \right\rangle_{\cF} \\
+    &= \langle f_0,f' \rangle_{\cF},
+  \end{align*}
+  so $\mu \equiv f_0 = \sum_{i=1}^n h(\cdot,x_i)w_{i0}$. 
+  The covariance kernel $\Sigma$ is the bilinear form satisfying
+  \begin{align*}
+    \Cov\big(f(x),f(x')\big) 
+    &= \Cov\big(f,\ip{h(\cdot,x)}_{\cF_n}, \ip{f,h(\cdot,x')}_{\cF} \big) \\
+    &= \left\langle \Sigma, h(\cdot,x) \otimes h(\cdot,x') \right\rangle_{\cF \otimes \cF}.
+  \end{align*}
+  Write $h_{x} := \langle h(\cdot,x),f \rangle_{\cF}$. 
+  Then, by the usual definition of covariances, we have that 
+  \begin{align*}
+    \Cov(h_x,h_{x'}) = \E[h_xh_{x'}] - \E[h_x]\E[h_{x'}],
+  \end{align*}
+  where, making use of the reproducing property, the first term on the left hand side is
+  \begin{align*}
+    \E[h_xh_{x'}] 
+    &= \E \left[ 
+    \left\langle h(\cdot,x), \sum_{i=1}^n h(\cdot,x_i)w_i \right\rangle_{\cF} 
+    \left\langle h(\cdot,x'), \sum_{j=1}^n h(\cdot,x_j)w_j \right\rangle_{\cF} 
+    \right] \\
+    &= \E \left[ 
+    \sum_{i=1}^n\sum_{j=1}^n w_iw_j \left\langle  h(\cdot,x), h(\cdot,x_i) \right\rangle_{\cF} 
+     \left\langle h(\cdot,x'), h(\cdot,x_j)\right\rangle_{\cF} 
+    \right] \\
+    &= \sum_{i=1}^n\sum_{j=1}^n (\psi_{ij} + w_{i0}w_{j0}) h(x,x_i) h(x',x_j),
+  \end{align*}
+  while the second term on the left hand side is
+  \begin{align*}
+    \E[h_x]\E[h_{x'}]
+    &= \left( \sum_{i=1}^n w_{i0} \left\langle  h(\cdot,x), h(\cdot,x_i)  \right\rangle_{\cF} \right)
+    \left( \sum_{j=1}^n w_{j0} \left\langle  h(\cdot,x'), h(\cdot,x_j)  \right\rangle_{\cF} \right) \\
+    &= \sum_{i=1}^n \sum_{j=1}^n w_{i0}w_{j0} h(x,x_i)h(x',x_j).
+  \end{align*}  
+  Thus,
+  \[
+    \Cov\big( f(x),f(x') \big) = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(x,x_i) h(x',x_j),
+  \]
+  the reproducing kernel for $\cF_n$.
+\end{proof}
+
+
+
+
+\section{Rate of convergence}
+
+We used the true Fisher information. \citet{efron1978assessing} say favour the observed information instead. Does this change if we use MLE $\hat f$ instead? Probably not... we don't use MLE anyway!
+
+https://stats.stackexchange.com/questions/179130/gaussian-process-proofs-and-results
+
+https://stats.stackexchange.com/questions/268429/do-gaussian-process-regression-have-the-universal-approximation-property
+
+
+\newpage
+
+
+\hClosingStuffStandalone
+\end{document}
