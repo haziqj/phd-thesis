@@ -33,15 +33,15 @@
 \usepackage{xr}  % Cross-referencing between files
 
 % Colour-blind safe pallete
-\definecolor{colblu}{RGB}{51,102,170}
-\definecolor{colcya}{RGB}{17,170,153}
-\definecolor{colgre}{RGB}{102,170,85}
+\definecolor{colblu}{RGB}{0,114,178}
+\definecolor{colcya}{RGB}{86,180,233}
+\definecolor{colgre}{RGB}{0,158,115}
 \definecolor{colgyl}{RGB}{204,204,85}
 \definecolor{colgry}{RGB}{119,119,119}
 \definecolor{colpur}{RGB}{153,34,136}
-\definecolor{colred}{RGB}{238,51,51}
-\definecolor{colora}{RGB}{238,119,34}
-\definecolor{colyel}{RGB}{255,238,51}
+\definecolor{colred}{RGB}{213,94,0}%{238,51,51}
+\definecolor{colora}{RGB}{230,159,0}
+\definecolor{colyel}{RGB}{240,228,66}%{255,238,51}
 
 % Coding
 %\usepackage{verbatim}
@@ -57,9 +57,10 @@
 %\usepackage[longnamesfirst]{natbib}
 %  \bibpunct{(}{)}{;}{a}{,}{,~}
 %  \addto\captionsenglish{\renewcommand{\bibname}{References}}  % change the name of Bibliography section
-\usepackage[style=authoryear, firstinits=true, maxcitenames=2, maxbibnames=99, backend=biber,natbib]{biblatex}
+\usepackage[style=authoryear, firstinits=true, maxcitenames=2,
+  minnames=1, maxbibnames=99, backend=biber, natbib]{biblatex}
 \setlength\bibitemsep{1.5\itemsep}
-%\AtEveryCite{\color{colblu}}
+\AtEveryCite{\color{colblu}}
 
 % Paragraph settings
 \usepackage{parskip}  

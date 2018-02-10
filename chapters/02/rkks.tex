@@ -263,15 +263,17 @@ We define the centred canonical RKHS as follows.
 
 \subsection{The fractional Brownian motion RKHS}
 
+Brownian motion (also known as the Wiener process) has been an inquisitive subject in the mathematical sciences, and here, we describe a function space influenced by a generalised version of Brownian motion paths.
+
 Suppose $B_\gamma(t)$ is a continuous-time Gaussian process on $[0,T]$, i.e. for any finite set of indices $t_1,\dots,t_k$, where each $t_j \in [0,T]$, $\big(B_\gamma(t_1),\dots,B_\gamma(t_k)\big)$ is a multivariate normal random variable.
 $B_\gamma(t)$ is said to be a \emph{fractional Brownian motion} (fBm) if $\E B_\gamma(t) = 0$ for all $t \in [0,T]$ and 
 \[
-  \Cov\big(B_\gamma(t),B_\gamma(s) \big) = \half\big( |t|^{2\gamma} + |s|^{2\gamma} + |t-s|^{2\gamma} \big) \hspace{1cm} \forall t,s \in [0,T],
+  \Cov\big(B_\gamma(t),B_\gamma(s) \big) = \half\big( |t|^{2\gamma} + |s|^{2\gamma} - |t-s|^{2\gamma} \big) \hspace{1cm} \forall t,s \in [0,T],
 \]
 where $\gamma \in (0,1)$ is called the Hurst index or Hurst parameter.
 Introduced by \citet{mandelbrot1968fractional}, fBms are a generalisation of Brownian motion.
 The Hurst parameter plays two roles: 1) It describes the raggedness of the resultant motion, with higher values leading to smoother motion; and 2) it determines the type of process the fBm is, as past increments of $B_\gamma(t)$ are weighted by $(t-s)^{\gamma-1/2}$.
-When $\gamma=1/2$ exactly, then the fBm is a Brownian motion and its increments are independent; when $\gamma > 1/2$ ($\gamma < 1/2$) its increments are positively (negatively) correlated.
+When $\gamma=1/2$ exactly, then the fBm is a standard Brownian motion and its increments are independent; when $\gamma > 1/2$ ($\gamma < 1/2$) its increments are positively (negatively) correlated.
 
 %\citet{schoenberg1937certain} has shown that, for $0 < \gamma\leq 1$, there exists a Hilbert space $\cB$ and a function $\phi_\gamma:\cX\to\cB$ such that $\forall x,x' \in \cX$,
 %\[
@@ -281,29 +283,126 @@ When $\gamma=1/2$ exactly, then the fBm is a Brownian motion and its increments 
 Let $\cX$ be a Hilbert space. 
 Defining a kernel function $h:\cX\times\cX\to\bbR$ identical to the fBm covariance kernel yields the so-called \emph{fractional Brownian motion RKHS}.
 
-\begin{definition}[Fractional Brownian motion (fBm) RKHS]
-  The fractional Brownian motion RKHS $\cF$ is the space of functions on the Hilbert space $\cX$ possessing the reproducing kernel $h:\cX\times\cX\to\bbR$ defined by
+\begin{definition}[Fractional Brownian motion RKHS]\label{def:fbmrkhs}
+  The fractional Brownian motion (fBm) RKHS $\cF$ is the space of functions on the Hilbert space $\cX$ possessing the reproducing kernel $h:\cX\times\cX\to\bbR$ defined by
   \[
-    h(x,x') = \half\big( \norm{x}_\cX^{2\gamma} + \norm{x'}_\cX^{2\gamma} + \norm{x-x'}_\cX^{2\gamma} \big),
+    h(x,x') = \half\big( \norm{x}_\cX^{2\gamma} + \norm{x'}_\cX^{2\gamma} - \norm{x-x'}_\cX^{2\gamma} \big),
   \]
   which depends on the Hurst coefficient $\gamma \in (0,1)$.
+  We shall reference this space as the fBm-$\gamma$ RKHS.
 \end{definition}
 
-It is clear that the fBm kernel is positive definite by construction, and thus induces an RKHS.
+\begin{remark}
+  When $\gamma=1$, by the polarisation identity we get $h(x,x') = \ip{x,x'}_\cX$, which is the (reproducing) kernel of the canonical RKHS.
+\end{remark}
+
+From its construction, it is clear that the fBm kernel is positive definite, and thus defines an RKHS.
 That the fBm RKHS describes a space of functions is proved in \citet{cohen2002}, who studied this space in depth. 
 It is also noted in the collection of examples of \citet[pp.71 \& 319]{berlinet2011reproducing}.
 
+The Hurst coefficient $\gamma$ controls the ``smoothness'' of the functions in the RKHS. 
+We can talk about smoothness in the context of Hölder continuity of functions.
 
+\begin{definition}[Hölder condition]
+  A function $f$ over a set $(\cX, \norm{\cdot}_\cX)$ is said to be \emph{Hölder continuous} of order $0 <\gamma\leq 1$ if there exists a $C>0$ such that $\forall x,x'\in\cX$,
+  \[
+    \vert f(x) - f(x') \vert \leq C \norm{x-x'}^\gamma.
+  \]
+\end{definition}
 
+Functions in the Hölder space $\text{C}^{k,\gamma}(\cX)$, where $k\geq 0$ is an integer, consists of those functions over $\cX$ having continuous derivatives up to order $k$ and such that the $k$th partial derivatives are Hölder continuous of order $\gamma$.
+Unlike realisations of actual fBm paths with Hurst index $\gamma$, which are well-known to be almost surely Hölder continuous of order less than $\gamma$ \citep[Theorem 4.1.1]{embrechts2002selfsimilar}, functions in its namesake RKHS are strictly smoother.
 
+%\begin{claim}
+%  Let $\cF$ denote the fBm RKHS of functions over $\cX$ with Hurst parameter $\gamma \in (0,1)$, and the kernel $h$ as defined in Definition \ref{def:fbmrkhs}.
+%  Then,
+%  \begin{enumerate}[label=(\roman*)]
+%    \item The functions in $\cF$ are Hölder continuous of order $\gamma$.  
+%    \item The basis functions $h(\cdot,x)$ are Hölder continuous of order $2\gamma$.
+%  \end{enumerate}
+%\end{claim}
 
+\begin{claim}
+  The fBm-$\gamma$ RKHS $\cF$ of functions over $(\cX, \norm{\cdot}_\cX)$ are Hölder continuous of order $\gamma$.
+\end{claim}
 
+\begin{proof}
+  For some $f \in \cF$ we have $f(x) = \ip{f,h(\cdot,x)}_\cF$ by the reproducing property of the kernel $h$ of $\cF$.
+  It follows from the Cauchy-Schwarz inequality that for any $x,x'\in\cX$,
+  \begin{align*}
+    \vert f(x) - f(x') \vert 
+    &= \vert \ip{f,h(\cdot,x) - h(\cdot,x')}_\cF \vert \\
+    &\leq \norm{f}_\cF \cdot \big\Vert h(\cdot,x) - h(\cdot,x') \big\Vert_\cF \\
+    &= \norm{f}_\cF \cdot \norm{x-x'}_\cX^{\gamma},
+  \end{align*}
+  since
+  \begin{align*}
+    \big\Vert h(\cdot,x) - h(\cdot,x') \big\Vert_\cF ^2
+    &= \big\Vert h(\cdot,x) \big\Vert_\cF ^2 + \big\Vert h(\cdot,x') \big\Vert_\cF ^2 - 2 \ip{h(\cdot,x),h(\cdot,x')}_\cF \\
+    &= h(x,x) + h(x',x') - 2 h(x,x') \\
+    &= \norm{x-x'}_\cX^{2\gamma},
+  \end{align*}  
+  and thus proving the claim.
+\end{proof}
 
+\hltodo[This is the same for any RKHS?]{The fBm-$\gamma$ RKHS is spanned by the functions $h(\cdot,x)$, which means that $f(0)=0$ for all $f \in \cF$, which may be undesirable}.
+We define the centred fBm RKHS as follows.
 
+\begin{definition}[Centred fBm RKHS]
+  Let $\cX$ be a Hilbert space, $\Prob$ be a probability measure over $\cX$, and $\mu\in\cX$ be the mean (i.e. $\E\ip{x,x'}_{\cX}  = \ip{\mu,x'}_{\cX}$ for all $x' \in \cX$) with respect to this probability measure.
+  The kernel $\bar h:\cX\times\cX\to\bbR$ defined by
+  \[
+    \bar h(x,x') = \half \E \left[ \norm{x-X}_\cX^{2\gamma} + \norm{x'-X'}_\cX^{2\gamma} - \norm{x-x'}_\cX^{2\gamma} - \norm{X-X'}_\cX^{2\gamma} \right]
+  \]
+  is the reproducing kernel of the \emph{centred} fBm-$\gamma$ RKHS, which consists of functions $f$ in the fBm-$\gamma$ RKHS such that $\E f(X) = 0$.
+  In the above definition, $X,X' \sim \Prob$ are two independent copies of a random vector $X \in \cX$.
+\end{definition}
+
+\begin{remark}
+  Again, when $\gamma=1$, we get the reduction 
+  \begin{align*}
+    \bar h(x,x') 
+    &= \half \E \left[ \norm{x-X}_\cX^{2} + \norm{x'-X'}_\cX^{2} - \norm{x-x'}_\cX^{2} - \norm{X-X'}_\cX^{2} \right] \\
+    &= \half \E \left[ \ip{X,X}_\cX + \ip{X',X'}_\cX + 2\ip{x,x'}_\cX - 2\ip{x,X}_\cX - 2\ip{x',X'}_\cX\right] \\
+    &= \ip{\mu,\mu}_\cX + \ip{x,x'}_\cX - \ip{x,\mu}_\cX - \ip{\mu,x'}_\cX \\
+    &= \ip{x-\mu,x'-\mu}_\cX,
+  \end{align*}
+  which is the (reproducing) kernel of the centred canonical RKHS.
+\end{remark}
 
 \subsection{The squared exponential RKHS}
 
-Are SE smoother than fBm? Mainly used because of the ``universal approximation'' property of SE kernels.
+The \gls{SE} kernel function is indeed known to be the default kernel used for Gaussian process regression in machine learning.
+It is a positive definite function, and hence defines an RKHS.
+The definition of the \gls{SE} RKHS is as follows.
+
+\begin{definition}[Squared exponential RKHS]
+  The squared exponential (SE) RKHS $\cF$ of functions over some set $\cX \subset \bbR^p$ equipped with the 2-norm $\norm{\cdot}_2$ is defined by the positive definite kernel $\hXXR$ 
+  \[
+    h(x,x') = \exp\left(-\frac{\norm{x-x'}_2^2}{2l^2} \right).
+  \]
+  The parameter $l$ is called the \emph{lengthscale} parameter, and is a smoothing parameter for the functions in the RKHS.
+\end{definition}
+
+It is known by many other names, including the Gaussian kernel, due to its semblance to the kernel of the Gaussian pdf. 
+Especially in the machine learning literature, the term Gaussian radial basis functions (RBF) is used, and commonly the simpler parameterisation $\gamma = 1 / 2l^2$ is utilised.
+\citet{duvenaud2014automatic} remarks that ``exponentiated quadratic'' is a more fitting descriptive name for this kernel.
+
+Despite being used extensively for learning algorithms using kernels, an explicit study of the RKHS defined by the SE kernel was not done until recently by \citet{steinwart2006explicit}.
+In that work, the authors describe the nature of real-valued functions in the SE RKHS by considering a a real restriction on the SE RKHS of functions over complex values.
+Their derivation of an orthonormal basis of such an RKHS proved the SE kernel to be the reproducing kernel for the SE RKHS.
+
+\hltodo{Are SE smoother than fBm? Lipschitz continuous. Compact convergence. May be smoother than functions in an fBm RKHS?}
+
+SE kernels are known to be ``universal''. That is, it satisfied the following definition of universal kernels due to \citet{micchelli2006universal}.
+
+\begin{definition}[Universal kernel]
+  Let $\text{C}(\cX)$ is the space of all continuous, complex-valued functions $f:\cX\to\bbC$ equipped with the maximum norm $\norm{\cdot}_\infty$, and denote $\cK(\cX)$ as the space of \emph{kernel sections} $ \overline{\text{span}}\{ h(\cdot,x) | x \in \cX \}$, where here, $h$ is a complex-valued kernel function.
+  A kernel $h$ is said to be \emph{universal} if given any compact subset $\cZ \subset \cX$, any positive number $\epsilon$ and any function $f \in \text{C}(\cZ)$, there is a function $g \in \cK(\cZ)$ such that $\norm{f-g}_\cZ \leq \epsilon$.
+\end{definition}
+
+The consequence of this universal property vis-à-vis regression modelling is that any (continuous) regression function $f$ may be approximated very well by a function $\hat f$ from the SE RKHS, and these two functions can get arbitrarily close to each other in the max norm sense.
+This, together with some very convenient computational advantages that the SE kernel brings (more on this in a later chapter), is a testament to the popularity of SE kernels.
 
 \subsection{The Pearson RKHS}
 
