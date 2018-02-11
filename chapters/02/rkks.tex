@@ -354,7 +354,7 @@ We define the centred fBm RKHS as follows.
   \[
     \bar h(x,x') = \half \E \left[ \norm{x-X}_\cX^{2\gamma} + \norm{x'-X'}_\cX^{2\gamma} - \norm{x-x'}_\cX^{2\gamma} - \norm{X-X'}_\cX^{2\gamma} \right]
   \]
-  is the reproducing kernel of the \emph{centred} fBm-$\gamma$ RKHS, which consists of functions $f$ in the fBm-$\gamma$ RKHS such that $\E f(X) = 0$.
+  is the reproducing kernel of the \emph{centred} fBm-$\gamma$ RKHS, which consists of functions $f$ in the fBm-$\gamma$ RKHS \hltodo[Proof?]{such that $\E f(X) = 0$}.
   In the above definition, $X,X' \sim \Prob$ are two independent copies of a random vector $X \in \cX$.
 \end{definition}
 
@@ -377,11 +377,11 @@ It is a positive definite function, and hence defines an RKHS.
 The definition of the \gls{SE} RKHS is as follows.
 
 \begin{definition}[Squared exponential RKHS]
-  The squared exponential (SE) RKHS $\cF$ of functions over some set $\cX \subset \bbR^p$ equipped with the 2-norm $\norm{\cdot}_2$ is defined by the positive definite kernel $\hXXR$ 
+  The squared exponential (SE) RKHS $\cF$ of functions over some set $\cX \subseteq \bbR^p$ equipped with the 2-norm $\norm{\cdot}_2$ is defined by the positive definite kernel $\hXXR$ 
   \[
     h(x,x') = \exp\left(-\frac{\norm{x-x'}_2^2}{2l^2} \right).
   \]
-  The parameter $l$ is called the \emph{lengthscale} parameter, and is a smoothing parameter for the functions in the RKHS.
+  The real-valued parameter $l > 0$ is called the \emph{lengthscale} parameter, and is a smoothing parameter for the functions in the RKHS.
 \end{definition}
 
 It is known by many other names, including the Gaussian kernel, due to its semblance to the kernel of the Gaussian pdf. 
@@ -404,21 +404,430 @@ SE kernels are known to be ``universal''. That is, it satisfied the following de
 The consequence of this universal property vis-à-vis regression modelling is that any (continuous) regression function $f$ may be approximated very well by a function $\hat f$ from the SE RKHS, and these two functions can get arbitrarily close to each other in the max norm sense.
 This, together with some very convenient computational advantages that the SE kernel brings (more on this in a later chapter), is a testament to the popularity of SE kernels.
 
+In a similar manner to the two previous subsections, we may also derive the \emph{centred} SE RKHS. 
+
+\begin{definition}[Centred SE RKHS]
+  Let $\cX \subseteq \bbR^p$ be equipped with the 2-norm $\norm{\cdot}_2$, and let $\Prob$ denote the distribution over $\cX$.
+  The \emph{centred} squared exponential (SE) RKHS (with lengthscale $l$) of functions over $\cX$ is defined by the positive definite kernel $\hXXR$ 
+  \[
+    h(x,x') = \exp\left(-\frac{\ip{x-\mu,x'-\mu}}{2l^2} \right),
+  \]
+  where $\mu =: \E X \in\cX $ under $\Prob$, and $\ip{\cdot,\cdot}$ represents the usual dot product in Euclidean space.
+  \hltodo[Proof?]{This ensures that $\E f(X) = 0$ for any $f$ in this RKHS}.
+\end{definition}
+
+%\begin{proof}
+%  \begin{align*}
+%    \E f(X) 
+%    &= \E\ip{f,h(\cdot,X)}_\cF \\
+%    &= \E \left\langle f, \exp\left(-\frac{\ip{\cdot,X-\mu}}{2l^2} \right) \right\rangle_\cF
+%  \end{align*}
+%  but the term on the right side of the inner product can be shown to have expectation 0 no matter what value is plugged in
+%\end{proof}
+
 \subsection{The Pearson RKHS}
+
+In all of the previous RKHS of functions, the domain $\cX$ was taken to be some Euclidean space. 
+The Pearson RKHS is a vector space of functions whose domain $\cX$ is a finite set.
+Let $\Prob$ be a probability measure over the finite set $\cX$. 
+The Pearson RKHS is defined as follows.
+
+\begin{definition}[Pearson RKHS]
+  The \emph{Pearson RKHS} is the RKHS of functions over a finite set $\cX$ defined by the reproducing kernel
+  \[
+    h(x,x') = \frac{\delta_{xx'}}{\Prob(X=x)} - 1,
+  \]
+  where $X \sim \Prob$ and $\delta$ is the Kronecker delta.
+\end{definition}
+
+The Pearson RKHS contains functions which are centred, and has the desirable property that the contribution of $f(x)^2$ to the squared norm of $f$ is proportional to $\Prob(X=x)$.
+
+\begin{claim}
+  Let $\cF$ be the Pearson RKHS of functions over a finite set $\cX$.
+  Then,
+  \[
+    \cF = \{f:\cX\to\bbR | \E f(X) = 0 \}
+  \]
+  with
+  \[
+    \norm{f}_\cF^2 = \Var f(X) = \sum_{x\in\cX} \Prob(X=x)f(x)^2, \ \forall f \in \cF.
+  \]
+\end{claim}
+
+\begin{proof}
+  Write $p_x = \Prob(X=x)$.
+  The set of functions $\{h(\cdot,x) | x \in \cX\}$ form a basis for $\cF$, and thus each $f \in \cF$ can be written as $f(x) = \sum_{x'\in\cX} w_{x'}h(x,x')$ for some scalars $w_i\in\bbR$, $i\in\cX$.
+  But $\E h(X,x') = \E [\delta_{Xx'}] / p_{x'} - 1 = p_{x'} / p_{x'} - 1 = 0$, and thus $\E f(X) = 0$.
+  Conversely, suppose $f:\cX\to\bbR$ is such that $\E f(X) = 0$.
+  Taking $w_x = p_xf(x)$, we see that
+  \begin{align*}
+    \sum_{x'\in\cX} w_{x'}h(x,x') 
+    &= \frac{w_x}{p_x} - \sum_{x'\in\cX} w_{x'} \\
+    &= \frac{f(x)\cancel{p_x}}{\cancel{p_x}} - \cancelto{\E f(X) = 0}{\sum_{x'\in\cX} p_{x'}f(x')} = f(x)
+  \end{align*}
+  and thus $h(\cdot,x)$ spans $\cF$ so $f\in\cF$.
+  To provide the second part, noting that with the choice $w_x = p_xf(x)$ and due to the reproducing property of $h$ for the RKHS $\cF$, the squared norm is 
+  \begin{align*}
+    \ip{f,f}_\cF 
+    &= \left\langle \sum_{x\in\cX} w_{x}h(\cdot,x), \sum_{x'\in\cX} w_{x'}h(\cdot,x') \right\rangle_\cF \\
+    &= \sum_{x\in\cX} \sum_{x'\in\cX} w_{x} w_{x'} \left\langle h(\cdot,x), h(\cdot,x') \right\rangle_\cF \\
+%    &= \sum_{x\in\cX} \sum_{x'\in\cX} w_{x} w_{x'} \left( \frac{\delta_{xx'}}{\Prob(X=x)} - 1 \right)
+    &= \sum_{x\in\cX} \sum_{x'\in\cX} w_{x} w_{x'} h(x,x')  \\
+    &= \sum_{x\in\cX} w_{x} f(x) \\
+    &= \sum_{x\in\cX} \Prob(X=x) f(x)^2,
+  \end{align*}
+  which is also the variance of $f(X)$.
+\end{proof}
 
 \section{Constructing RKKS from existing RKHS}
 
-\subsection{Scale of an RKHS}
+The previous section outlined all of the basic RKHSs of functions that will form the building blocks when constructing more complex function spaces.
+As previously mentioned in the preliminaries, sums of kernels are kernels and products of kernels are also kernels, and thus in the context of RKHS we may construct new RKHS from existing ones.
+To be more flexible in the specification of these new function spaces, we do not restrict ourselves to positive definite kernels only, thereby necessitating us to use the theory of reproducing kernel Krein spaces.
 
-\subsection{The polynomial RKHS}
+\subsection{Scaling an RKHS}
+
+The scale of an RKHS of functions $\cF$ over a set $\cX$ with kernel $h$ may be arbitrary.
+To resolve this issue, a scale parameter $\lambda\in\bbR$ for the kernel $h$ may be introduced, resulting in the RKHS denoted $\cF_\lambda$ with kernel $\lambda h$.
+The scale $\lambda$ will typically need to be estimated from the data.
+
+Restricting $\lambda$ to the positive reals may be arbitrary and restrictive; in particular, we shall see when constructing new function spaces this positive restriction may turn out to be unsatisfactory.
+Without the positive restriction, the kernel may potentially be negative-definite.
+Therefore, the subsequent sections speak of RKKSs, instead of RKHSs, to account solely for the fact that $\lambda$ may be negative.
+All other properties of RKHSs should carry over to RKKSs, so sometimes we might overlook this distinction, and make references to RKHSs when instead RKKSs would be more suited to the context.
+$\phantom{1}$
+\begin{remark}
+  As it turns out, for I-prior modelling, in cases where the RKHS is $\cF_\lambda$ with kernel $\lambda h$, then the sign of the single scale parameter $\lambda$ is unidentified.
+  Therefore, in such cases, we may restrict $\lambda\in\bbR^+$.
+  More on this in Chapter 4.
+\end{remark}
+
+\subsection{The polynomial RKKS}
+
+A polynomial construction based on a particular RKHS building block is considered here.
+For example, using the canonical RKHS in the polynomial construction would allow us to easily add higher order effects of the covariates $x \in \cX$.
+In particular, we only require a single scale parameter in polynomial kernel construction.
+
+\begin{definition}[The polynomial RKKS]
+  Let $\cX$ be a Hilbert space.
+  The kernel function $\hXXR$ obtained through the $d$-degree polynomial construction of linear kernels is
+  \[
+    h_\lambda(x,x') = \big(\lambda\cdot\ip{x,x'}_\cX + c\big)^d,
+  \]
+  where $\lambda \in \bbR$ is a scale parameter for the linear kernel, and $c \in \bbR$ is a real constant called the \emph{offset}.
+  This kernel defined the \emph{polynomial RKKS} of degree $d$.
+\end{definition}
+
+Write
+\begin{align*}
+  h_\lambda(x,x')_\cF = \sum_{k=0}^d \frac{d!}{k!(d-k)!} c^{k-d} \lambda^k \ip{x,x'}_\cX^k.
+%  &= \sum_{k=0}^d 
+%  {\color{gray}\overbrace{\color{black}\frac{d!}{k!(d-k)!} c^{k-d} \lambda^k}^{\beta_k}}
+%  \, \ip{x,x'}_\cX^k.
+\end{align*}
+Evidently, as the name suggests, this is a polynomial involving the canonical kernel.
+In particular, each of the $k$-powered kernels (i.e., $\ip{x,x'}_\cX^k$) defines an RKHS of their own (since these are merely products of kernels), and therefore the sum of these $k$-powered kernels define the polynomial RKHS.
+
+The offset parameter influences trade-off between the higher-order versus lower-order terms in the polynomial.
+It is sometimes known as the bias term.
+
+\begin{claim}
+  The polynomial RKKS of functions over $\bbR$, denoted $\cF$, contains polynomial functions of the form $f(x)=\sum_{k=0}^d \beta_k x^k$.
+\end{claim}
+
+\begin{proof}
+  By construction, $\cF = \cF_0 \oplus \bigoplus_{i=1}^d\bigotimes_{j=1}^i \cF_j$, where each $\cF_j, j \neq 0$ is the canonical RKHS, and $\cF_0$ is the RKHS of constant functions.
+  Each $g \in \cF$ can therefore be written as $g = \beta_0 + \sum_{i=1}^d\prod_{j=1}^i f_j$, and $f_j(x)= b_j x$ from before, where $b_j$ is a constant.
+  Therefore, $g(x) = \sum_{k=0}^d \beta_k x^k$.
+\end{proof}
+
+\begin{remark}
+  We may opt to use other RKHSs as the building blocks of the polynomial RKHS.
+  In particular, using the centred canonical kernel seems natural, so that each of the functions in the constituents of the direct sum of spaces is centred.
+  However, the polynomial RKKS itself will not be centred.
+\end{remark}
+
 
 \subsection{The ANOVA RKKS}
 
+We find it useful to begin this subsection by spending some time to elaborate on the classical \gls{anova} decomposition, and the associated notions of main effects and interactions.
+This will go a long way in understanding the thinking behind constructing an ANOVA-like RKKS of functions.
+
+The main bibliographical references for this subsection is as follows.
+Classical ANOVA is pretty much existent in every fundamental statistical textbook. 
+These texts have extremely well written introductions to this very important concept: \citet[Ch. 11]{casella2002statistical}, \citet[Ch. 3]{dean1999design}.
+On the relation between classical ANOVA and functional ANOVA decomposition, \citet{gu2013smoothing} offers novel insights.
+There is diverse literature concerning functional ANOVA, namely from the fields of machine learning (e.g. \cite{durrande2013anova}), applied mathematics (e.g. \cite{kuo2010decompositions}), and sensitivity analysis (e.g. \cite{sobol2001global}).
+What is interesting is that several authors who simply set out to find a suitable decomposition of a function, ended up somewhat independently recovering the ANOVA decomposition as being ``optimal'' in some sense.
+This speaks largely to this classical idea that is ANOVA.
+
+\subsubsection{The classical ANOVA decomposition}
+
+The standard one-way ANOVA is essentially a linear regression model which allows comparison of means from two or more samples.
+Given sets of observations $y_j = \{y_{1j},\dots,y_{n_jj}\}$ for $j=1,\dots,m$, we consider the linear model $y_{ij} = \mu_j + \epsilon_{ij}$, where $\epsilon_{ij}$ are independent, univariate normal random variables with a common variance.
+%One would like to test whether the hypothesis $\text{H}_0:\alpha_1=\cdots=\alpha_m$ stands.
+%However, obtaining a suitable and significant test statistic to reject the null hypothesis merely tells us that the means are indeed not the same, but does not tell us \emph{where exactly} the difference lies.
+%Enter the ANOVA decomposition.
+This covariate-less model is used to make inferences about the $m$ \emph{treatment means} $\mu_j$.
+Often, the model is written in the \emph{overparameterised} form by substituting $\mu_j = \mu + \tau_j$.
+This gives a different, arguably better, interpretability: The $\tau_j$'s, referred to as the \emph{treatment effects}, now represent the amount of deviation from the grand, \emph{overall mean} $\mu$.
+Estimating all $\tau_j$ and $\mu$ separately is not possible because there is one degree of freedom that needs to be addressed in the model: There are $p+1$ mean parameters to estimate but only information from $p$ means.
+%Knowledge of the overall mean $\mu$ would only allow us to freely ``choose'' only $m-1$ of the treatment effects $\mu_j$, since necessarily $\sum_{j=1}^m n_j\mu = \sum_{j=1}^m n_j\mu_j$.
+A common fix to the identifiability issue is to set one of the $\mu_j$'s, say the first one $\mu_1$, to zero, or impose the restriction $\sum_{j=1}^m \mu_j = 0$.
+The former treats one of the $m$ levels as the control, while the latter treats all treatment effects symmetrically.
+
+%The imposition of these restriction corresponds to a particular hypothesis test regarding the group means.
+%For instance, to test $\text{H}_0:\mu=\alpha_1=\cdots=\alpha_m$.
+
+Now write the ANOVA model slightly differently, as $y_{i} = f(x_i) + \epsilon_{i}$, where $f$ is defined on the discrete domain $\cX = \{1,\dots,m\}$, and $i$ indexes all of the $n := \sum_{j=1}^m n_j$ observations.
+Here, $f$ represents the group-level mean, returning $\mu_j$ for some $j\in\cX$.
+In a similar manner, we can perform the ANOVA decomposition on $f$ as
+\[
+%  f = \greyoverbrace{Af}{f_0} +  \greyoverbrace{(I - A)f}{f_1},
+  f = Af + (I-A)f = f_o + f_t,
+\]
+where $A$ is an averaging operator that ``averages out'' its argument $x$ and returns a constant, and $I$ is the identity operator.
+$f_o = Af$ is a constant function representing the \textit{\underline{o}verall mean}, whereas $f_t = (I - A)f$ is a function representing the \textit{\underline{t}reatment effects} $\tau_j$.
+Here are two choices of $A$:
+\begin{itemize}
+  \item $Af(x) = f(1) = \mu_1$. This implies $f(x) = f(1) + \big(f(x) - f(1)\big)$. The overall mean $\mu$ is the group mean $\mu_1$, which corresponds to setting the restriction $\mu_1=0$.
+  \item $Af(x) = \sum_{x=1}^m f(x) / m =: \bar \alpha$. This implies $f(x) = \bar \alpha + \big( f(x) - \bar \alpha \big)$. The overall mean is $\mu = \sum_{j=1}^m \alpha_j/m$, which corresponds to the restriction $\sum_{j=1}^m \mu_j = 0$.
+\end{itemize}
+By definition, $AAf = A^2f = Af$, because averaging a constant returns that constant
+[Side note: This idempotent property of the linear operator $A$ on $f$ speaks to the possibility of it being somewhat like an \emph{orthogonal projection}, and indeed this is so---we shall return to this point later when we describe functional ANOVA decomposition].
+We must have that $Af_t = A(I - A)f = Af - A^2f = 0$.
+In other words, the choice of A is arbitrary, just like the choice of restriction, so long as it satisfies the condition that $Af_c = 0$.
+
+The multiway ANOVA can be motivated in a similar light. 
+Let $x = (x_1,\dots,x_p) \in \prod_{k=1}^p \cX_k$, and consider functions that map $\prod_{k=1}^p \cX_j$ to $\bbR$.
+Let $A_j$ be an averaging operator on $\cX_k$ that averages the $k$th component of $x$ from the active argument list, i.e. $A_kf$ is constant on the $\cX_k$ axis but not necessarily an overall constant function.
+An ANOVA decomposition of $f$ is
+\[
+  f = \left( \prod_{k=1}^p (A_k + I - A_k) \right)f = \sum_{\cK\in\cP_p} \left( \prod_{k\in\cK} (I - A_k) \prod_{k\notin\cK} A_k \right)f = \sum_{\cK\in\cP_p} f_\cK
+\]
+where we had denoted $\cP_p = \cP(\{1,\dots,p\})$ to be the power set of $\{1,\dots,p\}$ whose cardinality is $2^p$.
+The summands $f_\cK$ will compose of the overall effect, main effects, two-way interaction terms, and so on.
+Each of the terms will satisfy the condition $A_kf_\cK = 0, \forall k \in \cK \in \cP_p$.
+
+\begin{example}[Two-way ANOVA decomposition]
+  Let $p=2$, $\cX_1=\{1,\dots,m_1\}$, and $\cX_2=\{1,\dots,m_2\}$.
+  The power set $\cP_2$ is $\big\{ \{\}, \{1\}, \{2\}, \{1,2\} \big\}$.
+  The ANOVA decomposition of $f$ is
+  \[
+    f = f_0 + f_1 + f_2 + f_{12}.
+  \]
+  Here are two choices for the averaging operator $A_k$ analogous to the previous illustration in the one-way ANOVA.
+  \begin{itemize}
+    \item Let $A_1f(x) = f(1,x_2)$ and $A_2f(x) = f(x_1,1)$. Then,
+    \begin{alignat*}{2}
+      f_0 &= A_1A_2 f          &&= f(1,1) \\
+      f_1 &= (I-A_1)A_2f       &&= f(x_1,1) - f(1,1) \\
+      f_2 &= A_1(I-A2)f        &&= f(1,x_2) - f(1,1) \\
+      f_{12} &= (I-A_1)(I-A2)f &&= f(x_1,x_2) - f(x_1,1) - f(1,x_2) + f(1,1).
+    \end{alignat*}
+    \item Let $A_kf(x) = \sum_{x_k=1}^{m_k} f(x_1,x_2) / m_k, k=1,2$. Then,
+    \begin{alignat*}{2}
+      f_0 &= A_1A_2 f          &&= f_{\bigcdot\bigcdot} \\
+      f_1 &= (I-A_1)A_2f       &&= f_{x_1\bigcdot} - f_{\bigcdot\bigcdot} \\
+      f_2 &= A_1(I-A_2)f        &&= f_{\bigcdot x_2} - f_{\bigcdot\bigcdot} \\
+      f_{12} &= (I-A_1)(I-A_2)f &&= f - f_{x_1\bigcdot} - f_{\bigcdot x_2} + f_{\bigcdot\bigcdot},
+    \end{alignat*}
+    where $f_{\bigcdot\bigcdot} = \sum_{x_1,x_2} f(x_1,x_2) / m_1m_2$, $ f_{x_1\bigcdot} = \sum_{x_2} f(x_1,x_2)/m_2$, and \newline $f_{\bigcdot x_1} = \sum_{x_1} f(x_1,x_2)/m_1$.
+  \end{itemize}
+\end{example}
+
+\subsubsection{Functional ANOVA decomposition}
+
+Let us now extend the ANOVA decomposition idea to a general function $f:\cX\to\bbR$ in some vector space $\cF$.
+Specifically, we shall consider the (Hilbert) space of square integrable functions over $\cX$ with measure $\nu$, $\text{L}^2(\cX,\nu) \equiv \cF$.
+We shall jump straight into the multiway ANOVA analogue for functional decomposition, and to that end, consider $x=(x_1,\dots,x_p) \in \prod_{k=1}^p \cX_k =: \cX$, where each of the spaces $\cX_k$ has measure $\nu_k$, and thus $\nu=\nu_1\otimes\cdots\otimes\nu_d$.
+As $\cX$ need not necessarily be a (collection of) finite set, we need to figure out a suitable linear operator that performs an ``averaging'' of some sort.
+
+Consider the linear operator $A_k:\cF\to \cF_{-k}$, where $\cF_{-k}$ is a vector space of functions for which the $k$th component is constant over $\cX$, defined by
+\begin{align}\label{eq:avgoper}
+  A_k f = \int_{\cX_k} f(x_1,\dots,x_p) d\nu(x_k).
+\end{align}
+Thus, for the one-way ANOVA ($k=1$), we get
+\begin{align}\label{eq:functionalanova1}
+  f = 
+  \greyoverbrace{\int_\cX f(x)\d\nu(x)}{f_0} 
+  + 
+  \greyoverbrace{\left( f - \int_\cX f(x)\d\nu(x) \right)}{f_1}
+\end{align}
+and for the two-way ANOVA ($k=2$), we have $f = f_0 + f_1 + f_2 + f_{12}$, with
+\begin{align*}
+  f_0 &= \int_{\cX_1}\int_{\cX_2} f(x_1,x_2) \d\nu(x_1)\d\nu(x_2) \\
+  f_1 &= \int_{\cX_2} \left( f(x_1,x_2) - \int_{\cX_1} f(x_1,x_2) \d\nu(x_1) \right) \d\nu(x_2)\\  
+  f_2 &= \int_{\cX_1} \left( f(x_1,x_2) - \int_{\cX_2} f(x_1,x_2) \d\nu(x_2) \right) \d\nu(x_1)\\  
+  f_{12} &= f(x_1,x_2) - \int_{\cX_1} f(x_1,x_2) \d\nu(x_1) - \int_{\cX_2} f(x_1,x_2) \d\nu(x_2) \\
+  &\phantom{==} + \int_{\cX_1}\int_{\cX_2} f(x_1,x_2) \d\nu(x_1)\d\nu(x_2).
+\end{align*}
+
+As a remark, the averaging operator $A_k$ defined in \eqref{eq:avgoper} is indeed true to its name, in that it calculates the mean function of $f$ over the $k$th coordinate. 
+For comparison, this is identical to the second type of restriction we considered in the classical ANOVA previously (i.e., setting $\sum_j \mu_j = 0$).
+We must also have, as before, that $A_kf_\cK = 0, \forall k \in \cK \in \cP_p$.
+For the one-way functional ANOVA decomposition in \eqref{eq:functionalanova1}, it must be that $f_1$ is a zero-mean function.
+As for the two-way ANOVA, it is the case that $\int_{\cX_k} f_1(x_1,x_2) \d\nu(x_k) = 0, k=1,2$, and $\int_{\cX_1}\int_{\cX_2} f_{12}(x_1,x_2) \d\nu(x_1)\d\nu(x_1) = 0$.
+
+We notice that the decomposition in \eqref{eq:functionalanova1} is orthogonal:
+
+\begin{claim}
+  For the ANOVA decomposition in \eqref{eq:functionalanova1}, $f_0$ and $f_1$ are orthogonal for the usual $\text{L}^2$ inner product.
+\end{claim}
+
+\begin{proof}
+  Note that $f_0$ is a constant function, and that $f_1 = f- f_0$.
+  Thus,
+  \begin{align*}
+    \ip{f_0,f_1} 
+    &= \int f_0f_1 \d\nu \\
+    &= f_0 \int \left(f - f_0\right) \d\nu \\
+    &= f_0 (f_0 - f_0) = 0.
+  \end{align*}
+\end{proof}
+
+In fact, for $k=1$, any $f \in \cF$ can be decomposed as a sum of a constant plus a zero mean function, so we have the geometric decomposition of the vector space $\cF = \cF_0 \displaystyle\mathop{\oplus}^\bot \bar\cF_1$, where $\cF_0$ is a vector space of constant functions, and $\bar\cF_1$ a vector space of zero-mean functions over $\cX_1$.
+For $k\geq 2$ we can argue something similar.
+The space $\cF$ has the tensor product structure\footnotemark~$\cF = \cF_1 \otimes \cdots \otimes \cF_p$, and considered individually, each $\cF_k$ can be decomposed orthogonally $\cF_k = \cF_{0} \displaystyle\mathop{\oplus}^\bot \bar\cF_k$.
+Note that $\cF_k$ consists of functions $f:\cX_k\to\bbR$.
+Expanding out under the distributivity rule of tensor products and rearranging slightly, we obtain
+\begin{align}
+  \cF &= \big( \cF_0 \mathop{\oplus}^\bot \bar\cF_1 \big) \otimes \cdots \otimes 
+  \big( \cF_0 \mathop{\oplus}^\bot \bar\cF_1 \big) \nonumber \\
+  &= \cF_{0}^{\otimes p} 
+  \ \mathop{\oplus}^\bot \
+  \bigoplus_{j=1}^p \! \mathop{\vphantom\oplus}^\bot \Big( \cF_0^{\otimes (p-1)} \otimes \bar\cF_j \Big) 
+  \ \mathop{\oplus}^\bot \
+  \mathop{\bigoplus_{j,k=1}^p}_{j<k} \!\! \mathop{\vphantom\oplus}^\bot  \Big( \cF_0^{\otimes (p-2)} \otimes \bar\cF_j \otimes \bar\cF_k \Big)
+  \label{eq:funcanovaspace} \\
+  &\phantom{==} \mathop{\oplus}^\bot \ 
+  \cdots 
+  \ \mathop{\oplus}^\bot \ 
+  \Big( \bar\cF_1 \otimes \cdots \otimes \bar\cF_p \Big). \nonumber
+%  \\
+%  &= \cF_0 
+%  \mathop{\oplus}^\bot
+%  \bigoplus_{j=1}^p \bar\cF_j
+%  \mathop{\oplus}^\bot
+%  \bigg( \mathop{\bigotimes_{j,k=1}^p}_{j<k} \bar\cF_j\bar\cF_k \bigg)
+%  \mathop{\oplus}^\bot \ \cdots \ \mathop{\oplus}^\bot
+%  \Big( \bar\cF_1 \otimes \cdots \otimes \bar\cF_p \Big).
+\end{align}
+To clarify,
+\begin{itemize}
+  \item $\cF_{0}^{\otimes p}$ is the space of constant functions $f:\cX_1\times\cdots\times\cX_p\to\bbR$.
+  \item $\Big( \cF_0^{\otimes (p-1)} \otimes \bar\cF_j \Big)$ is the space of functions that are constant on all coordinates except the $j$th coordinate of $x$. Further, the functions are centred on the $j$th coordinate.
+  \item $\Big( \cF_0^{\otimes (p-2)} \otimes \bar\cF_j \otimes \bar\cF_k \Big)$ is the space of functions that are constant on all coordinates except the $j$th and $k$th coordinate of $x$. Further, the functions are centred on these two coordinates.
+  \item $\bar\cF_1 \otimes \cdots \otimes \bar\cF_p$ is the space of zero-mean functions $f:\cX_1\times\cdots\times\cX_p\to\bbR$.
+  \item Similarly for the rest of the spaces in the summand, of which there are $2^p$ members all together. 
+\end{itemize}
+
+Therefore, given an arbitrary function $f\in\cF$, the projection of $f$ onto the above respective orthogonal spaces in \eqref{eq:funcanovaspace} leads to the \emph{functional ANOVA representation}
+\begin{align}\label{eq:functionalanova2}
+  f(x) = \mu + \sum_{j=1}^p f_j(x_j) + \mathop{\sum_{j,k=1}^p}_{j<k} f_{jk}(x_j,x_k) + \cdots + f_{1\cdots p}(x).
+\end{align}
+
+\begin{definition}[Functional ANOVA representation]
+  Let $\cP_d = \cP(\{1,\dots,d\})$, the power set of $\{1,\dots,d\}$.
+  For any function $f \in \cF\equiv\text{L}^2(\cX_1\times\cdots\times\cX_d,\nu_1\otimes\cdots\otimes\nu_d)$, the formula for $f$ in \eqref{eq:functionalanova2} is known as the \emph{functional ANOVA representation} of $f$ if $\forall k \in \cK \in \cP_p$,
+  \begin{align}\label{eq:funcanovaorth}
+    A_k f_\cK = \int_{\cX_\cK} f_\cK(x_\cK) \d\nu_k(x_k) = 0,
+  \end{align}
+  where $\cX_\cK = \prod_{k\in\cK} \cX_k$, and $x_\cK = \{x_k, k \in \cK \}$ is an element of this space.
+  In other words, the integral of $f_\cK$ with respect to any of the variables indexed by the elements in $\cK$ (itself an element of the power set), is zero.
+  The requirement \eqref{eq:funcanovaorth} ensures orthogonality of the summands in \eqref{eq:functionalanova2}.
+\end{definition}
+
+\footnotetext{There is an isomorphism $\text{L}^2(\cX_1\times\cdots\times\cX_d,\nu_1\otimes\cdots\otimes\nu_d) \cong \text{L}^2(\cX_1,\nu_1) \otimes \cdots \otimes \text{L}^2(\cX_d,\nu_d)$. See, for example, \citet{reed1972methods,kree1974produits}.}
+
+For the constant term, main effects, and two-way interaction terms, the familiar classical expressions are obtained:
+\begin{align*}
+%  \mu &= \int%_\cX 
+%  f(x) \d\nu(x) \\
+%  f_j(x_j) &= \int%_{\prod_{i\neq j}\cX_i} 
+%  f(x) \big( \textstyle\prod_{i\neq j} \d\nu_i(x_i) \big) - \mu \\
+%  f_{jk}(x_j,x_k) &= \int%_{\prod_{i\neq j,k}\cX_i} 
+%  f(x) \big( \textstyle\prod_{i\neq j,k} \d\nu_i(x_i) \big) - f_j(x_j) - f_k(x_k) - \mu  
+  f_0 &= \int f \d\nu \\
+  f_j &= \int f \, \textstyle\prod_{i\neq j} \d\nu_i  - f_0 \\
+  f_{jk} &= \int f \, \textstyle\prod_{i\neq j,k} \d\nu_i  - f_j - f_k - f_0  .
+\end{align*}
+
+%Any function square integrable function $f$ can be decomposed as a sum of a constant plus a zero mean function.
+
+%The two elements are orthogonal for the usual $\text{L}^2$ inner product $\ip{f,g} = \int_\cX f(x)g(x)\d\nu(x)$.
+%Therefore, we have a geometric decomposition 
+%\[
+%  \cF = \cF_0 \oplus \bar\cF
+%\]
+%where $\cF_0$ is the subspace of constant functions, and $\bar\cF$ is the subspace of zero mean functions: $\bar\cF = \{f \in \cF | \int_\cX f\d\nu = 0 \}$.
+
+\begin{remark}
+  Not all of the higher order terms need to be included. There may even be a model motivated reason for dropping certain main effects or interaction effects.  
+\end{remark}
+
+
+\subsubsection{The ANOVA kernel}
+
+At last, we come to the section of deriving the ANOVA RKKS, and, rest assured, the preceding long build-up will prove to be not in vain.
+The main idea is to construct an RKKS such that the functions that lie in them will have the ANOVA representation in \eqref{eq:functionalanova2}.
+The bulk of the work has been done, and in fact we know exactly how this ANOVA RKKS should be structured---it is the space as specified in \eqref{eq:funcanovaspace}). 
+The ANOVA RKKS will be constructed by a similar manipulation of the individual kernels representing the RKHS building blocks.
+
+\begin{definition}[The ANOVA RKKS]
+  For $k=1,\dots,p$, let $\cF_k$ be a centred RKHS of functions over the set $\cX_k$ with kernel $h_k:\cX_k\times\cX_k\to\bbR$. 
+  Let $\lambda_k, k=1,\dots,p$ be real-valued scale parameters.
+  The ANOVA RKKS of functions $f:\cX_1\times\cdots\times\cX_p\to\bbR$ is specified by the ANOVA kernel, defined by
+  \begin{align}\label{eq:anovarkks}
+    h_\lambda(x,x') = \prod_{k=1}^p \big( 1 + \lambda_k h_k(x_k,x_k') \big).
+  \end{align}
+\end{definition}
+
+The construction an ANOVA RKKS is very very simple in through multiplication of univariate kernels.
+Expanding out equations \eqref{eq:anovarkks}, we see that it is in fact a sum of separable kernels with increasing orders of interaction:
+\begin{align*}
+  h_\lambda(x,x') 
+%  &= \prod_{k=1}^p \big( 1 + \lambda_k h_k(x_k,x_k') \big) \\
+  &= 1 + \sum_{j=1}^p \lambda_j h_j(x_j,x_j') + \mathop{\sum_{j,k=1}^p}_{j<k} \lambda_j\lambda_k h_j(x_j,x_j')h_k(x_k,x_k') \\
+  &\phantom{==} + \cdots + \prod_{j=1}^p \lambda_j h_j(x_j,x_j').
+\end{align*}
+It is now clear from the expansion that the ANOVA RKKS yields functions that resemble those with the ANOVA representation in \eqref{eq:functionalanova2}:
+The mean value of the function stems from the `1', i.e. it lies in an RKHS of constant functions; the main effects are represented by the sum of the individual kernels; the two-way interaction terms are represented by the second-order kernel interactions; and so on.
+
+One thing to note is that restricting the $\lambda$ parameters to the positive orthant might give unsatisfactory results---what if the effect of two functions are in truth opposing one another?
+These are handled through opposing signs of their respective scale parameters, thus  the need for working in RKKSs.
+
+\begin{example}
+  Consider two RKKSs $\cF_k$ with kernel $\lambda_k h_k$, $k=1,2$.
+  The ANOVA kernel defining the ANOVA RKKS $\cF$ is
+  \[
+    h_\lambda\big((x_1,x_2),(x_1',x_2') \big) = 1 + \lambda_1 h_1(x_1,x_1') + \lambda_2 h_2(x_2,x_2') + \lambda_1\lambda_2 h_1(x_1,x_1')h_2(x_2,x_2').
+  \]  
+  Suppose that $\cF_1$ and $\cF_2$ are the centred canonical RKKS of functions over $\bbR$.
+  Then, functions in $\cF = \cF_0 \oplus \cF_1 \oplus \cF_2 \oplus (\cF_1 \otimes \cF_2)$ are of the form
+  \[
+    f(x_1,x_2) = \beta_0 + \beta_1x_1 + \beta_2x_2 + \beta_3x_1x_2.
+  \]
+\end{example}
+
+As remarked in the previous subsection, not all of the components of the ANOVA RKKS need to be included in construction.
+The selective exclusion of certain interactions characterises many interesting statistical models.
+Excluding certain terms of the ANOVA RKKS is equivalent to setting the scale parameter for those relevant components to be zero, i.e., they play no role in the decomposition of the function.
+With this in mind, the ANOVA RKKS then gives us an objective way of model-building, from linear regression, to multilevel models, longitudinal models, and so on.
+One thing's for sure---everything is ANOVA.
+
+\begin{remark}
+  Unfortunately, even if centred RKHSs are used as the building blocks of the ANOVA RKKS, the properties of the function represented by \eqref{eq:functionalanova2} may not be preserved.
+  In particular, any of the individual functions $f_\cK$, for $\cK$ in the power set, are not necessarily zero mean functions.
+  Furthermore, any two terms in the summand are generally not orthogonal.
+  \hltodo{Consequently, interpretation based on an ANOVA motivation may not be valid, but in spirit, they provide a conceptually strong basis for building new RKKSs from existing ones.}
+\end{remark}
 
 \section{The Sobolev-Hilbert inner product}
 
 \section{Discussion}
 
+Resolving the uncentred polynomial and ANOVA RKKS.
 
 
 

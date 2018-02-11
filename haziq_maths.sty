@@ -31,24 +31,25 @@
 \declaretheoremstyle[
   spaceabove=\parskip,spacebelow=\parskip
 ]{hDefinitionStyle}
+\declaretheoremstyle[
+   headfont=\normalfont\itshape,spaceabove=\parskip,spacebelow=\parskip
+]{hRemarkStyle}
 \declaretheorem[numberwithin=chapter,style=hTheoremStyle]{theorem} 
 \declaretheorem[sibling=theorem,style=hTheoremStyle]{proposition}
 \declaretheorem[sibling=theorem,style=hTheoremStyle]{lemma}
 \declaretheorem[parent=theorem,style=hTheoremStyle]{corollary}
 \declaretheorem[sibling=theorem,style=hTheoremStyle]{conjecture}
 \declaretheorem[sibling=theorem,style=hTheoremStyle]{claim}
-\declaretheorem[style=remark]{remark} 
+\declaretheorem[numberwithin=chapter,style=hRemarkStyle]{remark} 
 \declaretheorem[numberwithin=chapter,style=hDefinitionStyle]{definition}
 \declaretheorem[numberwithin=chapter,style=hDefinitionStyle]{example}
 
- 
 \usepackage{dsfont}  % for indicator variables \mathsds{1}
 \usepackage{bm}  % for better bold script
 \usepackage[makeroom]{cancel}
 	\renewcommand{\CancelColor}{\color{gray}}
 \usepackage{mathtools}
 \usepackage{dsfont}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% MATHS SYMBOLS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -227,6 +228,27 @@
 \let\d\relax
 \DeclareMathOperator{\d}{d\!\:\!}
 
+% Overbrace and underbrace
+\newcommand{\greyoverbrace}[2]{{\color{gray}\overbrace{\color{black}#1}^{#2}}}
+
+% \obot and \bigobot from the matha and mathx font (from mathabx.sty)
+\DeclareFontFamily{U}{matha}{\hyphenchar\font45}
+\DeclareFontShape{U}{matha}{m}{n}{
+      <5> <6> <7> <8> <9> <10> gen * matha
+      <10.95> matha10 <12> <14.4> <17.28> <20.74> <24.88> matha12
+      }{}
+\DeclareSymbolFont{matha}{U}{matha}{m}{n}
+\DeclareFontFamily{U}{mathx}{\hyphenchar\font45}
+\DeclareFontShape{U}{mathx}{m}{n}{
+      <5> <6> <7> <8> <9> <10>
+      <10.95> <12> <14.4> <17.28> <20.74> <24.88>
+      mathx10
+      }{}
+\DeclareSymbolFont{mathx}{U}{mathx}{m}{n}
+
+\DeclareMathSymbol{\obot}         {2}{matha}{"6B}
+\DeclareMathSymbol{\bigobot}       {1}{mathx}{"CB}
+
 % Conveniences
 \newcommand{\const}{\text{const.}}
 \newcommand{\half}[1][1]{\frac{#1}{2}}  % \half for 1/2 or \half[n] for n/2, etc.
@@ -245,3 +267,4 @@
 \newcommand{\Wtilde}{\tilde{\mathbf W}}
 \newcommand{\Vtilde}{\tilde{\mathbf V}}
 \newcommand{\hXXR}{h:\cX\times\cX\to\bbR}
+\newcommand*{\bigcdot}{\raisebox{-0.3ex}{\scalebox{1.15}{$\cdot$}}}
