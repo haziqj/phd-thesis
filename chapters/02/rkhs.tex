@@ -1,0 +1,258 @@
+The introductory section sets us up nicely to discuss the coveted reproducing kernel Hilbert space.
+This is a subset of Hilbert spaces for which its evaluation functionals are continuous (by definition, in fact).
+The majority of this section, apart from defining RKHS, is to convince ourselves that each and every RKHS of functions can be specified solely through its reproducing kernel.
+To begin, we consider a fundamental linear functional on a Hilbert space of functions $\cF$, that assigns a value to $f \in \mathcal F$ for each $x \in \mathcal X$.
+
+\begin{definition}[Evaluation functional]
+	Let $\mathcal F$ be a vector space of functions $f:\mathcal X \rightarrow \mathbb R$, defined on a non-empty set $\mathcal X$. 
+	For a fixed $x \in \mathcal X$, the functional $\delta_x:\mathcal F \rightarrow \mathbb R$ as defined by $\delta_x(f) = f(x)$ is called the (Dirac) evaluation functional at $x$.
+\end{definition}
+
+It is easy to see that evaluation functionals are always linear: $\delta_x(\lambda f + g) = (\lambda f + g)(x) = \lambda f(x) + g(x) = \lambda\delta_x(f) + \delta_x(g)$.
+This is in fact the linearity that was implied earlier on at the beginning of Chapter 2 when introducing the notion of functions behaving like vectors.
+As a remark, the calculation of the (penalised) likelihood functional involves evaluations. 
+It is therefore important for the evaluation functional to be continuous.
+It turns out, this is exactly what RKHS provide.
+
+\begin{definition}[Reproducing kernel Hilbert space]\label{def:rkhs}
+	A Hilbert space $\cF$ of real-valued functions $f:\mathcal X \rightarrow \mathbb R$ on a non-empty set $\mathcal X$ is called a \emph{reproducing kernel Hilbert space} if the evaluation functional $\delta_x: f \mapsto f(x)$ is continuous (equivalently, bounded) on $\cF$, $\forall x \in \cX$. 
+\end{definition}
+
+%The continuity condition also represents the weakest condition required for both the existence of an inner product and the evaluation of every function in $\cF$ at every point in the domain $\cX$.
+While the continuity condition by definition is what makes an RKHS, it is neither easy to check this condition in practice, nor is it intuitive as to the meaning of its name.
+In fact, there isn't even any mention of what a reproducing kernel actually is.
+In order to benefit from the desirable continuity property of RKHS, we should look at this from another, more intuitive, perspective. 
+By invoking the Riesz representation theorem, we see that for all $x\in\cX$, there exists a unique element $h_x\in\cF$ such that
+\[
+  f(x) = \delta_x(f) = \ip{f,h_x}_\cF, \forall f \in \cF
+\]
+holds. 
+Since $h_x$ itself is a function in $\cF$, it holds that for every $x' \in \cX$ there exists a $h_{x'}\in\cF$ such that
+\[
+  h_{x}(x') = \delta_{x'}(h_{x}) = \ip{h_x,h_{x'}}_\cF.
+\]
+This leads us to the definition of a \emph{reproducing kernel} of an RKHS---the very notion that inspired its name.
+
+\begin{definition}[Reproducing kernels]\label{def:repkern}
+  Let $\mathcal F$ be a Hilbert space of functions over a non-empty set $\mathcal X$. A function $h:\mathcal X\times\mathcal X\rightarrow\mathbb R$ is called a reproducing kernel of $\mathcal F$ if $h$ satisfies
+  \begin{itemize}
+    \item $\forall x \in \mathcal X,\, h(\cdot, x) \in \mathcal F$; and
+    \item $\forall x \in \mathcal X, \, f \in \mathcal F, \, \langle f, h(\cdot, x) \rangle_{\mathcal F} = f(x)$ (the reproducing property).
+  \end{itemize}
+  In particular, for any $x, x' \in \mathcal X$,
+  \[
+  	h(x,x') = \langle h(\cdot, x), h(\cdot, x') \rangle_{\mathcal F}.
+  \]
+\end{definition}
+
+Continuity of evaluation functionals in an RKHS means that functions that are close in RKHS norm imply that they are also close pointwise.
+\hltodo[Not so sure why this is useful?]{It gives some reassurance when trying to estimate $f$ from $\cF$---just look at the size of the norm.}
+More formally,
+
+\begin{corollary}[Norm convergence implies pointwise convergence in RKHS]\label{thm:normpointconv}
+  Let $\cF$ be an RKHS of real functions over $\cX$, and let $f_n$ be a sequence of points in $\cF$.
+  Then, for some $f\in\cF$,
+  \[
+    \lim_{n\to\infty} \norm{f_n - f}_\cF = 0 \ \ \Rightarrow \ \ \lim_{n\to\infty} |f_n(x) - f(x)| = 0.
+  \]
+\end{corollary}
+
+\begin{proof}
+  Suppose $\cF$ is an RKHS with reproducing kernel $h$.
+  Then,
+  \begin{align*}
+    |\delta_x(f) - \delta_x(g)| 
+    &= |\delta_x(f-g)| \\
+    &= |(f-g)(x)|  \\
+    &= |\ip{f-g,h(\cdot,x)}_\cF| \hspace{1em} \rlap{\color{gray} (reproducing property)} \\
+    &\leq \norm{h(\cdot,x)}_\cF \cdot \norm{f-g}_\cF \hspace{1em} \rlap{\color{gray} (by Cauchy-Schwarz)} \\
+    &= \sqrt{h(x,x)}\cdot \norm{f-g}_\cF.
+  \end{align*}
+\end{proof}
+
+Having defined an RKHS, there are several questions we might like the answer to: What is the relationship between a reproducing kernel and an RKHS? Can we speak to its existence and uniqueness? What other properties does it have?
+The rest of this subsection will be dedicated to discuss the following assertion.
+
+\begin{theorem}[RKHS]
+  For every reproducing kernel Hilbert space $\cF$ of functions over a set $\cX$, there corresponds a unique, positive-definite reproducing kernel $\hXXR$.
+  Conversely, for every positive-definite function $\hXXR$, there corresponds a unique reproducing kernel Hilbert space $\cF$ that has $h$ as its reproducing kernel.
+\end{theorem}
+
+In essence, there is a bijection between the set of positive-definite kernels and the set of reproducing kernel Hilbert spaces.
+We will take take apart this theorem and inspect its constituent claims.
+Firstly, on the definition of kernels and its positive-definiteness.
+
+\begin{definition}[Kernels]\label{def:kernel}
+  Let $\mathcal F$ be a Hilbert space (not necessarily a RKHS), $\mathcal X$ a non-empty set, and $\phi:\mathcal X \rightarrow \mathcal F$.   
+  A \emph{kernel} is defined to be function $\hXXR$ that satisfies
+  \[
+    h(x,x') = \langle \phi(x), \phi(x') \rangle_{\mathcal F}
+  \]
+  $\forall x,x'\in\cX$.
+  The map $\phi$ is referred to as the \emph{feature map}, and $\cF$ the \emph{feature space}.
+\end{definition}
+
+\begin{lemma}[Positive-definiteness of kernels]\label{thm:posdef}
+  The kernel as defined in Definition \ref{def:kernel} is a symmetric and positive definite function, where a symmetric function $h:\mathcal X\times\mathcal X\rightarrow\mathbb R$ is said to be  positive definite if
+  \[
+    \sum_{i=1}^n\sum_{k=1}^n a_ia_jh(x_i, x_k) \geq 0.
+  \]
+  for all integers $n>1$, $\forall a_1, \dots, a_n \in \mathbb R$, and $\forall x_1, \dots, x_n \in \mathcal X$.
+\end{lemma}
+
+\begin{proof}
+  \begin{align*}
+    \sum_{i=1}^n\sum_{k=1}^n a_ia_jh(x_i, x_k)	
+    &= \sum_{i=1}^n\sum_{k=1}^n \langle a_i\phi(x_i), a_k\phi(x_k) \rangle_{\mathcal F} \\
+    &= \Bigg\langle \sum_{i=1}^n a_i\phi(x_i), \sum_{k=1}^n a_k\phi(x_k) \Bigg\rangle_{\mathcal F} \\
+    &= \Bigg|\Bigg| \sum_{i=1}^n a_i\phi(x_i) \Bigg|\Bigg|_{\mathcal F}^2 \\
+    & \geq 0
+  \end{align*}
+\end{proof}
+
+\begin{corollary}[Positive-definiteness of reproducing kernels]
+  Reproducing kernels of a RKHS are positive definite. 
+%  For an RKKS, the reproducing kernel can be shown to be the difference between two positive definite kernels, but need not be itself positive definite.
+\end{corollary}
+
+\begin{proof}
+  Take $\phi: x \mapsto h(\cdot,x)$. 
+  By Definition \ref{def:kernel}, one has $h(x,x') = \langle h(\cdot, x), h(\cdot, x') \rangle_{\mathcal F}$, which is the reproducing property of the kernel in a RKHS, and this is positive-definite by Lemma \ref{thm:posdef}. 
+%  The second statement follows by a similar argument and by definition of a RKKS (see Definition \ref{def:krein}).
+  Incidentally, the $\phi$ as defined is known as the \emph{canonical feature map}.
+\end{proof}
+
+We have established what a kernel is, and that reproducing kernels of an RKHS are positive-definite. 
+But do reproducing kernels always exist, and if so, are they unique to an RKHS?
+Lemmas \ref{thm:rkhsexist} and \ref{eq:rkhsunique} answer these questions in the positive.
+
+\begin{lemma}[Existence of reproducing kernels]\label{thm:rkhsexist}
+  Let $\cF$ be a Hilbert space of functions over $\cX$.
+  $\cF$ is a RKHS if and only if $\cF$ has a reproducing kernel.  
+\end{lemma}
+
+\begin{proof}
+  Suppose $\cF$ is a RKHS with kernel $h$.
+  Choose $\delta=\epsilon / \norm{h(\cdot,x)}_\cF$.
+  Then, for any $f \in \cF$ such that $\norm{f-g}_\cF < \delta$, we have
+  \begin{align*}
+    \vert \delta_x (f) - \delta_x (g) \vert 
+    &= \vert (f-g)(x) \vert \\
+    &= |\ip{f-g,h(\cdot,x)}_\cF| \hspace{1em} \rlap{\color{gray} (reproducing property)} \\
+    &\leq \norm{h(\cdot,x)}_\cF \cdot \norm{f-g}_\cF \hspace{1em} \rlap{\color{gray} (by Cauchy-Schwarz)} \\
+    &= \epsilon.
+  \end{align*}
+  Thus, the evaluation functional is (uniformly) continuous on $\cF$.
+  To prove the reverse, follow the argument preceding Definition \ref{def:repkern}.
+\end{proof}
+
+\begin{lemma}[Uniqueness of reproducing kernels]\label{eq:rkhsunique}
+  The reproducing kernel $\hXXR$ of a RKHS $\cF$ of functions over $\cX$ is unique.
+\end{lemma}
+
+\begin{proof}
+  Assume that $\cF$ has two reproducing kernels $h_1$ and $h_2$. 
+  Then, $\forall f\in\cF$ and $\forall x\in\cX$,
+  \begin{align*}
+    \ip{f,h_1(\cdot,x) - h_2(\cdot,x)}_\cF = f(x) - f(x) = 0.
+  \end{align*}
+  In particular, if we take $f = h_1(\cdot,x) - h_2(\cdot,x)$, we obtain $\norm{h_1(\cdot,x) - h_2(\cdot,x)}^2_\cF = 0$
+\end{proof}
+
+Naturally, having seen that every RKHS corresponds to a unique reproducing kernel, we ask whether the converse is true.
+That is, given a reproducing kernel, does it define a unique RKHS?
+Astoundingly, the answer is again positive, and this is stated by the much celebrated Moore-Aronszajn theorem below.
+
+\begin{theorem}[Moore-Aronszajn]
+  If $\hXXR$ is a positive-definite function then there exists a unique RKHS whose reproducing kernel is $h$.
+\end{theorem}
+
+\begin{proof}[Sketch proof]
+  Most of the details here have been omitted, except for the parts which we feel are revealing as to the properties of an RKHS.
+  For a complete proof, see \citet{berlinet2011reproducing}. 
+  Start with the linear space
+  \[
+    \cF_0 = \left\{ f_n:\cX\to\bbR \, \Big| \, f_n = \sum_{i=1}^n w_i h(\cdot,x_i), x_i\in\cX, w_i\in\bbR, n\in\bbN \right\}
+  \]
+  and endow this linear space with the following inner product:
+  \[
+    \left\langle \sum_{i=1}^n w_i h(\cdot,x_i), \sum_{j=1}^m w_j' h(\cdot,x_j') \right\rangle_{\cF_0} = \sum_{i=1}^n\sum_{j=1}^m w_i w_j' h(x_i,x_j').
+  \]
+  It may be shown that this indeed a valid inner-product satisfying the conditions laid in Definition \ref{def:innerprod}.
+  At this point, the reproducing property is already had:
+  \begin{align*}
+    \big\langle f_n, h(\cdot,x) \big\rangle_{\cF_0} 
+    &= \left\langle \sum_{i=1}^n w_i h(\cdot,x_i), h(\cdot,x) \right\rangle_{\cF_0} \\
+    &= \sum_{i=1}^n w_i h(x_i,x) \\
+    &= f_n(x),
+  \end{align*}
+  for any $f_n\in\cF_0$.
+  
+  Let $\cF$ be the completion of $\cF_0$ with respect to this inner product.
+  In other words, define $\cF$ to be the set of functions $f:\cX\to\bbR$ for which there exists a Cauchy sequence $\{f_n\}_{n=1}^\infty$ in $\cF_0$ converging pointwise to $f \in \cF$.
+  The inner product for $\cF$ is defined to be
+  \[
+    \ip{f,f'}_\cF = \lim_{n\to\infty} \ip{f_n,f_n'}_{\cF_0}.
+  \]
+  The sequence $\{ \ip{f_n,f_n'}_{\cF_0} \}_{n=1}^\infty$ is convergent and does not depend on the sequence chosen, but only on the limits $f$ and $f'$ \citep[Lemma 5]{berlinet2011reproducing}.
+  We may check that this indeeds defines a valid inner product.
+  The reproducing property carries over to the completion:
+  \begin{align*}
+    \ip{f,h(\cdot,x)}_\cF 
+    &= \lim_{n\to\infty} \ip{f_n,h(\cdot,x)}_{\cF_0} \\
+    &= \lim_{n\to\infty} f_n(x) \\
+    &= f(x).
+  \end{align*}
+  
+  To prove uniqueness, let $\cG$ be another RKHS with reproducing kernel $h$.
+  $\cF$ has to be a closed subspace of $\cG$, since $h(\cdot,x) \in \cG$ for all $x\in\cX$, and because $\cG$ is complete and contains $\cF_0$ and hence its completion.
+  Using the orthogonal decomposition theorem, we have $\cG = \cF \oplus \cF^\bot$, i.e. any $g\in\cG$ can be decomposed as $g = f + f^c$, $f\in\cF$ and $f^c\in\cF^\bot$.
+  For each element $g\in\cG$ we have that, for all $x\in\cX$,
+  \begin{align*}
+    g(x) &= \ip{g,h(\cdot,x)}_\cG \\
+    &= \big\langle f+f^c, h(\cdot,x) \big\rangle_\cG \\
+    &= \big\langle f, h(\cdot,x) \big\rangle_\cG + \cancelto{0}{\big\langle f^c, h(\cdot,x) \big\rangle_\cG} \\
+    &= f(x)
+  \end{align*}
+  so therefore $g\in\cF$ too.
+  It must be that $\cF\equiv\cG$.
+  %$\cF\cong\cG$.
+%  
+%  Minor detail: $f^c \in \cF^\bot \Rightarrow f^c \in \{f\in\cF | \ip{f,f'} = 0 \ \forall f'\in\cF \}$. Thus
+%  \begin{align*}
+%    \big\langle f^c, h(\cdot,x) \big\rangle_\cG 
+%    &= f^c(x) \\
+%    &= \big\langle f^c, h(\cdot,x) \big\rangle_\cF \\
+%    &= 0
+%  \end{align*}
+%  It is evident that the inner product as defined is symmetric, linear, and positive-definite due to the positive-definiteness of reproducing kernels.
+%  The only non-trivial condition to check is that whether $\ip{f_n,f_n}_{\cF_0}$ implies $f_n=0$.
+%  To see this, realise that
+%  \begin{align*}
+%    0 &\leq 
+%    1
+%  \end{align*}
+%  
+
+%  By the Cauchy-Schwarz inequality, we see that
+%  \begin{align*}
+%    |f_n(x)| &= \big| \big\langle f_n, h(\cdot,x) \big\rangle_{\cF_0} \big| \\
+%    &\leq \Vert h(\cdot,x) \Vert_{\cF_0} \cdot \Vert f_n \Vert_{\cF_0}    \\
+%    &= \sqrt{h(x,x)} \cdot \Vert f_n \Vert_{\cF_0}
+%  \end{align*}
+%  so convergence in norm implies pointwise convergence.
+%  By a similar argument in the proof of Corollary \ref{thm:normpointconv}, we also get that pointwise convergence is implied by convergence in norm for this space.
+%  In particular, for every Cauchy sequence $\{f_n\}_{n=1}^\infty$ in $\cF_0$, $\big\{f_n(x)\big\}_{n=1}^\infty$ is a Cauchy sequence on the real line.
+%  Complete the space $\cF_0$ by adjoining all of these limits to it, and call this completed space $\cF$.
+%  
+%  Furthermore, note that $\big\vert \norm{f_n}_{\cF_0} - \norm{f_m}_{\cF_0} \big\vert \leq \norm{f_n - f_m}_{\cF_0}$ (triangle inequality), so for a Cauchy sequence $\{f_n\}_{n=1}^\infty$ in a complete space, $\norm{f_n}_{\cF_0}$ has a limit.
+%  Define the norm of $\cF$ to be $\norm{f}_\cF = \lim_{n\to\infty} \norm{f_n}_{\cF_0}$ for any $f\in\cF$.
+%  Next, extend the inner product from $\cF_0$ to $\cF$ by defining $\ip{f,g}_\cF = \lim_{n\to\infty} \langle f_n,g_n \rangle_{\cF_0}$, where
+%  \[
+%    \lim_{n\to\infty} \langle f_n,g_n \rangle_{\cF_0} = \lim_{n\to\infty} \half\left( \norm{f+g}_{\cF_0}^2 - \norm{f}_{\cF_0}^2 - \norm{g}_{\cF_0}^2\right).
+%  \]
+%  One can indeed verify this is a well-defined inner product.
+  
+  
+\end{proof}
+

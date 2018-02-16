@@ -18,3 +18,4 @@ cache/
 chapters/R/data/smoking-mod*
 
 chapters/R/data/
+.DS_Store

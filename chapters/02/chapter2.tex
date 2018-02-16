@@ -1,0 +1,66 @@
+\documentclass[a4paper,showframe,11pt,draft]{report}
+\usepackage{standalone}
+\standalonetrue
+\ifstandalone
+  \usepackage{../../haziq_thesis}
+  \usepackage{../../haziq_maths}
+  \usepackage{../../haziq_glossary}
+  \addbibresource{../../bib/haziq.bib}
+  \externaldocument{../01/.texpadtmp/introduction}
+\fi
+
+\begin{document}
+\hChapterStandalone[2]{Vector space of functions}
+
+One of the main assumptions for regression modelling with I-priors is that the regression functions lie in some vector space of functions.
+At first glance, this may seem strange, that the notion of functions (as mappings from input to output space) and vector spaces are somehow equatable.
+Upon further thought, one realises that firstly, two functions of a similar, particular form may be added together (in some meaningful way) resulting in a function in that same form. 
+Secondly, multiplication of a function by a scalar $c$ can be thought of as $c$ times the output of that function.
+Indeed, running through the checklist\footnotemark~of what constitutes a vector space, we find that a ``space of functions'' satisfies them all.
+\footnotetext{In modern linear algebra texts, this is the eight axioms of vector spaces over a field $\bbF$: The vectors forms an abelian group under addition, and this group has an $\bbF$-module structure.}
+
+The purpose of this chapter is to provide a concise review of functional analysis leading up to the theory of reproducing kernel Hilbert and Krein spaces (RKHS/RKKS).
+The interest with these RKHS and RKKS is that these spaces have well-established mathematical structure and offer desirable topologies.
+In particular, it allows the possibility of deriving the Fisher information for regression functions---this will be covered in Chapter 3.
+As we shall see, RKHS are also extremely convenient in that they may be specified completely via their reproducing kernels.
+Several of these function spaces are of interest to us, for example, spaces of linear functions, smoothing functions, and functions whose inputs are nominal values and even functions themselves.
+RKHS are widely studied in the literature, but perhaps RKKS are less so.
+To provide an early insight, RKKS are simply an extension of RKHS when its kernel is not positive-definite.
+The flexibility provided by RKKS will prove both useful and necessary, especially when considering scaled function spaces, as I-prior modelling does.
+
+It is emphasised that a deep knowledge of functional analysis, including RKHS and RKKS theory, is not at all necessary for I-prior modelling, so perhaps the advanced reader may wish to skip Sections 2.1--2.3. 
+Section 2.4 describes the fundamental RKHS of interest for I-prior regression, which we refer to as the ``building block'' RKHS/RKKS.
+The reason for this is that it is possible to construct new RKKS from existing ones, and this is described in Section 2.5.
+
+A remark on notation: Elements of the vector space $\cF$ of real functions over a set $\cX$ are denoted $f(\cdot)$, or simply $f$.
+This distinguishes them from the actual evaluation of the function at an input point $x \in \cX$, denoted $f(x) \in \bbR$.
+For a much cleaner read, we dispense with boldface notation for vectors and matrices when talking about them, without ambiguity, in the abstract sense. 
+
+\section{Some functional analysis}
+\input{functional-analysis}
+
+\section{Reproducing kernel Hilbert space theory}\label{sec:rkhstheory}
+\input{rkhs}
+
+\section{Reproducing kernel Krein space theory}
+\input{rkks}
+
+\section{RKHS building blocks}
+\input{rkhs-building-blocks}
+
+\section{Constructing RKKS from existing RKHS}
+\input{rkks-construction}
+
+\section{Summary}
+
+Brief notes on functional analysis allows us to describe RKHS and RKKS.
+These are of interest because of the convenient topologies.
+All linear functionals are continuous in these spaces.
+Moreover, RKHS and RKKS can be specified through kernel functions.
+Although it is unique for RKHS, not so for RKKS, but need not matter greatly, because the important properties that we care about carry over anyway.
+Of importance is the ANOVA functional decomposition, for which we can mimic through similar manipulation of scaled positive definite kernels.
+Restricting to positive scalars is unsatisfactory, so RKKS is required.
+
+
+\hClosingStuffStandalone
+\end{document}
