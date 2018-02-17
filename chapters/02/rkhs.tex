@@ -175,7 +175,7 @@ Astoundingly, the answer is again positive, and this is stated by the much celeb
     \cF_0 = \left\{ f_n:\cX\to\bbR \, \Big| \, f_n = \sum_{i=1}^n w_i h(\cdot,x_i), x_i\in\cX, w_i\in\bbR, n\in\bbN \right\}
   \]
   and endow this linear space with the following inner product:
-  \[
+  \[\label{eq:rkhsinnerprod}
     \left\langle \sum_{i=1}^n w_i h(\cdot,x_i), \sum_{j=1}^m w_j' h(\cdot,x_j') \right\rangle_{\cF_0} = \sum_{i=1}^n\sum_{j=1}^m w_i w_j' h(x_i,x_j').
   \]
   It may be shown that this indeed a valid inner-product satisfying the conditions laid in Definition \ref{def:innerprod}.
@@ -233,7 +233,6 @@ Astoundingly, the answer is again positive, and this is stated by the much celeb
 %    1
 %  \end{align*}
 %  
-
 %  By the Cauchy-Schwarz inequality, we see that
 %  \begin{align*}
 %    |f_n(x)| &= \big| \big\langle f_n, h(\cdot,x) \big\rangle_{\cF_0} \big| \\
@@ -252,7 +251,10 @@ Astoundingly, the answer is again positive, and this is stated by the much celeb
 %    \lim_{n\to\infty} \langle f_n,g_n \rangle_{\cF_0} = \lim_{n\to\infty} \half\left( \norm{f+g}_{\cF_0}^2 - \norm{f}_{\cF_0}^2 - \norm{g}_{\cF_0}^2\right).
 %  \]
 %  One can indeed verify this is a well-defined inner product.
-  
-  
 \end{proof}
+
+A consequence of the above proof is that we can show that any function $f$ in a RKHS $\mathcal F$ with kernel $h$ can be written in the form $f(x) = \sum_{i=1}^n h(x, x_i)w_i$, with some $(w_1,\dots,w_n)\in\bbR^n$, $n \in \mathbb N$. 
+More precisely, $\mathcal F$ is the completion of the space $\mathcal G = \text{span}\{h(\cdot,x) \, | \, x \in \mathcal X \}$ endowed with the inner product as stated in \eqref{eq:rkhsinnerprod}.
+
+
 

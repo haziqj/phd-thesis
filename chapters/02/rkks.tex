@@ -1,22 +1,22 @@
-\begin{definition}[Kernel matrix]
-  Let $\{x_1,\dots,x_n\}$ be a sample of observed data (covariates), where each $x_i\in\cX$, and $h$ a kernel over this set.
-  Define the \emph{kernel matrix} $\bH$ as the $n \times n$ matrix with $(i,j)$ entries equal to $h(x_i,x_j)$.
-\end{definition}
+Kreĭn spaces can be seen as a generalisation of Hilbert spaces, which caters for inner products not being positive definite.
+To motivate the need for Kreĭn spaces, we first look at several operations on reproducing kernels and the resulting vector space.
 
-The kernel matrix is also known as the \emph{Gram matrix}.
-By definition, the kernel matrix is a positive-definite matrix: $\ba^\top\bH\ba = \sum_{i=1}^n\sum_{j=1}^n a_ia_jh(x_i,x_j) \geq 0$ for any choice of $a\in\bbR^n$.
-
-\begin{lemma}[Scaling of kernels]
+\begin{lemma}[Scaling of kernels]\label{thm:scalingkernels}
   If $h$ is a kernel on $\cX$, and $\lambda \geq 0$ a scalar, then $\lambda h$ is a kernel.
-  This yields a scaled RKHS $\cF_\lambda$ with reproducing kernel $\lambda h$.
+  This yields a scaled RKHS $\cF_\lambda = \{\lambda f \,|\, f \in \cF \}$ with reproducing kernel $\lambda h$, where $\cF$ is the RKHS defined by $h$.
 \end{lemma}
+
+\begin{proof}
+  Multiplying a positive definite function by a positive constant results in a positive definite function still, and thus defines a unique RKHS.
+  The scaling of functions is seen through the fact that $\cF$ is the completion of the space spanned by the kernels, and hence $\cF_\lambda$ by the scaled kernels.
+\end{proof}
 
 \begin{lemma}[Sum of kernels]
   If $h_1$ and $h_2$ are kernels on $\cX_1$ and $\cX_2$ respectively, then $h = h_1 + h_2$ is a kernel on $\cX_1 \times \cX_2$.
   Moreover, denote $\cF_1$ and $\cF_2$ the RKHS defined by $h_1$ and $h_2$ respectively.
   Then $\cF = \cF_1 \oplus \cF_2$ is an RKHS defined by $h = h_1 + h_2$, where
   \[
-    \cF_1 \oplus \cF_2 = \{ f:\cX_1\times\cX_2 \to\bbR | f = f_1 + f_2, f_1\in\cF_1 \text{ and } f_2\in\cF_2 \}.
+    \cF_1 \oplus \cF_2 = \{ f:\cX_1\times\cX_2 \to\bbR \,|\, f = f_1 + f_2, f_1\in\cF_1 \text{ and } f_2\in\cF_2 \}.
   \]
   For all $f\in\cF$,
   \[
@@ -24,21 +24,64 @@ By definition, the kernel matrix is a positive-definite matrix: $\ba^\top\bH\ba 
   \]
 \end{lemma}
 
-\begin{lemma}[Products of kernels]
-  If $h_1$ and $h_2$ are kernels on $\cX_1$ and $\cX_2$ respectively, then $h = h_1 h_2$ is a kernel on $\cX_1 \times \cX_2$.
-  Moreover, denote $\cF_1$ and $\cF_2$ the RKHS defined by $h_1$ and $h_2$ respectively, and $\cF$ the RKHS defined by $h = h_1 h_2$.
-  There is an isometric isomorphism between $\cF$ and the tensor product space $\cF_1 \otimes \cF_2$.
+\begin{proof}
+  That $h_1+h_2$ is a kernel should be obvious, as the sum of two positive definite functions is also positive definite.
+  For a proof of the remaining statements, see \citet[Theorem 5]{berlinet2011reproducing}.
+\end{proof}
+
+\begin{lemma}[Products of kernels]\label{thm:prodkernels}
+  Let $\cF_1$ and $\cF_2$ be two RKHS of functions over $\cX_1$ and $\cX_2$, with respective reproducing kernels $h_1$ and $h_2$.
+  Then, $h = h_1 h_2$ is a kernel on $\cX_1 \times \cX_2$.
+  Moreover, the tensor product space $\cF_1 \otimes \cF_2$ is an RKHS with reproducing kernel $h$.
 \end{lemma}
 
-We have a familiar fact from linear algebra: 1) Multiplying a positive definite matrix by a positive constant results in a positive definite matrix; 2) Addition of two positive definite matrices results in a positive definite matrix; and 3) the Hadamard product of two positive definite matrices is a positive definite matrix.
+To prove this lemma we introduce the following definition of the \emph{kernel matrix}.
+
+\begin{definition}[Kernel matrix]
+  Let $\{x_1,\dots,x_n\}$ be a sample of observed data (covariates), where each $x_i\in\cX$, and $h$ a kernel over this set.
+  Define the \emph{kernel matrix} $\bH$ for $h$ as the $n \times n$ matrix with $(i,j)$ entries equal to $h(x_i,x_j)$.
+\end{definition}
+
+The kernel matrix is also known as the \emph{Gram matrix}.
+By definition, the kernel matrix is a positive-definite matrix: $\ba^\top\bH\ba = \sum_{i=1}^n\sum_{j=1}^n a_ia_jh(x_i,x_j) \geq 0$ for any choice of $a\in\bbR^n$.
+
+\begin{proof}[Proof of Lemma \ref{thm:prodkernels}]
+  Fix $n\in\bbN$, and let $\bH_1$ and $\bH_2$ be the kernel matrices for $h_1$ and $h_2$ respectively.
+  Since these kernel matrices are symmetric and positive-definite, we can write $\bH_1 = \bB^\top\bB$ and $\bH_1 = \bC^\top\bC$ for some matrices $\bB$ and $\bC$---perform an (orthogonal) eigendecomposition of each of the kernel matrices, and take square roots of the eigenvalues.
+  Let $\bH$ be the kernel matrix for $h = h_1h_2$.
+  With $x_i = (x_{i1}, x_{i2})$, its $(i,j)$ entries are
+  \begin{align*}
+    h(x_i,x_j)
+    &=h_1(x_{i1},x_{i2}) h_2(x_{j1},x_{j2}) \\
+    &= (\bB^\top\bB)_{ij}\cdot (\bC^\top\bC)_{ij} \\
+    &= \sum_{k=1}^n b_{ik}b_{jk} \sum_{l=1}^n c_{il}c_{jl},
+  \end{align*}
+  where we have denoted $b_{ij}$ and $c_{ij}$ to be the $(i,j)$th entries of $\bB$ and $\bC$ respectively 
+  Then,
+  \begin{align*}
+    \sum_{i=1}^n\sum_{j=1}^n h(x_i,x_j)
+    &= \sum_{k=1}^n \sum_{l=1}^n \sum_{i=1}^n \sum_{j=1}^n  a_ia_jb_{ik}b_{jk}c_{il}c_{jl} \\
+    &= \sum_{k=1}^n \sum_{l=1}^n \left(\sum_{i=1}^n a_i b_{ik} c_{il} \right) \left( \sum_{j=1}^n  a_jb_{jk}c_{jl} \right) \\
+    &= \sum_{k=1}^n \sum_{l=1}^n \left(\sum_{i=1}^n a_i b_{ik} c_{il} \right)^2 \\
+    &\geq 0
+  \end{align*}
+  Again, for the remainder of the statement in the lemma, we refer to \citet[Theorem 13]{berlinet2011reproducing}.
+\end{proof}
+
+A familiar fact from linear algebra is realised here from Lemmas \ref{thm:scalingkernels}--\ref{thm:prodkernels}: 
+1) Multiplying a positive definite matrix by a positive constant results in a positive definite matrix; 
+2) the addition of positive definite matrices is a positive definite matrix; and 
+3) the \emph{Hadamard product}\footnotemark~of two positive definite matrices is a positive definite matrix.
+\footnotetext{The Hadamard product is an element-wise multiplication of two matrices $\bA$ and $\bB$ of identical dimensions, denoted $\bA \circ \bB$. That is, $(\bA \circ \bB)_{ij} = \bA_{ij}\bB_{ij}$.}
+
 
 What if we want to consider scaling or sum or products of kernels that result in a non-positive definite function?
 Will we lose all the nice properties of RKHS?
-It turns out no---we just have to switch to Krein spaces.
+It turns out no---we just have to switch to Kreĭn spaces.
 Krein spaces are inner product spaces endowed with Hilbertian topology, yet their inner products are no longer positive.
 
 \begin{definition}[Negative and indefinite inner products]
-  If instead of the positive-definitess condition for inner products, as per the last item in Definition \ref{def:innerprod}, we have that $\forall f\in\cF$
+  If instead of the positive-definiteness condition for inner products, as per the last item in Definition \ref{def:innerprod}, we have that $\forall f\in\cF$
   \[
     \ip{f,f}_\cF \leq 0,
   \]
