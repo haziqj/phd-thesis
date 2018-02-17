@@ -1,4 +1,4 @@
-\documentclass[a4paper,showframe,11pt,draft]{report}
+\documentclass[a4paper,showframe,11pt]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
@@ -19,7 +19,7 @@ Secondly, multiplication of a function by a scalar $c$ can be thought of as $c$ 
 Indeed, running through the checklist\footnotemark~of what constitutes a vector space, we find that a ``space of functions'' satisfies them all.
 \footnotetext{In modern linear algebra texts, this is the eight axioms of vector spaces over a field $\bbF$: The vectors forms an abelian group under addition, and this group has an $\bbF$-module structure.}
 
-The purpose of this chapter is to provide a concise review of functional analysis leading up to the theory of reproducing kernel Hilbert and Krein spaces (RKHS/RKKS).
+The purpose of this chapter is to provide a concise review of functional analysis leading up to the theory of reproducing kernel Hilbert and Kreĭn spaces (RKHS/RKKS).
 The interest with these RKHS and RKKS is that these spaces have well-established mathematical structure and offer desirable topologies.
 In particular, it allows the possibility of deriving the Fisher information for regression functions---this will be covered in Chapter 3.
 As we shall see, RKHS are also extremely convenient in that they may be specified completely via their reproducing kernels.
@@ -48,18 +48,27 @@ For a much cleaner read, we dispense with boldface notation for vectors and matr
 \section{RKHS building blocks}
 \input{rkhs-building-blocks}
 
-\section{Constructing RKKS from existing RKHS}
+\section{Constructing RKKS from existing RKHS}\label{sec:constructrkks}
 \input{rkks-construction}
 
 \section{Summary}
 
-Brief notes on functional analysis allows us to describe RKHS and RKKS.
-These are of interest because of the convenient topologies.
-All linear functionals are continuous in these spaces.
-Moreover, RKHS and RKKS can be specified through kernel functions.
-Although it is unique for RKHS, not so for RKKS, but need not matter greatly, because the important properties that we care about carry over anyway.
-Of importance is the ANOVA functional decomposition, for which we can mimic through similar manipulation of scaled positive definite kernels.
-Restricting to positive scalars is unsatisfactory, so RKKS is required.
+The brief notes on functional analysis allow us to describe the theory of reproducing kernel Hilbert and Kreĭn spaces.
+These are of great interest to us because the topology endowed on such spaces gives great assurances---in particular, all evaluation functionals are continuous in these spaces.
+Moreover, RKHS and RKKS can be specified completely through kernel functions, with new and complex function spaces built simply by manipulation of these kernel functions.
+Of particular importance is the ANOVA functional decomposition, for which we realise provides an objective way of constructing various statistical models (such models will be described later on in detail in Chapter 4).
+
+An annotated collection of bibliographical references used for this chapter is as follows.
+\begin{itemize}
+  \item \textbf{Functional analysis}. On the introductory material relating to functional analysis in Section 2.1, the lecture notes by \citet{sejdinovic2012} is recommended, and forms the basis for most of the material described. Additionally, \citet{rudin1987real} provides a complementary reading.
+  \item \textbf{RKHS theory}. There are certainly no shortages of texts relating to the theory of RKHS: \citet{steinwart2008support}, \citet{berlinet2011reproducing}, and \citet{gu2013smoothing} to name a few.
+  \item \textbf{RKKS theory}. The innovation of indefinite inner product spaces perhaps started in mathematical physics literature, for which the theory of special relativity depends. The four-dimensional Euclidean space-time is an often cited example. In any case, we referred to mainly \citet{ong2004learning}, which gives an overview in the context of learning using indefinite kernels. \citet{alpay1991some} and \citet{zafeiriou2012subspace} were also useful for understanding the fundamental concepts of RKKS.
+  \item \textbf{RKHS building blocks}. The main building block RKHS, i.e. the canonical RKHS, the fBm RKHS and the Pearson RKHS are described in the manuscript of \citet{bergsma2017}.
+  \item \textbf{ANOVA and functional ANOVA}. Classical ANOVA is pretty much existent in every fundamental statistical textbook. These texts have extremely well written introductions to this very important concept: \citet[Ch. 11]{casella2002statistical}, \citet[Ch. 3]{dean1999design}. On the relation between classical ANOVA and functional ANOVA decomposition, \citet{gu2013smoothing} offers novel insights. There is diverse literature concerning functional ANOVA, namely from the fields of machine learning (e.g. \cite{durrande2013anova}), applied mathematics (e.g. \cite{kuo2010decompositions}), and sensitivity analysis (e.g. \cite{sobol2001global}). What is interesting is that several authors who simply set out to obtain a suitable functional decomposition, all ended up somewhat independently recovering the ANOVA decomposition as being ``optimal'' in some sense. This speaks largely to this classical idea that is ANOVA.
+\end{itemize}
+
+
+
 
 
 \hClosingStuffStandalone

@@ -18,6 +18,12 @@ It turns out, this is exactly what RKHS provide.
 	A Hilbert space $\cF$ of real-valued functions $f:\mathcal X \rightarrow \mathbb R$ on a non-empty set $\mathcal X$ is called a \emph{reproducing kernel Hilbert space} if the evaluation functional $\delta_x: f \mapsto f(x)$ is continuous (equivalently, bounded) on $\cF$, $\forall x \in \cX$. 
 \end{definition}
 
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[scale=0.22]{figure/hierarchy-spaces.png}
+  \caption{A hierarchy of vector spaces. Reproduced from the lecture slides of Dino Sejdinovic and Arthur Gretton entitled `Foundations of Reproducing Kernel Hilbert Spaces: Advanced Topics in Machine Learning', 2014. URL: \url{www.gatsby.ucl.ac.uk/~dino/teaching}.}
+\end{figure}
+
 %The continuity condition also represents the weakest condition required for both the existence of an inner product and the evaluation of every function in $\cF$ at every point in the domain $\cX$.
 While the continuity condition by definition is what makes an RKHS, it is neither easy to check this condition in practice, nor is it intuitive as to the meaning of its name.
 In fact, there isn't even any mention of what a reproducing kernel actually is.
@@ -73,7 +79,7 @@ More formally,
 Having defined an RKHS, there are several questions we might like the answer to: What is the relationship between a reproducing kernel and an RKHS? Can we speak to its existence and uniqueness? What other properties does it have?
 The rest of this subsection will be dedicated to discuss the following assertion.
 
-\begin{theorem}[RKHS]
+\begin{theorem}[RKHS uniqueness]\label{thm:rkhsunique}
   For every reproducing kernel Hilbert space $\cF$ of functions over a set $\cX$, there corresponds a unique, positive-definite reproducing kernel $\hXXR$.
   Conversely, for every positive-definite function $\hXXR$, there corresponds a unique reproducing kernel Hilbert space $\cF$ that has $h$ as its reproducing kernel.
 \end{theorem}

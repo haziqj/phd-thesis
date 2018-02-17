@@ -1,7 +1,8 @@
 
 The previous section outlined all of the basic RKHSs of functions that will form the building blocks when constructing more complex function spaces.
-As previously mentioned in the preliminaries, sums of kernels are kernels and products of kernels are also kernels, and thus in the context of RKHS we may construct new RKHS from existing ones.
-To be more flexible in the specification of these new function spaces, we do not restrict ourselves to positive definite kernels only, thereby necessitating us to use the theory of reproducing kernel Krein spaces.
+As previously mentioned in the preliminaries, sums of kernels are kernels and products of kernels are also kernels. 
+This provides us a platform for constructing new RKHS from existing ones.
+To be more flexible in the specification of these new function spaces, we do not restrict ourselves to positive definite kernels only, thereby necessitating us to use the theory of RKKS.
 
 \subsection{Scaling an RKHS}
 
@@ -71,25 +72,17 @@ It is sometimes known as the bias term.
 We find it useful to begin this subsection by spending some time to elaborate on the classical \gls{anova} decomposition, and the associated notions of main effects and interactions.
 This will go a long way in understanding the thinking behind constructing an ANOVA-like RKKS of functions.
 
-The main bibliographical references for this subsection is as follows.
-Classical ANOVA is pretty much existent in every fundamental statistical textbook. 
-These texts have extremely well written introductions to this very important concept: \citet[Ch. 11]{casella2002statistical}, \citet[Ch. 3]{dean1999design}.
-On the relation between classical ANOVA and functional ANOVA decomposition, \citet{gu2013smoothing} offers novel insights.
-There is diverse literature concerning functional ANOVA, namely from the fields of machine learning (e.g. \cite{durrande2013anova}), applied mathematics (e.g. \cite{kuo2010decompositions}), and sensitivity analysis (e.g. \cite{sobol2001global}).
-What is interesting is that several authors who simply set out to find a suitable decomposition of a function, ended up somewhat independently recovering the ANOVA decomposition as being ``optimal'' in some sense.
-This speaks largely to this classical idea that is ANOVA.
-
 \subsubsection{The classical ANOVA decomposition}
 
 The standard one-way ANOVA is essentially a linear regression model which allows comparison of means from two or more samples.
-Given sets of observations $y_j = \{y_{1j},\dots,y_{n_jj}\}$ for $j=1,\dots,m$, we consider the linear model $y_{ij} = \mu_j + \epsilon_{ij}$, where $\epsilon_{ij}$ are independent, univariate normal random variables with a common variance.
+Given sets of observations $y_j = \{y_{1j},\dots,y_{n_jj}\}$, $j=1,\dots,m$, we consider the linear model $y_{ij} = \mu_j + \epsilon_{ij}$, where $\epsilon_{ij}$ are independent, univariate normal random variables with a common variance.
 %One would like to test whether the hypothesis $\text{H}_0:\alpha_1=\cdots=\alpha_m$ stands.
 %However, obtaining a suitable and significant test statistic to reject the null hypothesis merely tells us that the means are indeed not the same, but does not tell us \emph{where exactly} the difference lies.
 %Enter the ANOVA decomposition.
-This covariate-less model is used to make inferences about the $m$ \emph{treatment means} $\mu_j$.
+This covariate-less model is used to make inferences about the  \emph{treatment means} $\mu_j$.
 Often, the model is written in the \emph{overparameterised} form by substituting $\mu_j = \mu + \tau_j$.
-This gives a different, arguably better, interpretability: The $\tau_j$'s, referred to as the \emph{treatment effects}, now represent the amount of deviation from the grand, \emph{overall mean} $\mu$.
-Estimating all $\tau_j$ and $\mu$ separately is not possible because there is one degree of freedom that needs to be addressed in the model: There are $p+1$ mean parameters to estimate but only information from $p$ means.
+This gives a different, arguably better, interpretability to the model: The $\tau_j$'s, referred to as the \emph{treatment effects}, now represent the amount of deviation from the grand, \emph{overall mean} $\mu$.
+Estimating all $\tau_j$'s and $\mu$ separately is not possible because there is one degree of freedom that needs to be addressed in the model: There are $p+1$ mean parameters to estimate but only information from $p$ means.
 %Knowledge of the overall mean $\mu$ would only allow us to freely ``choose'' only $m-1$ of the treatment effects $\mu_j$, since necessarily $\sum_{j=1}^m n_j\mu = \sum_{j=1}^m n_j\mu_j$.
 A common fix to the identifiability issue is to set one of the $\mu_j$'s, say the first one $\mu_1$, to zero, or impose the restriction $\sum_{j=1}^m \mu_j = 0$.
 The former treats one of the $m$ levels as the control, while the latter treats all treatment effects symmetrically.
@@ -114,9 +107,9 @@ Here are two choices of $A$:
 By definition, $AAf = A^2f = Af$, because averaging a constant returns that constant
 [Side note: This idempotent property of the linear operator $A$ on $f$ speaks to the possibility of it being somewhat like an \emph{orthogonal projection}, and indeed this is so---we shall return to this point later when we describe functional ANOVA decomposition].
 We must have that $Af_t = A(I - A)f = Af - A^2f = 0$.
-In other words, the choice of A is arbitrary, just like the choice of restriction, so long as it satisfies the condition that $Af_c = 0$.
+The choice of A is arbitrary, as is the choice of restriction, so long as it satisfies the condition that $Af_c = 0$.
 
-The multiway ANOVA can be motivated in a similar light. 
+The multiway ANOVA can be motivated in a similar fashion. 
 Let $x = (x_1,\dots,x_p) \in \prod_{k=1}^p \cX_k$, and consider functions that map $\prod_{k=1}^p \cX_j$ to $\bbR$.
 Let $A_j$ be an averaging operator on $\cX_k$ that averages the $k$th component of $x$ from the active argument list, i.e. $A_kf$ is constant on the $\cX_k$ axis but not necessarily an overall constant function.
 An ANOVA decomposition of $f$ is
@@ -157,9 +150,9 @@ Each of the terms will satisfy the condition $A_kf_\cK = 0, \forall k \in \cK \i
 \subsubsection{Functional ANOVA decomposition}
 
 Let us now extend the ANOVA decomposition idea to a general function $f:\cX\to\bbR$ in some vector space $\cF$.
-Specifically, we shall consider the (Hilbert) space of square integrable functions over $\cX$ with measure $\nu$, $\text{L}^2(\cX,\nu) \equiv \cF$.
+Specifically, we shall consider the (Hilbert) space of square integrable functions over $\cX$ with measure $\nu$, $\cF \equiv \text{L}^2(\cX,\nu)$.
 We shall jump straight into the multiway ANOVA analogue for functional decomposition, and to that end, consider $x=(x_1,\dots,x_p) \in \prod_{k=1}^p \cX_k =: \cX$, where each of the spaces $\cX_k$ has measure $\nu_k$, and thus $\nu=\nu_1\otimes\cdots\otimes\nu_d$.
-As $\cX$ need not necessarily be a (collection of) finite set, we need to figure out a suitable linear operator that performs an ``averaging'' of some sort.
+As $\cX$ need not necessarily be a collection of finite sets, we need to figure out a suitable linear operator that performs an ``averaging'' of some sort.
 
 Consider the linear operator $A_k:\cF\to \cF_{-k}$, where $\cF_{-k}$ is a vector space of functions for which the $k$th component is constant over $\cX$, defined by
 \begin{align}\label{eq:avgoper}
@@ -289,7 +282,7 @@ For the constant term, main effects, and two-way interaction terms, the familiar
 
 At last, we come to the section of deriving the ANOVA RKKS, and, rest assured, the preceding long build-up will prove to be not in vain.
 The main idea is to construct an RKKS such that the functions that lie in them will have the ANOVA representation in \eqref{eq:functionalanova2}.
-The bulk of the work has been done, and in fact we know exactly how this ANOVA RKKS should be structured---it is the space as specified in \eqref{eq:funcanovaspace}). 
+The bulk of the work has been done, and in fact we know exactly how this ANOVA RKKS should be structured---it is the space as specified in \eqref{eq:funcanovaspace}. 
 The ANOVA RKKS will be constructed by a similar manipulation of the individual kernels representing the RKHS building blocks.
 
 \begin{definition}[The ANOVA RKKS]
@@ -328,11 +321,11 @@ These are handled through opposing signs of their respective scale parameters, t
   \]
 \end{example}
 
-As remarked in the previous subsection, not all of the components of the ANOVA RKKS need to be included in construction.
+As remarked in the previous subsection, not all of the components of the ANOVA RKKS need to be included in the construction.
 The selective exclusion of certain interactions characterises many interesting statistical models.
 Excluding certain terms of the ANOVA RKKS is equivalent to setting the scale parameter for those relevant components to be zero, i.e., they play no role in the decomposition of the function.
 With this in mind, the ANOVA RKKS then gives us an objective way of model-building, from linear regression, to multilevel models, longitudinal models, and so on.
-One thing's for sure---everything is ANOVA.
+%One thing's for sure---everything is ANOVA.
 
 \begin{remark}
   Unfortunately, even if centred RKHSs are used as the building blocks of the ANOVA RKKS, the properties of the function represented by \eqref{eq:functionalanova2} may not be preserved.

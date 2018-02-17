@@ -1,5 +1,6 @@
-In what follows, each of the kernel functions will have its associated scale parameter denoted by $\lambda$.
-Further, to make the distinction between centred and non-centred versions of the kernels, we use the notation $h$ to denote the uncentred version, and $\bar h$ to denote the centred version.
+This section describes what we refer to as the ``building block'' RKHS of functions.
+In the context of regression modelling, we may assume that the regression function lies in any one of these single RKHS, although it may be more appropriate to consider function spaces built upon these RKHS for more complex models.
+Construction of new function spaces from these building block RKHS will be discussed in the next section.
 
 \subsection{The RKHS of constant functions}
 
@@ -27,15 +28,21 @@ The space $\cF$ can be equipped with a norm to form an RKHS, as shown in the fol
   Hence, $\norm{f}_\cF = \sqrt{\ip{f,f}_\cF} = \vert c_f \vert$.
 \end{proof}
 
-In I-prior modelling, one need not consider any scale parameter on reproducing kernel, as the scale parameter would not be identified otherwise.
-See later chapter for details.
-\hltodo{I think the scale parameter $\lambda$ would just be absorbed by the norm, which is a single value of interest and that is what is ``observed'', and the decomposition $\lambda\cdot c_f$ is not so interesting.}
+%In I-prior modelling, one need not consider any scale parameter on reproducing kernel, as the scale parameter would not be identified otherwise.
+%See later chapter for details.
+%\hltodo{I think the scale parameter $\lambda$ would just be absorbed by the norm, which is a single value of interest and that is what is ``observed'', and the decomposition $\lambda\cdot c_f$ is not so interesting.}
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[scale=0.5]{figure/kernel_path_const_th}
+  \caption{Sample paths from the RKHS of constant functions.}
+\end{figure}
 
 \subsection{The canonical (linear) RKHS}
 
 Consider a function space $\cF$ over $\cX$ which consists of functions of the form $f_\beta:\cX\to\bbR$, $f_\beta: x \mapsto \ip{x,\beta}_\cX$ for some $\beta\in\bbR$.
 Suppose that $\cX \equiv \bbR^p$, then $\cF$ consists of the linear functions $f_\beta(x) = x^\top\beta$.
-More generally, if $\cX$ is a Hilbert space, then its continuous dual consists of elements of the form $f_\beta = \ip{\cdot,\beta}_\cX$.
+More generally, if $\cX$ is a Hilbert space, then its continuous dual consists of elements of the form $f_\beta = \ip{\cdot,\beta}_\cX$ by the Riesz representation theorem.
 We can show that the continuous dual space of $\cX$ is a RKHS which consists of these linear functions.
 
 \begin{proposition}[The canonical RKHS]
@@ -86,7 +93,7 @@ We define the centred canonical RKHS as follows.
 \end{definition}
 
 \begin{proof}
-  Proof of the claim $\E f_\beta(x) = 0$:
+  That the centred canonical RKHS consists of zero mean function, $\E f_\beta(x) = 0$, consider the following argument:
   \begin{align*}
     \E f_\beta(x) 
     &= \E \ip{x-\mu,\beta}_\cX \\
@@ -99,20 +106,25 @@ We define the centred canonical RKHS as follows.
   In practice, the probability measure $\Prob$ over $\cX$ is unknown, so we may use the empirical distribution over $\cX$, so that $\cX$ is centred by the sample mean $\hat\mu = \frac{1}{n}\sum_{i=1}^n x_i$.  
 \end{remark}
 
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[scale=0.3]{figure/kernel_path_canonical_th}
+  \caption{Sample paths from the canonical RKHS.}
+\end{figure}
 
 \subsection{The fractional Brownian motion RKHS}
 
-Brownian motion (also known as the Wiener process) has been an inquisitive subject in the mathematical sciences, and here, we describe a function space influenced by a generalised version of Brownian motion paths.
+Brownian motion, which also goes by the name Wiener process, has been an inquisitive subject in the mathematical sciences, and here, we describe a function space influenced by a generalised version of Brownian motion paths.
 
 Suppose $B_\gamma(t)$ is a continuous-time Gaussian process on $[0,T]$, i.e. for any finite set of indices $t_1,\dots,t_k$, where each $t_j \in [0,T]$, $\big(B_\gamma(t_1),\dots,B_\gamma(t_k)\big)$ is a multivariate normal random variable.
 $B_\gamma(t)$ is said to be a \emph{fractional Brownian motion} (fBm) if $\E B_\gamma(t) = 0$ for all $t \in [0,T]$ and 
 \[
   \Cov\big(B_\gamma(t),B_\gamma(s) \big) = \half\big( |t|^{2\gamma} + |s|^{2\gamma} - |t-s|^{2\gamma} \big) \hspace{1cm} \forall t,s \in [0,T],
 \]
-where $\gamma \in (0,1)$ is called the Hurst index or Hurst parameter.
+where $\gamma \in (0,1)$ is called the \emph{Hurst index}, \emph{Hurst parameter} or even \emph{Hurst coefficient}.
 Introduced by \citet{mandelbrot1968fractional}, fBms are a generalisation of Brownian motion.
 The Hurst parameter plays two roles: 1) It describes the raggedness of the resultant motion, with higher values leading to smoother motion; and 2) it determines the type of process the fBm is, as past increments of $B_\gamma(t)$ are weighted by $(t-s)^{\gamma-1/2}$.
-When $\gamma=1/2$ exactly, then the fBm is a standard Brownian motion and its increments are independent; when $\gamma > 1/2$ ($\gamma < 1/2$) its increments are positively (negatively) correlated.
+When $\gamma=1/2$ exactly, then the fBm is a standard Brownian motion and its increments are independent; when $\gamma > 1/2$ (resp. $\gamma < 1/2$) its increments are positively (resp. negatively) correlated.
 
 %\citet{schoenberg1937certain} has shown that, for $0 < \gamma\leq 1$, there exists a Hilbert space $\cB$ and a function $\phi_\gamma:\cX\to\cB$ such that $\forall x,x' \in \cX$,
 %\[
@@ -209,6 +221,15 @@ We define the centred fBm RKHS as follows.
   which is the (reproducing) kernel of the centred canonical RKHS.
 \end{remark}
 
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[scale=0.22]{figure/kernel_path_fbm_01_th}
+  \includegraphics[scale=0.43]{figure/kernel_path_fbm_03_th}
+  \includegraphics[scale=0.43]{figure/kernel_path_fbm_05_th}
+  \includegraphics[scale=0.4]{figure/kernel_path_fbm_07_th}
+  \caption{Sample paths from the fBm RKHS with varying Hurst coefficients.}
+\end{figure}
+
 \subsection{The squared exponential RKHS}
 
 The \gls{SE} kernel function is indeed known to be the default kernel used for Gaussian process regression in machine learning.
@@ -225,7 +246,7 @@ The definition of the \gls{SE} RKHS is as follows.
 
 It is known by many other names, including the Gaussian kernel, due to its semblance to the kernel of the Gaussian pdf. 
 Especially in the machine learning literature, the term Gaussian radial basis functions (RBF) is used, and commonly the simpler parameterisation $\gamma = 1 / 2l^2$ is utilised.
-\citet{duvenaud2014automatic} remarks that ``exponentiated quadratic'' is a more fitting descriptive name for this kernel.
+\citet{duvenaud2014automatic} remarks that ``exponentiated quadratic'' is a better fitting and descriptive name for this kernel.
 
 Despite being used extensively for learning algorithms using kernels, an explicit study of the RKHS defined by the SE kernel was not done until recently by \citet{steinwart2006explicit}.
 In that work, the authors describe the nature of real-valued functions in the SE RKHS by considering a a real restriction on the SE RKHS of functions over complex values.
@@ -233,14 +254,14 @@ Their derivation of an orthonormal basis of such an RKHS proved the SE kernel to
 
 \hltodo{Are SE smoother than fBm? Lipschitz continuous. Compact convergence. May be smoother than functions in an fBm RKHS?}
 
-SE kernels are known to be ``universal''. That is, it satisfied the following definition of universal kernels due to \citet{micchelli2006universal}.
+SE kernels are known to be ``universal''. That is, it satisfies the following definition of universal kernels due to \citet{micchelli2006universal}.
 
 \begin{definition}[Universal kernel]
   Let $\text{C}(\cX)$ is the space of all continuous, complex-valued functions $f:\cX\to\bbC$ equipped with the maximum norm $\norm{\cdot}_\infty$, and denote $\cK(\cX)$ as the space of \emph{kernel sections} $ \overline{\text{span}}\{ h(\cdot,x) | x \in \cX \}$, where here, $h$ is a complex-valued kernel function.
   A kernel $h$ is said to be \emph{universal} if given any compact subset $\cZ \subset \cX$, any positive number $\epsilon$ and any function $f \in \text{C}(\cZ)$, there is a function $g \in \cK(\cZ)$ such that $\norm{f-g}_\cZ \leq \epsilon$.
 \end{definition}
 
-The consequence of this universal property vis-à-vis regression modelling is that any (continuous) regression function $f$ may be approximated very well by a function $\hat f$ from the SE RKHS, and these two functions can get arbitrarily close to each other in the max norm sense.
+The consequence of this universal property vis-à-vis regression modelling is that any (continuous) regression function $f$ may be approximated very well by a function $\hat f$ belonging to the SE RKHS, and these two functions can get arbitrarily close to each other in the max norm sense.
 This, together with some very convenient computational advantages that the SE kernel brings (more on this in a later chapter), is a testament to the popularity of SE kernels.
 
 In a similar manner to the two previous subsections, we may also derive the \emph{centred} SE RKHS. 
@@ -263,6 +284,14 @@ In a similar manner to the two previous subsections, we may also derive the \emp
 %  \end{align*}
 %  but the term on the right side of the inner product can be shown to have expectation 0 no matter what value is plugged in
 %\end{proof}
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[scale=0.4]{figure/kernel_path_se_1_th}
+  \includegraphics[scale=0.4]{figure/kernel_path_se_05_th}
+  \includegraphics[scale=0.4]{figure/kernel_path_se_01_th}
+  \caption{Sample paths from the SE RKHS with varying values for the lengthscale.}
+\end{figure}
 
 \subsection{The Pearson RKHS}
 
@@ -318,5 +347,9 @@ The Pearson RKHS contains functions which are centred, and has the desirable pro
   which is also the variance of $f(X)$.
 \end{proof}
 
-
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[scale=0.15]{figure/kernel_path_pearson_th}
+  \caption{Sample ``paths'' from the Pearson RKHS. These are represented as points over a finite set.}
+\end{figure}
 
