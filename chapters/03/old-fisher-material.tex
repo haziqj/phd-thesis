@@ -1,0 +1,68 @@
+The Fisher information $\cI(\theta) \in \mathcal \cH \otimes \mathcal \cH$ for $\theta \in \Theta$ is
+\[
+	\cI(\theta) = \E[\nabla L(\theta) \otimes \nabla L(\theta)],
+\]
+or equivalently,
+\[
+	\cI(\theta) = -\E[\nabla^2 L(\theta)],
+\]
+where again, stated for clarity, expectations are taken with respect to the random variable $Y$ under the true distribution $p(\cdot|\theta)$.
+In the above definitions, $\nabla^2$ is the second-order gradient, and the operation $\otimes:\cH \times \cH \to \cH \otimes \cH$ is the tensor product, mapping elements from $\cH^2$ to the tensor product space $\cH \otimes \cH$.
+It is a Hilbert space when equipped with the inner product
+\[
+  \ip{x\otimes y, x'\otimes y'}_{\cH\otimes\cH} = \ip{x, x'}_\cH\ip{y, y'}_\cH.
+\]
+
+Taking this concept further, we can also define the Fisher information for a linear functional of $\theta$, or between two linear functionals of $\theta$.
+This is essence of the next lemma.
+
+\begin{lemma}[Fisher information for linear functionals]\label{thm:fisherlinfunc}
+	Following the above definitions, suppose that the Fisher information for $\theta \in \Theta$ is $\cI(\theta)$, with $\Theta$ a Hilbert space with inner product $\ip{\cdot,\cdot}_\Theta$.
+	For some $b\in\Theta$, denote $\theta_b = \ip{\theta,b}_\Theta$.
+	Then, the Fisher information for $\theta_b$ is given as
+	\[
+		\cI(\theta_b) = \ip{\cI(\theta), b \otimes b}_{\Theta \otimes \Theta},
+	\]
+	and, more generally, the Fisher information between $\theta_b$ and $\theta_{b'}$ is given as
+	\[
+		\cI(\theta_b,\theta_{b'}) = \ip{\cI(\theta), b \otimes b'}_{\Theta \otimes \Theta}
+	\]
+\end{lemma}
+
+\begin{proof}
+  Let $\cB$ be a set containing an orthonormal sequence of points in $\Theta$, i.e. $\cB$ is a Hilbert basis for the Hilbert space $\Theta$. 
+  Then, by definition, every $\theta \in \Theta$ can be written as
+  \[
+    \theta = \sum_{\beta \in \cB} \ip{\theta,\beta}_\Theta \beta.
+  \]
+  Now, the score function with respect to the linear functional $\theta_b = \ip{\theta,b}_\Theta$ is
+  \begin{align*}
+    \frac{\partial}{\partial\theta_b} L(\theta) 
+    &= \dots \\
+    &= \nabla_b L(\theta) \\
+    %\frac{\partial}{\partial\theta_b} L\big(\textstyle\sum_{\beta \in \cB} \theta_\beta \beta\big) \\
+    &= \langle \nabla L(\theta), b \rangle_{\Theta}
+  \end{align*}
+  Differentiating again gives
+  \begin{align*}
+    \frac{\partial^2}{\partial\theta_b\partial\theta_{b'}} L(\theta) 
+    &= \langle \nabla L^2(\theta), b \otimes b' \rangle_{\Theta \otimes \Theta}
+  \end{align*}  
+%  Provided $\E \norm{\nabla L^2(\theta)}_{\Theta \otimes \Theta} < \infty$, then it follows from Fubini's theorem that taking expectations and multiplying both sides by minus one gives the desired result.
+  Note that by the bilinear property of tensor products,
+    \begin{align*}
+    -\frac{\partial^2}{\partial\theta_b\partial\theta_{b'}} L(\theta)
+    &= (-1) \cdot \langle \nabla L^2(\theta), b \otimes b' \rangle_{\Theta \otimes \Theta} \\
+    &= \langle -\nabla L^2(\theta), b \otimes b' \rangle_{\Theta \otimes \Theta}.
+  \end{align*}  
+  Provided $\E \norm{\nabla L^2(\theta)}_{\Theta \otimes \Theta} < \infty$, taking expectations of both sides gives the desired result, since $b\otimes b'$ is free of $Y$ and is therefore constant under the expectation. 
+  \hltodo{Not really convinced of this proof.}
+\end{proof}
+
+alternative
+
+\begin{align*}
+  \ip{\nabla L(\theta) \otimes \nabla L(\theta), b \otimes b'}_{\Theta \otimes \Theta} 
+  &= \ip{\nabla L(\theta), b }_\Theta  \ip{\nabla L(\theta), b' }_\Theta \\
+  &= \frac{\partial}{\partial\theta_b} L(\theta)\frac{\partial}{\partial\theta_{b'}} L(\theta)
+\end{align*}

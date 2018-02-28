@@ -1,0 +1,53 @@
+It was \citet{ra1922mathematical} who introduced the method of maximum likelihood as an objective way of conducting statistical inference.
+This method of inference is distinguished from the Bayesian school of thought in that only the data may inform deductive reasoning, but not any sort of  prior probabilities.
+Towards the later stages of his career\footnote{The introductory chapter of \citet{pawitan2001all} and the citations therein give a delightful  account of the evolution of the Fisherian view regarding statistical inference.}, his work reflected the view that the likelihood is to be more than simply a device to obtain parameter estimates; it is also a vessel that carries uncertainty about estimation.
+In this light and in the absence of the possibility of making probabilistic statements, one should look to the likelihood in order to make rational conclusions about an inference problem.
+Specifically, we may ask two things of the likelihood function: where is the maxima and what does the graph around the maxima look like?
+The first of these two problems is maximum likelihood estimation, while the second concerns the Fisher information.
+
+In simple terms, the Fisher information measures the amount of information that an observable random variable $Y$ carries about an unknown parameter $\theta$ of the statistical model that models $Y$.
+To make this concrete, $Y$ has the density function $p(\cdot|\theta)$ which depends on $\theta$.
+Write the log-likelihood function of $\theta$ as $L(\theta) = \log p(Y|\theta)$, and the gradient function of the log-likelihood (the \emph{score function}) with respect to $\theta$ as $S(\theta) = \partial L(\theta)/\partial\theta$.
+The \emph{Fisher information} about the parameter $\theta$ is defined to be expectation of the second moment of the score function, 
+%$\cI(\theta) = \E[S(\theta)^2] = \int S(\theta)^2 \, p(y|\theta) \d y$.
+\[
+  \cI(\theta) = \E\left[\left(\frac{\partial}{\partial\theta} \log p(Y|\theta)\right)^2\right].
+\]
+Here, expectation is taken with respect to the random variable $Y$ under its true distribution.
+Under certain regularity conditions, it can be shown that $\E[S(\theta)] = 0$, and thus the Fisher information is in fact the variance of the score function, since $\Var[S(\theta)] = \E[S(\theta)^2] - \E^2[S(\theta)]$.
+Further, if $\log p(Y|\theta)$ is twice differentiable with respect to $\theta$, then it can be shown that under certain regularity conditions,
+\[
+  \cI(\theta) = \E\left[-\frac{\partial ^ 2}{\partial\theta^2} \log p(Y|\theta)\right].
+\]
+Many textbooks provides a proof of this fact---see, for example, \citet[Section 9.7]{wasserman2013all}.
+
+From the last equation above, we see that the Fisher information is related to the curvature or concavity of the graph of the log-likelihood function, averaged over the random variable $Y$.
+The curvature, defined as the second derivative on the graph\footnote{Formally, the graph of a function $g$ is the set of all ordered pairs $(x, g(x))$.}~of a function, measures how quickly the function changes with changes in its input values.
+This then gives an intuition regarding the uncertainty surrounding $\theta$ at its maximal value; high Fisher information is indicative of a sharp peak at the maxima and therefore small variance, while low Fisher information is indicative of a shallow maxima for which many $\theta$ share similar log-likelihood values.
+Fisher information may be added much in the same way as log-likelihood may be added---the \emph{total Fisher information} from $n$ independent and identically distributed random variables $Y_1,\dots,Y_n$ is simply the sum of the $n$ \emph{unit Fisher information}, i.e. $\cI_n(\theta) = n \cI(\theta)$.
+\hltodo[Initially distinguished observed vs expected information, but realised it doesn't contribute to later discussion.]{}
+
+%For many applications, it is of interest to evaluate the (total) Fisher information at the maximum likelihood estimate under a sampling scenario.
+%However, the expectation required to calculate the Fisher information above cannot be done without knowing the true value of $\theta$.
+%As a point of clarification, we ought to make the distinction between the \emph{expected} Fisher information and the \emph{observed} Fisher information under a sampling scenario.
+%There are two quantities that are typically used as an approximation, and these are explained below.
+%Let $y = \{y_1,\dots,y_n\}$ represent an independent and identically distributed observed sample from $p(\cdot|\theta)$.
+%The maximum likelihood (ML) estimator $\hat\theta = \argmax_\theta L(\theta)$ for $\theta$ satisfies the first order conditions $S(\hat\theta) = 0$, where the log-likelihood function and the score function makes use of all of the observed samples, i.e. $L(\theta) = \sum_{i=1}^n \log p(y_i|\theta)$.
+%In a sampling experiment, the total Fisher information (denoted $\cI_n(\theta)$) is just $n$ times the unit Fisher information, i.e. $\cI_n(\theta) = n\cI(\theta)$.
+%Following \citet{efron1978assessing}, the expected Fisher information is defined to be $\cI_n(\hat\theta)$, while the observed Fisher information is
+%\[
+%  \hat\cI_n = -\sum_{i=1}^n \frac{\partial ^ 2}{\partial\theta^2} \log p(y_i|\theta) \bigg|_{\theta = \hat\theta} \ .
+%\]
+%%which is also by definition the negative Hessian. 
+%Note that 
+%%\[
+%%  \cJ(\theta) = -\frac{1}{n} \sum_{i=1}^n \frac{\partial ^ 2}{\partial\theta^2} \log p(y_i|\theta) 
+%%\]
+%$\frac{1}{n}\hat\cI_n \to \cI(\hat\theta)$ in probability as $n\to\infty$ by the weak law of large numbers.
+%Both of these quantities are used as replacements of the actual Fisher information about the ``true'' parameter.
+%In the context of measuring curvatures, the expected Fisher information would be used \citep{pawitan2001all}, but in the context of efficient variance for ML estimates, the observed Fisher information is favoured \citep{efron1978assessing}.
+%which by the law of large numbers, converges in probability to the expected Fisher information $\cI(\theta)$ as defined above.
+%In practice, one would not be able to calculate $\cI$ without knowing the true value for $\theta$, so replacing occurrences of $\theta$ with  (the MLE)
+
+%In particular, near the MLE, low Fisher information indicates a shallow maxima, while high observed information indicates a ``sharp'' maxima.
+%A shallow maxima is an indication that many nearby values have similar log-likelihood, but a sharp maxima is indicative of a high confidence surrounding the MLE.

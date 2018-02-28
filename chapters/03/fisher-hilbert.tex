@@ -1,0 +1,172 @@
+
+We extend the idea beyond thinking about parameters as merely numbers in the usual sense, to abstract objects in Hilbert spaces. 
+This generalisation allows us to extend the concept of Fisher information to regression functions in RKHSs later.
+The score and Fisher information is derived in a familiar manner, but extra care is required when taking derivatives with respect to Hilbert space objects.  
+
+Let $Y$ be a random variable with density in the parametric family $\{p(\cdot|\theta) \,|\, \theta \in \Theta \}$, where $\Theta$ is now assumed to be a Hilbert space with inner product $\ip{\cdot,\cdot}_\Theta$.
+If $p(Y|\theta) > 0$\hltodo[Why wouldn't it be >0 ?]{}, the log-likelihood function of $\theta$ is the real-valued function $L(\cdot|Y):\Theta\to\bbR$ defined by $\theta \mapsto \log p(Y|\theta)$. 
+To discuss derivatives of the log-likelihood function for $\theta\in\Theta$, we require a generalisation of the concept of differentiability from real-valued functions of a single, real variable, as is common in calculus, to functions between Banach spaces.
+
+%\begin{definition}[Directional derivative and gradient]
+%  Let ($\cH$, $\ip{\cdot,\cdot}_\cH$) be an inner product space, and consider a function $g:\mathcal H \rightarrow \mathbb R$. 
+%  Denote the directional derivate of $g$ in the direction $z$ by $\nabla_z g$, that is, 
+%	\[
+%		\nabla_z g(x) = \lim_{\delta \rightarrow 0} \frac{g(x + \delta z) - g(x)}{\delta}.
+%	\]
+%	The gradient of $g$, denoted by $\nabla g$, is the unique vector field satisfying 
+%	\[
+%		\langle \nabla g(x), z \rangle_{\mathcal H} = \nabla_z g(x), \ \ \ \forall x,z \in \mathcal H.
+%	\]
+%\end{definition}
+
+\begin{definition}[Fréchet derivative]
+  Let $\cV$ and $\cW$ be two normed spaces, and $\cU \subseteq \cV$ be an open subset.
+  A function $f:\cU\to\cW$ is called \emph{Fréchet differentiable} at $x \in \cU$ if there exists a bounded, linear operator $T:\cV\to\cW$ such that 
+  \[
+    \lim_{h\to 0} \frac{\big\Vert f(x+v) - f(x) - T v \big\Vert_{\cW}}{\norm{v}_\cV} = 0
+  \]
+  If this relation holds, then the operator $T$ is unique, and we write $\d f(x) := T$ and call it the \emph{Fréchet derivative} or \emph{Fréchet differential} of $f$ at $x$.
+  If $f$ is differentiable at every point $\cU$, then $f$ is said to be \emph{differentiable} on $\cU$.
+\end{definition}
+
+\begin{remark}
+  Since $\d f(x)$ is a bounded, linear operator, by Lemma X, it is also continuous. 
+\end{remark}
+
+The intuition here is similar to that of regular differentiability, that the linear operator $T$ well approximates the change in $f$ at $x$ (the numerator), relative to the change in $x$ (the denominator)---the fact that the limit exists and is zero, it must mean that the numerator converges faster to zero than the denominator does.
+In Landau notation, we have the familiar expression $f(x+h) = f(x) + \d f(x) h + o(h)$, that is, the tangent line to $f$ at $x$ gives the best linear approximation to $f$ near $x$.
+The limit in the definition is meant in the usual sense of convergence of functions with respect to the norms of $\cV$ and $\cW$.
+Of course, we may use Fréchet derivatives in Hilbert spaces too by using the inner product norm of the space.
+
+For the avoidance of doubt, $\d f(x)$ is not a vector in $\cW$, but is an element of the set of bounded, linear operators from $\cV$ to $\cW$, denoted $\L(\cV,\cW)$.
+That is, if $f:\cU\to\cW$ is a differentiable function at all points in $\cU\subseteq\cV$, then its derivative is a linear map
+\begin{align*}
+  \d f: \cU &\to \text{L}(\cV,\cW) \\
+  x &\mapsto \d f(x).
+\end{align*}
+It follows that this function may also have a derivative, which by definition will be a linear map as well:
+\begin{align*}
+  \d^2 f: \cU &\to \text{L}\big(\cV,\text{L}(\cV,\cW)\big) \\
+  x &\mapsto \d^2f(x).
+\end{align*}
+The space on the righthand side is identified with the Banach space $\L(\cV \times \cV, \cW)$ of all continuous bilinear maps from $\cV$ to $\cW$.
+In other words, an element $\phi\in \text{L}\big(\cV,\text{L}(\cV,\cW)\big)$ is identified with $\psi \in \text{L}(\cV \times \cV, \cW)$ such that for all $x,y\in\cV$, $\phi(x)(y) = \psi(x,y)$.
+Simply put, a function $\phi$ linear in $x$ with $\phi(x)$ linear in $y$ is the same as a bilinear function $\psi$ in $x$ and $y$.
+The second derivative $\d^2 f(x)$ is therefore a bounded, bilinear operator from $\cV\times\cV$ to $\cW$.
+
+Another closely related type of differentiability is the concept of \emph{Gâteaux differentials}, which is the formalism of functional derivatives in calculus of variations.
+Let $\cV$, $\cW$ and $\cU$ be as before, and consider the function $f:\cU\to\cW$.
+
+\begin{definition}[Gâteaux derivative]
+  The \emph{Gâteaux differential} or the \emph{Gâteaux derivative} $\partial_v f(x)$ of $f$ at $x \in \cU$ in the direction $v\in\cV$ is defined as
+  \[
+    \partial_v f(x) = \lim_{t \to 0} \frac{f(x + t v) - f(x)}{t},  % = \frac{\partial}{\partial t}f(x+tv)\bigg|_{t=0}.
+  \]  
+  for which this limit is taken relative to the topology of $\cW$.
+  The function $f$ is said to be \emph{Gâteaux differentiable} at $x\in\cU$ if $f$ has a directional derivative along all directions at $x$.
+  We name the operator $\partial f(x):\cV\to\cW$ which assigns $v \mapsto \partial_v f(x) \in \cW$ the \emph{Gâteaux derivative} of $f$ at $x$, and the operator $\partial f:\cU\to(\cV,\cW) = \{A \,|\, A:\cV\to\cW \}$ which assigns $x \mapsto \partial f(x)$ simply the \emph{Gâteaux derivative} of $f$.
+  
+\end{definition}
+
+\begin{remark}
+  The space $(\cV,\cW)$ of operators from $\cV$ to $\cW$ is not a topological space, and there is no obvious way to define a topology on it.
+  Consequently, we cannot consider the Gâteaux derivative of the Gâteaux derivative.
+  Furthermore, unlike the Fréchet derivative, which is by definition a linear operator, the Gâteaux derivative may fail to satisfy the additive condition of linearity\footnote{Although, for all scalars $\lambda \in \bbR$, the Gâteaux derivative is homogenous: $\partial_{\lambda v}f(x) = \lambda \partial_v f(x)$.}.
+  Finally, even if it is linear, it may fail to depend continuously on $v$ if $\cV$ and $\cW$ are infinite dimensional.
+\end{remark}
+
+Nevertheless, the reason we bring up Gâteaux differentials is that it may motivate higher-order Fréchet differentials.
+First note the connection between the two, by again considering the function $f:\cU\to\cW$.
+
+\begin{lemma}[Fréchet differentiability implies Gâteaux differentiability]
+  If $f$ is Fréchet differentiable at $x\in\cU$, then $f$ is Gâteaux differentiable at that point too, and $\d f(x) = \partial f(x)$.
+\end{lemma}
+
+\begin{proof}
+  Since $f$ is Fréchet differentiable at $x\in\cU$, we can write $f(x+v) \approx f(x) + \d f(x)(v)$ for some $v\in\cV$.
+  Then, 
+  \begin{align*}
+    \left\Vert \frac{f(x + t v) - f(x)}{t} - \d f(x)(v) \right\Vert_\cW
+    &= \frac{1}{t} \big\Vert f(x + t v) - f(x) - \d f(x)(tv)  \big\Vert_\cW \\
+    &= \frac{\big\Vert f(x + t v) - f(x) - \d f(x)(tv) \big\Vert_\cW }{\norm{tv}_\cV}\cdot \norm{v}_\cV 
+  \end{align*}
+  which converges to 0 since $f$ is Fréchet differentiable at $x$, and  $t\to 0$ if and only if $\norm{tv}_\cV \to 0$.
+  Thus, $f$ is Gâteaux differentiable at $x$, and the Gâteaux derivative $\partial_v f(x)$ of $f$ at $x$ in the direction $v$ coincides with the Fréchet derivatiave of $f$ at $x$ evaluated at $v$.
+\end{proof}
+
+Consider now the function $\d f(x):\cV\to\cW$ and suppose that $f$ is twice Fréchet differentiable at $x\in\cU$, i.e. $\d f(x)$ is Fréchet differentiable at $x\in\cU$ with derivative $\d^2 f(x):\cV\times\cV \to \cW$.
+Then, $\d f(x)$ is also Gâteaux differentiable at the point $x$ and the two differentials coincide.
+In particular, we have
+\begin{align}\label{eq:frech2gat}
+  \left\Vert \frac{\d f(x + t v)(v') - \d f(x)(v')}{t} - \d^2 f(x)(v,v') \right\Vert_\cW \to 0 \text{ as } t \to 0,
+\end{align}
+by a similar argument in the proof above.
+We will use this fact when we describe the Hessian in a little while.
+
+There is also the concept of \emph{gradients} in Hilbert space.
+Recall that the Riesz representation theorem says that the mapping $A:\cV\to\cV'$ from the Hilbert space $\cV$ to its continuous dual space $\cV'$ defined by $A = \ip{\cdot,v}_\cV$ for some $v\in\cV$ is an isometric isomorphism.
+Again, let $\cU \subseteq \cV$ be an open subset, and let $f:\cU\to\bbR$ be a (Fréchet) differentiable function with derivative $\d f: \cU \to \L(\cV,\bbR) \equiv \cV'$.
+We define the gradient as follows.
+
+\begin{definition}[Gradients in Hilbert space]
+  The \emph{gradient} of $f$ is the operator $\nabla f: \cU \to \cV$ defined by $\nabla f = A^{-1} \circ \d f$.
+  Thus, for $x \in \cU$, the gradient of $f$ at $x$, denoted $\nabla f(x)$, is the unique element of $\cV$ satisfying
+  \[
+    \ip{\nabla f(x), v}_\cV = \d f(x)(v)
+  \]
+  for any $v \in \cV$.
+  Note that $\nabla f$ being a composition of two continuous functions, is itself continuous.
+\end{definition}
+
+Since the gradient of $f$ is an operator on $\cU$ to $\cV$, it may itself have a (Fréchet) derivative.
+Assuming existence, i.e., $f$ is twice Fréchet differentiable at $x \in \cU$, we call this derivative the \emph{Hessian} of $f$.
+From \eqref{eq:frech2gat}, it must be that
+\begin{align*}
+  \d^2 f(x)(v,v') &= \lim_{t\to 0} \frac{\d f(x + t v)(v') - \d f(x)(v')}{t} \\
+  &= \lim_{t\to 0} \frac{\ip{\nabla f(x+tv), v'}_\cV - \ip{\nabla f(x), v'}_\cV}{t} \\
+  &= \left\langle \lim_{t\to 0} \frac{\nabla f(x+tv) - \nabla f(x)}{t} , v' \right\rangle_\cV \\%\hspace{10pt} \rlap{\color{gray} \text{by linearity}} \\
+  &= \left\langle \partial_v \nabla f(x) , v' \right\rangle_\cV.
+\end{align*}
+The second line follows from the definition of gradients, and the third line follows by linearity of inner products.
+Note that since the Fréchet and Gâteaux differentials coincide, we have that $\partial_v \nabla f(x) = \d \nabla f(x) (v)$.
+Letting $\cV$, $\cW$ and $\cU$ be as before, we now define the Hessian for the function $f:\cU \to \cW$.
+
+\begin{definition}[Hessian]
+  The Fréchet derivative of the gradient of $f$ is known as the \emph{Hessian} of $f$.
+  Denoted $\nabla^2 f$, it is the mapping $\nabla^2 f: \cU \to \L(\cV,\cV)$ defined by $\nabla^2 f  = \d \nabla f$, and it satisfies
+  \[
+    \left\langle \nabla^2 f(x)(v) , v' \right\rangle_\cV = \d^2 f(x)(v,v').
+  \]
+  for $x\in\cU$ and $v,v'\in\cV$.
+\end{definition}
+
+\begin{remark}
+  Since $\d^2 f(x)$ is a bilinear form in $\cV$, we can equivalently write
+  \[
+    \d^2 f(x)(v,v') = \ip{\d^2 f(x), v \otimes v'}_{\cV\otimes\cV}
+  \]
+  following the correspondence between bilinear forms and tensor product spaces.  
+\end{remark}
+
+We can now define the score $S$, assuming existence, as the (Fréchet) derivative of $L(\cdot|Y)$, i.e. $S:\Theta \to \L(\Theta,\bbR) \equiv \Theta'$ defined by $S = \d L(\cdot | Y)$.
+The second (Fréchet) derivative of $L(\cdot|Y)$ is then $\d^2 L(\cdot|Y): \Theta \to \L(\Theta \times \Theta,\bbR)$.
+The Fisher information $\cI(\theta)$ at $\theta\in\Theta$ is defined to be
+\[
+  \cI(\theta) = -\E[\d^2 L(\theta|Y)] \in \Theta \otimes \Theta.
+\]
+or \hltodo[Is this required?]{alternatively}
+\begin{align*}
+  \cI(\theta) 
+  &= \E[\d L(\theta|Y) \otimes \d L(\theta|Y)] \\ %\in \Theta \otimes \Theta 
+  &= \E[\ip{\nabla L(\theta|Y), \cdot}_{\Theta} \otimes \ip{\nabla L(\theta|Y), \cdot}_{\Theta}] \\
+  &= \E\ip{\nabla L(\theta|Y) \otimes \nabla L(\theta|Y), \cdot}_{\Theta\otimes\Theta} \\
+  &= \ip{\E[\nabla L(\theta|Y) \otimes \nabla L(\theta|Y)], \cdot}_{\Theta\otimes\Theta}.
+\end{align*}
+
+Since $\cI(\theta) \in \Theta \otimes \Theta$ we may view it also as a bilinear form. 
+That is, for any $b,b'\in\Theta$, we have
+\begin{align}\label{eq:fisher-linear-functional}
+  \cI(\theta)(b,b') = \ip{\cI(\theta), b \otimes b'}_{\Theta\otimes\Theta}.
+\end{align}
+We call this the Fisher information for $\theta$ evaluated at two points $b$ and $b'$ in $\Theta$.
+Setting $\theta_b = \ip{\theta,b}_\Theta$ for some $b\in\Theta$, we may view this also as the Fisher information between two continuous, linear functionals of $\theta$.\hltodo[This part seems sketchy.]{}

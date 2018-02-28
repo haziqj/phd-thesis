@@ -227,9 +227,10 @@
 
 % Derivatives and integration
 \let\d\relax
-\DeclareMathOperator{\d}{d\!\:\!}
+%\DeclareMathOperator{\d}{d\hspace{0.01pt}}
+\newcommand{\d}{\text{d}}
 
-% Overbrace and underbrace
+% Overbrace and underbrace$\!\:\!$
 \newcommand{\greyoverbrace}[2]{{\color{gray}\overbrace{\color{black}#1}^{#2}}}
 
 % \obot and \bigobot from the matha and mathx font (from mathabx.sty)
@@ -251,6 +252,8 @@
 \DeclareMathSymbol{\bigobot}       {1}{mathx}{"CB}
 
 % Conveniences
+\renewcommand{\L}{\text{L}}
+\renewcommand{\C}{\text{C}}
 \newcommand{\const}{\text{const.}}
 \newcommand{\half}[1][1]{\frac{#1}{2}}  % \half for 1/2 or \half[n] for n/2, etc.
 \DeclareMathOperator{\diag}{diag}

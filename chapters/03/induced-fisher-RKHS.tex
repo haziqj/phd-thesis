@@ -1,0 +1,71 @@
+\hltodo[Rewrite]{Next, let us see for which linear functionals of $f$ there is Fisher information.}
+Let 
+\begin{align}
+\cF_n = \left\{ f:\cX \to \bbR \, \bigg| \, f(x) = \sum_{i=1}^n h(x,x_i)w_i, \ w_i \in \bbR, \ i=1,\dots,n \right\}.  
+\end{align}
+Since $h(\cdot,x_i) \in \cF$, then any $f \in \cF_n$ is also in $\cF$ by linearity, and thus $\cF_n$ is a subset of $\cF$.
+Further, $\cF_n$ is closed under addition and multiplication by a scalar, and is therefore a subspace of $\cF$.
+Let $\cF_n^\bot$ be the orthogonal complement of $\cF_n$ in $\cF$.
+Then, any $r \in \cF_n^\bot$ is orthogonal to each of the $h(\cdot,x_i)$, so by the reproducing property of $h$, $r(x_i) = \ip{r,h(\cdot,x_i)}_\cF = 0$.
+
+\begin{corollary}
+  With $g \in \cF$, the Fisher information for $g$ is zero if and only if $g\in\cF_n^\bot$, i.e. if and only if $g(x_1) = \cdots = g(x_n) = 0$.
+\end{corollary}
+
+Hence, $r$ cannot be estimated from the data and has to be estimated by a prior guess.
+
+\hltodo{OLD, but some stuff relevant here.}
+Note that any regression function $f\in \mathcal F$ can be decomposed into $f = f_n + r$, with $f \in \mathcal F_n$ and $r \in \mathcal R$ where $\mathcal F = \mathcal F_n + \mathcal R$ and $\mathcal F_n \perp \mathcal R$. Fisher information exists only on the $n$-dimensional subspace $\mathcal F_n$, while there is no information for $\mathcal R$. Thus, we will only ever consider the RKHS $\mathcal F_n \subset \mathcal F$ where there is Fisher information. Let $h$ be a real symmetric and positive definite function over $\mathcal X$ defined by $h(x,x') = I[f(x),f(x')]$. As we saw earlier, $h$ defines a RKHS, and it can be shown that the RKHS induced is in fact $\mathcal F_n$ spanned by the reproducing kernel on the dataset with the squared norm $||f||_{\mathcal F_n}^2 = w^\top\Psi^{-1}w$.
+
+\begin{lemma}
+  Let $\cF_n$ be equipped with the inner product
+  \[
+    \ip{f_w, f_{w'}}_{\cF_n} = \bw^\top \bPsi^{-1} \bw',
+  \]
+  where $\bw = (w_1,\dots,w_n)$ and $f_w(x)=\sum_{i=1}^n h(x,x_i)w_i$.
+  Then, $h_n$ defined by
+  \[
+    h_n(x,x') = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij}h(x,x_i)h(x',x_j)
+  \]
+  is the reproducing kernel of $\cF_n$.
+\end{lemma}
+
+\begin{proof}
+  \hltodo{Prove $\cF_n$ is a Hilbert space?}
+  \begin{align*}
+    f_j = \sum h(\cdot,x_i)w_{ij}
+  \end{align*}
+  \begin{align*}
+    \norm{f_j-f}_{\cF_n}^2 &= \ip{f_j-f,f_j-f} \\
+    &\leq \ip{f_j,f_j} + \ip{f,f} \\
+    &= w_j\Psi w_j + w\Psi w \\
+    &= \Psi(w_jw_j^\top + ww^\top)
+  \end{align*}
+  Note that by defining $w_j(x) = \sum_{k=1}^n \psi_{jk} h(x,x_k)$, we see that
+  \begin{align*}
+    h_n(\cdot,x) 
+    &= \sum_{j=1}^n\sum_{k=1}^n \psi_{jk} h(\cdot,x_j) h(x,x_k) \\
+    &= \sum_{j=1}^n w_j(x)h(\cdot,x_j)
+  \end{align*}
+  is an element of $\cF_n$.
+  Now, we just need to prove the reproducing property. 
+  Denote by $\psi_{ij}^{-}$ the $(i,j)$th element of $\bPsi^{-1}$.
+  \hltodo[How?]{Since $\ip{h(\cdot,x_i), h(\cdot,x_j)}_{\cF_n} = \psi_{ij}^{-}$}, we have
+  \begin{align*}
+    \ip{f_w, h_n(\cdot,x)}_{\cF_n}
+    &= \left\langle 
+    \sum_{i=1}^n h(\cdot,x_i)w_i ,
+    \sum_{j=1}^n\sum_{k=1}^n \psi_{jk} h(\cdot,x_j) h(x,x_k)
+    \right\rangle_{\cF_n} \\
+    &= \sum_{i=1}^n w_i \sum_{j=1}^n\sum_{k=1}^n \psi_{jk}h(x,x_k) 
+    \big\langle h(\cdot,x_i)w_i , h(\cdot,x_j) \big\rangle_{\cF_n} \\
+    &= \sum_{i=1}^n w_i \sum_{j=1}^n\sum_{k=1}^n \psi_{jk}h(x,x_k)\psi_{ij}^{-} \\
+    &= \sum_{i=1}^n w_i \sum_{k=1}^n \delta_{ik}h(x,x_k) \\
+    &= \sum_{i=1}^n w_i h(x,x_i) \\
+    &= f_w(x)
+  \end{align*}
+  Therefore, $h_n$ is a reproducing kernel for $\cF_n$.
+\end{proof}
+
+\hltodo{Is the Fisher information metric and semi-norm over $\cF$ useful?}
+

@@ -1,0 +1,222 @@
+Here we consider data dependent priors---seemingly data dependent (i.e. dependent on X) but the whole model is conditional on $X$ implicitly, so there is no issue.
+If prior depended on $y$ then there is a problem, at least, violates Bayesian first principles (using the data twice such that a priori and a posteriori same amount of information).
+Rather, more of a principled prior. One that is based on objectivity of maximum entropy---if one does not know anything, best to choose prior which maximises uncertainty.
+We see that it coincides with the Fisher information induced RKHS.
+
+Goal is always to estimate $f \in \cF$ based on finite amount of data points.
+We know MLE is not so good, so want regularise by some prior.
+Unfortunately, $\cF$ might be huge such that data don't provide enough information for $f$ to be estimated sufficiently well.
+We ask: What is the smallest subset for which there is full information coming from the data? 
+Intuitively, it must be of $n$-dimensions, the sample size of the data.
+Rather separately, we found out what the Fisher information for $f$ looks like, and deduced that there is Fisher information only on an orthogonal projection of $\cF$ on to $\cF_n$.
+There is this flavour of dimension reduction---no need to consider the entire space, because this is futile, but just consider functions in the smaller subspace, as this is the best we can do anyway.
+Therefore, we just look in this subspace $\cF_n$ for an appropriate approximation to $f$. 
+In particular, what prior should I use? On the basis of maximum entropy principle, I figure out that the form of our I-prior.
+The connection of $\cF_n$ to Fisher information is this: $\cF_n$ is the subspace of $\cF$ for which Fisher information exists. Equipping this space with a particular inner product reveals that $\cF_n$ is a RKHS with reproducing kernel equal to the Fisher information for $f$.
+
+The set $\cF$ is potentially ``too big'' for the purpose of estimating $f$, that is, for certain pairs of functions $\cF$, the data do not allow an assessment of whether one is closer to the truth than the other.
+In particular, the data do not contain information to distinguish betwen any $f$ and $f'$ for which $f(x_i) = f'(x_i), i=1,\dots,n$.
+  \hltodo[If data do not provide enough information, isn't the purpose of the prior to provide the missing information?]{A prior for $f$ therefore need not have support $\cF$, instead it is sufficient to consider priors with support $f_0 + \cF_n$}, where $f_0 \in \cF$ is fixed and chosen a priori as a ``best guess'' of $f$.
+Since the Fisher information for $\ip{g,f}_\cF$ is non-zero for any non-zero $g \in \cF_n$, there is information to allow a comparison between any pair of functions in $f_0 + \cF_n$.
+
+Key questions:
+\begin{itemize}
+  \item What does it mean to say that the measure space $(\cF,\nu)$ has a probability density function $\pi$? A probability density function $p$ on $(\cF, \nu)$ is a $\nu$-measurable function from $\cF$ to $[0, \infty)$ such that $p \d\nu$ is a probability measure on $\cF$.
+  \item What does it mean for $f \in \cF$ to be Gaussian?
+\end{itemize}
+
+Let $(\Theta,D)$ be a metric space and let $\nu = \nu_D$ be a volume measure induced by $D$ (e.g. Hausdorff measure).
+  Denote by $\pi$ a density of $\Theta$ relative to $\nu$, i.e. if $\theta$ is a random variable with density $\pi$, then for any measurable subset $A \subset \Theta$, $\Prob(\theta \in A) = \int_A \pi(t)\nu(\d t)$.
+
+
+\begin{definition}[Entropy]
+  The entropy of a distribution $\pi$ over $\cF$ relative to a measure $\nu$ is defined as
+  \[
+    \cE(\pi) = - \int_\cF \pi(f) \log \pi(f) \, \d\nu(f).
+  \]
+  This converges if $\pi \log\pi$ is Lebesgue integrable, i.e. $\pi\log\pi \in \text{L}^1(\cF,\nu)$.
+\end{definition}
+
+\begin{definition}[Functional derivative]
+  Given a manifold $M$ representing continuous/smooth functions $\rho$ with certain boundary conditions, and a functional $F:M\to\bbR$, the functional derivative of $F[\rho]$ with respect to $\rho$, denoted $\partial F/\partial\rho$, is defined by
+  \begin{align*}
+    \int \frac{\partial F}{\partial\rho}(x)\phi(x)\d x
+    &= \lim_{\epsilon\to 0} \frac{F[\rho + \epsilon\phi] - F[\rho]}{\epsilon} \\
+    &= \left[ \frac{\d}{\d \epsilon} F[\rho + \epsilon\phi] \right]_{\epsilon=0},
+  \end{align*}
+  where $\phi$ is an arbitrary function.
+  The function $\partial F/\partial\rho$ as the gradient of $F$ at the point $\rho$, and
+  \[
+    \partial F(\rho,\phi) = \int \frac{\partial F}{\partial\rho}(x)\phi(x) \d x
+  \]
+  as the directional derivative at point $\rho$ in the direction of $\phi$.
+  Analogous to vector calculus, the inner product with the gradient gives the directional derivative.
+\end{definition}
+
+\begin{example}[Functional derivative of entropy]
+  Let $X$ be a discrete random variable with probability mass function $p(x) \geq 0$, for $\forall x \in \Omega$, a finite set.
+  The entropy is a functional of $p$, namely
+  \[
+    \cE[p] = - \sum_{x\in\Omega} p(x)\log p(x).
+  \]
+  Equivalently, using the counting measure $\nu$ on $\Omega$, we can write
+  \[
+    \cE[p] = -\int_\Omega p(x) \log p(x) \d\nu(x).
+  \]
+  \begin{align*}
+    \int_\Omega \frac{\partial\cE}{\partial p}(x)\phi(x) 
+    &= \left[ \frac{\d}{\d \epsilon} \cE[p +  \epsilon\phi] \right]_{\epsilon=0} \\
+    &= \left[ -\frac{\d}{\d \epsilon} 
+    \big( p(x) + \epsilon\phi(x) \big) 
+    \log \big(p(x) + \epsilon\phi(x) \big) 
+    \right]_{\epsilon=0} \\
+    &= -\int_\Omega \left( 
+    \frac{p(x)\phi(x)}{p(x)+\epsilon\phi(x)}
+    + \frac{\epsilon\phi(x)}{p(x) + \epsilon\phi(x)}
+    + \phi(x)\log\big( p(x) + \epsilon\phi(x) \big)
+    \right) \d x \\
+    &= -\int_\Omega \left( 1 + \log p(x) \right) \phi(x) \d x.
+  \end{align*}
+  Thus, $(\partial\cE/\partial p)(x) = -1 -\log p(x)$.
+\end{example}
+
+\begin{lemma}[Maximum entropy distribution]\label{thm:maxentr}
+  Let $(\cX,d)$ be a metric space and let $\nu=\nu_d$ be a volume measure induced by $d$.
+  Let $p$ be a probability density function on $(\cX,d)$.
+  The entropy maximising density, which satisfies
+  \[
+    \argmax_{p} \cE(p) = - \int_\cX p(x) \log p(x) \, \d\nu(x),
+  \]
+  subject to the constraints
+  \begin{align*}
+    \begin{gathered}
+      \E\big[d(x,x_0)^2\big] = \int_\cX d(x,x_0)^2 p(x) \d\nu(x) = \const, \hspace{1cm} 
+      \int_\cX p(x) \d\nu(x) = 1, \\
+      \text{and} \hspace{0.5cm} p(x) \geq 0,
+    \end{gathered}
+  \end{align*}
+  is the density given by
+  \[
+    \tilde p(x) \propto \exp \left(-\half d(x,x_0)^2 \right),
+  \]
+  for some $x_0\in\cX$.
+  If $(\cX,d)$ is a Euclidean space and $\nu$ a flat (Lebesgue) measure then $\tilde p$ represent a (multivariate) normal density.
+\end{lemma}
+
+\begin{proof}
+  This follows from standard calculus of variations.
+  We provide a sketch proof here.
+  Set up the Langrangian
+  \begin{align*}
+      \cL(p,\gamma_1,\gamma_2) &= 
+      - \int_\cX p(x) \log p(x) \, \d\nu(x) +
+      \gamma_1 \left(\int_\cX d(x,x_0)^2 p(x) \d\nu(x) - \const \right) \\
+      &\phantom{==} + \gamma_2 \left( \int_\cX p(x) \d\nu(x) - 1 \right).
+  \end{align*}
+  From the above lemma and example, taking derivatives with respect to $p$ yields
+  \begin{align*}
+    \frac{\partial}{\partial p} \cL(p,\gamma_1,\gamma_2)(x)
+    = - 1 - \log p(x) + \gamma_1 d(x,x_0)^2 + \gamma_2.
+  \end{align*}
+  Set this to zero, and solve for $p$:
+  \begin{align*}
+    p(x) &= \exp \left( \gamma_1 d(x,x_0)^2 + \gamma_2 - 1 \right) \\
+    &\propto \exp \left( \gamma_1 d(x,x_0)^2 \right)
+  \end{align*}
+  which is positive for any values of $\gamma_1$ (and $\gamma_2$).
+  This density normalises to one if $\gamma_1 < 0$, so we choose $\gamma_1=-1/2$.
+  If $\cX = \bbR^n$ and that $\nu$ is the Lebesgue measure then $d(x,x_0) = \norm{x-x_0}_{\bbR^n}$, so $\tilde p$ is recognised as a multivariate normal density centred at $x_0$ with identity covariance matrix.
+\end{proof}
+
+\begin{theorem}[The I-prior]
+  Let $\cF$ be an RKHS with kernel $h$, and consider the finite dimensional affine subspace $\cF_n$ of $\cF$ equipped with an inner product as in Lemma 2.5.
+%  Suppose $\Theta$ is a finite dimensional affine subspace of a Hilbert space with norm $\norm{\cdot}_\Theta$. 
+%  We have a metric space $(\cF_n,d)$, where $d(f,f')^2 = \ip{f-f',f-f'}$.
+  Let $\nu$ be a volume measure induced by the norm $\norm{\cdot}_{\cF_n} = \sqrt{\ip{\cdot,\cdot}_{\cF_n}}$.
+  With $f_0 \in \cF$, let $\Pi_0$ be the class of distributions $p$ such that 
+  \[
+    \E[\norm{f-f_0}^2_{\cF_n}] = \int_{\cF_n} \norm{f-f_0}^2_{\cF_n} \ p(f) \d\nu(f) = \const
+  \]
+  Denote by $\tilde p$ the density of the entropy maximising distribution among the class of distributions within $\Pi_0$.
+  Then, $\tilde p$ is Gaussian over $\cF$ with mean $f_0$ and covariance kernel equal to the reproducing kernel of $\cF_n$, i.e.
+  \[
+    \Cov\big(f(x),f(x')\big) = h_n(x,x').
+  \]
+  We call $\tilde p$ the I-prior for $f$.
+\end{theorem}
+
+\begin{proof}
+  Recall the fact that any $f \in \cF$ can be decomposed into $f = f_n + r_n$, with $f_n \in \cF_n$ and $r_n \in \cR_n$, the orthogonal complement of $\cF_n$.
+  Also recall that there is no Fisher information about any $r \in \cR_n$, and therefore it is not possible to estimate $r_n$ from the data.
+  Therefore, $p(r_n) = 0$, and one needs only consider distributions over $\cF_n$ when building distributions over $\cF$.
+  
+  The norm on $\cF_n$ induces the metric $d(f,f') = \norm{f - f'}_{\cF_n}$.
+  Thus, for $f \in \cF$ of the form $f = \sum_{i=1}^n h(\cdot,x_i)w_i$ (i.e., $f \in \cF_n$) and provided $f_0 \in \cF_n \subset \cF$,
+  \begin{align*}
+    d(f,f_0)^2 
+    &= \norm{f - f_0}_{\cF_n}^2 \\
+    &= \left\Vert \sum_{i=1}^n h(\cdot,x_i)w_i - \sum_{i=1}^n h(\cdot,x_i)w_{i0} \right\Vert_{\cF_n}^2 \\
+    &= \left\Vert \sum_{i=1}^n h(\cdot,x_i)(w_i - w_{i0}) \right\Vert_{\cF_n}^2 \\
+    &= (\bw - \bw_0)^\top\bPsi^{-1} (\bw - \bw_0) \\
+%    &= \bw^\top\bPsi^{-1}\bw - 2\bw^\top\bPsi^{-1}\bw' + \bw'^\top\bPsi^{-1}\bw'j
+  \end{align*}
+  Thus, by Lemma \ref{thm:maxentr}, the maximum entropy distribution for $f = \sum_{i=1}^n h(\cdot,x_i)w_i$ is
+  \[
+    (w_1,\dots,w_n)^\top \sim \N_n(\bw_0,\bPsi).
+  \]
+  This implies that $f$ is Gaussian, since
+  \begin{align*}
+    \langle f,f' \rangle_{\cF}
+    = \left\langle \sum_{i=1}^n h(\cdot,x_i)w_i, f' \right\rangle_{\cF} 
+    = \sum_{i=1}^n w_i \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF}  
+  \end{align*}
+  is a sum of normal random variables, and therefore $\langle f,f' \rangle_{\cF}$ is normally distributed for any $f' \in \cF$.
+  The mean $\mu\in\cF$ of this random vector $f$ satisfies $\E\ip{f,f'}_{\cF}  = \ip{\mu,f'}_{\cF}$ for all $f'\in\cF_n$, but
+  \begin{align*}
+    \E\ip{f,f'}_{\cF}  
+    &= \E \left\langle \sum_{i=1}^n h(\cdot,x_i)w_i, f' \right\rangle_{\cF} \\
+    &= \E \left[ \sum_{i=1}^n w_i \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF} \right] \\
+    &= \sum_{i=1}^n w_{i0} \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF} \\
+    &= \left\langle \sum_{i=1}^n h(\cdot,x_i)w_{i0}, f' \right\rangle_{\cF} \\
+    &= \langle f_0,f' \rangle_{\cF},
+  \end{align*}
+  so $\mu \equiv f_0 = \sum_{i=1}^n h(\cdot,x_i)w_{i0}$. 
+  The covariance kernel $\Sigma$ is the bilinear form satisfying
+  \begin{align*}
+    \Cov\big(f(x),f(x')\big) 
+    &= \Cov\big(\ip{f,h(\cdot,x)}_{\cF}, \ip{f,h(\cdot,x')}_{\cF} \big) \\
+    &= \left\langle \Sigma, h(\cdot,x) \otimes h(\cdot,x') \right\rangle_{\cF \otimes \cF}.
+  \end{align*}
+  Write $h_{x} := \langle h(\cdot,x),f \rangle_{\cF}$. 
+  Then, by the usual definition of covariances, we have that 
+  \begin{align*}
+    \Cov(h_x,h_{x'}) = \E[h_xh_{x'}] - \E[h_x]\E[h_{x'}],
+  \end{align*}
+  where, making use of the reproducing property, the first term on the left hand side is
+  \begin{align*}
+    \E[h_xh_{x'}] 
+    &= \E \left[ 
+    \left\langle h(\cdot,x), \sum_{i=1}^n h(\cdot,x_i)w_i \right\rangle_{\cF} 
+    \left\langle h(\cdot,x'), \sum_{j=1}^n h(\cdot,x_j)w_j \right\rangle_{\cF} 
+    \right] \\
+    &= \E \left[ 
+    \sum_{i=1}^n\sum_{j=1}^n w_iw_j \left\langle  h(\cdot,x), h(\cdot,x_i) \right\rangle_{\cF} 
+     \left\langle h(\cdot,x'), h(\cdot,x_j)\right\rangle_{\cF} 
+    \right] \\
+    &= \sum_{i=1}^n\sum_{j=1}^n (\psi_{ij} + w_{i0}w_{j0}) h(x,x_i) h(x',x_j),
+  \end{align*}
+  while the second term on the left hand side is
+  \begin{align*}
+    \E[h_x]\E[h_{x'}]
+    &= \left( \sum_{i=1}^n w_{i0} \left\langle  h(\cdot,x), h(\cdot,x_i)  \right\rangle_{\cF} \right)
+    \left( \sum_{j=1}^n w_{j0} \left\langle  h(\cdot,x'), h(\cdot,x_j)  \right\rangle_{\cF} \right) \\
+    &= \sum_{i=1}^n \sum_{j=1}^n w_{i0}w_{j0} h(x,x_i)h(x',x_j).
+  \end{align*}  
+  Thus,
+  \[
+    \Cov\big( f(x),f(x') \big) = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(x,x_i) h(x',x_j),
+  \]
+  the reproducing kernel for $\cF_n$.
+\end{proof}
+
+
