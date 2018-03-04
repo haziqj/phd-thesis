@@ -31,24 +31,25 @@ Note that any regression function $f\in \mathcal F$ can be decomposed into $f = 
 \end{lemma}
 
 \begin{proof}
-  \hltodo{Prove $\cF_n$ is a Hilbert space?}
-  \begin{align*}
-    f_j = \sum h(\cdot,x_i)w_{ij}
-  \end{align*}
-  \begin{align*}
-    \norm{f_j-f}_{\cF_n}^2 &= \ip{f_j-f,f_j-f} \\
-    &\leq \ip{f_j,f_j} + \ip{f,f} \\
-    &= w_j\Psi w_j + w\Psi w \\
-    &= \Psi(w_jw_j^\top + ww^\top)
-  \end{align*}
-  Note that by defining $w_j(x) = \sum_{k=1}^n \psi_{jk} h(x,x_k)$, we see that
+%  \hltodo{Prove $\cF_n$ is a Hilbert space?}
+%  \begin{align*}
+%    f_j = \sum h(\cdot,x_i)w_{ij}
+%  \end{align*}
+%  \begin{align*}
+%    \norm{f_j-f}_{\cF_n}^2 &= \ip{f_j-f,f_j-f} \\
+%    &\leq \ip{f_j,f_j} + \ip{f,f} \\
+%    &= w_j\Psi w_j + w\Psi w \\
+%    &= \Psi(w_jw_j^\top + ww^\top)
+%  \end{align*}
+  We simply need to prove the reproducing property of $h_n$.
+  First note that by defining $w_j(x) = \sum_{k=1}^n \psi_{jk} h(x,x_k)$, we see that
   \begin{align*}
     h_n(\cdot,x) 
     &= \sum_{j=1}^n\sum_{k=1}^n \psi_{jk} h(\cdot,x_j) h(x,x_k) \\
     &= \sum_{j=1}^n w_j(x)h(\cdot,x_j)
   \end{align*}
   is an element of $\cF_n$.
-  Now, we just need to prove the reproducing property. 
+%  Now, we simply need to prove the reproducing property. 
   Denote by $\psi_{ij}^{-}$ the $(i,j)$th element of $\bPsi^{-1}$.
   \hltodo[How?]{Since $\ip{h(\cdot,x_i), h(\cdot,x_j)}_{\cF_n} = \psi_{ij}^{-}$}, we have
   \begin{align*}
@@ -58,7 +59,7 @@ Note that any regression function $f\in \mathcal F$ can be decomposed into $f = 
     \sum_{j=1}^n\sum_{k=1}^n \psi_{jk} h(\cdot,x_j) h(x,x_k)
     \right\rangle_{\cF_n} \\
     &= \sum_{i=1}^n w_i \sum_{j=1}^n\sum_{k=1}^n \psi_{jk}h(x,x_k) 
-    \big\langle h(\cdot,x_i)w_i , h(\cdot,x_j) \big\rangle_{\cF_n} \\
+    \big\langle h(\cdot,x_i) , h(\cdot,x_j) \big\rangle_{\cF_n} \\
     &= \sum_{i=1}^n w_i \sum_{j=1}^n\sum_{k=1}^n \psi_{jk}h(x,x_k)\psi_{ij}^{-} \\
     &= \sum_{i=1}^n w_i \sum_{k=1}^n \delta_{ik}h(x,x_k) \\
     &= \sum_{i=1}^n w_i h(x,x_i) \\
@@ -67,5 +68,5 @@ Note that any regression function $f\in \mathcal F$ can be decomposed into $f = 
   Therefore, $h_n$ is a reproducing kernel for $\cF_n$.
 \end{proof}
 
-\hltodo{Is the Fisher information metric and semi-norm over $\cF$ useful?}
+%\hltodo{Is the Fisher information metric and semi-norm over $\cF$ useful?}
 

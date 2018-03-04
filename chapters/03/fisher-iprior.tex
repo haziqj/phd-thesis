@@ -36,16 +36,29 @@ Such a distribution on $f$ is called the I-prior distribution.
 \input{induced-fisher-RKHS}
 
 \section{The I-prior}
-%\input{iprior-derivation}
+\input{iprior-derivation}
 
 \section{Rate of convergence}
+\hltodo{Should I say something about this? Rates can be better than GPR?}
 
 \section{Conclusion}
-We used the true Fisher information. \citet{efron1978assessing} say favour the observed information instead. Does this change if we use MLE $\hat f$ instead? Probably not... we don't use MLE anyway!
 
-https://stats.stackexchange.com/questions/179130/gaussian-process-proofs-and-results
+Goal is always to estimate $f \in \cF$ based on finite amount of data points.
+We know MLE is not so good, so want regularise by some prior.
+Unfortunately, $\cF$ might be huge such that data don't provide enough information for $f$ to be estimated sufficiently well.
+We ask: What is the smallest subset for which there is full information coming from the data? 
+Intuitively, it must be of $n$-dimensions, the sample size of the data.
+Rather separately, we found out what the Fisher information for $f$ looks like, and deduced that there is Fisher information only on an orthogonal projection of $\cF$ on to $\cF_n$.
+There is this flavour of dimension reduction---no need to consider the entire space, because this is futile, but just consider functions in the smaller subspace, as this is the best we can do anyway.
+Therefore, we just look in this subspace $\cF_n$ for an appropriate approximation to $f$. 
+In particular, what prior should I use? On the basis of maximum entropy principle, I figure out that the form of our I-prior.
+The connection of $\cF_n$ to Fisher information is this: $\cF_n$ is the subspace of $\cF$ for which Fisher information exists. Equipping this space with a particular inner product reveals that $\cF_n$ is a RKHS with reproducing kernel equal to the Fisher information for $f$.
 
-https://stats.stackexchange.com/questions/268429/do-gaussian-process-regression-have-the-universal-approximation-property
+
+
+\section{Omitted}
+\input{03-omitted}
+
 
 \hClosingStuffStandalone
 \end{document}

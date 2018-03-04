@@ -1,0 +1,52 @@
+\begin{definition}[Functional derivative]
+  Given a manifold $M$ representing continuous/smooth functions $\rho$ with certain boundary conditions, and a functional $F:M\to\bbR$, the functional derivative of $F[\rho]$ with respect to $\rho$, denoted $\partial F/\partial\rho$, is defined by
+  \begin{align*}
+    \int \frac{\partial F}{\partial\rho}(x)\phi(x)\d x
+    &= \lim_{\epsilon\to 0} \frac{F[\rho + \epsilon\phi] - F[\rho]}{\epsilon} \\
+    &= \left[ \frac{\d}{\d \epsilon} F[\rho + \epsilon\phi] \right]_{\epsilon=0},
+  \end{align*}
+  where $\phi$ is an arbitrary function.
+  The function $\partial F/\partial\rho$ as the gradient of $F$ at the point $\rho$, and
+  \[
+    \partial F(\rho,\phi) = \int \frac{\partial F}{\partial\rho}(x)\phi(x) \d x
+  \]
+  as the directional derivative at point $\rho$ in the direction of $\phi$.
+  Analogous to vector calculus, the inner product with the gradient gives the directional derivative.
+\end{definition}
+
+\begin{example}[Functional derivative of entropy]
+  Let $X$ be a discrete random variable with probability mass function $p(x) \geq 0$, for $\forall x \in \Omega$, a finite set.
+  The entropy is a functional of $p$, namely
+  \[
+    \cE[p] = - \sum_{x\in\Omega} p(x)\log p(x).
+  \]
+  Equivalently, using the counting measure $\nu$ on $\Omega$, we can write
+  \[
+    \cE[p] = -\int_\Omega p(x) \log p(x) \d\nu(x).
+  \]
+  \begin{align*}
+    \int_\Omega \frac{\partial\cE}{\partial p}(x)\phi(x) \dint x
+    &= \left[ \frac{\d}{\d \epsilon} \cE[p +  \epsilon\phi] \right]_{\epsilon=0} \\
+    &= \left[ -\frac{\d}{\d \epsilon} 
+    \big( p(x) + \epsilon\phi(x) \big) 
+    \log \big(p(x) + \epsilon\phi(x) \big) 
+    \right]_{\epsilon=0} \\
+    &= -\int_\Omega \left( 
+    \frac{p(x)\phi(x)}{p(x)+\epsilon\phi(x)}
+    + \frac{\epsilon\phi(x)}{p(x) + \epsilon\phi(x)}
+    + \phi(x)\log\big( p(x) + \epsilon\phi(x) \big)
+    \right) \d x \\
+    &= -\int_\Omega \left( 1 + \log p(x) \right) \phi(x) \dint x.
+  \end{align*}
+  Thus, $(\partial\cE/\partial p)(x) = -1 -\log p(x)$.
+\end{example}
+
+
+Here we consider data dependent priors---seemingly data dependent (i.e. dependent on X) but the whole model is conditional on $X$ implicitly, so there is no issue.
+If prior depended on $y$ then there is a problem, at least, violates Bayesian first principles (using the data twice such that a priori and a posteriori same amount of information).
+
+We used the true Fisher information. \citet{efron1978assessing} say favour the observed information instead. Does this change if we use MLE $\hat f$ instead? Probably not... we don't use MLE anyway!
+
+https://stats.stackexchange.com/questions/179130/gaussian-process-proofs-and-results
+
+https://stats.stackexchange.com/questions/268429/do-gaussian-process-regression-have-the-universal-approximation-property

@@ -23,7 +23,7 @@ To discuss derivatives of the log-likelihood function for $\theta\in\Theta$, we 
   Let $\cV$ and $\cW$ be two normed spaces, and $\cU \subseteq \cV$ be an open subset.
   A function $f:\cU\to\cW$ is called \emph{Fréchet differentiable} at $x \in \cU$ if there exists a bounded, linear operator $T:\cV\to\cW$ such that 
   \[
-    \lim_{h\to 0} \frac{\big\Vert f(x+v) - f(x) - T v \big\Vert_{\cW}}{\norm{v}_\cV} = 0
+    \lim_{v\to 0} \frac{\big\Vert f(x+v) - f(x) - T v \big\Vert_{\cW}}{\norm{v}_\cV} = 0
   \]
   If this relation holds, then the operator $T$ is unique, and we write $\d f(x) := T$ and call it the \emph{Fréchet derivative} or \emph{Fréchet differential} of $f$ at $x$.
   If $f$ is differentiable at every point $\cU$, then $f$ is said to be \emph{differentiable} on $\cU$.
@@ -32,6 +32,16 @@ To discuss derivatives of the log-likelihood function for $\theta\in\Theta$, we 
 \begin{remark}
   Since $\d f(x)$ is a bounded, linear operator, by Lemma X, it is also continuous. 
 \end{remark}
+
+\begin{remark}
+  While many authors in the calculus of variations literature write the Fréchet derivative as derivative between Banach spaces, the definition also applies to Hilbert spaces.
+  On the other hand, in the functional analysis literature, it is presented as derivatives in Hilbert spaces.
+  A. V. Balakrishnan, Applied Functional Analysis. Springer, 1976.
+  Extension of Wirtinger's Calculus to Reproducing Kernel Hilbert Spaces and the Complex Kernel LMS Pantelis Bouboulis, Sergios Theodoridis .
+  For Gateaux derivative, $\cV$ need only be a vector space, while $\cW$ a topological space.
+  For continuous linear functionals on $\bbR$ then this is fine.
+\end{remark}
+
 
 The intuition here is similar to that of regular differentiability, that the linear operator $T$ well approximates the change in $f$ at $x$ (the numerator), relative to the change in $x$ (the denominator)---the fact that the limit exists and is zero, it must mean that the numerator converges faster to zero than the denominator does.
 In Landau notation, we have the familiar expression $f(x+h) = f(x) + \d f(x) h + o(h)$, that is, the tangent line to $f$ at $x$ gives the best linear approximation to $f$ near $x$.
@@ -168,5 +178,147 @@ That is, for any $b,b'\in\Theta$, we have
 \begin{align}\label{eq:fisher-linear-functional}
   \cI(\theta)(b,b') = \ip{\cI(\theta), b \otimes b'}_{\Theta\otimes\Theta}.
 \end{align}
-We call this the Fisher information for $\theta$ evaluated at two points $b$ and $b'$ in $\Theta$.
-Setting $\theta_b = \ip{\theta,b}_\Theta$ for some $b\in\Theta$, we may view this also as the Fisher information between two continuous, linear functionals of $\theta$.\hltodo[This part seems sketchy.]{}
+\hltodo[This part seems sketchy.]{We call this the Fisher information for $\theta$ evaluated at two points $b$ and $b'$ in $\Theta$}.
+Setting $\theta_b = \ip{\theta,b}_\Theta$ for some $b\in\Theta$, we may view this also as the Fisher information between two continuous, linear functionals of $\theta$.
+That is, $\cI(\theta)(x,\cdot)$ and $\cI(\theta)(\cdot,x')$ are both \hltodo[I think it is, because derivatives are continuous]{continuous}, linear functionals on $\Theta$, and thus belong to the continuous dual space $\Theta'$.
+By the Riesz representation theorem, $\cI(\theta)(x,\cdot) = \ip{\cdot,b}$ for some $b\in\Theta$...
+
+\subsection{Tensor product spaces}
+\hltodo{Move this to Chapter 2}
+
+\begin{definition}[Tensor products]
+  Let $x_1\in\cH_1$ and $x_2\in\cH_2$ be two elements of two real Hilbert spaces.
+  Then, the tensor product $x_1 \otimes x_2:\cH_1\times\cH_2\to\bbR$, is a bilinear form defined as
+  \[
+    (x_1\otimes x_2)(y_1,y_2) = \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2}
+  \]
+  for any $(y_1,y_2)\in\cH_1\times\cH_2$.
+\end{definition}
+
+\begin{definition}[Tensor product space]
+  The tensor product space $\cH_1\otimes\cH_2$ is the completion of the space
+  \[
+    \cA = \left\{ \sum_{j=1}^J x_{1j} \otimes x_{2j} \,\Bigg\vert\, x_{1j}\in\cH_1, x_{2j}\in\cH_2, J \in \bbN \right\}
+  \]
+  with respect to the norm induced by the inner product
+  \[
+    \left\langle  \sum_{j=1}^J x_{1j} \otimes x_{2j},  \sum_{k=1}^K y_{1k} \otimes y_{2k} \right\rangle_\cA = \sum_{j=1}^J\sum_{k=1}^K \ip{x_{1j},y_{1k}}_{\cH_1} \ip{x_{2j},y_{2k}}_{\cH_2}.
+  \]
+\end{definition}
+
+An operator interpretation of the tensor product.
+For each pair of elements $(x_1,x_2) \in \cH_1\times\cH_2$, we define the operator $A:\cH_1\to\cH_2$ in the following way:
+\begin{align*}
+  A_{x_1,x_2}:\cH_1&\to\cH_2 \\
+  y_1&\mapsto \ip{x_1,y_1}_{\cH_1}x_2
+\end{align*}
+For some $y_1\in\cH_1$ and $y_2\in\cH_2$, we have that
+\begin{align*}
+  \ip{A_{x_1,x_2}(y_1),y_2}_{\cH_2} 
+  &= \big\langle \ip{x_1,y_1}_{\cH_1}x_2 , y_2 \big\rangle_{\cH_2} \\
+  &= \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2} \\
+  &= (x_1\otimes x_2)(y_1,y_2).
+\end{align*}
+It is seen that the tensor product $x_1\otimes x_2$ is is associated with the rank one operator $B:\cH_1'\to\cH_2$ defined by $z \mapsto z(x_1)x_2$ with $z = \ip{x_1,\cdot}_{\cH_1}$.
+We write $B = x_1 \otimes x_2$.
+\hltodo[From Wikipedia. But don't really get it, although it might explain the Fisher information between linear functionals.]{Therefore, this extends a linear identification between $\cH_1\otimes\cH_2$ and the space of finite-rank operators from $\cH_1'$ to $\cH_2$.}
+We now have three distinct interpretations of the tensor product:
+\begin{itemize}
+  \item \textbf{Bilinear form} (as defined in Definition 3.5). 
+  \begin{align*}
+    x_1 \otimes x_2:\cH_1 \times \cH_2 &\to \bbR \\
+    (y_1,y_2) &\mapsto \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2}
+  \end{align*}
+  for $x_1,y_1\in\cH_1$ and $x_2,y_2\in\cH_2$.
+  \item \textbf{Operator}.
+  \begin{align*}
+    x_1 \otimes x_2:\cH_1 &\to \cH_2 \\
+    y_1 &\mapsto \ip{x_1,y_1}_{\cH_1}x_2
+  \end{align*}  
+  \item \textbf{General form} (as an element in the tensor space).
+  \[
+    x_1 \otimes x_2 \in \cH_1 \otimes \cH_2.
+  \]
+\end{itemize}
+
+\subsection{Random elements in a Hilbert space}
+
+\hltodo{Move this to Chapter 2}
+
+Let $\cH$ be a real Hilbert space. 
+We can define a metric on $\cH$ using $D(x,x') = \norm{x-x'}_\cH$, where the norm on $\cH$ is the norm induced by the inner product.
+A collection $\Sigma$ of subsets of $\cH$ is called a \emph{$\sigma$-algebra} if $\emptyset \in \Sigma$, $S \in \Sigma$ implies its complement $S^c \in \Sigma$, and $S_j\in\Sigma$, $j\geq 1$ implies $\bigcup_{j=1}^\infty S_j \in \Sigma$.
+The smallest $\sigma$-algebra containing all open subsets of $\cH$ is called the \emph{Borel $\sigma$-algebra}, and its members the Borel sets.
+Denote by $\cB(\cH)$ the Borel $\sigma$-algebra of $\cH$.
+The metric space $(\cH,D)$ is called \emph{separable} if it has a countable dense subset, i.e., there are $x_1,x_2,\cdots$ in $\cH$ such that the closure $\overline{\{x,_1,x_2,\cdots\}} = \cH$.
+
+A function $\nu:\Sigma\to[0,\infty]$ is called a \emph{measure} if it satisfies
+\begin{itemize}
+  \item \textbf{Non-negativity}. $\nu(S) \geq 0$ for all $S$ in $\Sigma$
+  \item \textbf{Null empty set}. $\nu(\emptyset) = 0$
+  \item \textbf{$\sigma$-additivity}. For all countable, mutually disjoint sets $\{S_i\}_{i=1}^\infty$,
+  \[
+    \nu\left(\bigcup_{i=1}^\infty S_i \right) = \sum_{i=1}^\infty \nu(S_i)
+  \] 
+\end{itemize}
+A measure $\nu$ on $\big(\cH,\cB(\cH)\big)$ is called a \emph{Borel measure} on $\cH$.
+We shall only concern ourselves with finite Borel measures. 
+In addition, if $\nu(\cH) = 1$ then $\nu$ is a \emph{(Borel) probability measure} and the measure space $\big(\cH,\cB(\cH),\nu\big)$ is a \emph{(Borel) probability space}.
+
+Let $(\Omega,\cE,\Prob)$ be a probability space.
+We say that a mapping $X:\Omega\to\cH$ is a \emph{random element} in $\cH$ if $X^{-1}(B)\in\cE$ for every Borel set, i.e., $X$ is a function such that for every $B\in\cB(\cH)$, its preimage $X^{-1}(B) = \{\omega \in \Omega \,|\, X(\omega) \in B \}$ lies in $\Sigma$.
+This is simply a generalised version of the definition of random variables in regular Euclidean space.
+From this definition, we can also properly define random functions $f$ in some Hilbert space of functions $\cF$.
+In any case, every random element $X$ induces a probability measure on $\cH$ defined by
+\[
+  \nu(B) = \Prob\big(X^{-1}(B)\big) = \Prob\big( \omega \in \Omega | X(\omega) \in B  \big) = \Prob(X \in B).
+\]
+The measure $\nu$ is called the \emph{distribution} of $X$.
+The \emph{density} $\pi$ of $X$ is a measurable function with the property that
+\[
+  \Prob(X \in B) = \int_{X^{-1}(B)} \omega \dint\Prob(\omega) = \int_B \pi(x) \dint\nu(x).
+\]
+
+\begin{definition}[Mean vector]
+  Let $\nu$ be a Borel probability measure on a real Hilbert space $\cH$.
+  Supposing that a random element $X$ of $\cH$ is \emph{integrable}, that is to say
+  \[
+    \E \norm{X}_\cH = \int_\cH \norm{x}_\cH \dint\nu(x) < \infty,
+  \]
+  then the unique element $\mu\in\cH$ satisfying 
+  \[
+    \ip{\mu,x'} = \int_\cX \ip{x,x'}_\cX \dint\nu(x) = \E\ip{X,x'}_\cH
+  \]
+  for all $x' \in \cH$ is called the \emph{mean vector}. 
+\end{definition}
+
+\begin{definition}[Covariance operator]
+  Let $\nu$ be a Borel probability measure on a real Hilbert space $\cH$.
+  Suppose that a random element $X$ of $\cH$ is \emph{square integrable}, i.e., $\E \norm{X}_\cH^2 < \infty$, and let $\mu$ be the mean vector of $X$.
+  Then the \emph{covariance operator} $C$ is defined by the mapping
+  \begin{align*}
+    C:\cH &\to \cH \\
+    x &\mapsto \E\big[\ip{X - \mu, x}_{\cH}(X - \mu) \big].
+  \end{align*}
+  The covariance operator $C$ is also an element of $\cH\otimes\cH$ that satisfies
+  \begin{align*}
+    \ip{C,x\otimes x'}_{\cH\otimes\cH} 
+    &= \int_\cH \ip{z-\mu, x}_\cH\ip{z-\mu,x'}_\cH \dint\nu(z) \\
+    &= \E\big[\ip{X-\mu,x}_\cH \ip{X-\mu,x'}_\cH\big]
+  \end{align*}
+  for all $x,x'\in\cH$.
+\end{definition}
+
+From the definition of the covariance operator, we see that it induces a symmetric, bilinear form, which we shall denote by $\Cov:\cH\times\cH\to\bbR$, through
+\begin{align*}
+  \ip{Cx,x'}_\cH 
+  &= \big\langle\E\big[\ip{X - \mu, x}_{\cH}(X - \mu) \big], x' \big\rangle_\cH \\
+  &= \E\big[\ip{X-\mu,x}_\cH \ip{X-\mu,x'}_\cH\big] \\
+  &=: \Cov(x,x').
+\end{align*}
+
+\begin{definition}[Gaussian vectors]
+  A random element $X$ is called \emph{Gaussian} if $\ip{X,x}_\cH$ has a normal distribution for all fixed $x\in\cH$.
+  A Gaussian vector $X$ is characterised by its mean element $\mu\in\cH$ and its covariance $C\in\cH\otimes\cH$.
+\end{definition}
+

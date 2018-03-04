@@ -48,7 +48,7 @@ where $\alpha \in \bbR$ is an intercept and $f$ is in an RKHS $\cF$ with kernel 
 	\begin{align*}
 		\d L(\cdot|\by,\btheta)
 		&= - \frac{1}{2} \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \d (k_{x_i}k_{x_j} - y_jk_{x_i} - y_ik_{x_j} + y_iy_j )  \\
-		&= - \frac{1}{2} \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} (k_{x_j} \d k_{x_i}  + k_{x_i}\d k_{x_j} - y_j\d k_{x_i} - y_i\d k_{x_j} )
+		&= - \frac{1}{2} \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} (k_{x_j} \d k_{x_i}  + k_{x_i}\d k_{x_j} - y_j\d k_{x_i} - y_i\d k_{x_j} ).
 %		&= - \frac{1}{2} \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \Big(\phi(x_i)k_{x_j}(v) + \phi(x_j)k_{x_i}(v) - \phi(x_i)y_j - \phi(x_j)y_i \Big)
 	\end{align*}
 %	where we had made the substitution $\nabla k_x(v) = \phi(x)$. 
@@ -58,7 +58,7 @@ where $\alpha \in \bbR$ is an intercept and $f$ is in an RKHS $\cF$ with kernel 
 		&= - \frac{1}{2} \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} (\d k_{x_j} \d k_{x_i}  + \d k_{x_i}\d k_{x_j}) \\
 		&= - \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \cdot \d k_{x_i} \d k_{x_j}
 	\end{align*}
-	since the derivative of $\d k_{x}$ is zero as it is the derivative of a constant.
+	since the derivative of $\d k_{x}$ is zero (it is the derivative of a constant).
 	We can then calculate the Fisher information to be
 	\begin{align*}
 		\cI(v) = -\E \big[ \d^2 L(v|\by,\btheta) \big] 
