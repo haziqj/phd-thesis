@@ -4,67 +4,59 @@ This generalisation allows us to extend the concept of Fisher information to reg
 The score and Fisher information is derived in a familiar manner, but extra care is required when taking derivatives with respect to Hilbert space objects.  
 
 Let $Y$ be a random variable with density in the parametric family $\{p(\cdot|\theta) \,|\, \theta \in \Theta \}$, where $\Theta$ is now assumed to be a Hilbert space with inner product $\ip{\cdot,\cdot}_\Theta$.
-If $p(Y|\theta) > 0$\hltodo[Why wouldn't it be >0 ?]{}, the log-likelihood function of $\theta$ is the real-valued function $L(\cdot|Y):\Theta\to\bbR$ defined by $\theta \mapsto \log p(Y|\theta)$. 
-To discuss derivatives of the log-likelihood function for $\theta\in\Theta$, we require a generalisation of the concept of differentiability from real-valued functions of a single, real variable, as is common in calculus, to functions between Banach spaces.
-
-%\begin{definition}[Directional derivative and gradient]
-%  Let ($\cH$, $\ip{\cdot,\cdot}_\cH$) be an inner product space, and consider a function $g:\mathcal H \rightarrow \mathbb R$. 
-%  Denote the directional derivate of $g$ in the direction $z$ by $\nabla_z g$, that is, 
-%	\[
-%		\nabla_z g(x) = \lim_{\delta \rightarrow 0} \frac{g(x + \delta z) - g(x)}{\delta}.
-%	\]
-%	The gradient of $g$, denoted by $\nabla g$, is the unique vector field satisfying 
-%	\[
-%		\langle \nabla g(x), z \rangle_{\mathcal H} = \nabla_z g(x), \ \ \ \forall x,z \in \mathcal H.
-%	\]
-%\end{definition}
+\hltodo[Why wouldn't it be >0 ?]{If $p(Y|\theta) > 0$}, the log-likelihood function of $\theta$ is the real-valued function $L(\cdot|Y):\Theta\to\bbR$ defined by $\theta \mapsto \log p(Y|\theta)$. 
+To discuss derivatives of the log-likelihood function for $\theta\in\Theta$, we require a generalisation of the concept of differentiability from real-valued functions of a single, real variable, as is common in calculus, to functions between Hilbert spaces.
 
 \begin{definition}[Fréchet derivative]
-  Let $\cV$ and $\cW$ be two normed spaces, and $\cU \subseteq \cV$ be an open subset.
+  Let $\cV$ and $\cW$ be two Hilbert spaces, and $\cU \subseteq \cV$ be an open subset.
   A function $f:\cU\to\cW$ is called \emph{Fréchet differentiable} at $x \in \cU$ if there exists a bounded, linear operator $T:\cV\to\cW$ such that 
   \[
     \lim_{v\to 0} \frac{\big\Vert f(x+v) - f(x) - T v \big\Vert_{\cW}}{\norm{v}_\cV} = 0
   \]
   If this relation holds, then the operator $T$ is unique, and we write $\d f(x) := T$ and call it the \emph{Fréchet derivative} or \emph{Fréchet differential} of $f$ at $x$.
-  If $f$ is differentiable at every point $\cU$, then $f$ is said to be \emph{differentiable} on $\cU$.
+  If $f$ is differentiable at every point $\cU$, then $f$ is said to be \emph{(Fréchet) differentiable} on $\cU$.
 \end{definition}
 
 \begin{remark}
-  Since $\d f(x)$ is a bounded, linear operator, by Lemma X, it is also continuous. 
+  Since $\d f(x)$ is a bounded, linear operator, by \hltodo{Lemma X}, it is also continuous. 
 \end{remark}
 
 \begin{remark}
-  While many authors in the calculus of variations literature write the Fréchet derivative as derivative between Banach spaces, the definition also applies to Hilbert spaces.
-  On the other hand, in the functional analysis literature, it is presented as derivatives in Hilbert spaces.
-  A. V. Balakrishnan, Applied Functional Analysis. Springer, 1976.
-  Extension of Wirtinger's Calculus to Reproducing Kernel Hilbert Spaces and the Complex Kernel LMS Pantelis Bouboulis, Sergios Theodoridis .
-  For Gateaux derivative, $\cV$ need only be a vector space, while $\cW$ a topological space.
-  For continuous linear functionals on $\bbR$ then this is fine.
+  While the Fréchet derivative is most commonly defined as derivatives of functions between Banach spaces,  the definition itself also applies to Hilbert spaces.
+  Since our main focus are RKHSs, it is presented as such, and we follow the definitions supplied in \citet[Definition 3.6.5]{balakrishnan1981applied} and \citet[Section 6]{bouboulis2011extension}.
 \end{remark}
 
+\begin{remark}
+  The use of the open subset $\cU$ in the definition above for the domain of the function $f$ is so that the notion of $f$ being differentiable is possible even without having it defined on the entire space $\cV$.
+\end{remark}
 
-The intuition here is similar to that of regular differentiability, that the linear operator $T$ well approximates the change in $f$ at $x$ (the numerator), relative to the change in $x$ (the denominator)---the fact that the limit exists and is zero, it must mean that the numerator converges faster to zero than the denominator does.
-In Landau notation, we have the familiar expression $f(x+h) = f(x) + \d f(x) h + o(h)$, that is, the tangent line to $f$ at $x$ gives the best linear approximation to $f$ near $x$.
-The limit in the definition is meant in the usual sense of convergence of functions with respect to the norms of $\cV$ and $\cW$.
-Of course, we may use Fréchet derivatives in Hilbert spaces too by using the inner product norm of the space.
+The intuition here is similar to that of regular differentiability, in that the linear operator $T$ well approximates the change in $f$ at $x$ (the numerator), relative to the change in $x$ (the denominator)---the fact that the limit exists and is zero, it must mean that the numerator converges faster to zero than the denominator does.
+In Landau notation, we have the familiar expression $f(x+v) = f(v) + \d f(x)(v) + o(v)$, that is, the derivative of $f$ at $x$ gives the best linear approximation to $f$ near $x$.
+Note that the limit in the definition is meant in the usual sense of convergence of functions with respect to the norms of $\cV$ and $\cW$.
 
-For the avoidance of doubt, $\d f(x)$ is not a vector in $\cW$, but is an element of the set of bounded, linear operators from $\cV$ to $\cW$, denoted $\L(\cV,\cW)$.
+For the avoidance of doubt, $\d f(x)$ is not a vector in $\cW$, but is an element of the set of bounded, linear operators from $\cV$ to $\cW$, denoted $\L(\cV;\cW)$.
 That is, if $f:\cU\to\cW$ is a differentiable function at all points in $\cU\subseteq\cV$, then its derivative is a linear map
 \begin{align*}
-  \d f: \cU &\to \text{L}(\cV,\cW) \\
+  \d f: \cU &\to \text{L}(\cV;\cW) \\
   x &\mapsto \d f(x).
 \end{align*}
-It follows that this function may also have a derivative, which by definition will be a linear map as well:
+It follows that this function may also have a derivative, which by definition will be a linear map as well.
+This is the \emph{second Fréchet derivative} of $f$, defined by
 \begin{align*}
-  \d^2 f: \cU &\to \text{L}\big(\cV,\text{L}(\cV,\cW)\big) \\
+  \d^2 f: \cU &\to \text{L}\big(\cV;\text{L}(\cV;\cW)\big) \\
   x &\mapsto \d^2f(x).
 \end{align*}
-The space on the righthand side is identified with the Banach space $\L(\cV \times \cV, \cW)$ of all continuous bilinear maps from $\cV$ to $\cW$.
-In other words, an element $\phi\in \text{L}\big(\cV,\text{L}(\cV,\cW)\big)$ is identified with $\psi \in \text{L}(\cV \times \cV, \cW)$ such that for all $x,y\in\cV$, $\phi(x)(y) = \psi(x,y)$.
-Simply put, a function $\phi$ linear in $x$ with $\phi(x)$ linear in $y$ is the same as a bilinear function $\psi$ in $x$ and $y$.
+To make sense of the space on the right-hand side, consider the following argument.
+\begin{itemize}
+  \item Take any $\phi(\cdot) \in \text{L}\big(\cV;\text{L}(\cV;\cW)\big)$. For all $v\in\cV$, $\phi(v)\in\text{L}(\cV;\cW)$, and $\phi(v)$ is linear in $v$.
+  \item Since $\phi(v)\in\text{L}(\cV;\cW)$, it is itself a linear operator taking elements from $\cV$ to $\cW$. We can write it as $\phi(v)(\cdot)$ for clarity.
+  \item So, for any $v'\in\cV$, $\phi(v)(v')\in\cW$, and it depends linearly on $v'$ too. Thus, given any two $v,v'\in\cV$, we obtain an element $\phi(v)(v')\in\cW$ which depends linearly on both $v$ and $v'$.
+  \item It is therefore possible to identify $\phi \in \text{L}\big(\cV;\text{L}(\cV;\cW)\big)$ with an element $\psi \in \text{L}(\cV \times \cV, \cW)$ such that for all $v,v'\in\cV$, $\phi(v)(v') = \psi(v,v')$.
+\end{itemize}
+To summarise, there is an isomorphism between the space on the right-hand side and the space $\L(\cV \times \cV, \cW)$ of all continuous bilinear maps from $\cV$ to $\cW$.
 The second derivative $\d^2 f(x)$ is therefore a bounded, bilinear operator from $\cV\times\cV$ to $\cW$.
 
-Another closely related type of differentiability is the concept of \emph{Gâteaux differentials}, which is the formalism of functional derivatives in calculus of variations.
+Another closely related type of differentiability is the concept of \emph{Gâteaux differentials}, which is the formalism of the functional derivative in calculus of variations.
 Let $\cV$, $\cW$ and $\cU$ be as before, and consider the function $f:\cU\to\cW$.
 
 \begin{definition}[Gâteaux derivative]
@@ -79,12 +71,20 @@ Let $\cV$, $\cW$ and $\cU$ be as before, and consider the function $f:\cU\to\cW$
 \end{definition}
 
 \begin{remark}
-  The space $(\cV,\cW)$ of operators from $\cV$ to $\cW$ is not a topological space, and there is no obvious way to define a topology on it.
-  Consequently, we cannot consider the Gâteaux derivative of the Gâteaux derivative.
-  Furthermore, unlike the Fréchet derivative, which is by definition a linear operator, the Gâteaux derivative may fail to satisfy the additive condition of linearity\footnote{Although, for all scalars $\lambda \in \bbR$, the Gâteaux derivative is homogenous: $\partial_{\lambda v}f(x) = \lambda \partial_v f(x)$.}.
-  Finally, even if it is linear, it may fail to depend continuously on $v$ if $\cV$ and $\cW$ are infinite dimensional.
+  For Gâteaux derivatives, $\cV$ need only be a vector space, while $\cW$ a topological space.
+  \citet[p. 55]{tapia1971diff} wrote that for quite some time analysis was simply done using the topology of the real line when dealing with functionals.
+  As a result, important concepts such as convergence could not be adequately discussed.
+%  For continuous linear functionals on $\bbR$ then this is fine.  
 \end{remark}
 
+\begin{remark}[\color{colblu}Tapia, 1971, p. 52]
+  The space $(\cV,\cW)$ of operators from $\cV$ to $\cW$ is not a topological space, and there is no obvious way to define a topology on it.
+  Consequently, we cannot consider the Gâteaux derivative of the Gâteaux derivative.
+\end{remark}
+
+Unlike the Fréchet derivative, which is by definition a linear operator, the Gâteaux derivative may fail to satisfy the additive condition of linearity\footnote{Although, for all scalars $\lambda \in \bbR$, the Gâteaux derivative is homogenous: $\partial_{\lambda v}f(x) = \lambda \partial_v f(x)$.}.
+Even if it is linear, it may fail to depend continuously on some $v'\in\cV$ if $\cV$ and $\cW$ are infinite dimensional.
+In this sense, Fréchet derivatives are more demanding than Gâteaux derivatives.
 Nevertheless, the reason we bring up Gâteaux differentials is that it may motivate higher-order Fréchet differentials.
 First note the connection between the two, by again considering the function $f:\cU\to\cW$.
 
@@ -164,14 +164,14 @@ The Fisher information $\cI(\theta)$ at $\theta\in\Theta$ is defined to be
 \[
   \cI(\theta) = -\E[\d^2 L(\theta|Y)] \in \Theta \otimes \Theta.
 \]
-or \hltodo[Is this required?]{alternatively}
-\begin{align*}
-  \cI(\theta) 
-  &= \E[\d L(\theta|Y) \otimes \d L(\theta|Y)] \\ %\in \Theta \otimes \Theta 
-  &= \E[\ip{\nabla L(\theta|Y), \cdot}_{\Theta} \otimes \ip{\nabla L(\theta|Y), \cdot}_{\Theta}] \\
-  &= \E\ip{\nabla L(\theta|Y) \otimes \nabla L(\theta|Y), \cdot}_{\Theta\otimes\Theta} \\
-  &= \ip{\E[\nabla L(\theta|Y) \otimes \nabla L(\theta|Y)], \cdot}_{\Theta\otimes\Theta}.
-\end{align*}
+%or \hltodo[Is this required?]{alternatively}
+%\begin{align*}
+%  \cI(\theta) 
+%  &= \E[\d L(\theta|Y) \otimes \d L(\theta|Y)] \\ %\in \Theta \otimes \Theta 
+%  &= \E[\ip{\nabla L(\theta|Y), \cdot}_{\Theta} \otimes \ip{\nabla L(\theta|Y), \cdot}_{\Theta}] \\
+%  &= \E\ip{\nabla L(\theta|Y) \otimes \nabla L(\theta|Y), \cdot}_{\Theta\otimes\Theta} \\
+%  &= \ip{\E[\nabla L(\theta|Y) \otimes \nabla L(\theta|Y)], \cdot}_{\Theta\otimes\Theta}.
+%\end{align*}
 
 Since $\cI(\theta) \in \Theta \otimes \Theta$ we may view it also as a bilinear form. 
 That is, for any $b,b'\in\Theta$, we have

@@ -1,3 +1,15 @@
+\begin{definition}[Directional derivative and gradient]
+  Let ($\cH$, $\ip{\cdot,\cdot}_\cH$) be an inner product space, and consider a function $g:\mathcal H \rightarrow \mathbb R$. 
+  Denote the directional derivate of $g$ in the direction $z$ by $\nabla_z g$, that is, 
+	\[
+		\nabla_z g(x) = \lim_{\delta \rightarrow 0} \frac{g(x + \delta z) - g(x)}{\delta}.
+	\]
+	The gradient of $g$, denoted by $\nabla g$, is the unique vector field satisfying 
+	\[
+		\langle \nabla g(x), z \rangle_{\mathcal H} = \nabla_z g(x), \ \ \ \forall x,z \in \mathcal H.
+	\]
+\end{definition}
+
 \begin{definition}[Functional derivative]
   Given a manifold $M$ representing continuous/smooth functions $\rho$ with certain boundary conditions, and a functional $F:M\to\bbR$, the functional derivative of $F[\rho]$ with respect to $\rho$, denoted $\partial F/\partial\rho$, is defined by
   \begin{align*}
