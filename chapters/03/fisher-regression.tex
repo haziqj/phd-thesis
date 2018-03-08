@@ -36,9 +36,10 @@ where $\alpha \in \bbR$ is an intercept and $f$ is in an RKHS $\cF$ with kernel 
 		&= \langle \phi(x), u \rangle_{\cV}.
 	\end{align*}
     Since clearly $\partial_u k_x(v)$ is a continuous linear operator for any $u\in\cV$, it is bounded, so the Fréchet derivative exists and $\d k_x(v) = \partial k_x(v)$.
-	Thus, the gradient is $\nabla k_x(v) = \phi(x)$ by definition. 
+%	Thus, the gradient is $\nabla k_x(v) = \phi(x)$ by definition. 
 	Let $\by = \{y_1,\dots,y_n\}$, and denote the hyperparameters of the regression model by $\btheta = \{ \alpha,\bPsi,\eta \}$.
-	Without loss of generality, assume $\alpha = 0$; otherwise we can always add back $\alpha$ to $y$ later.
+	Without loss of generality, assume $\alpha = 0$; even if not, we can always add back $\alpha$ to the $y_i$'s later.
+	Regardless, both $\alpha$ and $\by$ are constant in the differential of $L(v|\by, \btheta)$.
 	The log-likelihood of $v$ is given by
 	\begin{align*}
 		L(v|\by,\btheta) 
@@ -47,7 +48,7 @@ where $\alpha \in \bbR$ is an intercept and $f$ is in an RKHS $\cF$ with kernel 
 	and the score by
 	\begin{align*}
 		\d L(\cdot|\by,\btheta)
-		&= - \frac{1}{2} \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \d (k_{x_i}k_{x_j} - y_jk_{x_i} - y_ik_{x_j} + y_iy_j )  \\
+		&= - \frac{1}{2} \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \cdot \d (k_{x_i}k_{x_j} - y_jk_{x_i} - y_ik_{x_j} + y_iy_j )  \\
 		&= - \frac{1}{2} \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} (k_{x_j} \d k_{x_i}  + k_{x_i}\d k_{x_j} - y_j\d k_{x_i} - y_i\d k_{x_j} ).
 %		&= - \frac{1}{2} \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \Big(\phi(x_i)k_{x_j}(v) + \phi(x_j)k_{x_i}(v) - \phi(x_i)y_j - \phi(x_j)y_i \Big)
 	\end{align*}
@@ -62,13 +63,14 @@ where $\alpha \in \bbR$ is an intercept and $f$ is in an RKHS $\cF$ with kernel 
 	We can then calculate the Fisher information to be
 	\begin{align*}
 		\cI(v) = -\E \big[ \d^2 L(v|\by,\btheta) \big] 
-		&=\E \left[ \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \cdot \langle \phi(x_i), \cdot \rangle_{\cV} \langle \phi(x_j), \cdot \rangle_{\cV} \right] \\
-		&= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \cdot \E\langle \phi(x_i) \otimes \phi(x_j), \cdot \rangle_{\cV\otimes\cV}  \\		
+		&=\E \left[ \sum_{i=1}^n\sum_{j=1}^n \psi_{ij}  \langle \phi(x_i), \cdot \rangle_{\cV} \langle \phi(x_j), \cdot \rangle_{\cV} \right] \\
+		&= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij}  \langle \phi(x_i) \otimes \phi(x_j), \cdot \rangle_{\cV\otimes\cV}  \\		
 		&=\sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \cdot \phi(x_i) \otimes \phi(x_j).
 %		&\rlap {\color{gray}\text{by substituting $\nabla k_x(f) = h(\cdot,x)$, the expectation}} \\
 %		&\rlap {\color{gray}\text{is free of $f$}} 
 	\end{align*}	 	
 	Here, we had treated $\phi(x_i) \otimes \phi(x_j)$ as a bilinear operator, since $\cI(v) \in \cV \otimes \cV$ as well.
+	Also, the expectation is free of the random variable under expectation (i.e., $\by$), which makes the second line possible.
 	
 	By taking the canonical feature $\phi(x)=h(\cdot,x)$, we have that $\phi \equiv h(\cdot,x):\cX\to\cF \equiv \cV$ and therefore for $f\in\cF$, the reproducing property gives us $f(x) = \ip{h(\cdot,x),f}_\cF$, so the formula for $\cI(f) \in \cF \otimes \cF$ follows.
 \end{proof}
@@ -77,39 +79,39 @@ The above lemma gives the form of the Fisher information for $f$ in a rather abs
 Consider the following example of applying Lemma \eqref{thm:fisherregf} to obtain the Fisher information for a standard linear regression model.
 
 \begin{example}[Fisher information for linear regression]
-  As before, suppose model \eqref{eq:model1} subject to its assumptions hold.
+  As before, suppose model \eqref{eq:model1} subject to \eqref{eq:model1ass} and $f\in\cF$, an RKHS.
   For simplicity, we assume iid errors, i.e. $\bPsi = \psi \bI_n$.
   Let $\cX = \bbR^p$, and the feature space $\cV = \bbR^p$ be equipped with the usual dot product $\ip{\cdot,\cdot}_\cV:\cV \otimes \cV \to \bbR$ defined by $v^\top v$.
-  Consider also the feature map $\phi:\cX \to \cV$ defined by $\phi(x)=x$.
-  For some $\beta \in \cV$, the linear regression model is such that $f(x) = x^\top \beta = \ip{\phi(x),\beta}_\cV$.
+  Consider also the identity feature map $\phi:\cX \to \cV$ defined by $\phi(\bx)=\bx$.
+  For some $\boldsymbol\beta \in \cV$, the linear regression model is such that $f(\bx) = \bx^\top \boldsymbol\beta = \ip{\phi(\bx),\boldsymbol\beta}_\cV$.
   Therefore, according to Lemma \eqref{thm:fisherregf}, the Fisher information for $\beta$ is
   \begin{align*}
-    \cI(\beta) 
-    &= \sum_{i=1}^n\sum_{j=1}^n \psi \phi(x_i) \otimes \phi(x_j) \\
-    &= \psi \sum_{i=1}^n\sum_{j=1}^n x_i \otimes x_j \\
-    &= \psi \bX^\top \bX,
+    \cI(\boldsymbol\beta) 
+    &= \sum_{i=1}^n\sum_{j=1}^n \psi \cdot \phi(\bx_i) \otimes \phi(\bx_j) \\
+    &= \psi \sum_{i=1}^n\sum_{j=1}^n \bx_i \otimes \bx_j \\
+    &= \psi \bX^\top \bX.
   \end{align*}
-  where $\bX$ is a $n \times p$ matrix containing the entries $x_1^\top,\dots,x_n^\top$ row-wise.
+  Note that the operation `$\otimes$' on two vectors in Euclidean space is simply their outer product.
+  The resulting $\bX$ is a $n \times p$ matrix containing the entries $\bx_1^\top,\dots,\bx_n^\top$ row-wise.
   This is of course recognised as the Fisher information for the regression coefficients in the standard linear regression model.
 \end{example}
 
-We can also compute the Fisher information for a linear functionals of $f$, and in particular for point evaluation functionals of $f$, thereby allowing us to compute the Fisher information between two points $f(x)$ and $f(x')$.
+We can also compute the Fisher information for linear functionals of $f$, and in particular, for point evaluation functionals of $f$, thereby allowing us to compute the Fisher information at two points $f(x)$ and $f(x')$.
 
 \begin{corollary}[Fisher information between two linear functionals of the regression function]\label{thm:fisherreglinfunc}
-	For our regression model as defined in \eqref{eq:model1} subject to \eqref{eq:model1ass} and $f$ belonging to a RKHS $\mathcal F$ with kernel $h$, the Fisher information between two points $f(x)$ and $f(x')$ is given by
+	For our regression model as defined in \eqref{eq:model1} subject to \eqref{eq:model1ass} and $f$ belonging to a RKHS $\mathcal F$ with kernel $h$, the Fisher information at two points $f(x)$ and $f(x')$
+%	, written $\cI\big(f(x),f(x')\big)$, is given by
+	is given by
 	\[
 		\cI\big(f(x),f(x')\big) = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(x,x_i)h(x',x_j).
 	\]
 \end{corollary}
 
-\newcommand{\mycomment}[2][10pt]{\hspace{#1}\rlap{\color{gray}\text{#2}}}
-
 \begin{proof}
   In a RKHS $\mathcal F$, the reproducing property gives $f(x) = \langle f, h(\cdot, x) \rangle_{\mathcal F}$ and in particular, $\langle h(\cdot,x), h(\cdot, x') \rangle_{\mathcal F} = h(x,x')$. 
   By \eqref{eq:fisher-linear-functional}, we have that
   \begin{align*}
-    \cI\big(f(x),f(x')\big) 
-    &= \cI\big(\langle f, h(\cdot, x) \rangle_{\cF},\langle f, h(\cdot, x') \rangle_{\cF} \big) \\
+    \cI(f)\big(h(\cdot,x),h(\cdot,x') \big)
     &= \big\langle \cI(f), h(\cdot, x) \otimes h(\cdot, x') \big\rangle_{\mathcal F \otimes \mathcal F} \\
     &= \Bigg\langle \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(\cdot,x_i) \otimes h(\cdot,x_j) \ , \ h(\cdot, x) \otimes h(\cdot, x') \Bigg\rangle_{\mathcal F \otimes \mathcal F} \\
     &= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \big\langle h(\cdot,x_i), h(\cdot, x) \big\rangle_{\mathcal F} \big\langle h(\cdot,x_j), h(\cdot, x') \big\rangle_{\mathcal F } \\
@@ -117,9 +119,10 @@ We can also compute the Fisher information for a linear functionals of $f$, and 
     %		&{\color{gray}\text{and $\forall b_1, b_2 \in \mathcal B$, $\langle a_1 \otimes b_1, a_2 \otimes b_2 \rangle_{\mathcal A \otimes \mathcal B} = \langle a_1, a_2 \rangle_{\mathcal A}\langle b_1, b_2 \rangle_{\mathcal B}$)}} \\
     &= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(x,x_i) h(x', x_j).
     %		\mycomment{(by the reproducing property)}
+%    &=: \cI\big(f(x),f(x')\big).
   \end{align*}
   The second to last line follows from the definition of the usual inner product for tensor spaces, and the last line follows by the reproducing property.
 \end{proof}
 
-An inspection of the formula in Corollary \eqref{thm:fisherreglinfunc} reveals the fact that the Fisher information for $f(x)$ is positive if and only if $h(x,x_i)\neq 0$ for at least one $i \in \{1,\dots,n \}$.
-\hltodo[Rewrite]{In practice, this condition is often satisfied for all $x$, so this result might be considered both remarkable and reassuring, because it suggests we can estimate $f$ over its entire domain, no matter how big, even though we only have a finite amount of data points.}
+An inspection of the formula in Corollary \ref{thm:fisherreglinfunc} reveals the fact that the Fisher information for $f(x)$, $\cI \big(f(x),f(x) \big)$, is positive if and only if $h(x,x_i)\neq 0$ for at least one $i \in \{1,\dots,n \}$.
+In practice, this condition is often satisfied for all $x$, so this result might be considered both remarkable and reassuring, because it suggests we can estimate $f$ over its entire domain, no matter how big, even though we only have a finite amount of data points.

@@ -7,6 +7,7 @@
   \usepackage{../../haziq_glossary}
   \addbibresource{../../bib/haziq.bib}
   \externaldocument{../01/.texpadtmp/introduction}
+  \externaldocument{../02/.texpadtmp/chapter2}
 \fi
 
 \begin{document}
@@ -23,7 +24,7 @@ It turns out, the entropy maximising prior for $f$ is Gaussian with mean chosen 
 Such a distribution on $f$ is called the I-prior distribution.
 
 \section{The traditional Fisher information}
-%\input{traditional-fisher.tex}
+\input{traditional-fisher.tex}
 
 \section{Fisher information for Hilbert space objects}
 \input{fisher-hilbert.tex}
@@ -43,22 +44,20 @@ Such a distribution on $f$ is called the I-prior distribution.
 
 \section{Conclusion}
 
-Goal is always to estimate $f \in \cF$ based on finite amount of data points.
-We know MLE is not so good, so want regularise by some prior.
-Unfortunately, $\cF$ might be huge such that data don't provide enough information for $f$ to be estimated sufficiently well.
-We ask: What is the smallest subset for which there is full information coming from the data? 
-Intuitively, it must be of $n$-dimensions, the sample size of the data.
-Rather separately, we found out what the Fisher information for $f$ looks like, and deduced that there is Fisher information only on an orthogonal projection of $\cF$ on to $\cF_n$.
-There is this flavour of dimension reduction---no need to consider the entire space, because this is futile, but just consider functions in the smaller subspace, as this is the best we can do anyway.
-Therefore, we just look in this subspace $\cF_n$ for an appropriate approximation to $f$. 
-In particular, what prior should I use? On the basis of maximum entropy principle, I figure out that the form of our I-prior.
-The connection of $\cF_n$ to Fisher information is this: $\cF_n$ is the subspace of $\cF$ for which Fisher information exists. Equipping this space with a particular inner product reveals that $\cF_n$ is a RKHS with reproducing kernel equal to the Fisher information for $f$.
+In estimating the regression function $f$ of the normal model in \eqref{eq:model1} subject to \eqref{eq:model1ass}, and $f$ belonging to an RKHS $\cF$, we established that the entropy maximising prior distribution for $f$ is Gaussian with some prior mean $f_0$ that needs to be chosen, and covariance function equal to the Fisher information for $f$.
+We call this the I-prior for $f$.
 
+The dimension of the function space $\cF$ could be huge, infinite-dimensional even, while the task of estimating $f\in\cF$ only relies on a finite amount of data point.
+However, we are certain that the Fisher information for $f$ exists only for the finite subspace $\cF_n$ as defined in \eqref{eq:subspaceFn}, and it is zero everywhere else.
+This suggests that the data only allows us to provide an estimation to the function $f\in\cF$ by considering functions in an (at most) $n$-dimensional subspace instead.
+In other words, it would be futile to consider functions in a space larger than this, and hence there is an element of dimension reduction here, especially when $\dim(\cF) \gg n$.
 
+By equipping the subspace $\cF_n$ with the inner product  \eqref{eq:Fninnerprod}, $\cF_n$ is revealed to be a RKHS with reproducing kernel equal to the Fisher information for $f$.
+Importantly, functions in the subspace $\cF_n$ are structurally similar to the functions in the parent space $\cF$.
+The problem at hand then boils down to a Gaussian process regression using the kernel of the RKHS $\cF_n$, which is the Fisher information for $f$.
 
 \section{Omitted}
 \input{03-omitted}
-
 
 \hClosingStuffStandalone
 \end{document}

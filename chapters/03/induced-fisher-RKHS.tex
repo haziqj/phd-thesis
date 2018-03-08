@@ -1,29 +1,63 @@
-\hltodo[Rewrite]{Next, let us see for which linear functionals of $f$ there is Fisher information.}
-Let 
-\begin{align}
+From Lemma \ref{thm:fisherregf}, the formula for the Fisher information uses $n$ points of the observed data $x_i\in\cX$.
+This seems to suggest that the Fisher information only exists for a finite subspace of the RKHS $\cF$.
+Indeed, this is the case, and we will be specific about the subspace for which there is Fisher information.
+Consider the following set, a similar one considered in the proof of the Moore-Aronszajn theorem (Theorem \ref{thm:moorea}):
+\begin{align}\label{eq:subspaceFn}
 \cF_n = \left\{ f:\cX \to \bbR \, \bigg| \, f(x) = \sum_{i=1}^n h(x,x_i)w_i, \ w_i \in \bbR, \ i=1,\dots,n \right\}.  
 \end{align}
 Since $h(\cdot,x_i) \in \cF$, then any $f \in \cF_n$ is also in $\cF$ by linearity, and thus $\cF_n$ is a subset of $\cF$.
 Further, $\cF_n$ is closed under addition and multiplication by a scalar, and is therefore a subspace of $\cF$.
+Unlike in Theorem \ref{thm:moorea}, this is a finite subspace with dimension $n$.
+
 Let $\cF_n^\bot$ be the orthogonal complement of $\cF_n$ in $\cF$.
-Then, any $r \in \cF_n^\bot$ is orthogonal to each of the $h(\cdot,x_i)$, so by the reproducing property of $h$, $r(x_i) = \ip{r,h(\cdot,x_i)}_\cF = 0$.
+By the orthogonal decomposition theorem, any regression function $f\in\cF$ can be uniquely decomposed as $f = f_n + r$, with $f_n \in \cF_n$ and $r \in \cF_n^\bot$, where $\mathcal F = \mathcal F_n \oplus  \cF_n^\bot$.
+We saw earlier in Theorem \ref{thm:moorea} that $\cF$ is the closure of $\cF_n$, so therefore $\cF$ is dense in $\cF_n$, and hence by Corollary \ref{thm:orthdecomp2} we have that $\cF_n^\bot = \{0\}$.
+Alternatively, we could have argued the following: any $r \in \cF_n^\bot$ is orthogonal to each of the $h(\cdot,x_i)\in\cF$, so by the reproducing property of $h$, $r(x_i) = \ip{r,h(\cdot,x_i)}_\cF = 0$.
+This seems to suggest the statement in the following corollary.
 
 \begin{corollary}
   With $g \in \cF$, the Fisher information for $g$ is zero if and only if $g\in\cF_n^\bot$, i.e. if and only if $g(x_1) = \cdots = g(x_n) = 0$.
 \end{corollary}
 
-Hence, $r$ cannot be estimated from the data and has to be estimated by a prior guess.
+\begin{proof}  
+  Let $\cI(f)$ be the Fisher information for $f$.
+  The Fisher information for $\ip{f,r}_\cF$ is
+  \begin{align*}
+    \cI(f)(r,r) 
+    &= \ip{\cI(f), r\otimes r}_{\cF\otimes\cF} \\
+    &= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \ip{h(\cdot,x_i),r}_\cF\ip{h(\cdot,x_j),r}_\cF \\
+    &= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} r(x_i)r(x_j).
+  \end{align*}
+  So if $r\in\cF_n^\bot$, then $r(x_1) = \cdots = r(x_n) = 0$, and thus the Fisher information at $r\in\cF_n^\bot$ is zero.
+  Conversely, if the Fisher information is zero, it must necessarily mean that $r(x_1) = \cdots = r(x_n) = 0$ since $\psi_{ij}>0$, and thus $r\in\cF_n^\bot$.
+%  Conversely, suppose that the Fisher information is zero, and that $r \notin \cF_n^\bot$. 
+%  Then, $r$ must be in $\cF_n$, i.e. $r=\sum_{i=1}^n h(\cdot,x_i) w_i$, for some $\{w_i\}$.
+%  We can then argue
+%  \begin{align*}
+%    \ip{r,f}_\cF
+%    &= \left\langle \sum_{i=1}^n h(\cdot,x_i) w_i, f \right\rangle_\cF \\
+%    &= \sum_{i=1}^n w_i \left\langle h(\cdot,x_i), f \right\rangle_\cF \\
+%    &= \sum_{i=1}^n w_if(x_i)
+%  \end{align*}
+\end{proof}
 
-\hltodo{OLD, but some stuff relevant here.}
-Note that any regression function $f\in \mathcal F$ can be decomposed into $f = f_n + r$, with $f \in \mathcal F_n$ and $r \in \mathcal R$ where $\mathcal F = \mathcal F_n + \mathcal R$ and $\mathcal F_n \perp \mathcal R$. Fisher information exists only on the $n$-dimensional subspace $\mathcal F_n$, while there is no information for $\mathcal R$. Thus, we will only ever consider the RKHS $\mathcal F_n \subset \mathcal F$ where there is Fisher information. Let $h$ be a real symmetric and positive definite function over $\mathcal X$ defined by $h(x,x') = I[f(x),f(x')]$. As we saw earlier, $h$ defines a RKHS, and it can be shown that the RKHS induced is in fact $\mathcal F_n$ spanned by the reproducing kernel on the dataset with the squared norm $||f||_{\mathcal F_n}^2 = w^\top\Psi^{-1}w$.
+The above corollary implies that the Fisher information for our regression function $f\in\cF$ exists only on the $n$-dimensional subspace $\mathcal F_n$. 
+More subtly, as there is no Fisher information for $r\in\cF_n^\bot$, $r$ cannot be estimated from the data.
+Thus, in estimating $f$, we will only ever consider the finite subspace $\mathcal F_n \subset \mathcal F$ where there is Fisher information about $f$.
+
+As it turns out, $\cF_n$ can be identified as a RKHS with reproducing kernel equal to the Fisher information for $f$.
+That is, the real, symmetric, and positive-definite function $h_n$ over $\cX\times\cX$ defined by $h_n(x,x') = \cI\big(f(x),f(x')\big)$ is associated to the RKHS which is $\cF_n$, equipped with the squared norm 
+$\norm{f}_{\cF_n}^2 = \sum_{i,j=1}^n w_i(\bPsi^{-1})_{ij}w_j$.
+%$||f||_{\mathcal F_n}^2 = w^\top\Psi^{-1}w$.
+This is stated in the next lemma.
 
 \begin{lemma}
-  Let $\cF_n$ be equipped with the inner product
-  \[
-    \ip{f_w, f_{w'}}_{\cF_n} = \bw^\top \bPsi^{-1} \bw',
-  \]
-  where $\bw = (w_1,\dots,w_n)$ and $f_w(x)=\sum_{i=1}^n h(x,x_i)w_i$.
-  Then, $h_n$ defined by
+  Let $\cF_n$ as in \eqref{eq:subspaceFn} be equipped with the inner product
+  \begin{align}\label{eq:Fninnerprod}
+    \ip{f, f'}_{\cF_n} = \sum_{i=1}^n\sum_{j=1}^n w_i(\bPsi^{-1})_{ij}w_j' = \bw^\top\bPsi\bw' 
+  \end{align}
+  for any two $f=\sum_{i=1}^n h(\cdot,x_i)w_i$ and $f'=\sum_{j=1}^n h(\cdot,x_j)w_j'$ in $\cF_n$.
+  Then, $h_n:\cX\times\cX\to\bbR$ as defined by
   \[
     h_n(x,x') = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij}h(x,x_i)h(x',x_j)
   \]
@@ -31,39 +65,35 @@ Note that any regression function $f\in \mathcal F$ can be decomposed into $f = 
 \end{lemma}
 
 \begin{proof}
-%  \hltodo{Prove $\cF_n$ is a Hilbert space?}
-%  \begin{align*}
-%    f_j = \sum h(\cdot,x_i)w_{ij}
-%  \end{align*}
-%  \begin{align*}
-%    \norm{f_j-f}_{\cF_n}^2 &= \ip{f_j-f,f_j-f} \\
-%    &\leq \ip{f_j,f_j} + \ip{f,f} \\
-%    &= w_j\Psi w_j + w\Psi w \\
-%    &= \Psi(w_jw_j^\top + ww^\top)
-%  \end{align*}
-  We simply need to prove the reproducing property of $h_n$.
+  Since $\cF_n$ is a finite subspace of $\cF$, it is complete, and thus a Hilbert space.
+  What remains to be proven is the reproducing property of $h_n$ for $\cF_n$.
   First note that by defining $w_j(x) = \sum_{k=1}^n \psi_{jk} h(x,x_k)$, we see that
   \begin{align*}
-    h_n(\cdot,x) 
-    &= \sum_{j=1}^n\sum_{k=1}^n \psi_{jk} h(\cdot,x_j) h(x,x_k) \\
-    &= \sum_{j=1}^n w_j(x)h(\cdot,x_j)
+    h_n(x,\cdot) 
+    &= \sum_{j=1}^n\sum_{k=1}^n \psi_{jk} h(x,x_j) h(\cdot,x_k) 
+    = \sum_{j=1}^n w_j(x)h(\cdot,x_j)
   \end{align*}
-  is an element of $\cF_n$.
-%  Now, we simply need to prove the reproducing property. 
+  Furthermore, writing $h(\cdot,x_j) = \sum_{k=1}^n \delta_{jk} h(\cdot,x_k)$, we see that $h(\cdot,x_j)$ is also an element of $\cF_n$, and in particular,
+  \[
+    \big\langle h(\cdot,x_i), h(\cdot,x_k) \big\rangle_{\cF_n} 
+    = \sum_{j=1}^n\sum_{l=1}^n \delta_{ij} (\bPsi^{-1})_{jl} \delta_{lk} = (\bPsi^{-1})_{ik}
+  \]
+  where $\delta$ is the Kronecker delta. 
   Denote by $\psi_{ij}^{-}$ the $(i,j)$th element of $\bPsi^{-1}$.
-  \hltodo[How?]{Since $\ip{h(\cdot,x_i), h(\cdot,x_j)}_{\cF_n} = \psi_{ij}^{-}$}, we have
+  A fact we will use later is $\sum_{k=1}^n \psi_{jk}\psi_{ik}^{-} = (\bPsi\bPsi^{-1})_{ji} = (\bI_n)_{ji} = \delta_{ji}$.  
+  Then,
   \begin{align*}
-    \ip{f_w, h_n(\cdot,x)}_{\cF_n}
+    \ip{f, h_n(x,\cdot)}_{\cF_n}
     &= \left\langle 
     \sum_{i=1}^n h(\cdot,x_i)w_i ,
-    \sum_{j=1}^n\sum_{k=1}^n \psi_{jk} h(\cdot,x_j) h(x,x_k)
+    \sum_{j=1}^n\sum_{k=1}^n \psi_{jk} h(x,x_j) h(\cdot,x_k)
     \right\rangle_{\cF_n} \\
-    &= \sum_{i=1}^n w_i \sum_{j=1}^n\sum_{k=1}^n \psi_{jk}h(x,x_k) 
-    \big\langle h(\cdot,x_i) , h(\cdot,x_j) \big\rangle_{\cF_n} \\
-    &= \sum_{i=1}^n w_i \sum_{j=1}^n\sum_{k=1}^n \psi_{jk}h(x,x_k)\psi_{ij}^{-} \\
-    &= \sum_{i=1}^n w_i \sum_{k=1}^n \delta_{ik}h(x,x_k) \\
+    &= \sum_{i=1}^n w_i \sum_{j=1}^n\sum_{k=1}^n \psi_{jk} h(x,x_j) 
+    \big\langle h(\cdot,x_i) , h(\cdot,x_k) \big\rangle_{\cF_n} \\
+    &= \sum_{i=1}^n w_i \sum_{j=1}^n\sum_{k=1}^n \psi_{jk}h(x,x_j)\psi_{ik}^{-} \\
+    &= \sum_{i=1}^n w_i \sum_{j=1}^n \delta_{ji}h(x,x_j) \\
     &= \sum_{i=1}^n w_i h(x,x_i) \\
-    &= f_w(x)
+    &= f(x).
   \end{align*}
   Therefore, $h_n$ is a reproducing kernel for $\cF_n$.
 \end{proof}

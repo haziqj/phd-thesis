@@ -1,3 +1,28 @@
+For many applications, it is of interest to evaluate the (total) Fisher information at the maximum likelihood estimate under a sampling scenario.
+However, the expectation required to calculate the Fisher information above cannot be done without knowing the true value of $\theta$.
+As a point of clarification, we ought to make the distinction between the \emph{expected} Fisher information and the \emph{observed} Fisher information under a sampling scenario.
+There are two quantities that are typically used as an approximation, and these are explained below.
+Let $y = \{y_1,\dots,y_n\}$ represent an independent and identically distributed observed sample from $p(\cdot|\theta)$.
+The maximum likelihood (ML) estimator $\hat\theta = \argmax_\theta L(\theta)$ for $\theta$ satisfies the first order conditions $S(\hat\theta) = 0$, where the log-likelihood function and the score function makes use of all of the observed samples, i.e. $L(\theta) = \sum_{i=1}^n \log p(y_i|\theta)$.
+In a sampling experiment, the total Fisher information (denoted $\cI_n(\theta)$) is just $n$ times the unit Fisher information, i.e. $\cI_n(\theta) = n\cI(\theta)$.
+Following \citet{efron1978assessing}, the expected Fisher information is defined to be $\cI_n(\hat\theta)$, while the observed Fisher information is
+\[
+  \hat\cI_n = -\sum_{i=1}^n \frac{\partial ^ 2}{\partial\theta^2} \log p(y_i|\theta) \bigg|_{\theta = \hat\theta} \ .
+\]
+which is also by definition the negative Hessian. 
+Note that 
+\[
+  \cJ(\theta) = -\frac{1}{n} \sum_{i=1}^n \frac{\partial ^ 2}{\partial\theta^2} \log p(y_i|\theta) 
+\]
+$\frac{1}{n}\hat\cI_n \to \cI(\hat\theta)$ in probability as $n\to\infty$ by the weak law of large numbers.
+Both of these quantities are used as replacements of the actual Fisher information about the ``true'' parameter.
+In the context of measuring curvatures, the expected Fisher information would be used \citep{pawitan2001all}, but in the context of efficient variance for ML estimates, the observed Fisher information is favoured \citep{efron1978assessing}.
+which by the law of large numbers, converges in probability to the expected Fisher information $\cI(\theta)$ as defined above.
+In practice, one would not be able to calculate $\cI$ without knowing the true value for $\theta$, so replacing occurrences of $\theta$ with  (the MLE)
+
+In particular, near the MLE, low Fisher information indicates a shallow maxima, while high observed information indicates a ``sharp'' maxima.
+A shallow maxima is an indication that many nearby values have similar log-likelihood, but a sharp maxima is indicative of a high confidence surrounding the MLE.
+
 \begin{definition}[Directional derivative and gradient]
   Let ($\cH$, $\ip{\cdot,\cdot}_\cH$) be an inner product space, and consider a function $g:\mathcal H \rightarrow \mathbb R$. 
   Denote the directional derivate of $g$ in the direction $z$ by $\nabla_z g$, that is, 
@@ -59,6 +84,6 @@ If prior depended on $y$ then there is a problem, at least, violates Bayesian fi
 
 We used the true Fisher information. \citet{efron1978assessing} say favour the observed information instead. Does this change if we use MLE $\hat f$ instead? Probably not... we don't use MLE anyway!
 
-https://stats.stackexchange.com/questions/179130/gaussian-process-proofs-and-results
+\url{https://stats.stackexchange.com/questions/179130/gaussian-process-proofs-and-results}
 
-https://stats.stackexchange.com/questions/268429/do-gaussian-process-regression-have-the-universal-approximation-property
+\url{https://stats.stackexchange.com/questions/268429/do-gaussian-process-regression-have-the-universal-approximation-property}

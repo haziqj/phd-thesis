@@ -1,64 +1,64 @@
 In the introductory chapter, we discussed that unless the regression function $f$ is regularised (for instance, using some prior information), the ML estimator of $f$ is likely to be inadequate.
 In choosing a prior distribution for $f$, we appeal to the principle of maximum entropy, which states that the probability distribution which best represents the current state of knowledge is the one with largest entropy.
-We aim to show the relationship between the Fisher information for $f$ and its maximum entropy prior distribution.
+In this section, we aim to show the relationship between the Fisher information for $f$ and its maximum entropy prior distribution.
 Before doing this, we recall the definition of entropy and derive the maximum entropy prior distribution for a parameter which has unrestricted support.
-
 Let $(\Theta,D)$ be a metric space and let $\nu = \nu_D$ be a volume measure induced by $D$ (e.g. Hausdorff measure).
 In addition, assume $\nu$ is a probability measure over $\Theta$ so that $(\Theta,\cB(\Theta),\nu)$ is a Borel probability space.
-Denote by $\pi$ a density of $\Theta$ relative to $\nu$.
 
 \begin{definition}[Entropy]
-  Suppose that $\int \pi\log\pi \dint \nu < \infty$, i.e., $\pi \log\pi$ is Lebesgue integrable and belongs to the space $\text{L}^1(\Theta,\nu)$.
-  The entropy of a distribution $\pi$ over $\Theta$ relative to a measure $\nu$ is defined as
+  Denote by $p$ a probability density over $\Theta$ relative to $\nu$.
+  Suppose that $\int p\log p \dint \nu < \infty$, i.e., $p \log p$ is Lebesgue integrable and belongs to the space $\text{L}^1(\Theta,\nu)$.
+  The entropy of a distribution $p$ over $\Theta$ relative to a measure $\nu$ is defined as
   \[
-    H(\pi) = - \int_\Theta \pi(t) \log \pi(t) \, \d\nu(t).
+    H(p) = - \int_\Theta p(\theta) \log p(\theta) \, \d\nu(\theta).
   \]
 \end{definition}
 
-In deriving the maximum entropy distribution, we will need to maximise the functional $H$ with respect to $\pi$.
-Typically this is done using calculus of variations, using functional derivatives.
+
+In deriving the maximum entropy distribution, we will need to maximise the functional $H$ with respect to $p$.
+Typically this is done using calculus of variations techniques of functional derivatives.
 Since we have already introduced concepts of Fréchet and Gâteaux derivatives earlier, we shall use those instead.
-Assume that the entropy $H$ is Fréchet differentiable at $\pi$, and that the probability densities $\pi$ under consideration belong to the Hilbert space of square integrable functions $\L^2(\Theta,\nu)$ with inner product $\ip{\theta,\theta'}_\Theta = \int \theta\theta' \dint\nu$.
-Now since the Fréchet derivative of $H$ at $\pi$ is assumed to exist, it is equal to the Gâteaux derivative, which can be computed as follows:
+Assume that the entropy $H$ is Fréchet differentiable at $p$, and that the probability densities $p$ under consideration belong to the Hilbert space of square integrable functions $\L^2(\Theta,\nu)$ with inner product $\ip{\theta,\theta'}_\Theta = \int \theta\theta' \dint\nu$.
+Now since the Fréchet derivative of $H$ at $p$ is assumed to exist, it is equal to the Gâteaux derivative, which can be computed as follows:
 \begin{align*}
-  \partial_\phi H(\pi) 
-  &= \lim_{t\to 0} \frac{H(\pi + t\phi) - H(\pi)}{t} \\
-  &= \frac{\d}{\d t} H(\pi + t\phi)  \bigg|_{t=0} \\
-  &= \frac{\d}{\d t} \left\{ - \int_\Theta \big(\pi(\theta) + t\phi(\theta)\big) \log \big(\pi(\theta) + t\phi(\theta)\big) \dint\nu(\theta) \right\} \Bigg|_{t=0} \\
-  &= - \int_\Theta \left\{ \frac{\d}{\d t} \big(\pi(\theta) + t\phi(\theta)\big) \log \big(\pi(\theta) + t\phi(\theta)\big) \bigg|_{t=0} \right\} \dint\nu(\theta)  \\
+  \partial_q H(p) 
+%  &= \lim_{t\to 0} \frac{H(p + tq) - H(p)}{t} \\
+  &= \frac{\d}{\d t} H(p + tq)  \bigg|_{t=0} \\
+  &= \frac{\d}{\d t} \left\{ - \int_\Theta \big(p(\theta) + tq(\theta)\big) \log \big(p(\theta) + tq(\theta)\big) \dint\nu(\theta) \right\} \Bigg|_{t=0} \\
+  &= - \int_\Theta \left\{ \frac{\d}{\d t} \big(p(\theta) + tq(\theta)\big) \log \big(p(\theta) + tq(\theta)\big) \bigg|_{t=0} \right\} \dint\nu(\theta)  \\
   &= -\int_\Theta \left( 
-    \frac{\pi(\theta)\phi(\theta)}{\pi(\theta)+t\phi(\theta)}
-    + \frac{t\phi(\theta)^2}{\pi(\theta) + t\phi(\theta)}
-    + \phi(\theta)\log\big( \pi(\theta) + t\phi(\theta) \big)
+    \frac{p(\theta)q(\theta)}{p(\theta)+tq(\theta)}
+    + \frac{tq(\theta)^2}{p(\theta) + tq(\theta)}
+    + q(\theta)\log\big( p(\theta) + tq(\theta) \big)
     \right)\bigg|_{t=0} \dint\nu(\theta) \\
-  &= -\int_\Theta \phi(\theta)\big(1 + \log \pi(\theta) \big) \dint\nu(\theta) \\
-  &= \left\langle -\big( 1 + \log \pi \big), \phi \right\rangle_\Theta = \d H(\pi)(\phi).   
+  &= -\int_\Theta q(\theta)\big(1 + \log p(\theta) \big) \dint\nu(\theta) \\
+  &= \left\langle -\big( 1 + \log p \big), q \right\rangle_\Theta \\
+  &= \d H(p)(q).   
 \end{align*}
-By definition, the gradient of $H$, denoted $\nabla H(\pi)$, is equal to $-\big( 1 + \log \pi \big)$.
-This agrees with the usual functional derivative of the entropy obtained via standard calculus of variations, which is usually denoted $\partial H / \partial \pi$.
-We now show another well known result from information theory, regarding the form of the maximum entropy distribution.
+By definition, the gradient of $H$ at $p$, denoted $\nabla H(p)$, is equal to $- 1 - \log p$.
+This agrees with the usual functional derivative of the entropy obtained via standard calculus of variations, which is usually denoted $\partial H / \partial p$.
+We now present another well known result from information theory, regarding the form of the maximum entropy distribution.
 
 \begin{lemma}[Maximum entropy distribution]\label{thm:maxentr}
-  Let $(\Theta,D)$ be a metric space and let $\nu=\nu_D$ be a volume measure induced by $D$.
-  Let $p$ be a probability density function on $(\cX,d)$.
+  Let $(\Theta,D)$ be a metric space, $\nu=\nu_D$ be a volume measure induced by $D$, and $p$ be a probability density function on $\Theta$.
   The entropy maximising density $\tilde p$, which satisfies
   \[
-    \argmax_{p\in\L^2(\Theta,\nu)} H(p) = - \int_\Theta \tilde p(t) \log \tilde p(t) \dint\nu(t),
+    \argmax_{p\in\L^2(\Theta,\nu)} H(p) = - \int_\Theta \tilde p(\theta) \log \tilde p(\theta) \dint\nu(\theta),
   \]
   subject to the constraints
   \begin{align*}
     \begin{gathered}
-      \E\big[D(t,t_0)^2\big] = \int_\Theta D(t,t_0)^2 p(t) \d\nu(t) = \const, \hspace{1cm} 
-      \int_\Theta p(t) \d\nu(t) = 1, \\
-      \text{and} \hspace{0.5cm} p(t) \geq 0, \forall t \in \Theta,
+      \E\big[D(\theta,\theta_0)^2\big] = \int_\Theta D(\theta,\theta_0)^2 p(\theta) \dint \nu(\theta) = \const, \hspace{1cm} 
+      \int_\Theta p(\theta) \dint \nu(\theta) = 1, \\
+      \text{and} \hspace{0.5cm} p(\theta) \geq 0, \forall \theta \in \Theta,
     \end{gathered}
   \end{align*}
   is the density given by
   \[
-    \tilde p(x) \propto \exp \left(-\half d(x,x_0)^2 \right),
+    \tilde p(\theta) \propto \exp \left(-\half D(\theta,\theta_0)^2 \right),
   \]
-  for some fixed $t_0\in\Theta$.
-  If $(\Theta,D)$ is a Euclidean space and $\nu$ a flat (Lebesgue) measure then $\tilde p$ represent a (multivariate) normal density.
+  for some fixed $\theta_0\in\Theta$.
+  If $(\Theta,D)$ is a Euclidean space and $\nu$ a flat (Lebesgue) measure then $\tilde p$ represents a (multivariate) normal density.
 \end{lemma}
 
 \begin{proof}[Sketch proof.]
@@ -66,42 +66,43 @@ We now show another well known result from information theory, regarding the for
   Set up the Langrangian
   \begin{align*}
       \cL(p,\gamma_1,\gamma_2) &= 
-      - \int_\Theta p(t) \log p(t) \dint\nu(t) +
-      \gamma_1 \left(\int_\Theta D(t,t_0)^2 p(t) \dint\nu(t) - \const \right) \\
-      &\phantom{==} + \gamma_2 \left( \int_\Theta p(t) \dint\nu(t) - 1 \right).
+      - \int_\Theta p(\theta) \log p(\theta) \dint\nu(\theta) +
+      \gamma_1 \left(\int_\Theta D(\theta,\theta_0)^2 p(\theta) \dint\nu(\theta) - \const \right) \\
+      &\phantom{==} + \gamma_2 \left( \int_\Theta p(\theta) \dint\nu(\theta) - 1 \right).
   \end{align*}
-  From the above illustration, taking derivatives with respect to $p$ yields
+  From the above illustration preceding the lemma, taking derivatives with respect to $p$ yields
   \begin{align*}
-    \frac{\partial}{\partial p} \cL(p,\gamma_1,\gamma_2)(t)
-    = - 1 - \log p(t) + \gamma_1 D(t,t_0)^2 + \gamma_2.
+    \frac{\partial}{\partial p} \cL(p,\gamma_1,\gamma_2)(\theta)
+    = - 1 - \log p(\theta) + \gamma_1 D(\theta,\theta_0)^2 + \gamma_2.
   \end{align*}
-  Set this to zero, and solve for $p(t)$:
+  Set this to zero, and solve for $p(\theta)$:
   \begin{align*}
-    p(t) &= \exp \left( \gamma_1 D(t,t_0)^2 + \gamma_2 - 1 \right) \\
-    &\propto \exp \left( \gamma_1 D(t,t_0)^2 \right)
+    p(\theta) &= \exp \left( \gamma_1 D(\theta,\theta_0)^2 + \gamma_2 - 1 \right) \\
+    &\propto \exp \left( \gamma_1 D(\theta,\theta_0)^2 \right).
   \end{align*}
-  which is positive for any values of $\gamma_1$ (and $\gamma_2$).
-  This density normalises to one if $\gamma_1 < 0$, so we choose $\gamma_1=-1/2$.
-  If $\Theta \equiv \bbR^m$ and that $\nu$ is the Lebesgue measure then $D(t,t_0)^2 = \norm{t-t_0}_{\bbR^m}^2$, so $\tilde p$ is recognised as a multivariate normal density centred at $x_0$ with identity covariance matrix.
+  This density is positive for any values of $\gamma_1$ (and $\gamma_2$), and it normalises to one if $\gamma_1 < 0$. 
+  As $\gamma_1$ can take any value less than zero, we choose $\gamma_1=-1/2$.
+  
+  Now, if $\Theta \equiv \bbR^m$ and $\nu$ is the Lebesgue measure, then $D(\theta,\theta_0)^2 = \norm{\theta-\theta_0}_{\bbR^m}^2$, so $\tilde p$ is recognised as a multivariate normal density centred at $\theta_0$ with identity covariance matrix.
 \end{proof}
 
 Returning to the normal regression model of \eqref{eq:model1} subject to \eqref{eq:model1ass}, we shall now derive the maximum entropy prior for $f$ in some RKHS $\cF$.
 One issue that we have is that the set $\cF$ is potentially ``too big'' for the purpose of estimating $f$, that is, for certain pairs of functions $\cF$, the data do not allow an assessment of whether one is closer to the truth than the other.
 In particular, the data do not contain information to distinguish between two functions $f$ and $g$ in $\cF$ for which $f(x_i) = g(x_i), i=1,\dots,n$.
 Since the Fisher information for a linear functional of a non-zero $f \in \cF_n$ is non-zero, there is information to allow a comparison between any pair of functions in $f_0 + \cF_n := \{f_0 + f \,|\, f_0 \in \cF, f \in \cF_n \}$.
-\hltodo[If data do not provide enough information, isn't the purpose of the prior to provide the missing information?]{A prior for $f$ therefore need not have support $\cF$, instead it is sufficient to consider priors with support $f_0 + \cF_n$}, where $f_0 \in \cF$ is fixed and chosen a priori as a ``best guess'' of $f$.
+A prior for $f$ therefore need not have support $\cF$, instead it is sufficient to consider priors with support $f_0 + \cF_n$, where $f_0 \in \cF$ is fixed and chosen a priori as a ``best guess'' of $f$.
 We now state and prove the I-prior theorem.
 
 \begin{theorem}[The I-prior]
-  Let $\cF$ be an RKHS with kernel $h$, and consider the finite dimensional affine subspace $\cF_n$ of $\cF$ equipped with an inner product as in Lemma 2.5.
+  Let $\cF$ be an RKHS with kernel $h$, and consider the finite dimensional subspace $\cF_n$ of $\cF$ equipped with an inner product as in Lemma 2.5.
 %  Suppose $\Theta$ is a finite dimensional affine subspace of a Hilbert space with norm $\norm{\cdot}_\Theta$. 
 %  We have a metric space $(\cF_n,d)$, where $d(f,f')^2 = \ip{f-f',f-f'}$.
   Let $\nu$ be a volume measure induced by the norm $\norm{\cdot}_{\cF_n} = \sqrt{\ip{\cdot,\cdot}_{\cF_n}}$.
-  With $f_0 \in \cF$, let $\Pi_0$ be the class of distributions $p$ such that 
+  With $f_0 \in \cF$, let $\cP_0$ be the class of distributions $p$ such that 
   \[
-    \E[\norm{f-f_0}^2_{\cF_n}] = \int_{\cF_n} \norm{f-f_0}^2_{\cF_n} \ p(f) \d\nu(f) = \const
+    \E\big[\norm{f-f_0}^2_{\cF_n}\big] = \int_{\cF_n} \norm{f-f_0}^2_{\cF_n} \, p(f) \dint \nu(f) = \const
   \]
-  Denote by $\tilde p$ the density of the entropy maximising distribution among the class of distributions within $\Pi_0$.
+  Denote by $\tilde p$ the density of the entropy maximising distribution among the class of distributions within $\cP_0$.
   Then, $\tilde p$ is Gaussian over $\cF$ with mean $f_0$ and covariance function equal to the reproducing kernel of $\cF_n$, i.e.
   \[
     \Cov\big(f(x),f(x')\big) = h_n(x,x').
@@ -110,19 +111,18 @@ We now state and prove the I-prior theorem.
 \end{theorem}
 
 \begin{proof}
-  Recall the fact that any $f \in \cF$ can be decomposed into $f = f_n + r_n$, with $f_n \in \cF_n$ and $r_n \in \cR_n$, the orthogonal complement of $\cF_n$.
-  Also recall that there is no Fisher information about any $r \in \cR_n$, and therefore it is not possible to estimate $r_n$ from the data.
-  Therefore, $p(r_n) = 0$, and one needs only consider distributions over $\cF_n$ when building distributions over $\cF$.
+  Recall the fact that any $f \in \cF$ can be decomposed into $f = f_n + r$, with $f_n \in \cF_n$ and $r \in \cF_n^\bot$.
+  Also recall that there is no Fisher information about any $r \in \cR_n$, and therefore it is not possible to estimate $r$ from the data.
+  Therefore, $p(r) = 0$, and one needs only consider distributions over $\cF_n$ when building distributions over $\cF$.
   
   The norm on $\cF_n$ induces the metric $D(f,f') = \norm{f - f'}_{\cF_n}$.
-  Thus, for $f \in \cF$ of the form $f = \sum_{i=1}^n h(\cdot,x_i)w_i$ (i.e., $f \in \cF_n$) and 
-  \hltodo[Prior mean should be in $\cF$?]{provided $f_0 \in \cF_n \subset \cF$},
+  \hltodo[Shouldn't $f$ and $f_0$ be in $\cF$?]{Thus, for $f,f_0 \in \cF$ of the forms $f = \sum_{i=1}^n h(\cdot,x_i)w_i$ and $f_0 = \sum_{i=1}^n h(\cdot,x_i)w_i$ (i.e., $f,f_0 \in \cF_n$)},
   \begin{align*}
-    d(f,f_0)^2 
+    D(f,f_0)^2 
     &= \norm{f - f_0}_{\cF_n}^2 \\
     &= \left\Vert \sum_{i=1}^n h(\cdot,x_i)w_i - \sum_{i=1}^n h(\cdot,x_i)w_{i0} \right\Vert_{\cF_n}^2 \\
     &= \left\Vert \sum_{i=1}^n h(\cdot,x_i)(w_i - w_{i0}) \right\Vert_{\cF_n}^2 \\
-    &= (\bw - \bw_0)^\top\bPsi^{-1} (\bw - \bw_0) 
+    &= (\bw - \bw_0)^\top\bPsi^{-1} (\bw - \bw_0).
 %    &= \bw^\top\bPsi^{-1}\bw - 2\bw^\top\bPsi^{-1}\bw' + \bw'^\top\bPsi^{-1}\bw'j
   \end{align*}
   Thus, by Lemma \ref{thm:maxentr}, the maximum entropy distribution for $f = \sum_{i=1}^n h(\cdot,x_i)w_i$ is
@@ -146,6 +146,7 @@ We now state and prove the I-prior theorem.
     &= \langle f_0,f' \rangle_{\cF},
   \end{align*}
   so $\mu \equiv f_0 = \sum_{i=1}^n h(\cdot,x_i)w_{i0}$. 
+  
   The covariance between two evaluation functionals of $f$ is shown to satisfy 
   \begin{align*}
     \Cov\big(f(x),f(x')\big) 
@@ -159,7 +160,7 @@ We now state and prove the I-prior theorem.
   \begin{align*}
     \Cov(h_x,h_{x'}) = \E[h_xh_{x'}] - \E[h_x]\E[h_{x'}],
   \end{align*}
-  where, making use of the reproducing property, the first term on the left hand side is
+  where, making use of the reproducing property of $h$ for $\cF$, the first term on the right-hand side is
   \begin{align*}
     \E[h_xh_{x'}] 
     &= \E \left[ 
@@ -172,7 +173,7 @@ We now state and prove the I-prior theorem.
     \right] \\
     &= \sum_{i=1}^n\sum_{j=1}^n (\psi_{ij} + w_{i0}w_{j0}) h(x,x_i) h(x',x_j),
   \end{align*}
-  while the second term on the left hand side is
+  while the second term on the right-hand side is
   \begin{align*}
     \E[h_x]\E[h_{x'}]
     &= \left( \sum_{i=1}^n w_{i0} \left\langle  h(\cdot,x), h(\cdot,x_i)  \right\rangle_{\cF} \right)
