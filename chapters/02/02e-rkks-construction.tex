@@ -4,22 +4,103 @@ As previously mentioned in the preliminaries, sums of kernels are kernels and pr
 This provides us a platform for constructing new RKHS from existing ones.
 To be more flexible in the specification of these new function spaces, we do not restrict ourselves to positive definite kernels only, thereby necessitating us to use the theory of RKKS.
 
-\subsection{Scaling an RKHS}
+\subsection{Sums, products and scaling of RKHS}
+
+Sums of positive definite kernels are also positive definite kernels, and the product of positive definite kernel is a positive definite kernel.
+They each, in turn, are associated with a RKHS that is defined by the sum of kernels and product of kernels, respectively.
+The two lemmas below formalise these two facts. 
+
+\begin{lemma}[Sum of kernels]\label{thm:sumkernels}
+  If $h_1$ and $h_2$ are kernels on $\cX_1$ and $\cX_2$ respectively, then $h = h_1 + h_2$ is a kernel on $\cX_1 \times \cX_2$.
+  Moreover, denote $\cF_1$ and $\cF_2$ the RKHS defined by $h_1$ and $h_2$ respectively.
+  Then $\cF = \cF_1 \oplus \cF_2$ is an RKHS defined by $h = h_1 + h_2$, where
+  \[
+    \cF_1 \oplus \cF_2 = \{ f:\cX_1\times\cX_2 \to\bbR \,|\, f = f_1 + f_2, f_1\in\cF_1 \text{ and } f_2\in\cF_2 \}.
+  \]
+  For all $f\in\cF$,
+  \[
+    \norm{f}_\cF^2 = \min_{f_1+f_2=f} \left\{ \norm{f_1}_{\cF_1}^2 + \norm{f_2}_{\cF_2}^2 \right\}.
+  \]
+\end{lemma}
+
+\begin{proof}
+  That $h_1+h_2$ is a kernel should be obvious, as the sum of two positive definite functions is also positive definite.
+  For a proof of the remaining statements, see \citet[Theorem 5]{berlinet2011reproducing}.
+\end{proof}
+
+\begin{lemma}[Products of kernels]\label{thm:prodkernels}
+  Let $\cF_1$ and $\cF_2$ be two RKHS of functions over $\cX_1$ and $\cX_2$, with respective reproducing kernels $h_1$ and $h_2$.
+  Then, $h = h_1 h_2$ is a kernel on $\cX_1 \times \cX_2$.
+  Moreover, the tensor product space $\cF_1 \otimes \cF_2$ is an RKHS with reproducing kernel $h$.
+\end{lemma}
+
+\begin{proof}
+  Fix $n\in\bbN$, and let $\bH_1$ and $\bH_2$ be the kernel matrices for $h_1$ and $h_2$ respectively.
+  Since these kernel matrices are symmetric and positive-definite by virtue of $h_1$ and $h_2$ being symmetric and positive-definite functions, we can write $\bH_1 = \bA^\top\bA$ and $\bH_1 = \bB^\top\bB$ for some matrices $\bA$ and $\bB$: perform an (orthogonal) eigendecomposition of each of the kernel matrices, and take square roots of the eigenvalues.
+  Let $\bH$ be the kernel matrix for $h = h_1h_2$.
+  With $x_i = (x_{i1}, x_{i2})$, its $(i,j)$ entries are
+  \begin{align*}
+    h(x_i,x_j)
+    &= h_1(x_{i1},x_{i2}) h_2(x_{j1},x_{j2}) \\
+    &= (\bA^\top\bA)_{ij}\cdot (\bB^\top\bB)_{ij} \\
+    &= \sum_{k=1}^n a_{ik}a_{jk} \sum_{l=1}^n b_{il}b_{jl},
+  \end{align*}
+  where we have denoted $b_{ij}$ and $c_{ij}$ to be the $(i,j)$th entries of $\bB$ and $\bC$ respectively 
+  Then,
+  \begin{align*}
+    \sum_{i=1}^n\sum_{j=1}^n h(x_i,x_j)
+    &= \sum_{k=1}^n \sum_{l=1}^n \sum_{i=1}^n \sum_{j=1}^n  \lambda_i \lambda_j a_{ik}a_{jk}b_{il}b_{jl} \\
+    &= \sum_{k=1}^n \sum_{l=1}^n \left(\sum_{i=1}^n \lambda_i a_{ik} b_{il} \right) \left( \sum_{j=1}^n  \lambda_j a_{jk}b_{jl} \right) \\
+    &= \sum_{k=1}^n \sum_{l=1}^n \left(\sum_{i=1}^n \lambda_i a_{ik} b_{il} \right)^2 \\
+    &\geq 0
+  \end{align*}
+  Again, for the remainder of the statement in the lemma, we refer to \citet[Theorem 13]{berlinet2011reproducing}.
+\end{proof}
+
+A familiar fact from linear algebra is realised here from Lemmas \ref{thm:sumkernels} and \ref{thm:prodkernels}: 
+%1) Multiplying a positive definite matrix by a positive constant results in a positive definite matrix; 
+1) the addition of positive definite matrices is a positive definite matrix; and 
+2) the \emph{Hadamard product}\footnotemark~of two positive definite matrices is a positive definite matrix.
+\footnotetext{The Hadamard product is an element-wise multiplication of two matrices $\bA$ and $\bB$ of identical dimensions, denoted $\bA \circ \bB$. That is, $(\bA \circ \bB)_{ij} = \bA_{ij}\bB_{ij}$.}
 
 The scale of an RKHS of functions $\cF$ over a set $\cX$ with kernel $h$ may be arbitrary.
-To resolve this issue, a scale parameter $\lambda\in\bbR$ for the kernel $h$ may be introduced, resulting in the RKHS denoted $\cF_\lambda$ with kernel $\lambda h$.
-The scale $\lambda$ will typically need to be estimated from the data.
+To resolve this issue, a scale parameter $\lambda\in\bbR$ for the kernel $h$ may be introduced, which will typically need to be estimated from the data. 
+If $h$ is a positive definite kernel on $\cX\times\cX$, and $\lambda \geq 0$ a scalar, then this yields a scaled RKHS $\cF_\lambda = \{\lambda f \,|\, f \in \cF \}$ with reproducing kernel $\lambda h$, where $\cF$ is the RKHS defined by $h$.
 
-Restricting $\lambda$ to the positive reals may be arbitrary and restrictive; in particular, we shall see when constructing new function spaces this positive restriction may turn out to be unsatisfactory.
-Without the positive restriction, the kernel may potentially be negative-definite.
-Therefore, the subsequent sections speak of RKKSs, instead of RKHSs, to account solely for the fact that $\lambda$ may be negative.
-All other properties of RKHSs should carry over to RKKSs, so sometimes we might overlook this distinction, and make references to RKHSs when instead RKKSs would be more suited to the context.
-$\phantom{1}$
+Restricting $\lambda$ to the positive reals is arbitrary and unnecessarily restrictive.
+Especially when considering sums and products of scaled RKHSs, having negative scale parameters also give additional flexibility.
+The resulting kernels from summation and/or multiplication with negative kernels may no longer be positive-definite, and in such cases, they give rise to RKKS instead.
+%Obviously, a negative scale parameter implies that $\lambda h$ is negative-definite.
+%Having negative scale parameters also give additional flexibility to polynomial and ANOVA RKKS, which we describe in the next subsections.
+%An immediate consequence of having negative scale parameters is that sums and products of kernels may no longer be positive-definite.
+
 \begin{remark}
-  As it turns out, for I-prior modelling, in cases where the RKHS is $\cF_\lambda$ with kernel $\lambda h$, then the sign of the single scale parameter $\lambda$ is unidentified.
-  Therefore, in such cases, we may restrict $\lambda\in\bbR^+$.
-  More on this in Chapter 4.
+  Recall that a RKKS $\cF$ of functions over $\cX$ can be uniquely decomposed as the difference between two RKHSs $\cF_+$ and $\cF_-$, and its associated Hilbert space $\cF_\cH$ is the RKHS $\cF_+ \oplus \cF_-$.
+  If it is important to note that both $\cF$ and $\cF_\cH$  contain identical functions over $\cX$, but their topologies are different.
+  That is to say, functions that are close with respect to the norm of $\cF$ may not be close to each other in the norm of $\cF_\cH$.
 \end{remark}
+
+
+%Without the positive restriction, the kernel may potentially be negative-definite.
+%Therefore, the subsequent sections speak of RKKSs, instead of RKHSs, to account solely for the fact that $\lambda$ may be negative.
+%All other properties of RKHSs should carry over to RKKSs, so sometimes we might overlook this distinction, and make references to RKHSs when instead RKKSs would be more suited to the context.
+%\begin{remark}
+%  As it turns out, for I-prior modelling, in cases where the RKHS is $\cF_\lambda$ with kernel $\lambda h$, then the sign of the single scale parameter $\lambda$ is unidentified.
+%  Therefore, in such cases, we may restrict $\lambda\in\bbR^+$.
+%  More on this in Chapter 4.
+%\end{remark}
+%Kreĭn spaces can be seen as a generalisation of Hilbert spaces, which caters for inner products not being positive definite.
+%To motivate the need for Kreĭn spaces, we first look at several operations on reproducing kernels and the resulting vector space.
+%\begin{lemma}[Scaling of kernels]\label{thm:scalingkernels}
+%  If $h$ is a kernel on $\cX$, and $\lambda \geq 0$ a scalar, then $\lambda h$ is a kernel.
+%  This yields a scaled RKHS $\cF_\lambda = \{\lambda f \,|\, f \in \cF \}$ with reproducing kernel $\lambda h$, where $\cF$ is the RKHS defined by $h$.
+%\end{lemma}
+%\begin{proof}
+%  Multiplying a positive definite function by a positive constant results in a positive definite function still, and thus defines a unique RKHS.
+%  The scaling of functions is seen through the fact that $\cF$ is the completion of the space spanned by the kernels, and hence $\cF_\lambda$ by the scaled kernels.
+%\end{proof}
+%The difference of kernels is not guaranteed to be a positive definite function.
+
 
 \subsection{The polynomial RKKS}
 
@@ -105,7 +186,7 @@ Here are two choices of $A$:
   \item $Af(x) = \sum_{x=1}^m f(x) / m =: \bar \alpha$. This implies $f(x) = \bar \alpha + \big( f(x) - \bar \alpha \big)$. The overall mean is $\mu = \sum_{j=1}^m \alpha_j/m$, which corresponds to the restriction $\sum_{j=1}^m \mu_j = 0$.
 \end{itemize}
 By definition, $AAf = A^2f = Af$, because averaging a constant returns that constant
-[Side note: This idempotent property of the linear operator $A$ on $f$ speaks to the possibility of it being somewhat like an \emph{orthogonal projection}, and indeed this is so---we shall return to this point later when we describe functional ANOVA decomposition].
+[Side note: This idempotent property of the linear operator $A$ on $f$ speaks to the possibility of it being an \emph{orthogonal projection}, and indeed this is so---we shall return to this point later when we describe functional ANOVA decomposition].
 We must have that $Af_t = A(I - A)f = Af - A^2f = 0$.
 The choice of A is arbitrary, as is the choice of restriction, so long as it satisfies the condition that $Af_c = 0$.
 
@@ -158,14 +239,14 @@ Consider the linear operator $A_k:\cF\to \cF_{-k}$, where $\cF_{-k}$ is a vector
 \begin{align}\label{eq:avgoper}
   A_k f = \int_{\cX_k} f(x_1,\dots,x_p) d\nu(x_k).
 \end{align}
-Thus, for the one-way ANOVA ($k=1$), we get
+Thus, for the one-way ANOVA ($p=1$), we get
 \begin{align}\label{eq:functionalanova1}
   f = 
   \greyoverbrace{\int_\cX f(x)\d\nu(x)}{f_0} 
   + 
   \greyoverbrace{\left( f - \int_\cX f(x)\d\nu(x) \right)}{f_1}
 \end{align}
-and for the two-way ANOVA ($k=2$), we have $f = f_0 + f_1 + f_2 + f_{12}$, with
+and for the two-way ANOVA ($p=2$), we have $f = f_0 + f_1 + f_2 + f_{12}$, with
 \begin{align*}
   f_0 &= \int_{\cX_1}\int_{\cX_2} f(x_1,x_2) \d\nu(x_1)\d\nu(x_2) \\
   f_1 &= \int_{\cX_2} \left( f(x_1,x_2) - \int_{\cX_1} f(x_1,x_2) \d\nu(x_1) \right) \d\nu(x_2)\\  
@@ -295,7 +376,7 @@ The ANOVA RKKS will be constructed by a similar manipulation of the individual k
 \end{definition}
 
 The construction an ANOVA RKKS is very very simple in through multiplication of univariate kernels.
-Expanding out equations \eqref{eq:anovarkks}, we see that it is in fact a sum of separable kernels with increasing orders of interaction:
+Expanding out equations \eqref{eq:anovarkks}, we see that it is in fact a sum of products of kernels with increasing orders of interaction:
 \begin{align*}
   h_\lambda(x,x') 
 %  &= \prod_{k=1}^p \big( 1 + \lambda_k h_k(x_k,x_k') \big) \\
@@ -305,8 +386,8 @@ Expanding out equations \eqref{eq:anovarkks}, we see that it is in fact a sum of
 It is now clear from the expansion that the ANOVA RKKS yields functions that resemble those with the ANOVA representation in \eqref{eq:functionalanova2}:
 The mean value of the function stems from the `1', i.e. it lies in an RKHS of constant functions; the main effects are represented by the sum of the individual kernels; the two-way interaction terms are represented by the second-order kernel interactions; and so on.
 
-One thing to note is that restricting the $\lambda$ parameters to the positive orthant might give unsatisfactory results---what if the effect of two functions are in truth opposing one another?
-These are handled through opposing signs of their respective scale parameters, thus  the need for working in RKKSs.
+%One thing to note is that restricting the $\lambda$ parameters to the positive orthant might give unsatisfactory results---what if the effect of two functions are in truth opposing one another?
+%These are handled through opposing signs of their respective scale parameters, thus  the need for working in RKKSs.
 
 \begin{example}
   Consider two RKKSs $\cF_k$ with kernel $\lambda_k h_k$, $k=1,2$.
@@ -327,10 +408,10 @@ Excluding certain terms of the ANOVA RKKS is equivalent to setting the scale par
 With this in mind, the ANOVA RKKS then gives us an objective way of model-building, from linear regression, to multilevel models, longitudinal models, and so on.
 %One thing's for sure---everything is ANOVA.
 
-\begin{remark}
-  Unfortunately, even if centred RKHSs are used as the building blocks of the ANOVA RKKS, the properties of the function represented by \eqref{eq:functionalanova2} may not be preserved.
-  In particular, any of the individual functions $f_\cK$, for $\cK$ in the power set, are not necessarily zero mean functions.
-  Furthermore, any two terms in the summand are generally not orthogonal.
-  \hltodo[What are advantages of using ANOVA? I feel this has not been addressed properly.]{Consequently, interpretation based on an ANOVA motivation may not be valid, but in spirit, they provide a conceptually strong basis for building new RKKSs from existing ones.}
-\end{remark}
+%\begin{remark}
+%  Unfortunately, even if centred RKHSs are used as the building blocks of the ANOVA RKKS, the properties of the function represented by \eqref{eq:functionalanova2} may not be preserved.
+%  In particular, any of the individual functions $f_\cK$, for $\cK$ in the power set, are not necessarily zero mean functions.
+%  Furthermore, any two terms in the summand are generally not orthogonal.
+%  \hltodo[What are advantages of using ANOVA? I feel this has not been addressed properly.]{Consequently, interpretation based on an ANOVA motivation may not be valid, but in spirit, they provide a conceptually strong basis for building new RKKSs from existing ones.}
+%\end{remark}
 

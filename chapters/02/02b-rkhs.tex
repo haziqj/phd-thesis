@@ -3,6 +3,13 @@ This is a subset of Hilbert spaces for which its evaluation functionals are cont
 The majority of this section, apart from defining RKHS, is to convince ourselves that each and every RKHS of functions can be specified solely through its reproducing kernel.
 To begin, we consider a fundamental linear functional on a Hilbert space of functions $\cF$, that assigns a value to $f \in \mathcal F$ for each $x \in \mathcal X$.
 
+\begin{figure}[htb]
+  \centering
+  \includegraphics[scale=0.22]{figure/hierarchy-spaces.png}
+  \caption[A hierarchy of vector spaces]{A hierarchy of vector spaces\footnotemark.}
+\end{figure}
+\footnotetext{Reproduced from the lecture slides of Dino Sejdinovic and Arthur Gretton entitled `Foundations of Reproducing Kernel Hilbert Spaces: Advanced Topics in Machine Learning', 2014. URL: \url{http://www.stats.ox.ac.uk/~sejdinov/teaching/atml14/Theory_slides2_2014.pdf}.}
+
 \begin{definition}[Evaluation functional]
 	Let $\mathcal F$ be a vector space of functions $f:\mathcal X \rightarrow \mathbb R$, defined on a non-empty set $\mathcal X$. 
 	For a fixed $x \in \mathcal X$, the functional $\delta_x:\mathcal F \rightarrow \mathbb R$ as defined by $\delta_x(f) = f(x)$ is called the (Dirac) evaluation functional at $x$.
@@ -18,41 +25,8 @@ It turns out, this is exactly what RKHS provide.
 	A Hilbert space $\cF$ of real-valued functions $f:\mathcal X \rightarrow \mathbb R$ on a non-empty set $\mathcal X$ is called a \emph{reproducing kernel Hilbert space} if the evaluation functional $\delta_x: f \mapsto f(x)$ is continuous (equivalently, bounded) on $\cF$, $\forall x \in \cX$. 
 \end{definition}
 
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[scale=0.22]{figure/hierarchy-spaces.png}
-  \caption{A hierarchy of vector spaces. Reproduced from the lecture slides of Dino Sejdinovic and Arthur Gretton entitled `Foundations of Reproducing Kernel Hilbert Spaces: Advanced Topics in Machine Learning', 2014. URL: \url{www.gatsby.ucl.ac.uk/~dino/teaching}.}
-\end{figure}
-
-%The continuity condition also represents the weakest condition required for both the existence of an inner product and the evaluation of every function in $\cF$ at every point in the domain $\cX$.
-While the continuity condition by definition is what makes an RKHS, it is neither easy to check this condition in practice, nor is it intuitive as to the meaning of its name.
-In fact, there isn't even any mention of what a reproducing kernel actually is.
-In order to benefit from the desirable continuity property of RKHS, we should look at this from another, more intuitive, perspective. 
-By invoking the Riesz representation theorem, we see that for all $x\in\cX$, there exists a unique element $h_x\in\cF$ such that
-\[
-  f(x) = \delta_x(f) = \ip{f,h_x}_\cF, \forall f \in \cF
-\]
-holds. 
-Since $h_x$ itself is a function in $\cF$, it holds that for every $x' \in \cX$ there exists a $h_{x'}\in\cF$ such that
-\[
-  h_{x}(x') = \delta_{x'}(h_{x}) = \ip{h_x,h_{x'}}_\cF.
-\]
-This leads us to the definition of a \emph{reproducing kernel} of an RKHS---the very notion that inspired its name.
-
-\begin{definition}[Reproducing kernels]\label{def:repkern}
-  Let $\mathcal F$ be a Hilbert space of functions over a non-empty set $\mathcal X$. A function $h:\mathcal X\times\mathcal X\rightarrow\mathbb R$ is called a reproducing kernel of $\mathcal F$ if $h$ satisfies
-  \begin{itemize}
-    \item $\forall x \in \mathcal X,\, h(\cdot, x) \in \mathcal F$; and
-    \item $\forall x \in \mathcal X, \, f \in \mathcal F, \, \langle f, h(\cdot, x) \rangle_{\mathcal F} = f(x)$ (the reproducing property).
-  \end{itemize}
-  In particular, for any $x, x' \in \mathcal X$,
-  \[
-  	h(x,x') = \langle h(\cdot, x), h(\cdot, x') \rangle_{\mathcal F}.
-  \]
-\end{definition}
-
-Continuity of evaluation functionals in an RKHS means that functions that are close in RKHS norm imply that they are also close pointwise.
-\hltodo[Not so sure why this is useful?]{It gives some reassurance when trying to estimate $f$ from $\cF$---just look at the size of the norm.}
+Continuity of evaluation functionals in an RKHS means that functions that are close in RKHS norm imply that they are also close pointwise, but the converse is not necessarily true.
+This gives some reassurance when trying to estimate $f$ from $\cF$ using the norm of $\cF$ as a criterion for selection.
 More formally,
 
 \begin{corollary}[Norm convergence implies pointwise convergence in RKHS]\label{thm:normpointconv}
@@ -76,98 +50,113 @@ More formally,
   \end{align*}
 \end{proof}
 
-Having defined an RKHS, there are several questions we might like the answer to: What is the relationship between a reproducing kernel and an RKHS? Can we speak to its existence and uniqueness? What other properties does it have?
-The rest of this subsection will be dedicated to discuss the following assertion.
+\hltodo{Insert figure squiggly line and smooth line.}
 
-\begin{theorem}[RKHS uniqueness]\label{thm:rkhsunique}
-  For every reproducing kernel Hilbert space $\cF$ of functions over a set $\cX$, there corresponds a unique, positive-definite reproducing kernel $\hXXR$.
-  Conversely, for every positive-definite function $\hXXR$, there corresponds a unique reproducing kernel Hilbert space $\cF$ that has $h$ as its reproducing kernel.
-\end{theorem}
+%The continuity condition also represents the weakest condition required for both the existence of an inner product and the evaluation of every function in $\cF$ at every point in the domain $\cX$.
+While the continuity condition by definition is what makes an RKHS, it is neither easy to check this condition in practice, nor is it intuitive as to the meaning of its name.
+In fact, there isn't even any mention of what a reproducing kernel actually is.
+In order to benefit from the desirable continuity property of RKHS, we should look at this from another, more intuitive, perspective. 
+By invoking the Riesz representation theorem, we see that for all $x\in\cX$, there exists a unique element $h_x\in\cF$ such that
+\[
+  f(x) = \delta_x(f) = \ip{f,h_x}_\cF, \forall f \in \cF
+\]
+holds. 
+Since $h_x$ itself is a function in $\cF$, it holds that for every $x' \in \cX$ there exists a $h_{x'}\in\cF$ such that
+\[
+  h_{x}(x') = \delta_{x'}(h_{x}) = \ip{h_x,h_{x'}}_\cF.
+\]
+This leads us to the definition of a \emph{reproducing kernel} of an RKHS---the very notion that inspired its name.
 
-In essence, there is a bijection between the set of positive-definite kernels and the set of reproducing kernel Hilbert spaces.
-We will take take apart this theorem and inspect its constituent claims.
-Firstly, on the definition of kernels and its positive-definiteness.
-
-\begin{definition}[Kernels]\label{def:kernel}
-  Let $\mathcal F$ be a Hilbert space (not necessarily a RKHS), $\mathcal X$ a non-empty set, and $\phi:\mathcal X \rightarrow \mathcal F$.   
-  A \emph{kernel} is defined to be function $\hXXR$ that satisfies
+\begin{definition}[Reproducing kernels]\label{def:repkern}
+  Let $\mathcal F$ be a Hilbert space of functions over a non-empty set $\mathcal X$. 
+  A symmetric, bivariate function $h:\mathcal X\times\mathcal X\rightarrow\mathbb R$ is called a \emph{kernel}, and it is a \emph{reproducing kernel} of $\mathcal F$ if $h$ satisfies
+  \begin{itemize}
+    \item $\forall x \in \mathcal X,\, h(\cdot, x) \in \mathcal F$; and
+    \item $\forall x \in \mathcal X, \, f \in \mathcal F, \, \langle f, h(\cdot, x) \rangle_{\mathcal F} = f(x)$ (the reproducing property).
+  \end{itemize}
+  In particular, for any $x, x' \in \mathcal X$,
   \[
-    h(x,x') = \langle \phi(x), \phi(x') \rangle_{\mathcal F}
+  	h(x,x') = \langle h(\cdot, x), h(\cdot, x') \rangle_{\mathcal F}.
   \]
-  $\forall x,x'\in\cX$.
-  The map $\phi$ is referred to as the \emph{feature map}, and $\cF$ the \emph{feature space}.
 \end{definition}
 
-\begin{lemma}[Positive-definiteness of kernels]\label{thm:posdef}
-  The kernel as defined in Definition \ref{def:kernel} is a symmetric and positive definite function, where a symmetric function $h:\mathcal X\times\mathcal X\rightarrow\mathbb R$ is said to be  positive definite if
-  \[
-    \sum_{i=1}^n\sum_{k=1}^n a_ia_jh(x_i, x_k) \geq 0.
-  \]
-  for all integers $n>1$, $\forall a_1, \dots, a_n \in \mathbb R$, and $\forall x_1, \dots, x_n \in \mathcal X$.
-\end{lemma}
+An important property for reproducing kernels of a RKHS is that they are positive-definite functions.
+That is, $\forall \lambda_1, \dots, \lambda_n \in \mathbb R$ and $\forall x_1, \dots, x_n \in \mathcal X$,
+\[
+  \sum_{i=1}^n\sum_{j=1}^n \lambda_i \lambda_j h(x_i, x_j) \geq 0.
+\]
+
+\begin{claim}[Reproducing kernels of RKHS are positive-definite]\label{thm:posdef}
+  Let $\hXXR$ be a reproducing kernel for a Hilbert space $\cF$.
+  Then $h$ is a symmetric and positive definite function.
+\end{claim}
 
 \begin{proof}
   \begin{align*}
-    \sum_{i=1}^n\sum_{k=1}^n a_ia_jh(x_i, x_k)	
-    &= \sum_{i=1}^n\sum_{k=1}^n \langle a_i\phi(x_i), a_k\phi(x_k) \rangle_{\mathcal F} \\
-    &= \Bigg\langle \sum_{i=1}^n a_i\phi(x_i), \sum_{k=1}^n a_k\phi(x_k) \Bigg\rangle_{\mathcal F} \\
-    &= \Bigg|\Bigg| \sum_{i=1}^n a_i\phi(x_i) \Bigg|\Bigg|_{\mathcal F}^2 \\
+    \sum_{i=1}^n\sum_{j=1}^n \lambda_i \lambda_j h(x_i, x_j)	
+    &= \sum_{i=1}^n\sum_{j=1}^n \lambda_i \lambda_j \langle  h(\cdot, x_i), h(\cdot, x_j) \rangle_{\mathcal F} \\
+    &= \Bigg\langle \sum_{i=1}^n \lambda_i h(\cdot, x_i), \sum_{j=1}^n \lambda_j h(\cdot, x_j) \Bigg\rangle_{\mathcal F} \\
+    &= \Bigg\Vert \sum_{i=1}^n \lambda_i h(\cdot, x_i) \Bigg\Vert_{\mathcal F}^2 \\
     & \geq 0
   \end{align*}
 \end{proof}
 
-\begin{corollary}[Positive-definiteness of reproducing kernels]
-  Reproducing kernels of a RKHS are positive definite. 
-%  For an RKKS, the reproducing kernel can be shown to be the difference between two positive definite kernels, but need not be itself positive definite.
-\end{corollary}
+\begin{remark}
+  In the kernel method literature, a \emph{kernel} $\hXXR$ is usually defined as the inner product between inputs in feature space.
+  That is, take $\phi:\cX\to\cV$, $x\mapsto\phi(x)$, where $\cV$ is a Hilbert space.
+  Then the kernel is defined as $h(x,x') = \ip{\phi(x),\phi(x')}_\cV$, for any $x,x'\in\cX$.
+  $\cV$ is known as the \emph{feature space} and $\phi$ the \emph{feature map}.
+  In many mathematical models involving feature space mappings, elucidation of the feature map and feature space is not necessary, and computation  is made simpler by the use of kernels (known as the \emph{kernel trick}).
+  Note that kernels defined in this manner are positive definite, while in this thesis, we opt for a more general definition allowing for non-positive kernels.
+\end{remark}
 
-\begin{proof}
-  Take $\phi: x \mapsto h(\cdot,x)$. 
-  By Definition \ref{def:kernel}, one has $h(x,x') = \langle h(\cdot, x), h(\cdot, x') \rangle_{\mathcal F}$, which is the reproducing property of the kernel in a RKHS, and this is positive-definite by Lemma \ref{thm:posdef}. 
-%  The second statement follows by a similar argument and by definition of a RKKS (see Definition \ref{def:krein}).
-  Incidentally, the $\phi$ as defined is known as the \emph{canonical feature map}.
-\end{proof}
+Introducing the following definition of the \emph{kernel matrix} (also known as the \emph{Gram matrix}) is useful at this point.
 
-We have established what a kernel is, and that reproducing kernels of an RKHS are positive-definite. 
-But do reproducing kernels always exist, and if so, are they unique to an RKHS?
-Lemmas \ref{thm:rkhsexist} and \ref{eq:rkhsunique} answer these questions in the positive.
+\begin{definition}[Kernel matrix]
+  Let $\{x_1,\dots,x_n\}$ be a sample of points, where each $x_i\in\cX$, and $h$ a kernel over $\cX$.
+  Define the \emph{kernel matrix} $\bH$ for $h$ as the $n \times n$ matrix with $(i,j)$ entries equal to $h(x_i,x_j)$.
+\end{definition}
 
-\begin{lemma}[Existence of reproducing kernels]\label{thm:rkhsexist}
+%By definition, the kernel matrix is a positive-definite matrix: $\ba^\top\bH\ba = \sum_{i=1}^n\sum_{j=1}^n a_ia_jh(x_i,x_j) \geq 0$ for any choice of $a\in\bbR^n$.
+
+Now, one might ask what the relationship between a reproducing kernel and a RKHS is.
+%there are several questions we might like the answer to: What is the relationship between a reproducing kernel and an RKHS? Can we speak to its existence and uniqueness? What other properties does it have?
+We assert the following:
+\begin{itemize}
+  \item \textbf{RKHS $\Leftrightarrow$ reproducing kernel}. For every RKHS $\cF$ of functions over a set $\cX$, there corresponds a unique, positive-definite reproducing kernel $\hXXR$, and vice-versa.
+  \item \textbf{P.d. function $\Rightarrow$ RKHS}. For every positive-definite function $\hXXR$, there corresponds a unique RKHS $\cF$ that has $h$ as its reproducing kernel.
+\end{itemize}
+In essence, there is a bijection between the set of positive-definite kernels and the set of reproducing kernel Hilbert spaces.
+The rest of this subsection is a discussion of this assertion, which is proven by the two theorems that follow.
+
+\begin{theorem}[RKHS uniqueness]\label{thm:rkhsunique}
   Let $\cF$ be a Hilbert space of functions over $\cX$.
-  $\cF$ is a RKHS if and only if $\cF$ has a reproducing kernel.  
-\end{lemma}
+  $\cF$ is a RKHS if and only if $\cF$ has a reproducing kernel $\hXXR$, and that $h$ is unique to $\cF$.
+\end{theorem}
 
 \begin{proof}
-  Suppose $\cF$ is a RKHS with kernel $h$.
-  Choose $\delta=\epsilon / \norm{h(\cdot,x)}_\cF$.
-  Then, for any $f \in \cF$ such that $\norm{f-g}_\cF < \delta$, we have
+  First we tackle existence, i.e., we prove that $\cF$ is a RKHS if and only if $\cF$ has a reproducing kernel.
+  Suppose $\cF$ is a Hilbert space of functions, and $\hXXR$ is a reproducing kernel for $\cF$.
+  Then, choosing $\delta=\epsilon / \norm{h(\cdot,x)}_\cF$, for any $f \in \cF$ such that $\norm{f-g}_\cF < \delta$, we have
   \begin{align*}
     \vert \delta_x (f) - \delta_x (g) \vert 
     &= \vert (f-g)(x) \vert \\
-    &= |\ip{f-g,h(\cdot,x)}_\cF| \hspace{1em} \rlap{\color{gray} (reproducing property)} \\
-    &\leq \norm{h(\cdot,x)}_\cF \cdot \norm{f-g}_\cF \hspace{1em} \rlap{\color{gray} (by Cauchy-Schwarz)} \\
+    &= |\ip{f-g,h(\cdot,x)}_\cF| \mycomment{(reproducing property)} \\
+    &\leq \norm{h(\cdot,x)}_\cF \cdot \norm{f-g}_\cF \mycomment{(by Cauchy-Schwarz)} \\
     &= \epsilon.
   \end{align*}
-  Thus, the evaluation functional is (uniformly) continuous on $\cF$.
-  To prove the reverse, follow the argument preceding Definition \ref{def:repkern}.
-\end{proof}
-
-\begin{lemma}[Uniqueness of reproducing kernels]\label{eq:rkhsunique}
-  The reproducing kernel $\hXXR$ of a RKHS $\cF$ of functions over $\cX$ is unique.
-\end{lemma}
-
-\begin{proof}
-  Assume that $\cF$ has two reproducing kernels $h_1$ and $h_2$. 
+  Thus, the evaluation functional is (uniformly) continuous on $\cF$, and by definition, $\cF$ is a RKHS.
+  Now suppose that $\cF$ is a RKHS, and $h$ is a kernel function over $\cX\times\cX$.
+  The reproducing property of $h$ is had by following the argument preceding Definition \ref{def:repkern}.
+ 
+  As for uniqueness, assume that the RKHS $\cF$ has two reproducing kernels $h_1$ and $h_2$. 
   Then, $\forall f\in\cF$ and $\forall x\in\cX$,
   \begin{align*}
     \ip{f,h_1(\cdot,x) - h_2(\cdot,x)}_\cF = f(x) - f(x) = 0.
   \end{align*}
-  In particular, if we take $f = h_1(\cdot,x) - h_2(\cdot,x)$, we obtain $\norm{h_1(\cdot,x) - h_2(\cdot,x)}^2_\cF = 0$
+  In particular, if we take $f = h_1(\cdot,x) - h_2(\cdot,x)$, we obtain $\norm{h_1(\cdot,x) - h_2(\cdot,x)}^2_\cF = 0$.
+  Thus, $h_1=h_2$.
 \end{proof}
-
-Naturally, having seen that every RKHS corresponds to a unique reproducing kernel, we ask whether the converse is true.
-That is, given a reproducing kernel, does it define a unique RKHS?
-Astoundingly, the answer is again positive, and this is stated by the much celebrated Moore-Aronszajn theorem below.
 
 \begin{theorem}[Moore-Aronszajn]\label{thm:moorea}
   If $\hXXR$ is a positive-definite function then there exists a unique RKHS whose reproducing kernel is $h$.

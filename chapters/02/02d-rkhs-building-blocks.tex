@@ -1,6 +1,7 @@
 This section describes what we refer to as the ``building block'' RKHS of functions.
 In the context of regression modelling, we may assume that the regression function lies in any one of these single RKHS, although it may be more appropriate to consider function spaces built upon these RKHS for more complex models.
 Construction of new function spaces from these building block RKHS will be discussed in the next section.
+\hltodo[Update graphics.]{}
 
 \subsection{The RKHS of constant functions}
 
@@ -73,7 +74,7 @@ We can show that the continuous dual space of $\cX$ is a RKHS which consists of 
 In many other literature, the kernel $h(x,x') = \ip{x,x'}_\cX$ is also known as the \emph{linear kernel}.
 The use of the term `canonical' is fitting not just due to the relation between a Hilbert space and its continuous dual space.
 Let $\phi:\cX\to\cV$ be the feature map from the space of covariates (inputs) to some feature space $\cV$.
-Suppose both $\cX$ and $\cV$ is a Hilbert space, then a kernel is defined as 
+Suppose both $\cX$ and $\cV$ are Hilbert spaces, then a kernel is defined as 
 \[
   h(x,x') = \ip{\phi(x),\phi(x')}_\cV.
 \]
@@ -83,9 +84,10 @@ The origin of a Hilbert space may be arbitrary, in which case a centring may be 
 We define the centred canonical RKHS as follows.
 
 \begin{definition}[Centred canonical RKHS]
-  Let $\cX$ be a Hilbert space, $\Prob$ be a probability measure over $\cX$, and $\mu\in\cX$ be the mean (i.e. $\E\ip{x,x'}_{\cX}  = \ip{\mu,x'}_{\cX}$ for all $x' \in \cX$) with respect to this probability measure.
+  Let $\cX$ be a Hilbert space, $\Prob$ be a probability measure over $\cX$, and $\mu\in\cX$ be the mean of a random element $X\in\cX$. 
+%  (i.e. $\E\ip{x,x'}_{\cX}  = \ip{\mu,x'}_{\cX}$ for all $x' \in \cX$) with respect to this probability measure.
   Define $(\cX - \mu)'$, the continuous dual space of $\cX - \mu$, to be the \emph{centred canonical RKHS}.
-  $(\cX - \mu)'$ consists of the centred linear functions $f_\beta(x)=\ip{x-\mu,\beta}_\cX$, for $\beta\in\cX$, such that $\E f_\beta(x) = 0$.
+  $(\cX - \mu)'$ consists of the centred linear functions $f_\beta(x)=\ip{x-\mu,\beta}_\cX$, for $\beta\in\cX$, such that $\E f_\beta(X) = 0$.
   The reproducing kernel of $(\cX - \mu)'$ is
   \[
     h(x,x') = \ip{x-\mu,x'-\mu}_\cX.
@@ -93,17 +95,17 @@ We define the centred canonical RKHS as follows.
 \end{definition}
 
 \begin{proof}
-  That the centred canonical RKHS consists of zero mean function, $\E f_\beta(x) = 0$, consider the following argument:
+  That the centred canonical RKHS consists of zero mean function, $\E f_\beta(X) = 0$, consider the following argument:
   \begin{align*}
-    \E f_\beta(x) 
-    &= \E \ip{x-\mu,\beta}_\cX \\
-    &= \E \ip{x,\beta}_\cX - \ip{\mu,\beta}_\cX,
+    \E f_\beta(X) 
+    &= \E \ip{X-\mu,\beta}_\cX \\
+    &= \E \ip{X,\beta}_\cX - \ip{\mu,\beta}_\cX,
   \end{align*}
-  and since $\E \ip{x,\beta}_\cX = \ip{\mu,\beta}_\cX$ for any $\beta\in\cX$, the results follows.
+  and since $\E \ip{X,\beta}_\cX = \ip{\mu,\beta}_\cX$ for any $\beta\in\cX$, the results follows.
 \end{proof}
 
 \begin{remark}
-  In practice, the probability measure $\Prob$ over $\cX$ is unknown, so we may use the empirical distribution over $\cX$, so that $\cX$ is centred by the sample mean $\hat\mu = \frac{1}{n}\sum_{i=1}^n x_i$.  
+  In practice, the probability measure $\Prob$ over $\cX$ is unknown, so we find it useful to use the empirical distribution over $\cX$ instead, so that $\cX$ is centred by the sample mean $\hat\mu = \frac{1}{n}\sum_{i=1}^n x_i$.  
 \end{remark}
 
 \begin{figure}[hbt]
@@ -126,18 +128,23 @@ Introduced by \citet{mandelbrot1968fractional}, fBms are a generalisation of Bro
 The Hurst parameter plays two roles: 1) It describes the raggedness of the resultant motion, with higher values leading to smoother motion; and 2) it determines the type of process the fBm is, as past increments of $B_\gamma(t)$ are weighted by $(t-s)^{\gamma-1/2}$.
 When $\gamma=1/2$ exactly, then the fBm is a standard Brownian motion and its increments are independent; when $\gamma > 1/2$ (resp. $\gamma < 1/2$) its increments are positively (resp. negatively) correlated.
 
-%\citet{schoenberg1937certain} has shown that, for $0 < \gamma\leq 1$, there exists a Hilbert space $\cB$ and a function $\phi_\gamma:\cX\to\cB$ such that $\forall x,x' \in \cX$,
-%\[
-%  \big\Vert \phi_\gamma(x) - \phi_\gamma(x') \big\Vert_\cB = \norm{x-x'}_\cX^\gamma.
-%\]
-
-Let $\cX$ be a Hilbert space. 
-Defining a kernel function $h:\cX\times\cX\to\bbR$ identical to the fBm covariance kernel yields the so-called \emph{fractional Brownian motion RKHS}.
+Now let $\cX$ be a Hilbert space. 
+\cite{schoenberg1937} has shown that, for $0 < \gamma\leq 1$, there exists a Hilbert space $\cV$ and a function $\phi_\gamma:\cX\to\cV$ such that $\forall x,x' \in \cX$,
+\[
+  \big\Vert \phi_\gamma(x) - \phi_\gamma(x') \big\Vert_\cV = \norm{x-x'}_\cX^\gamma.
+\]
+Using the polarisation identity, 
+%\begin{align*}
+%  \big\Vert \phi_\gamma(x) - \phi_\gamma(x') \big\Vert_\cV^2 
+%  &= \big\Vert \phi_\gamma(x) \big\Vert_\cV^2 + \big\Vert \phi_\gamma(x') \big\Vert_\cV^2 - 2\big\langle \phi_\gamma(x), \phi_\gamma(x') \big\rangle_\cV \\
+%  &=
+%\end{align*} 
+we find that the kernel of the RKHS with feature space $\cV$ and feature map $\phi_\gamma$ defines a kernel function $h:\cX\times\cX\to\bbR$ identical to the fBm covariance kernel.
 
 \begin{definition}[Fractional Brownian motion RKHS]\label{def:fbmrkhs}
   The fractional Brownian motion (fBm) RKHS $\cF$ is the space of functions on the Hilbert space $\cX$ possessing the reproducing kernel $h:\cX\times\cX\to\bbR$ defined by
   \[
-    h(x,x') = \half\big( \norm{x}_\cX^{2\gamma} + \norm{x'}_\cX^{2\gamma} - \norm{x-x'}_\cX^{2\gamma} \big),
+    h_\gamma(x,x') = \big\langle \phi_\gamma(x), \phi_\gamma(x') \big\rangle_\cV = \half\big( \norm{x}_\cX^{2\gamma} + \norm{x'}_\cX^{2\gamma} - \norm{x-x'}_\cX^{2\gamma} \big),
   \]
   which depends on the Hurst coefficient $\gamma \in (0,1)$.
   We shall reference this space as the fBm-$\gamma$ RKHS.
@@ -200,12 +207,14 @@ Unlike realisations of actual fBm paths with Hurst index $\gamma$, which are wel
 We define the centred fBm RKHS as follows.
 
 \begin{definition}[Centred fBm RKHS]
-  Let $\cX$ be a Hilbert space, $\Prob$ be a probability measure over $\cX$, and $\mu\in\cX$ be the mean (i.e. $\E\ip{x,x'}_{\cX}  = \ip{\mu,x'}_{\cX}$ for all $x' \in \cX$) with respect to this probability measure.
+  Let $\cX$ be a Hilbert space, $\Prob$ be a probability measure over $\cX$, and $\mu\in\cX$ be the mean 
+%  (i.e. for a random element $X\in\cX$, $\E\ip{X,x'}_{\cX}  = \ip{\mu,x'}_{\cX}$ for all $x' \in \cX$) 
+  with respect to this probability measure.
   The kernel $\bar h:\cX\times\cX\to\bbR$ defined by
   \[
     \bar h(x,x') = \half \E \left[ \norm{x-X}_\cX^{2\gamma} + \norm{x'-X'}_\cX^{2\gamma} - \norm{x-x'}_\cX^{2\gamma} - \norm{X-X'}_\cX^{2\gamma} \right]
   \]
-  is the reproducing kernel of the \emph{centred} fBm-$\gamma$ RKHS, which consists of functions $f$ in the fBm-$\gamma$ RKHS \hltodo[Proof?]{such that $\E f(X) = 0$}.
+  is the reproducing kernel of the \emph{centred} fBm-$\gamma$ RKHS, which consists of functions $f$ in the fBm-$\gamma$ RKHS such that $\E f(X) = 0$.
   In the above definition, $X,X' \sim \Prob$ are two independent copies of a random vector $X \in \cX$.
 \end{definition}
 
@@ -239,7 +248,7 @@ The definition of the \gls{SE} RKHS is as follows.
 \begin{definition}[Squared exponential RKHS]
   The squared exponential (SE) RKHS $\cF$ of functions over some set $\cX \subseteq \bbR^p$ equipped with the 2-norm $\norm{\cdot}_2$ is defined by the positive definite kernel $\hXXR$ 
   \[
-    h(x,x') = \exp\left(-\frac{\norm{x-x'}_2^2}{2l^2} \right).
+    h(x,x') = \exp\left( -\frac{\norm{x-x'}_2^2}{2l^2} \right).
   \]
   The real-valued parameter $l > 0$ is called the \emph{lengthscale} parameter, and is a smoothing parameter for the functions in the RKHS.
 \end{definition}
@@ -252,7 +261,7 @@ Despite being used extensively for learning algorithms using kernels, an explici
 In that work, the authors describe the nature of real-valued functions in the SE RKHS by considering a a real restriction on the SE RKHS of functions over complex values.
 Their derivation of an orthonormal basis of such an RKHS proved the SE kernel to be the reproducing kernel for the SE RKHS.
 
-\hltodo{Are SE smoother than fBm? Lipschitz continuous. Compact convergence. May be smoother than functions in an fBm RKHS?}
+%\hltodo{Are SE smoother than fBm? Lipschitz continuous. Compact convergence. May be smoother than functions in an fBm RKHS?}
 
 SE kernels are known to be ``universal''. That is, it satisfies the following definition of universal kernels due to \citet{micchelli2006universal}.
 
@@ -268,12 +277,12 @@ In a similar manner to the two previous subsections, we may also derive the \emp
 
 \begin{definition}[Centred SE RKHS]
   Let $\cX \subseteq \bbR^p$ be equipped with the 2-norm $\norm{\cdot}_2$, and let $\Prob$ denote the distribution over $\cX$.
-  The \emph{centred} squared exponential (SE) RKHS (with lengthscale $l$) of functions over $\cX$ is defined by the positive definite kernel $\hXXR$ 
+  Assuming integrability of $h(x,X)$, for any $x\in\cX$ and a random element $X\in\cX$, the \emph{centred} squared exponential (SE) RKHS (with lengthscale $l$) of functions over $\cX$ is defined by the positive definite kernel $\hXXR$ 
   \[
-    h(x,x') = \exp\left(-\frac{\ip{x-\mu,x'-\mu}}{2l^2} \right),
+    h(x,x') = e^{-\frac{\norm{x-x'}_2^2}{2l^2}} - \E e^{-\frac{\norm{x-X'}_2^2}{2l^2}} - \E e^{-\frac{\norm{X-x'}_2^2}{2l^2}} + \E e^{-\frac{\norm{X-X'}_2^2}{2l^2}},
   \]
-  where $\mu =: \E X \in\cX $ under $\Prob$, and $\ip{\cdot,\cdot}$ represents the usual dot product in Euclidean space.
-  \hltodo[Proof?]{This ensures that $\E f(X) = 0$ for any $f$ in this RKHS}.
+  where $X,X'\sim\Prob$ are two independent random elements of $\cX$. 
+  This ensures that $\E f(X) = 0$ for any $f$ in this RKHS.
 \end{definition}
 
 %\begin{proof}

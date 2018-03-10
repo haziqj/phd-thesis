@@ -1,0 +1,108 @@
+%To state the obvious, multiplication of a kernel by a negative scalar results in a negative definite function.
+%Such actions arise when building new function spaces from existing ones, such as via a polynomial-type or ANOVA-type construction, as we will see later in Section \ref{sec:constructrkks}.
+%Do we forfeit all the nice properties of RKHS?
+%As it turns out no, for the most relevant parts anyway.
+In this section, we shall review basic Kreĭn and reproducing kernel Kreĭn space theory, and comment on the similarity and differences between it and RKHS.
+Kreĭn spaces are spaces endowed with a Hilbertian topology, characterised by an inner product which is non-positive.
+%To quote \citet{ong2004learning}, Kreĭn spaces are inner product spaces endowed with a Hilbertian topology, yet their inner product is no longer positive. 
+
+\begin{definition}[Negative and indefinite inner products]
+  Let $\ip{\cdot,\cdot}_\cF$ be an inner product of a vector space $\cF$, as per Definition \ref{def:innerprod}.
+  An inner product is said to be \emph{negative-definite} if for all $f\in\cF$, $\ip{f,f}_\cF \leq 0$.
+  It is \emph{indefinite} if it is neither positive- nor negative-definite.
+\end{definition}
+
+\begin{definition}[Kreĭn space]
+  An inner product space $\big(\cF,\ip{\cdot,\cdot}_\cF\big)$ is a \emph{Krein space} if there exists two Hilbert spaces $\big(\cF_+,\ip{\cdot,\cdot}_{\cF_+}\big)$ and $\big(\cF_-,\ip{\cdot,\cdot}_{\cF_-}\big)$ spanning $\cF$ such that
+  \begin{itemize}
+    \item All $f\in\cF$ can be decomposed into $f = f_+ + f_-$, where $f_+\in\cF_+$ and $f_- \in \cF_-$.
+    \item This decomposition is orthogonal, i.e. $\cF_+ \cup \cF_- = \{0\}$, and $\ip{f_+,f_-}_\cF=0$ for all $f_+\in\cF_+$ and $f_-\in\cF_-$, with the inner product on $\cF$ defined below.
+    \item $\forall f,f'\in\cF$, $\ip{f,f'}_\cF = \ip{f_+,f_+'}_{\cF_+}- \ip{f_-,f_-'}_{\cF_-}$.
+  \end{itemize}
+\end{definition}
+
+Let $P$ be the projection of the Kreĭn space $\cF$ onto $\cF_+$, and $Q=I-P$ the projection onto $\cF_-$.
+These are caleld the \emph{fundamental projections} of $\cF$.
+We shall refer to $\cF_+$ as the \emph{positive subspace}, and $\cF_-$ as the \emph{negative subspace}.
+These monikers stem from the fact that for all $f,f' \in \cF$, $\ip{Pf,Pf'}_{\cF_+} \geq 0$ while $\ip{Qf,Qf'}_{\cF_-} \leq 0$.
+We introduce the notation $\ominus$ to refer to the Kreĭn space decomposition: $\cF = \cF_+ \ominus \cF_-$.
+There is then a notion of an \emph{associated Hilbert space}.
+
+\begin{definition}[Associated Hilbert space]
+  Let $\cF$ be a Kreĭn space with decomposition into Hilbert spaces $\cF_+$ and $\cF_-$.
+  Denote by $\cF_\cH$ the associated Hilbert space defined by $\cF_\cH = \cF_+ \oplus \cF_-$, with inner product 
+  \[
+    \ip{f,f'}_{\cF_\cH} = \ip{f_+,f_+'}_{\cF_+} + \ip{f_-,f_-'}_{\cF_-},
+  \]
+  for all $f,f'\in\cF$.
+%  Likewise,
+%  \[
+%    \cF = \cF_+ \ominus \cF_-,
+%  \]
+%  and hence $\ip{f,f'}_{\cF} = \ip{f_+,f_+'}_{\cF_+} - \ip{f_-,f_-'}_{\cF_-}$.
+\end{definition}
+
+The associated Hilbert space can be found via the linear operator $J = P - Q$ called the \emph{fundamental symmetry}.
+%, which satisfies $J = J^{-1} = J^\top$.
+That is, a Kreĭn space $\cF$ can be turned into its associated Hilbert space by using the positive-definite inner product of the associated Hilbert space as $\ip{f,f'}_{\cF_\cH} = \ip{f,Jf'}_\cF$, for all $f,f'\in\cF$.
+The converse is true too: Starting from a Hilbert space $\cF_\cH$ and an operator $J$, the vector space endowed with the inner product $\ip{f,f'}_\cF = \ip{f,Jf'}_{\cF_\cH}$, for all $f,f'\in\cF$, is a Kreĭn space.
+
+We realise that for a Kreĭn space $\cF$, $|\ip{f,f}_\cF| \leq \norm{f}^2_{\cF_\cH}|$ for all $f\in\cF$, and we say that $\cF_\cH$ majorises the $\cF$, and in fact it is the smallest Hilbert space to do so.
+The strong topology on $\cF$ is defined to be the topology arising from the norm of $\cF_\cH$, and this does not depend on the decomposition chosen \citep{ong2004learning}.
+
+\begin{definition}[Reproducing kernel Krein space]
+  A Krein space $\cF$ of real-valued functions $f:\mathcal X \rightarrow \mathbb R$ on a non-empty set $\mathcal X$ is called a \emph{reproducing kernel Krein space} if the evaluation functional $\delta_x: f \mapsto f(x)$ is continuous on $\cF$, $\forall x \in \cX$, endowed with its strong topology (i.e. the topology of its associated Hilbert space $\cF_\cH$).
+\end{definition}
+
+One might wonder whether the uniqueness theorem (Theorem \ref{thm:rkhsunique}) holds for RKKS.
+Indeed, for every RKKS $\cF$ of functions over a set $\cX$, there corresponds a unique reproducing kernel $\hXXR$.
+
+\begin{lemma}[Uniqueness of kernel for RKKS]
+  Let $\cF$ be a RKKS of functions over a set $\cX$, with $\cF = \cF_+ \ominus \cF_-$.
+  Then, $\cF_+$ and $\cF_-$ are both RKHS with kernel $h_+$ and $h_-$, and the kernel $h = h_+ - h_-$ is a unique, symmetric, reproducing kernel for $\cF$.  
+\end{lemma}
+
+\begin{proof}
+  Since $\cF$ is a RKKS, evaluation functionals are continuous on $\cF$ with respect to topology of the associated Hilbert space $\cF_\cH = \cF_+ \oplus \cF_-$.
+  Therefore, $\cF_\cH$ is a RKHS, and so too are $\cF_+$ and $\cF_-$ with respective kernels $h_+$ and $h_-$.
+  
+  Furthermore, $h(\cdot,x) \in\cF$ since $h_+(\cdot,x) \in\cF_+$ and $h_-(\cdot,x) \in\cF_-$ for some $x\in\cX$.
+  Then, for any $f\in\cF$,
+  \begin{align*}
+    \ip{f, h(\cdot,x)}_\cF 
+    &= \ip{f, h_+(\cdot,x)}_{\cF} - \ip{f, h_-(\cdot,x)}_{\cF} \\ 
+    &= \ip{f_+, h_+(\cdot,x)}_{\cF_+} - \cancelto{0}{\ip{f_-, h_+(\cdot,x)}_{\cF_-}} \\
+    &\phantom{==} - \cancelto{0}{\ip{f_+, h_-(\cdot,x)}_{\cF_+}} + \ip{f_-, h_-(\cdot,x)}_{\cF_-} \\
+    &= f_+(x) + f_-(x) \\
+    &= f(x)
+  \end{align*}
+  The last two lines are achieved by linearity of evaluation functionals ($\delta_x(f_+) + \delta_x(f_-) = \delta_x(f_+ + f_-)$), and the fact that $f = f_+ + f_-$ (by the Kreĭn space decomposition).
+  We have that $h=h_+ - h_-$ is a reproducing kernel for $\cF$.
+  Uniqueness follows as a consequence of the non-degeneracy condition of the respective inner products for $\cF_+$ and $\cF_-$.
+\end{proof}
+
+\begin{remark}
+  Unlike reproducing kernels of RKHSs, reproducing kernels of RKKSs may not be positive-definite.
+%  As we said earlier, difference in kernels may not be positive-definite and therefore not kernels in the truest sense of the word.
+%  Rather, they should be referred to as \emph{generalised kernels}, as they are defined in the vector space generated out of the cone of positive kernels. 
+%  Regardless, we shall keep referring to them as kernels for brevity.
+\end{remark}
+
+The analogue of the Moore-Aronszajn theorem holds partially for RKKS, up to uniqueness.
+That is, there is \emph{at least} one associated RKKS with kernel $\hXXR$ if and only if $h$ can be decomposed as the difference between two positive kernels $h_+$ and $h_-$ over $\cX$, i.e., $h=h_+-h_-$.
+The proof of this statement is rather involved, so is omitted in the interest of maintaining coherence to the discussion at hand.
+This subject has been studied by various authors, one may refer to works by \citet[Theorem 2 \& Example in Section 4]{alpay1991some}, and \citet[Theorem 2.28]{mary2003hilbertian}.
+%\begin{lemma}[Non-uniqueness of RKKS for kernel]
+%  Let $h$ be a kernel over $\cX$.
+%  There is (at least) one associated RKKS with kernel $h$ if and only if $h$ can be decomposed as the difference between two positive kernels $h_+$ and $h_-$ over $\cX$, i.e., $h=h_+-h_-$.
+%\end{lemma}
+%
+%\begin{proof}
+%  The existence and (non-)uniqueness of a RKKS associated with a kernel $h$ relies on the ability to complete the span of $h(\cdot,x)$, much like in the proof of the Moore-Aronszajn theorem.
+%  As it turns out, this is rather involved, so is omitted in the interest of maintaining coherence to the discussion at hand.
+%  This subject has been studied by various authors, one may refer to a proof of this lemma in works by \citet[Theorem 2 \& Example in Section 4]{alpay1991some}, and \citet[Theorem 2.28]{mary2003hilbertian}.
+%\end{proof}
+
+The take-away message as we close this section is that there is no bijection, but a surjection, between the set of RKKS and the set of bivariate, symmetric functions over $\cX\times\cX$.
+In any case, Hilbertian topology applies to Kreĭn spaces via the associated Hilbert space, and in particular, RKKS provide a functional space for which evaluation functionals are continuous.
+The motivation for the use of Kreĭn spaces will become clear when constructing function spaces out of (scaled) building block RKHS later in Section \ref{sec:constructrkks}.
