@@ -11,7 +11,6 @@ library(lme4)
 library(jmcm)
 library(caret)
 library(tidyverse)
-library(ggplot2)
 library(directlabels)
 library(reshape2)
 library(kableExtra)
@@ -19,17 +18,22 @@ library(cowplot)
 library(ElemStatLearn)
 library(spatstat)
 library(stringr)
+library(caret)
+library(kernlab)
+
+# ggplot2 theme
+ggplot2::theme_set(theme_bw())
 
 # knitr settings
-knitr::opts_chunk$set(fig.align = "center", prompt = TRUE)
+chapter.no <- substr(current_input(), start = 0, stop = 2)
+knitr::opts_chunk$set(fig.align = "center", prompt = TRUE, myspac = TRUE,
+                      fig.path = paste0("figure/", chapter.no, "-"))
 knitr::knit_theme$set("bclear")
 options(prompt = "R> ", continue = "+  ", width = 70,
         knitr.table.format = "latex")
-# knit_hooks$set(move.fig = function(before, options, envir) {
-#   if (!before) {
-#     move_fig_to_chapter()
-#   }
-# })
+knit_hooks$set(myspac = function(before, options, envir) {
+  if (before) return("\\singlespacing")
+})
 
 # BibLaTeX with Biber backend
 system(paste("biber", sub("\\.Rnw$", "", current_input())))
@@ -40,22 +44,21 @@ options(str = strOptions(strict.width = "cut"), width = 70)
 # Move .tex file to correct chapter
 move_tex_to_chapter <- function() {
   this.file <- sub("\\.Rnw$", "\\.tex", current_input())
-  chapter.no <- sub("[a-z]\\.tex", "", this.file)
+  chapter.no <- substr(this.file, start = 0, stop = 2)
   file.copy(file.path(this.file), file.path(paste0("../", chapter.no), this.file),
             overwrite = TRUE)
 }
 
 # Move figures
 move_fig_to_chapter <- function() {
-  this.file <- sub("\\.Rnw$", "\\.tex", current_input())
-  # chapter.no <- sub("[a-z]\\.tex", "", this.file)
   files <- list.files("figure/")
-  # figure.path <- paste0("../", chapter.no, "/figure")
-  # if (!file.exists(figure.path)) {
-  #   dir.create(file.path(figure.path))
-  # }
-  # file.copy(file.path("figure", files), file.path(figure.path, files),
-  #           overwrite = TRUE)
+  files <- files[grep(chapter.no, files)]
+  figure.path <- paste0("../", chapter.no, "/figure")
+  if (!file.exists(figure.path)) {
+    dir.create(file.path(figure.path))
+  }
+  file.copy(file.path("figure", files), file.path(figure.path, files),
+            overwrite = TRUE)
   file.copy(file.path("figure", files), file.path("../../figure", files),
             overwrite = TRUE)
 }
@@ -75,12 +78,8 @@ delete_files <- function() {
     file.remove(dir(pattern = file.types[i], full.names = TRUE))
   }
 }
-delete_files()
+# delete_files()
 
+# # Function to determine even numbers
+# isEven <- function(x) x %% 2 == 0
 
-
-# Function to specify decimal places
-decPlac <- function(x, k = 2) format(round(x, k), nsmall = k)
-
-# Function to determine even numbers
-isEven <- function(x) x %% 2 == 0

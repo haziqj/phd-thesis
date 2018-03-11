@@ -23,12 +23,10 @@
 % 	\chead{\leftmark}
 \usepackage[utf8]{inputenc}  % To get accents on letters
 \usepackage[T1]{fontenc}     % e.g. \"a
-\usepackage{fontspec}  % phonetics
-\newfontfamily\dsil{Doulos SIL}
+%\usepackage{fontspec}  % phonetics, needs XeLaTeX or LuaLaTeX
+%\newfontfamily\dsil{Doulos SIL}
 \usepackage{nicefrac}   % To get nice typography for units
 \usepackage{units}      % and fractions
-\let\proglang=\textsf
-\newcommand{\pkg}[1]{{\fontseries{b}\selectfont #1}}
 \usepackage{enumitem}  % replacing enumerate
 \usepackage{xr}  % Cross-referencing between files
 
@@ -51,7 +49,10 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 %\usepackage{algorithmicx}
-\newcommand{\code}[1]{\texttt{#1}}
+\newcommand\code{\bgroup\@makeother\_\@makeother\~\@makeother\$\@codex}
+\def\@codex#1{{\normalfont\ttfamily\hyphenchar\font=-1 #1}\egroup}
+\let\proglang=\textsf
+\newcommand{\pkg}[1]{{\fontseries{b}\selectfont #1}}
 
 % Bibliography
 %\usepackage[longnamesfirst]{natbib}
@@ -89,6 +90,8 @@
 \usepackage{booktabs}
 \usepackage{colortbl}
 \usepackage{lscape}  % landscape tables
+\usepackage{threeparttable}
+\usepackage{tablefootnote}
 
 % Margin notes
 \usepackage{marginnote}

@@ -1,0 +1,130 @@
+
+\subsection{The intercept}
+
+Given the regression model \eqref{eq:linmod} subject to an I-prior \eqref{eq:iprior}, the marginal likelihood of the intercept $\alpha$ (after integrating out the I-prior) can be maximised with respect to $\alpha$, which yields the sample mean for $y$ as the ML estimate for intercept.
+
+\subsection{Direct optimisation}
+
+The kernel parameter $\eta$ and the error precision $\psi$ (which we collectively refer to as the model hyperparameters of the covariance kernel $\theta$) can be estimated in several ways.
+One of these is direct optimisation of the marginal log-likelihood---the most common method in the Gaussian process literature.
+%
+\begin{align*}
+  \log L(\theta)
+  &= \log \int p(\by|\bff)p(\bff) \d \bff \\
+  &= -\half[n]\log 2\pi - \half\log\vert \bSigma_\theta \vert - \half \by^\top \bSigma_\theta^{-1} \by
+\end{align*}
+%
+where $\bSigma_\theta = \psi\bH_\eta^2 + \psi^{-1}\bI_n$.
+This is typically done using conjugate gradients with a Cholesky decomposition on the covariance kernel to maintain stability, but the \pkg{iprior} package opts for an eigendecomposition of the kernel matrix (Gram matrix) $\bH_{\eta} = \bV\cdot\text{diag}(u_1,\dots,u_n)\cdot\bV^\top$ instead.
+Since $\bH_{\eta}$ is a symmetrix matrix, we have that $\bV\bV^\top = \bI_n$, and thus
+%
+\[
+  \bSigma_\theta = \bV \cdot \text{diag} (\psi u_1^2 + \psi^{-1},\dots,\psi u_n^2 + \psi^{-1}) \cdot \bV^\top
+\]
+%
+for which the inverse and log-determinant is easily obtainable.
+This method is relatively robust to numerical instabilities and is better at ensuring positive definiteness of the covariance kernel.
+The eigendecomposition is performed using the \pkg{Eigen} \proglang{C++} template library and linked to \pkg{iprior} using \pkg{Rcpp} \citep{eddelbuettel2011rcpp}.
+The hyperparameters are transformed by the \pkg{iprior} package so that an unrestricted optimisation using the quasi-Newton L-BFGS algorithm provided by \code{optim()} in \proglang R.
+Note that minimisation is done on the deviance scale, i.e., minus twice the log-likelihood.
+The direct optimisation method can be prone to local optima, in which case repeating the optimisation at different starting points and choosing the one which yields the highest likelihood is one way around this.
+
+\subsection{Expectation-maximisation algorithm}
+
+Alternatively, the expectation-maximisation (EM) algorithm may be used to estimate the hyperparameters, in which case the I-prior formulation in \eqref{eq:ipriorre} is convenient.
+Substituting this into \eqref{eq:linmod} we get something that resembles a random effects model.
+By treating the $w_i$ as ``missing'', the $t$th iteration of the E-step entails computing
+%
+\begin{align}
+  Q(\theta) = \E \left[ \log p(\by, \bw | \theta) \big\vert \by,\theta^{(t)} \right].
+\end{align}
+%
+As a consequence of the properties of the normal distribution, the required joint and posterior distributions $p(\by, \bw)$ and $p(\bw | \by)$ are easily obtained.
+The M-step then maximises the $Q$ function above, which boils down to solving the first order conditions
+%
+\begin{align}
+  \frac{\partial Q}{\partial\eta}
+  &= -\half \tr \left(\frac{\partial \bSigma_\theta}{\partial\eta} \tilde\bW^{(t)} \right) + \psi \cdot \by ^\top \frac{\partial \bH_\eta}{\partial\eta} \tilde\bw^{(t)} \label{eq:emtheta} \\
+  \frac{\partial Q}{\partial\psi}
+  &= -\half \by^\top\by - \tr \left(\frac{\partial \bSigma_\theta}{\partial\psi} \tilde\bW^{(t)} \right) + \by^\top \bH_\eta \tilde\bw^{(t)} \label{eq:empsi}
+\end{align}
+%
+equated to zero.
+Here, $\tilde\bw$ and $\tilde\bW$ are the first and second posterior moments of $\bw$.
+The solution to \eqref{eq:empsi} can be found in closed-form, but not necessarily for \eqref{eq:emtheta}.
+In cases where closed-form solutions exist, then it is just a matter of iterating the update equations until a suitable convergence criterion is met (e.g. no more sizeable increase in successive log-likelihood values).
+In cases where closed-form solutions do not exist for $\theta$, the $Q$ function is again optimised with respect to $\theta$ using the L-BFGS algorithm.
+
+The EM algorithm is more stable than direct maximization, and is especially suitable if there are many scale parameters. However, it is typically slow to converge.
+The \pkg{iprior} package provides a method to automatically switch to the direct optimisation method after running several EM iterations.
+This then combines the stability of the EM with the speed of direct optimisation.
+
+\subsection{Markov chain Monte Carlo methods}
+
+For completeness, it should be mentioned that a full Bayesian treatment of the model is possible, with additional priors on the hyperparameters set.
+Markov chain Monte Carlo (MCMC) methods can then be employed to sample from the posteriors of the hyperparameters, with point estimates obtained using the posterior mean or mode, for instance.
+Additionally, the posterior distribution encapsulates the uncertainty about the parameter, for which inference can be made.
+Posterior sampling can be done using Gibbs-based methods in \pkg{WinBUGS} \citep{lunn2000winbugs} or \pkg{JAGS} \citep{plummer2003jags}, and both have interfaces to \proglang{R} via \pkg{R2WinBUGS} \citep{sturtz2005r2winbugs} and \pkg{runjags} \citep{denwood2016runjags} respectively.
+Hamiltonian Monte Carlo (HMC) sampling is also a possibility, and the \proglang{Stan} project \citep{carpenter2016stan} together with the package \pkg{rstan} \citep{rstan}  makes this possible in \proglang{R}.
+All of these MCMC packages require the user to code the model individually, and we are not aware of the existence of MCMC-based packages which are able to estimate GPR models.
+This makes it inconvenient for GPR and I-prior models, because in addition to the model itself, the kernel functions need to be coded as well and ensuring computational efficiency would be a difficult task.
+Note that this full Bayesian method is not implemented in \pkg{iprior}, but described here for completeness.
+
+\subsection{Computational considerations}
+
+Computational complexity for estimating I-prior models (and in fact, for GPR in general) is dominated by the inversion of the $n \times n$ matrix $\bSigma_\theta = \psi\bH_\eta^2 + \psi^{-1}\bI_n$, which scales as $O(n^3)$ in time.
+As mentioned earlier, the \pkg{iprior} package inverts this by way of the eigendecomposition of $\bH_\eta$, but this operation is also $O(n^3)$.
+For the direct optimisation method, this matrix inversion is called when computing the log-likelihood, and thus must be computed at each Newton step.
+For the EM algorithm, this matrix inversion appears when calculating $\tilde \bw$, the posterior mean of the I-prior random effects.
+Furthermore, storage requirements for I-priors models are similar to that of GPR models, which is $O(n^2)$.
+
+The machine learning literature is rich in ways to resolve this issue, as summarised by \cite{quinonero2005unifying}.
+One such method is to use low-rank matrix approximations.
+Let $\bQ$ be a matrix with rank $q < n$, and that $\bQ\bQ^\top$ can be used to approximate the kernel matrix $\bH_\eta$.
+Then
+%
+\[
+  (\psi\bH_\eta^2 + \psi^{-1}\bI_n)^{-1} \approx
+  \psi\left[
+  \bI_n -
+  \bQ\left( \big(\psi^2\bQ^\top\bQ\big)^{-1} +\bQ^\top\bQ \right)^{-1} \bQ^\top
+  \right],
+\]
+%
+obtained via the Woodbury matrix identity, is a potentially much cheaper operation which scales $O(nq^2)$---$O(q^3)$ to do the inversion, and $O(nq)$ to do the multiplication (because typically the inverse is premultiplied to a vector).
+When the kernel matrix itself is sufficiently low ranked (for instance, when using the linear kernel for a low-dimensional covariate) then the above method is exact.
+However, other interesting kernels such as the fractional Brownian motion (fBm) kernel or the squared exponential kernel results in kernel matrices which are full rank.
+
+Another method of approximating the kernel matrix, and the method implemented by our package, is the Nystr\"om method \citep{williams2001using}.
+The theory has its roots in approximating eigenfunctions, but this has since been adopted to speed up kernel machines.
+The main idea is to obtain an (approximation to the true) eigendecomposition of $\bH_\eta$ based on a small subset $m \ll n$ of the data points.
+Reorder the rows and columns and partition the kernel matrix as
+%
+\[
+  \bH_\eta =
+  \begin{pmatrix}
+    \bA_{m\times m}         & \bB_{m \times (n-m)} \\
+    \bB_{m \times (n-m)}^\top  & \bC_{(n-m) \times (n-m)} \\
+  \end{pmatrix}.
+\]
+%
+The Nystr\"om method provides an approximation to the lower right block $\bC$ by manipulating the eigenvectors and eigenvalues of $\bA$, an $m \times m$ matrix, together with the matrix $\bB$ to give
+%
+\[
+  \bH_\eta \approx
+  \begin{pmatrix}
+    \bV_m \\
+    \bB^\top\bV_m\bU_m^{-1}
+  \end{pmatrix}
+  \bU_m
+  \begin{pmatrix}
+    \bV_m^\top & \bU_m^{-1}\bV_m^\top\bB
+  \end{pmatrix}
+\]
+%
+where $\bU_m$ is the diagonal matrix containing the $m$ eigenvalues of $\bA$, and $\bV_m$ is the corresponding matrix of eigenvectors.
+An orthogonal version of this approximation is of interest, which has been studied by \cite{fowlkes2001efficient}, which allows us to easily calculate the inverse of $\bSigma_\theta$.
+Estimating I-prior models using the Nystr\"om method takes $O(nm^2)$ times and $O(nm)$ storage.
+
+
+\subsection{Comparison of estimation methods}

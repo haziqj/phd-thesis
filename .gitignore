@@ -19,3 +19,5 @@ chapters/R/data/smoking-mod*
 
 chapters/R/data/
 .DS_Store
+
+chapters/R/cache.zip

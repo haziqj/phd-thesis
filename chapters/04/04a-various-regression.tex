@@ -1,0 +1,76 @@
+\subsection{Multiple linear regression}
+
+Let $\cX\equiv \bbR^p$ equipped with the regular dot product, and $\cF_\lambda$ the scaled canonical RKHS of functions over $\cX$ with kernel $h_\lambda(\bx,\bx') = \lambda \bx^\top\bx'$. 
+Then, an I-prior on $f$ implies that 
+\begin{align*}
+  f(\bx_i) &= \sum_{j=1}^n \lambda \bx_i^\top\bx_j w_j \\
+  &= \sum_{j=1}^n \lambda \sum_{k=1}^p x_{ik}x_{jk} w_j \\
+  &= \beta_1 x_{i1}+ \dots + \beta_p x_{ip},
+\end{align*}
+where each $\beta_k = \lambda \sum_{j=1}^n  x_{jk}w_j$.
+This implies a multivariate normal prior distribution for the regression coefficients   
+\begin{align*}
+  \boldsymbol\beta := (\beta_1,\dots,\beta_p) \sim \N_p(\bzero, \lambda^2 \bX^\top \bPsi \bX),
+\end{align*}
+where $\bX$ is the $n \times p$ design matrix for the covariates, excluding the column of ones at the beginning typically reserved for the intercept. 
+The covariance matrix for $\boldsymbol\beta$ is recognised as the scaled Fisher information matrix for the regression coefficients.
+
+The I-prior for $\boldsymbol{\beta}$ resembles the objective $g$-prior \citep{zellner1986assessing} for regression coefficients,
+\[
+  \boldsymbol{\beta} \sim \N_p\big(\bzero, g (\bX^\top \bPsi \bX)^{-1} \big),
+\]
+although they are quite different objects. 
+The $g$-prior for $\boldsymbol{\beta}$ has the \emph{inverse} (scaled) Fisher information matrix as its covariance matrix.
+This, in itself, has a much different and arguably counterintuitive meaning: large amounts of Fisher information about $\boldsymbol{\beta}$ corresponds to a small prior variance, and hence less deviation away from the prior mean of zero in estimating $\boldsymbol\beta$.
+The choice of the hyperparameter $g$ has been the subject of much debate, with choices ranging from fixing $g=n$ (corresponding to the concept of \emph{unit Fisher information}), to fully Bayesian and empirical Bayesian methods of estimating $g$ from the data.
+
+On the other hand, we note that the $g$-prior has an I-prior interpretation when argues as follows.
+Assume that the regression function $f$ lies in the continual dual space of $\bbR^p$ equipped with the inner product $\ip{\bx,\bx'}_\cX = \bx^\top(\bX^\top \bPsi \bX)^{-1}\bx$.
+With this inner product and from \hltodo{(3.3)}, the Fisher information for $\boldsymbol{\beta}$ is
+\begin{align*}
+  \cI_g(\boldsymbol\beta) 
+  &= \sum_{i=1}^n \sum_{j=1}^n \psi_{ij} (\bX^\top \bPsi \bX)^{-1}\bx_i \otimes (\bX^\top \bPsi \bX)^{-1}\bx_j \\
+  &= (\bX^\top \bPsi \bX)^{-1} \cancel{(\bX^\top \bPsi \bX)} \cancel{(\bX^\top \bPsi \bX)^{-1}} \\
+  &= (\bX^\top \bPsi \bX)^{-1},
+\end{align*}
+and this rather than the usual $\bX^\top \bPsi \bX$ as the prior covariance matrix for $\boldsymbol{\beta}$ means that the I-prior is in fact the standard $g$-prior.
+
+The metric induced by the inner product is actually the \emph{Mahalanobis distance}, a scale-invariant natural distance if the covariates are measured on different scales.
+To expand on this idea, circle back to the regression function and write it as $f(\bx) = \ip{\bx,\boldsymbol\beta}_\cX$.
+In usual least squares regression, the choice of inner product is irrelevant, so the usual dot product is commonly used (however, as we have seen above, the choice of inner product determines the form of the Fisher information for $\boldsymbol{\beta}$).
+In particular, suppose that all the $x_{ik}$'s, $k=1,\dots,p$ for each unit $i=1,\dots,n$ are measured on the same scale; for instance, these could be measurements in centimetres.
+In this case, the dot product is reasonable, because $\ip{\bx_i,\bx_j} = \sum_{k=1}^p x_{ik}x_{jk}$ and the inner product has a coherent unit, namely the squared unit of the $x_{ik}$'s.
+However, if they were a mix of various scaled measurements, then obviously the inner product's unit is incoherent---one would be resorted to adding measurements in different units, for example, $\text{cm}^2$ and $\text{kg}^2$ and so on.
+In such a case, a unitless inner product is appropriate, like the Mahalonobis inner product, which technically rescales the $x_{ik}$'s to unity.
+In summary, if the covariates are all measured on the same scale, then the I-prior is appropriate, and if not, the $g$-prior is appropriate.
+\hltodo[Can I just standardise $x$?]{}
+
+A different approach for covariate measurements of differing scales, without resorting to $g$-priors, is the ANOVA approach.
+By considering only the main effects, one decomposes the regression function into
+\[
+  f(\bx_i) = \beta_0 + f_1(x_{i1}) + \cdots + f_p(x_{ip}) 
+\]
+for which $(f-\beta_0) \in \cF_\lambda \equiv \cF_{\lambda_1}\oplus\cdots\oplus\cF_{\lambda_p}$, and $\cF_{\lambda_k}$,$k=1,\dots,p$ are unidimensional centred canonical RKKSs with kernels $h_{\lambda_k}(x_{ik},x_{jk}) = \lambda_k (x_{ik}-\bar x_k) (x_{jk}-\bar x_k)$, where $\bar x_k = \sum_{i=1}^n x_{ik}/n$.
+In effect, we now have $p$ scale parameters, one for each of the RKKSs associated with the $p$ covariates.
+Denote $\tilde x_{ik} = x_{ik}-\bar x_k$, the centred covariates.
+The RKKS $\cF_\lambda$ therefore has the kernel
+\[
+  h(\bx_i,\bx_j) = \sum_{k=1}^p \lambda_k \tilde x_{ik}\tilde x_{jk},
+\]
+and hence each regression coefficient can now be written as $\beta_k =  \sum_{j=1}^n  \lambda_k \tilde x_{jk}w_j$.
+Thus, the corresponding I-prior for $\boldsymbol{\beta}$ is
+\[
+  \boldsymbol{\beta} \sim \N_p(\bzero, \lambda^2 \tilde\bX^\top\bLambda \bPsi \bLambda \tilde\bX),
+\]
+with $\bLambda = \diag(\lambda_1,\dots,\lambda_p)$.
+Note that the overall effect $\beta_0$ can be treated in a number of ways, the simplest of which is as an intercept to be estimated.
+This approach is disadvantageous when $p$ is large, in which case there would be numerous scale parameters to estimate.
+
+
+\subsection{Multilevel linear modelling}
+
+\subsection{Longitudinal modelling}
+
+\subsection{Smoothing models}
+
+\subsection{Models with functional covariates}

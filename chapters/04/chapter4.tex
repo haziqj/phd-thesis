@@ -1,0 +1,62 @@
+\documentclass[a4paper,showframe,11pt]{report}
+\usepackage{standalone}
+\standalonetrue
+\ifstandalone
+  \usepackage{../../haziq_thesis}
+  \usepackage{../../haziq_maths}
+  \usepackage{../../haziq_glossary}
+  \usepackage{../../knitr}
+  \addbibresource{../../bib/haziq.bib}
+  \externaldocument{../01/.texpadtmp/introduction}
+  \externaldocument{../02/.texpadtmp/chapter2}
+  \externaldocument{../03/.texpadtmp/chapter3}
+\fi
+
+\begin{document}
+\hChapterStandalone[4]{Regression modelling using I-priors}
+
+In the previous chapter, we defined an I-prior for the normal regression model \eqref{eq:model1} subject to \eqref{eq:model1ass} and $f$ belonging to a reproducing kernel Hilbert or Krein space of functions.
+We also saw how new function spaces can be constructed via the polynomial and ANOVA RKKS.
+In this chapter, we shall describe various regression models, and connect them to an appropriate RKKS, so that an I-prior may be defined on it.
+Methods for estimating I-prior models will also be described.
+Finally, several examples of I-prior modelling are presented.
+
+\section{Various regression models}\label{sec:various-regression}
+\input{04a-various-regression.tex}
+
+\section{Estimation}
+\input{04b-iprior-estimation}
+\section{Examples}
+%\input{04c-examples}
+
+\section{Conclusion}
+
+The steps for I-prior modelling are basically three-fold:
+\begin{enumerate}
+  \item Select an appropriate function space; equivalently, the kernels for which a specific effect is desired on the covariates. Several modelling examples are described in Section \ref{sec:various-regression}.
+%  Choices included a linear effect (canonical RKHS), a polynomial effect (polynomial RKKS), smoothing effect (fBm or SE RKHS), 
+  \item Estimate the hyperparameters (these included the RKHS scale parameter(s), error precision, and any other kernel parameters such as the Hurst index of fBm) of the I-prior model and obtain the posterior regression function.
+  \item Post-estimation procedures include
+  \begin{itemize}
+    \item Posterior predictive checks;
+    \item Model comparison via log-likelihood ratio tests/empirical Bayes factors; and
+    \item Prediction of new data point.
+  \end{itemize}
+\end{enumerate}
+
+The main sticking point with the estimation procedure is the involvement of the $n\times n$ kernel matrix, for which its inverse is needed.
+This requires $O(n^2)$ storage and $O(n^3)$ computational time.
+The Nyström method of approximating the kernel matrix reduces complexity to $O(nm)$ storage and approximately $O(nm^2)$, and is highly advantageous if $m \ll n$.
+The computational issue faced by I-priors are mirrored in Gaussian process regression, so the methods to overcome these computational challenges in GPR can be explored further.
+However, most efficient computational solutions exploit the nature of the SE kernel structure, which is the most common kernel used in GPR.
+
+One promising avenue to achieve efficient computation for I-prior models is by using variational methods.
+A sparse variational approximation (typically by using inducing points) or stochastic variational inference can greatly reduce computational storage and speed requirements.
+A recent paper by \citet{cheng2017variational} suggested a variational algorithm with linear complexity for GPR-type models.
+
+
+\section*{Omitted}
+\input{04-omitted}
+
+\hClosingStuffStandalone
+\end{document}
