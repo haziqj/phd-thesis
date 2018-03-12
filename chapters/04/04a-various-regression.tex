@@ -1,3 +1,5 @@
+Without loss of generality, we assume a prior mean of zero for the I-prior distribution.
+
 \subsection{Multiple linear regression}
 
 Let $\cX\equiv \bbR^p$ equipped with the regular dot product, and $\cF_\lambda$ the scaled canonical RKHS of functions over $\cX$ with kernel $h_\lambda(\bx,\bx') = \lambda \bx^\top\bx'$. 
@@ -68,9 +70,193 @@ This approach is disadvantageous when $p$ is large, in which case there would be
 
 
 \subsection{Multilevel linear modelling}
+\label{sec:multilevelmodels}
+
+Let $\cX\equiv\bbR^p$, and suppose that alongside the covariates, there is information on group levels $\cM= \{1,\dots,m\}$ for each unit $i$.
+That is, every observation for unit $i$ is known to belong to a specific group $j$, and we write $\bx_i^{(j)}$ to indicate this.
+Let $n_j$ denote the sample size for cluster $j$, and the overall sample size be $n = \sum_{j=1}^m n_j$.
+When modelled linearly with the responses $y_i^{(j)}$, the model is known as a multilevel (linear) model, although it is known by many other names: random-effects models, random coefficient models, hierarchical models, and so on.
+As this model is seen as an extension of linear models, applications are plenty, especially in research designs for which the data varies at more than one level.
+
+Consider a functional ANOVA decomposition of the regression function as follows:
+\begin{align}\label{eq:anovamultilevel}
+  f(\bx_i^{(j)}, j) = f_0 + f_1(\bx_i^{(j)}) + f_2(j) + f_{12}(\bx_i^{(j)}, j).  
+\end{align}
+To mimic the multilevel model, assume $f_1\in\cF_1$ the Pearson RKHS, $f_2\in\cF_2$ the centred canonical RKHS, and $f_{12} \in \cF_{12} = \cF_1 \otimes \cF_2$, the tensor product space of $\cF_1$ and $\cF_2$.
+As we know, $f_0$ is the overall intercept, and the varying intercepts are given by the function $f_2$.
+$f_1$ is the (main) linear effect of the covariates, while $f_{12}$ provides the varying linear effect per group of the covariates.
+The I-prior for $f-f_0$ is assumed to lie in the function space $\cF-f_0$, which is an ANOVA RKKS with kernel
+\[
+  h_\lambda\big((\bx_i^{(j)},j),(\bx_i^{(j')},j')\big) = \lambda_1 h_1(\bx_i^{(j)},\bx_{i'}^{(j')}) + \lambda_2 h_2(j,j') + \lambda_1\lambda_2 h_1(\bx_i^{(j)},\bx_{i'}^{(j')})h_2(j,j'),
+\]
+with $h_1$ the centred canonical kernel and $h_2$ the Pearson kernel.
+
+We can show that the regression function \eqref{eq:anovamultilevel} corresponds to the standard way of writing the multilevel model, 
+\[
+  f(\bx_i^{(j)}, j) = \beta_0 + \bx_i^{(j)\top}\boldsymbol{\beta}_1 + \beta_{0j} + \bx_i^{(j)\top}\boldsymbol{\beta}_{1j}.   
+\]
+and determine the prior distributions on $(\beta_{0j},\boldsymbol{\beta}_{1j})^\top$.
+Write $f_0=\beta_0$, and for simplicity, assume iid errors, i.e.,  $\bPsi = \psi\bI_n$.
+The form of $f\in\cF$ is now $f(\bx_i^{(j)},j) = \sum_{i'=1}^{n_{j'}}\sum_{j'=1}^m h_\lambda\big((\bx_i^{(j)},j),(\bx_{i'}^{(j')},j')\big) w_{i'j'}$, where each $w_{i'j'}\sim\N(0,\psi^{-1})$.
+We have seen from the previous section that $f_1(\bx_i^{(j)}) = \tilde\bx_i^{(j)\top}\boldsymbol{\beta}$, with $\boldsymbol{\beta} = \lambda_1\tilde\bX^\top\bw \sim \N_p(\bzero, \lambda_1^2\psi \tilde\bX^\top\tilde\bX )$.
+Here, $\tilde\bX$ is the $(n_1+\cdots+n_m) \times p$ matrix containing centred entries of $\bx_i^{(j)}$.
+Now, functions in the scaled RKHS $\cF_2$ have the form
+\begin{align*}
+  f_2(j) 
+  &= \sum_{i=1}^{n_{j'}}\sum_{j'=1}^m \lambda_2\left( \frac{\delta_{jj'}}{p_j} - 1 \right)w_{ij'} \\
+  &=  \lambda_2\left( \frac{w_{+j}}{p_j} - w_{++} \right),
+\end{align*}
+where a `$+$' in the index of $w_{ik}$ indicates a summation over that index, and $p_j$ is the empirical distribution over $\cM$, i.e. $p_j = n_j/n$.
+Clearly $f_2(j)$ is a variable depending on $j$, so write $f_2(j)=\beta_{0j}$.
+The distribution of $\beta_{0j}$ is normal with zero mean and variance
+\begin{align*}
+  \Var \beta_{0j} 
+  &= \lambda_2^2 \left( \frac{\cancel{n_j}\psi}{n_j^{\cancel{2}} / n^2} + n\psi \right)  \\
+  &= n\psi\lambda_2^2 \left( \frac{1}{p_j} + 1 \right).
+\end{align*}
+The covariance between any two random intercepts $\beta_{0j}$ and $\beta_{0j'}$ is
+\begin{align*}
+  \Cov(\beta_{0j},\beta_{0j'})
+  &= \Cov\left( \lambda_2\left( \frac{w_{+j}}{p_j} - w_{++} \right), \lambda_2\left( \frac{w_{+j'}}{p_{j'}} - w_{++} \right) \right)  \\
+  &= \frac{\lambda_2^2}{p_j p_{j'}} \cancelto{0}{\Cov(w_{+j},w_{+j'})} - \frac{\lambda_2^2}{p_j} \Cov(w_{+j},w_{++}) - \frac{\lambda_2^2}{p_{j'}} \Cov(w_{++},w_{+j'}) \\
+  &\phantom{==} + \lambda_2^2 \Cov(w_{++},w_{++}) \\
+  &= - \frac{\lambda_2^2}{\cancel{n_j}/n} \cancel{n_j}\psi - \frac{\lambda_2^2}{\cancel{n_{j'}}/n} \cancel{n_{j'}}\psi + \lambda_2^2 n\psi \\
+  &= -n\psi\lambda_2^2.
+\end{align*}
+
+Functions in $\cF_{12}$, on the other hand, have the form
+\begin{align*}
+  f_{12}(\bx_i, j)
+  &= \sum_{i'=1}^{n_{j'}}\sum_{j'=1}^m \lambda_1\lambda_2 \cdot \tilde \bx_i^{(j)\top} \tilde \bx_{i'}^{(j')} \cdot \left( \frac{\delta_{jj'}}{p_j} - 1 \right)  w_{i'j'} \\
+  &=  \tilde \bx_i^{(j)\top}   
+  {\color{gray}
+  \underbrace{\color{black}
+  \left( \frac{\lambda_1\lambda_2}{p_j} \sum_{i'=1}^{n_{j}}  \tilde \bx_{i'}^{(j)} w_{i'j} - \lambda_1\lambda_2\sum_{i'=1}^{n_{j'}}\sum_{j'=1}^m  \tilde \bx_{i'}^{(j')}  w_{i'j'} \right)
+  }_{\boldsymbol\beta_{1j}}},
+\end{align*}
+and this is, as expected, a linear form dependent on cluster $j$.
+We can calculate the variance for $\beta_{1j}$ to be
+\begin{align*}
+  \Var \boldsymbol{\beta}_{1j}
+  &= \lambda_1^2\lambda_2^2 \Var\left( \frac{1}{p_j} \tilde\bX_j^\top \bw_j - \tilde\bX^\top \bw \right) \\
+  &= \lambda_1^2\lambda_2^2 \left( \frac{\psi}{n_j^2/n^2} \tilde\bX_j^\top\tilde\bX_j + \psi \tilde\bX^\top  \tilde\bX - \frac{1}{p_j} \tilde\bX_j^\top \Cov( \bw_j,\bw) \tilde\bX^\top  \right) \\
+  &= n\psi\lambda_1^2\lambda_2^2 \left( \frac{1}{p_j}\bS_j +  \bS - \bS_{j} \right) \\
+  &= n\psi\lambda_1^2\lambda_2^2 \left( \left(\frac{1}{p_j}-1\right)\bS_j +  \bS  \right)
+\end{align*}
+where $\bS_j = \frac{1}{n_j} \sum_{i=1}^{n_j} (\bx_i^{(j)} - \bar \bx)^\top(\bx_i^{(j)} - \bar \bx)$, $\bS = \frac{1}{n} \sum_{i=1}^{n_j} \sum_{j=1}^{m} (\bx_i^{(j)} -  \bar \bx)^\top(\bx_i^{(j)} - \bar \bx)$, and $\bar \bx = \frac{1}{n} \sum_{i=1}^{n_j} \sum_{j=1}^{m} \bx_i^{(j)}$.
+The covariance between two vectors of the random slopes is
+\begin{align*}
+  \Cov(\boldsymbol{\beta}_{1j},\boldsymbol{\beta}_{1j'}) 
+  &= \lambda_1^2\lambda_2^2  \Cov \left( \frac{1}{p_j} \tilde\bX_j^\top \bw_j - \tilde\bX^\top \bw, \frac{1}{p_{j'}} \tilde\bX_{j'}^\top \bw_{j'} - \tilde\bX^\top \bw  \right) \\
+  &= \psi\lambda_1^2\lambda_2^2 \left( \tilde\bX^\top\tilde\bX - \frac{1}{p_j}\tilde\bX_j^\top\tilde\bX_j  - \frac{1}{p_{j'}}\tilde\bX_{j'}^\top\tilde\bX_{j'} \right) \\
+  &= n\psi\lambda_1^2\lambda_2^2 \left( \bS - \bS_j - \bS_{j'}  \right).
+\end{align*}
+
+Another quantity of interest is the covariance between the random intercepts and random slopes:
+\begin{align*}
+  \Cov(\beta_{0j}, \boldsymbol{\beta}_{1j}) 
+  &= \lambda_1\lambda_2^2  \Cov\left( \frac{1}{p_{j}} \bone_{n_j}^\top \bw_{j} - \bone_n^\top \bw, \frac{1}{p_{j}} \tilde\bX_{j}^\top \bw_{j} - \tilde\bX^\top \bw   \right) \\
+  &= \psi\lambda_1\lambda_2^2  \left( \cancelto{0}{\bone_{n}^\top \tilde\bX} + \frac{1}{p_{j}^2} \bone_{n_j}^\top \tilde\bX_j  - \frac{2}{p_{j}} \bone_{n_{j}}^\top \tilde\bX_{j} \right) \\
+  &= n\psi\lambda_1\lambda_2^2  \left(  \left(\frac{1}{p_j} - 2 \right) \frac{1}{n_{j}} \sum_{i=1}^{n_j}(\bx_i^{(j)} - \bar \bx)  \right) \\
+  &= n\psi\lambda_1\lambda_2^2 \left(\frac{1}{p_j} - 2 \right) ( \bar\bx^{(j)}   -\bar \bx  ) 
+\end{align*}
+and
+\begin{align*}
+  \Cov(\beta_{0j}, \boldsymbol{\beta}_{1j'}) 
+  &= \lambda_1\lambda_2^2  \Cov\left( \frac{1}{p_{j}} \bone_{n_j}^\top \bw_{j} - \bone_n^\top \bw, \frac{1}{p_{j'}} \tilde\bX_{j'}^\top \bw_{j'} - \tilde\bX^\top \bw   \right) \\
+  &= \psi\lambda_1\lambda_2^2  \left( \cancelto{0}{\bone_{n}^\top \tilde\bX} + \frac{1}{p_{j}p_{j'}} \bone_{n_j}^\top \cancelto{0}{\Cov(\bw_j,\bw_{j'})} \tilde\bX_{j'} - \frac{1}{p_{j}} \bone_{n_j}^\top \tilde\bX_j  - \frac{1}{p_{j'}} \bone_{n_{j'}}^\top \tilde\bX_{j'} \right) \\
+  &= n\psi\lambda_1\lambda_2^2  \left(  - \frac{1}{n_{j}} \sum_{i=1}^{n_j}(\bx_i^{(j)} - \bar \bx)  - \frac{1}{n_{j'}} \sum_{i=1}^{n_{j'}}(\bx_i^{(j')} - \bar \bx) \right) \\
+  &= n\psi\lambda_1\lambda_2^2  \left(  2\bar \bx -  \bar\bx^{(j)}  -  \bar \bx^{(j')}  \right).
+\end{align*}
+
+The standard multilevel random effects assumption is that $(\beta_{0j},\boldsymbol{\beta}_{1j})^\top$ is normally distributed with mean zero and covariance matrix $\bPhi$ of dimensions $(p+1)\times(p+1)$.
+In total, there are $p+1$ regression coefficients and $(p+1)(p+2)/2$ covariance parameters in $\Phi$ to be estimated.
+In contrast, the I-prior model is parameterised by only two RKKS scale parameters and the error precision $\psi$.
+While the estimation procedure for $\bPhi$ in the standard multilevel model can result in non-positive covariance matrices, the I-prior model has the advantage that positive definiteness is taken care of automatically.
+This is seen from the calculations for $\Var \beta_{0j}$, $\Var \boldsymbol\beta_{1j}$ and the respective covariances.
+An example of multilevel modelling using I-priors is given in \hltodo{Section 4.3.1}.
+
+As a remark, the following regression functions are nested 
+\begin{itemize}
+  \item $f(\bx_i^{(j)}, j) = f_0 + f_1(\bx_i^{(j)}) + f_2(j)$ (random intercept model);  %\cF_0 \oplus \lambda_1\cF_1 \oplus \lambda_2\cF_2
+  \item $f(\bx_i^{(j)}, j) = f_0 + f_1(\bx_i^{(j)})$ (linear regression model);
+  \item $f(\bx_i^{(j)}, j) = f_0 + f_2(j)$ (ANOVA model);
+  \item $f(\bx_i^{(j)}, j) = f_0 $ (intercept only model),
+\end{itemize}
+and thus one may compare likelihoods to ascertain the best fitting model.
+In addition, one may add flexibility to the model in two possible ways:
+\begin{enumerate}
+  \item \textbf{More than two levels}. The model can be easily adjusted to reflect the fact that that the data is structured in a hierarchy containing three or more levels. For the three level case, let the indices $j\in\{1,\dots,m_1\}$ and $k\in\{1,\dots,m_2\}$ denote the two levels, and simply decompose the regression function accordingly.
+  \begin{align*}
+    \begin{gathered}
+      f(\bx_i^{(j,k)}, j, k) = f_0 + f_1(\bx_i^{(j,k)}) + f_2(j) + f_3(k) + f_{12}(\bx_i^{(j,k)}, j) + f_{13}(\bx_i^{(j,k)}, k)\\ 
+      + f_{23}(j, k) + f_{123}(\bx_i^{(j,k)}, j, k).
+    \end{gathered}
+  \end{align*}
+  \item \textbf{Group-level covariates}. Suppose now we would like to add group-level covariates to the model, i.e., covariates $\bz_j$ that only vary across groups. The regression function would then be
+  \begin{align*}
+    \begin{gathered}
+      f(\bx_i^{(j)}, j, \bz_j) = f_0 + f_1(\bx_i^{(j)}) + f_2(j) + f_3(\bz_j) + f_{12}(\bx_i^{(j)}, j) + f_{13}(\bx_i^{(j)}, \bz_j)\\ 
+      + f_{23}(j, \bz_j) + f_{123}(\bx_i^{(j)}, j, \bz_j).
+    \end{gathered}
+  \end{align*}
+  Not all of these terms need to be included.
+  For example, excluding $f_{23}$ would imply that the regression coefficient for $\bz_j$ does not vary across groups.
+\end{enumerate}
 
 \subsection{Longitudinal modelling}
 
+Longitudinal or panel data observes covariate measurements $x_i\in\cX$ and responses $y_i(t)\in\bbR$ for individuals $i=1,\dots,n$ across a time period $t \in \{1,\dots,T\} =: \cT$. 
+Often, the time indexing set $\cT$ may be unique to each individual $i$, so measurements for unit $i$ happens across a time period $\{t_{i1},\dots,t_{iT_i} \} =: \cT_i$---this is known as an unbalanced panel.
+It is also possible that covariate measurements vary across time too, so appropriately they are denoted $x_i(t)$.
+For example, $x_i(t)$ could be repeated measurements of the variable $x_i$ at time point $t\in\cT_i$.
+The relationship between the response variables $y_i(t)$ at time $t\in\cT_i$ is captured through the equation
+\[
+  y_i(t) = f\big(x_i, t \big) + \epsilon_{i}(t)
+\]
+where the distribution of $\bepsilon_i = \big(\epsilon_i(t_{i1}),\dots,\epsilon_i(t_{iT_i}) \big)^\top$ is Gaussian with mean zero and covariance matrix $\bPsi_i$.
+Assuming $\bPsi_i=\psi_i\bI_{T_i}$ or even $\bPsi_i=\psi\bI_{T_i}$ are perfectly valid choices, even though this seemingly ignores any time dependence between the observations.
+In reality, the I-prior induces time dependence of the observations via the kernels in the prior covariance matrix for $f$.
+Additionally, the random vectors $\bepsilon_i$ and $\bepsilon_{i'}$ are assumed to be independent for any two distinct $i,i'\in\{1,\dots,n\}$.
+%, in which case, $y_i(t)$ are viewed as multidimensional responses.
+
+Using the functional ANOVA decomposition on the regression function, we obtain
+\begin{align}\label{eq:longitudinalanova}
+  f(x_i,t) = f_0 + f_1(x_i) + f_2(t) + f_{12}(x_i,t),
+\end{align}
+where $f_0$ is an overall constant, $f_1\in\cF_1$, $f_2\in\cF_2$, and $f_{12}\in\cF_1\otimes\cF_2$.
+Choices for $\cF_1$ and $\cF_2$ are plentiful.
+In fact, any of the RKHS/RKKS described in Chapter 3 can be used to either model a linear dependence (canonical RKHS), nominal dependence (Pearson RKHS), polynomial dependence (polynomial RKKS) or smooth dependence (fBm or SE RKHS) on the $x_i$'s and $t$'s on $f$.
+
+\begin{remark}
+  Although \eqref{eq:longitudinalanova} is a special case of the multilevel model decomposition \eqref{eq:anovamultilevel} for which $x_i = x_i(t)$ (time-varying covariates), it is different to how longitudinal models are normally treated in using random coefficients.
+  As a multilevel model, longitudinal models treat the individuals as the groups or clusters (level two), and the time points as the various measurements within the clusters (level one).
+\end{remark}
+
 \subsection{Smoothing models}
 
-\subsection{Models with functional covariates}
+Assume that, up to a constant, the regression function lies in the scaled, centred fBm RKHS $\cF$ of functions over $\cX \equiv \bbR$ with Hurst index $1/2$.
+Thus, with a centring with respect to the empirical distribution of $\{x_1,\dots,x_n\}$ and using the absolute norm on $\bbR$, $\cF$ has kernel
+\[
+  h_\lambda(x,x') = \frac{\lambda}{2n^2} \sum_{i=1}^n\sum_{j=1}^n \big( \abs{x-x_i} + \abs{x'-x_j} - \abs{x-x'} - \abs{x_i-x_j} \big).
+\]
+According to \citet[Section 10]{van2008reproducing}, $\cF$ contains functions possessing a square integrable weak derivative.
+The posterior mean of $f$ based on an I-prior is then a (one-dimensional) smoother for the data.
+
+With $w_k\iid\N(0,\psi)$, functions in $\cF$ are of the form
+\begin{align*}
+  f(x) 
+  &= \sum_{k=1}^n h(x,x_k)w_k \\
+  &= \sum_{k=1}^n \left( \frac{\lambda}{2n^2} \sum_{i=1}^n\sum_{j=1}^n \big( \abs{x-x_i} + \abs{x_k-x_j} - \abs{x-x_k} - \abs{x_i-x_j} \big) \right) w_k.
+\end{align*}
+The derivative of $f(x)$ with respect to $x$ is
+\begin{align*}
+  \frac{\d }{\d x}f(x) 
+  &= \frac{\lambda}{2n^2} \sum_{k=1}^n  \sum_{i=1}^n\sum_{j=1}^n \left( \frac{\d}{\d x}\abs{x-x_i}  - \frac{\d}{\d x}\abs{x-x_k}  \right) w_k \\
+  &= \frac{\lambda}{2n^2} \sum_{k=1}^n  \sum_{i=1}^n\sum_{j=1}^n \left( \sign(x-x_i)  - \sign(x-x_k)  \right) w_k \\
+  &= \frac{\lambda}{2n} \sum_{k=1}^n  \sum_{i=1}^n           \left( \sign(x-x_i)  - \sign(x-x_k)  \right) w_k \\
+\end{align*}
+
+
+
+
