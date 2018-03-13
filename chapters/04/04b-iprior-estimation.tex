@@ -1,7 +1,23 @@
+After choosing an appropriate function space...
+What are the kernel parameters? 
+State the model $y = \alpha + \sum h w + e$.
+Goal is to estimate posterior regression function.
+
+After imposing an I-prior on the regression function, the interest is then to obtain the posterior distribution of the regression function.
+This has been described in Chapter 1, and repeated here for convenience.
+In particular, the posterior distribution for the regression function of the form $f(x) = \sum_{i=1}^n h(x,x_i)w_i$ merely depends on the posterior distribution of $  \bw := (w_1,\dots,w_n)^\top$, which is $  \bw|\by \sim \N_n(\wtilde, )$, where
+\begin{align*}
+  \begin{gathered}
+    \wtilde = 
+  \end{gathered}
+\end{align*}
+
+explain package
+
 
 \subsection{The intercept}
 
-Given the regression model \eqref{eq:linmod} subject to an I-prior \eqref{eq:iprior}, the marginal likelihood of the intercept $\alpha$ (after integrating out the I-prior) can be maximised with respect to $\alpha$, which yields the sample mean for $y$ as the ML estimate for intercept.
+Given the regression model \eqref{eq:model1} subject to an I-prior \eqref{eq:model1ass}, the marginal likelihood of the intercept $\alpha$ (after integrating out the I-prior) can be maximised with respect to $\alpha$, which yields the sample mean for $y$ as the ML estimate for intercept.
 
 \subsection{Direct optimisation}
 
@@ -70,61 +86,8 @@ All of these MCMC packages require the user to code the model individually, and 
 This makes it inconvenient for GPR and I-prior models, because in addition to the model itself, the kernel functions need to be coded as well and ensuring computational efficiency would be a difficult task.
 Note that this full Bayesian method is not implemented in \pkg{iprior}, but described here for completeness.
 
-\subsection{Computational considerations}
-
-Computational complexity for estimating I-prior models (and in fact, for GPR in general) is dominated by the inversion of the $n \times n$ matrix $\bSigma_\theta = \psi\bH_\eta^2 + \psi^{-1}\bI_n$, which scales as $O(n^3)$ in time.
-As mentioned earlier, the \pkg{iprior} package inverts this by way of the eigendecomposition of $\bH_\eta$, but this operation is also $O(n^3)$.
-For the direct optimisation method, this matrix inversion is called when computing the log-likelihood, and thus must be computed at each Newton step.
-For the EM algorithm, this matrix inversion appears when calculating $\tilde \bw$, the posterior mean of the I-prior random effects.
-Furthermore, storage requirements for I-priors models are similar to that of GPR models, which is $O(n^2)$.
-
-The machine learning literature is rich in ways to resolve this issue, as summarised by \cite{quinonero2005unifying}.
-One such method is to use low-rank matrix approximations.
-Let $\bQ$ be a matrix with rank $q < n$, and that $\bQ\bQ^\top$ can be used to approximate the kernel matrix $\bH_\eta$.
-Then
-%
-\[
-  (\psi\bH_\eta^2 + \psi^{-1}\bI_n)^{-1} \approx
-  \psi\left[
-  \bI_n -
-  \bQ\left( \big(\psi^2\bQ^\top\bQ\big)^{-1} +\bQ^\top\bQ \right)^{-1} \bQ^\top
-  \right],
-\]
-%
-obtained via the Woodbury matrix identity, is a potentially much cheaper operation which scales $O(nq^2)$---$O(q^3)$ to do the inversion, and $O(nq)$ to do the multiplication (because typically the inverse is premultiplied to a vector).
-When the kernel matrix itself is sufficiently low ranked (for instance, when using the linear kernel for a low-dimensional covariate) then the above method is exact.
-However, other interesting kernels such as the fractional Brownian motion (fBm) kernel or the squared exponential kernel results in kernel matrices which are full rank.
-
-Another method of approximating the kernel matrix, and the method implemented by our package, is the Nystr\"om method \citep{williams2001using}.
-The theory has its roots in approximating eigenfunctions, but this has since been adopted to speed up kernel machines.
-The main idea is to obtain an (approximation to the true) eigendecomposition of $\bH_\eta$ based on a small subset $m \ll n$ of the data points.
-Reorder the rows and columns and partition the kernel matrix as
-%
-\[
-  \bH_\eta =
-  \begin{pmatrix}
-    \bA_{m\times m}         & \bB_{m \times (n-m)} \\
-    \bB_{m \times (n-m)}^\top  & \bC_{(n-m) \times (n-m)} \\
-  \end{pmatrix}.
-\]
-%
-The Nystr\"om method provides an approximation to the lower right block $\bC$ by manipulating the eigenvectors and eigenvalues of $\bA$, an $m \times m$ matrix, together with the matrix $\bB$ to give
-%
-\[
-  \bH_\eta \approx
-  \begin{pmatrix}
-    \bV_m \\
-    \bB^\top\bV_m\bU_m^{-1}
-  \end{pmatrix}
-  \bU_m
-  \begin{pmatrix}
-    \bV_m^\top & \bU_m^{-1}\bV_m^\top\bB
-  \end{pmatrix}
-\]
-%
-where $\bU_m$ is the diagonal matrix containing the $m$ eigenvalues of $\bA$, and $\bV_m$ is the corresponding matrix of eigenvectors.
-An orthogonal version of this approximation is of interest, which has been studied by \cite{fowlkes2001efficient}, which allows us to easily calculate the inverse of $\bSigma_\theta$.
-Estimating I-prior models using the Nystr\"om method takes $O(nm^2)$ times and $O(nm)$ storage.
-
-
 \subsection{Comparison of estimation methods}
+
+Running example: smoothing in one dimension.
+Data simulated, what are the true parameters?
+Run three methods of estimation, compare solutions, bias, MSE of prediction.

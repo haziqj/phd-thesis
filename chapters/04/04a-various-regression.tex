@@ -235,28 +235,88 @@ In fact, any of the RKHS/RKKS described in Chapter 3 can be used to either model
 
 \subsection{Smoothing models}
 
+Single- and multi-variable smoothing models can be fitted under the I-prior methodology using the fBm RKHS.
+In standard kernel based smoothing methods, the squared exponential kernel is often used, and the corresponding RKHS contains analytic functions.
+There are several attractive properties of using the fBm RKHS, and for one-dimensional smoothing, these are discussed below.
+
 Assume that, up to a constant, the regression function lies in the scaled, centred fBm RKHS $\cF$ of functions over $\cX \equiv \bbR$ with Hurst index $1/2$.
-Thus, with a centring with respect to the empirical distribution of $\{x_1,\dots,x_n\}$ and using the absolute norm on $\bbR$, $\cF$ has kernel
+Thus, with a centring with respect to the empirical distribution $\Prob_n$ of $\{x_1,\dots,x_n\}$ and using the absolute norm on $\bbR$, $\cF$ has kernel
 \[
   h_\lambda(x,x') = \frac{\lambda}{2n^2} \sum_{i=1}^n\sum_{j=1}^n \big( \abs{x-x_i} + \abs{x'-x_j} - \abs{x-x'} - \abs{x_i-x_j} \big).
 \]
-According to \citet[Section 10]{van2008reproducing}, $\cF$ contains functions possessing a square integrable weak derivative.
+According to \citet[Section 10]{van2008reproducing}, $\cF$ contains absolutely continuous functions possessing a square integrable weak derivative satisfying $f(0)=0$.
+The norm is given by $\norm{f}^2_\cF = \int \dot f^2 \d x$.
 The posterior mean of $f$ based on an I-prior is then a (one-dimensional) smoother for the data.
+For $f$ of the form $f = \sum_{i=1}^n h(\cdot,x_i)w_i$, i.e., $f\in\cF_n$, the finite subspace of $\cF$ as in \hltodo{Section}), then \citep{bergsma2017} shows that $f$ can be represented as 
+\begin{align}\label{eq:ipriorbrownianbridge}
+  f(x) = \int_{-\infty}^x \beta(t) \dint t
+\end{align}
+where 
+\[
+  \beta(t) = \sum_{i:x_i \leq t} w_i =  \frac{f(x_{i_t + 1}) - f(x_{i_t})}{x_{i_t + 1} - x_{i_t}}
+\]
+with $i_t = \max_{x_i \leq t} i$.
+Under the I-prior with an iid assumption on the errors, the $w_i$'s are zero mean normal random variables with variance $\psi$, so that $\beta$ as defined above is an ordinary Brownian bridge with respect to the empirical distribution $\Prob_n$.
+The I-prior for $f$ is piecewise linear with knots at $x_1,\dots,x_n$, and the same holds true for the posterior mean.
+The implication is that the I-prior automatically adapts to irregularly spaced $x_i$: in any region where there are no observations, the resulting smoother is linear.
+This is explained by the reduced Fisher information about the derivative of the regression curve in regions with no observation.
 
-With $w_k\iid\N(0,\psi)$, functions in $\cF$ are of the form
-\begin{align*}
-  f(x) 
-  &= \sum_{k=1}^n h(x,x_k)w_k \\
-  &= \sum_{k=1}^n \left( \frac{\lambda}{2n^2} \sum_{i=1}^n\sum_{j=1}^n \big( \abs{x-x_i} + \abs{x_k-x_j} - \abs{x-x_k} - \abs{x_i-x_j} \big) \right) w_k.
-\end{align*}
-The derivative of $f(x)$ with respect to $x$ is
-\begin{align*}
-  \frac{\d }{\d x}f(x) 
-  &= \frac{\lambda}{2n^2} \sum_{k=1}^n  \sum_{i=1}^n\sum_{j=1}^n \left( \frac{\d}{\d x}\abs{x-x_i}  - \frac{\d}{\d x}\abs{x-x_k}  \right) w_k \\
-  &= \frac{\lambda}{2n^2} \sum_{k=1}^n  \sum_{i=1}^n\sum_{j=1}^n \left( \sign(x-x_i)  - \sign(x-x_k)  \right) w_k \\
-  &= \frac{\lambda}{2n} \sum_{k=1}^n  \sum_{i=1}^n           \left( \sign(x-x_i)  - \sign(x-x_k)  \right) w_k \\
-\end{align*}
+In \citep{bergsma2017}, it is stated that the covariance function for $\beta$ is 
+\[
+  \Cov\big(\beta(x),\beta(x') \big) = n\big( \min\{\Prob_n(X < x), \Prob_n(X_n < x') \} -  \Prob_n(X < x) \Prob_n(X_n < x') \big)
+\]
+From this, notice that $\Var \beta(x) = \Prob_n(X_n < x)\big(1 - \Prob_n(X_n < x) \big)$, which shows an automatic boundary correction: close to the boundary there is little Fisher information on the derivative of the regression function $\beta(x)$, so the prior variance is small.
+This will lead to more shrinkage of the posterior derivative of $f$ towards the derivative of the prior mean $f_0$.
 
+\begin{remark}
+  From \eqref{eq:ipriorbrownianbridge}, the prior process for $f$ is thus an integrated Brownian bridge. 
+  This shows a close relation with cubic spline smoothers, which can be interpreted as the posterior mean when the prior is an integrated Wiener process \citep{wahba1990spline}.
+  Unlike I-priors however, cubic spline smoothers do not have automatic boundary corrections, and typically the additional assumption is made that the smoothing curve is linear at the boundary knots.
+\end{remark}
 
+%\[
+%  \norm{f}^2_\cF = \sum_{i=1}^{n-1} \frac{\big( f(x_{i+1}) - f(x_i) \big)^2}{x_{i+1} - x_i}
+%\]
+%because $\cF_n$ is the set of functions which integrate to zero and are piecewise linear with knots at $x_1,\dots,x_n$.
+%Assuming $x_1\leq x_2\leq \cdots \leq x_n$, then it can be shown that
+%\[
+%  w_1 = \frac{f(x_2) - f(x_1)}{x_2 - x_1}
+%\]
 
+%With $w_k\iid\N(0,\psi)$, functions in $\cF$ are of the form
+%\begin{align*}
+%  f(x) 
+%  &= \sum_{k=1}^n h(x,x_k)w_k \\
+%  &= \sum_{k=1}^n \left( \frac{\lambda}{2n^2} \sum_{i=1}^n\sum_{j=1}^n \big( \abs{x-x_i} + \abs{x_k-x_j} - \abs{x-x_k} - \abs{x_i-x_j} \big) \right) w_k.
+%\end{align*}
+%The derivative of $f(x)$ with respect to $x$ is
+%\begin{align*}
+%  \frac{\d }{\d x}f(x) 
+%  &= \frac{\lambda}{2n^2} \sum_{k=1}^n  \sum_{i=1}^n\sum_{j=1}^n \left( \frac{\d}{\d x}\abs{x-x_i}  - \frac{\d}{\d x}\abs{x-x_k}  \right) w_k \\
+%  &= \frac{\lambda}{2n^2} \sum_{k=1}^n  \sum_{i=1}^n\sum_{j=1}^n \left( \sign(x-x_i)  - \sign(x-x_k)  \right) w_k \\
+%  &= \frac{\lambda}{2n} \sum_{k=1}^n  \sum_{i=1}^n           \left( \sign(x-x_i)  - \sign(x-x_k)  \right) w_k \\
+%\end{align*}
 
+The advantage of the I-prior methodology is the ability to fit single or multidimensional smoothing models with just two parameters to be estimated: the RKHS scale parameter $\lambda$ and the error precision $\bPsi$.
+The Hurst parameter $\gamma \in (0,1)$ of the fBm RKHS can also be treated as a free parameter for added flexibility, but for most practical applications, we find that the default setting of $\gamma = 1/2$ performs sufficiently well.
+
+\subsection{Regression with functional covariates}
+
+Suppose that we have functional covariates $x$ in the real domain, and that $\cX$ is a set of differentiable functions.
+If so, it is reasonable to assume that $\cX$ is a Hilbert-Sobolev space with inner product
+%
+\[
+  \langle x,x' \rangle_\cX = \int \dot{x}(t) \dot{x}'(t) \dint t,
+\]
+%
+so that we may apply the linear, fBm or any other kernels which make use of inner products by making use of the polarisation identity.
+Furthermore, let $z \in \bbR^T$ be the discretised realisation of the function $x \in \cX$ at regular intervals $t = 1,\dots,T$. Then
+%
+\[
+  \langle x,x' \rangle_\cX \approx \sum_{t=1}^{T-1} (z_{t+1} - z_t)(z'_{t+1} - z_t').
+\]
+%
+For discretised observations at non-regular intervals $\{t_1,\dots,t_T\}$ then a more general formula to the above one might be used, for instance,
+\[
+  \langle x,x' \rangle_\cX \approx \sum_{i=1}^{T-1} \frac{(z_{t_{i+1}} - z_{t_i})(z'_{t_{i+1}} - z_{t_i}')}{t_{i+1} - t_{i}}.
+\]
