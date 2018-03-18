@@ -1,0 +1,24 @@
+\section{A recap on the exponential family EM algorithm}
+\label{apx:expem}
+
+Consider the density function $p(\cdot|\btheta)$ of the complete data $\bz = \{\by,\bw\}$, which depends on parameters $\btheta = (\theta_1,\dots,\theta_s)^\top \in\Theta\subseteq\bbR^s$, belonging to an exponential family of distributions.
+This density takes the form $p(\bz|\btheta) = B(\bz) \exp \big( \ip{\bfeta(\btheta), \bT(\bz)} -  A(\btheta) \big)$, where $\bfeta:\bbR^s \mapsto \bbR$,  $\bT(\bz) = \big(T_1(\bz),\dots,T_s(\bz)\big)^\top \in \bbR^s$ are the sufficient statistics of the distribution, and $\ip{\cdot,\cdot}$ is the usual Euclidean dot product.
+It is often easier to work in the \emph{natural parameterisation} of the exponential family distribution
+\[
+  p(\bz|\bfeta) = B(\bz) \exp \big( \ip{\bfeta, \bT(\bz)} -  A^*(\bfeta) \big)
+\]
+by defining $\bfeta := \big(\eta_1(\btheta),\dots,\eta_r(\btheta)\big) \in \cE$, and $\exp A^*(\bfeta) = \int B(\bz) \, \exp \, \ip{\bfeta, \bT(\bz)}  \dint \bz$ to ensure the density function normalises to one.
+As an aside, the set $\cE := \big\{ \bfeta = (\eta_1,\dots,\eta_s) \,|\, \int  \exp A^*(\bfeta) < \infty \big\}$ is called the \emph{natural parameter space}.
+If $\dim \cE = r < s = \dim \Theta$, then the the pdf belongs to the \emph{curved exponential family} of distributions.
+If $\dim \cE = r = s = \dim \Theta$, then the family is a \emph{full exponential family}.
+
+Assuming the latent $\bw$ variables are observed and working with the natural parameterisation, then the complete maximum likelihood (ML) estimate for $\bfeta$ is obtained by solving 
+\begin{align*}
+  \frac{\partial}{\partial\bfeta}\log p(\bz|\bfeta)
+  &= \bT(\bz) - \frac{\partial}{\partial\bfeta} A^*(\bfeta) = 0.
+\end{align*}
+A useful identity to know is that $\frac{\partial}{\partial\bfeta} A^*(\bfeta) = \E \bT(\bz)$ \citep[Theorem 3.4.2 \& Exercise 3.32(a)]{casella2002statistical}.
+
+\hltodo{Prove this in the appendix. IDEA is this: For MLE of exponential family, equate $T(x) = A'(\eta)$ and solve for $\eta$. Fact: $A'(\eta) = E T(x)$. Under EM, equate $E_z T(x,z) = E T(x,z)$, but $E T(x,z) = T(x,z)$ also if it satisfies MLE.}
+
+$\bfeta = \big(\eta_1(\btheta),\dots,\eta_1(\btheta)\big)\in\bbR^s$

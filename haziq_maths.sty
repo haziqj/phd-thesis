@@ -253,13 +253,18 @@
 \DeclareMathSymbol{\obot}{2}{matha}{"6B}
 \DeclareMathSymbol{\bigobot}{1}{mathx}{"CB}
 
+% overbrace and underbrace
+\newcommand{\myoverbrace}[3][gray]{{\color{#1}\overbrace{\color{black}#2}^{#3}}}
+\newcommand{\myunderbrace}[3][gray]{{\color{#1}\underbrace{\color{black}#2}_{#3}}}
+
 % Conveniences
 \renewcommand{\L}{\text{L}}
 \providecommand{\C}{\text{C}}
-\newcommand{\const}{\text{const.}}
+\newcommand{\const}{\text{const.}\hspace{0.01em}}
 \newcommand{\half}[1][1]{\frac{#1}{2}}  % \half for 1/2 or \half[n] for n/2, etc.
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\vecc}{vec}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator{\sign}{sign}

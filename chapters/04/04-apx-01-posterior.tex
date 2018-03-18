@@ -1,0 +1,64 @@
+\section[Deriving the posterior distribution for w]{Deriving the posterior distribution for $\bw$}
+\label{apx:posteriorw}
+
+In the following derivation, we implicitly assume the dependence on $\bff_0$ and $\theta$.
+The distribution of $\by|\bw$ is $\N_n(\balpha + \bff_0 +\bH_\eta\bw,\bPsi^{-1})$, where $\balpha = \alpha\bone_n$, while the prior distribution for $\bw$ is $\N_n(\bzero,\bPsi)$.
+Since $p(\bw|\by) \propto p(\by|\bw)p(\bw)$, we have that
+\begin{align*}
+  \log p(\bw|\by) 
+  &=  \log p(\by|\bw) + \log p(\bw) \\
+  &= \const + \cancel{\half\log\abs{\bPsi}} - \half (\by - \balpha - \bff_0 - \bH_\eta\bw)^\top \bPsi (\by - \balpha - \bff_0 - \bH_\eta\bw) \\
+  &\phantom{==} -\cancel{\half\log\abs{\bPsi}} - \half \bw^\top\bPsi^{-1}\bw \\
+  &= \const - \half \bw^\top(\bH_\eta\bPsi\bH_\eta + \bPsi^{-1})\bw + (\by - \balpha - \bff_0)^\top\bPsi\bH_\eta\bw.
+\end{align*}
+Setting $\bA = \bH_\eta\bPsi\bH_\eta + \bPsi^{-1}$, $\ba^\top = (\by - \balpha - \bff_0)^\top\bPsi\bH_\eta$, and using the fact that 
+\[
+  \bw^\top \bA \bw - 2 \ba^\top\bw = (\bw - \bA^{-1}\ba)^\top\bA(\bw - \bA^{-1}\ba),
+\]
+we have that $\bw|\by$ is normally distributed with the required mean and variance.
+
+Alternatively, one could have shown this using standard results of multivariate normal distributions.
+Noting that the covariance between $\by$ and $\bw$ is  %\sim\N_n(\balpha +\bff_0, \bV_y)
+\begin{align*}
+  \Cov(\by,\bw) 
+  &= \Cov(\balpha + \bff_0 + \bH_\eta\bw + \bepsilon, \bw) \\
+  &= \bH_\eta\Cov(\bw,\bw) \\
+  &= \bH_\eta\bPsi 
+%  &= \Cov(\bw,\by),
+\end{align*}
+and that $\Cov(\bw,\by) = \bPsi\bH_\eta = \bH_\eta\bPsi = \Cov(\by,\bw)$ by symmetry, the joint distribution $(\by,\bw)$ is
+\[
+  \begin{pmatrix}
+    \by \\
+    \bw
+  \end{pmatrix}
+  \sim \N_{n+n}
+  \left(
+    \begin{pmatrix}
+      \balpha + \bff_0 \\
+      \bzero
+    \end{pmatrix},
+    \begin{pmatrix}
+      \bV_y         & \bH_\eta\bPsi \\
+      \bH_\eta\bPsi & \bPsi \\
+    \end{pmatrix}
+  \right).
+\] 
+Thus,
+\begin{align*}
+  \E [\bw|\by] 
+  &= \E \bw + \Cov(\bw,\by) (\Var \by)^{-1} (\by - \E \by) \\
+  &= \bH_\eta\bPsi\bV_y^{-1}(\by - \balpha - \bff_0),
+\end{align*}
+and
+\begin{align*}
+  \Var [\bw|\by] 
+  &= \Var \bw - \Cov(\bw,\by) (\Var \by)^{-1} \Cov(\by,\bw) \\
+  &= \bPsi - \bH_\eta\bPsi\bV_y^{-1}\bH_\eta\bPsi \\
+  &= \bPsi - \bPsi\bH_\eta \left(\bPsi^{-1} + \bH_\eta\bPsi\bH_\eta \right)^{-1}\bH_\eta\bPsi  \\
+  &= \left(\bPsi^{-1} + \bH_\eta\bPsi\bH_\eta \right)^{-1} \\
+  &= \bV_y^{-1}
+%  &= \bPsi\left(\bPsi^{-1} - \bH_\eta\bV_y^{-1}\bH_\eta \right)\bPsi
+%  &= \left[ \bPsi^{-1} + \bPsi^{-1}\bH_\eta\bPsi \left( \right) \right]^{-1}
+\end{align*}
+as a direct consequence of the Woodbury matrix identity.
