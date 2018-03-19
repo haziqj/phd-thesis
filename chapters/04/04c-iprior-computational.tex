@@ -239,19 +239,19 @@ Defining $\bR_k$ and $\bS_k$ as the kernel matrices with $(i,j)$ entries $r_k(x_
   \bH_\eta^2 = \lambda_k^2\bR_k^2 + \lambda_k \myoverbrace{\big(\bR_k\bS_k + (\bR_k\bS_k)^\top \big)}{\bU_k} + \bS_k^2.
 \]
 Consider the full data log-likelihood for $\lambda_k$, $k=1,\dots,p$, conditionally dependent on the rest of the unknown parameters $\psi$ and $\lambda_{-k} = \{\lambda_1,\dots,\lambda_p\} \backslash \{ \lambda_k \}$:
-\begin{align*}
+\begin{align}
   L(\lambda_k|\by,\bw,\lambda_{-k},\psi)
   &= \const 
   - \half \tr \Big( (
   \psi\bH_\eta^2 + \psi^{-1}\bI_n
   )\bw\bw^\top \Big)
-  + \psi \tilde\by^\top \bH_\eta \bw \\
+  + \psi \tilde\by^\top \bH_\eta \bw \label{eq:logliklambdak} \\
   &= \const 
   - \lambda_k^2 \cdot \half[\psi] \tr(\bR_k^2 \bw\bw^\top)
   + \lambda_k \cdot \left( 
   \psi \tilde\by^\top \bR_k \bw - \half[\psi] \tr(\bU_k \bw\bw^\top)
-  \right).
-\end{align*}
+  \right). \nonumber
+\end{align}
 Notice that the above likelihood is an exponential family distribution with the natural parameterisation $\beta = (-\lambda_k^2, \lambda_k)$ and sufficient statistics $T_1$ and $T_2$ defined by
 \[
   T_1 = \half[\psi] \tr(\bR_k^2 \bw\bw^\top)
@@ -343,5 +343,44 @@ In the next chapter on binary and multinomial regression using I-priors, the exp
 
 \subsection{Accelerating the EM algorithm}
 
-Small speed up to the EM algorithm.
+A criticism of the EM algorithm is that it may take many iterations to converge.
+Several novel ideas have been looked at in a bid to `accelerate the EM algorithm', as it were.
+One such approach, which does not require any amendment to the particular EM algorithm at hand, is called the \emph{monotonically over-relaxed EM algorithm} (MOEM) by \citet{yu2012monotonically}.
+
+The idea of MOEM is as follows.
+At every iteration of the MOEM, perform as usual the E-step and M-step to obtain an updated parameter value $\theta^{(t+1)}_\text{EM}$.
+Instead of using this update value of the parameter, modify it instead, and use
+\[
+  \theta^{(t+1)} = (1 + \omega) \theta^{(t+1)}_\text{EM} - \omega \theta^{(t)},
+\]
+where $\omega$ is an \emph{over-relaxation} parameter.
+Under mild conditions, among them that $Q(\theta^{(t+1)}) > Q(\theta^{(t)})$, the MOEM estimate does not decrease the log-likelihood at each step.
+This condition is a slight inconvenience to check under the usual EM algorithm, but is a great companion to exponential family EM algorithm.
+From \eqref{alg:EM2}, we see that $Q(\lambda_k)$ is quadratic in $\lambda_k$, therefore any $\omega \in [0,1]$ will maintain monotonicity of the EM algorithm.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

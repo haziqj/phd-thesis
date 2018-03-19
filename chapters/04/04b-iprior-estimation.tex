@@ -137,11 +137,11 @@ Assuming A1 and A2, a direct optimisation of the parameters $\theta=\{\eta,\bPsi
 Denote $\bSigma_\theta := \bH_\eta\bPsi\bH_\eta + \bPsi^{-1} = \bV_y$.
 From \eqref{eq:model2}, the log-likelihood of $\theta$ is given by
 %
-\begin{align*}
+\begin{align}
   L(\theta)
-  &= \log \int p(\by|\bw)p(\bw) \dint \bw \\
-  &= -\half[n]\log 2\pi - \half\log\vert \bSigma_\theta \vert - \half \tilde\by^\top \bSigma_\theta^{-1} \tilde\by
-\end{align*}
+  &= \log \int p(\by|\bw)p(\bw) \dint \bw \nonumber \\
+  &= -\half[n]\log 2\pi - \half\log\vert \bSigma_\theta \vert - \half \tilde\by^\top \bSigma_\theta^{-1} \tilde\by \label{eq:marglogliky}
+\end{align}
 %
 This is typically done using conjugate gradients with a Cholesky decomposition on the covariance kernel to maintain stability, but the \pkg{iprior} package opts for an eigendecomposition of the kernel matrix $\bH_{\eta} = \bV\cdot\text{diag}(u_1,\dots,u_n)\cdot\bV^\top$ instead.
 Further, assuming A3 and since $\bH_{\eta}$ is a symmetrix matrix, we have that $\bV\bV^\top = \bI_n$, and thus

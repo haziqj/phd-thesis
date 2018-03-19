@@ -31,7 +31,7 @@ Finally, several examples of I-prior modelling are presented.
 \input{04c-iprior-computational}
 
 \section{Post-estimation}
-%\input{04c-iprior-post-estimation}
+\input{04c-iprior-post-estimation}
 
 \section{Examples}
 %\input{04c-examples}
@@ -57,18 +57,26 @@ The Nyström method of approximating the kernel matrix reduces complexity to $O(
 The computational issue faced by I-priors are mirrored in Gaussian process regression, so the methods to overcome these computational challenges in GPR can be explored further.
 However, most efficient computational solutions exploit the nature of the SE kernel structure, which is the most common kernel used in GPR.
 
-One promising avenue to achieve efficient computation for I-prior models is by using variational methods.
+Several avenues have been discussed to make the estimation procedure more efficient, but improvements can be had.
+One promising avenue to achieve efficient estimation for I-prior models is by using variational methods.
 A sparse variational approximation (typically by using inducing points) or stochastic variational inference can greatly reduce computational storage and speed requirements.
 A recent paper by \citet{cheng2017variational} suggested a variational algorithm with linear complexity for GPR-type models.
 
+On the topic of accelerating the EM algorithm, besides the MOEM procedure, there are two other algorithms that could be explored.
+The first is called parameter-expansion EM algorithm (PXEM) by \citep{liu1998parameter}, which has been shown to be promising for random-effects type models.
+It involves correcting the M-step by a `covariance adjustment', so that extra information can be capitalised on to improve convergence rates.
+The second is a quasi-Newton acceleration of the EM algorithm as proposed by \citet{lange1995quasi}.
+A slight change to the EM gradient algorithm in the M-step steers the EM algorithm to the Newton-Raphson algorithm, thus exploiting the benefits of the EM algorithm in the early stages (monotonic increase in likelihood) and avoiding the pitfalls of Newton-Raphson (getting stuck in local optima).
+The PXEM and quasi-Newton EM algorithms require an in-depth reassessment of the EM algorithm to specifically tailor them to I-prior models, which we leave as future work.
 
-\section*{Omitted}
+\section*{Miscellanea}
 \input{04-omitted}
 
 \ifstandalone
   \section*{Appendix}
   \input{04-apx-01-posterior}
   \input{04-apx-02-expem}
+  \input{04-apx-03-postestimation}
 \fi
 
 \hClosingStuffStandalone
