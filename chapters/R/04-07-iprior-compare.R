@@ -49,12 +49,15 @@ dat.fit <- rbind(
   data.frame(x = x, y = f(x, TRUE))
 )
 
+linlab <- paste0("alpha + ", "italic(f[true](x))")
 p <- ggplot() +
   geom_line(data = dat.truth, aes(x = x, y = y), col = "red3", size = 1,
             linetype = "solid") +
   geom_point(data = dat, aes(x = x, y = y)) +
   scale_x_continuous(name = expression(italic(x))) +
   scale_y_continuous(name = expression(italic(y))) +
+  annotate(geom = "text", x = 5.8, y = y.true[length(y.true)] - 1.5,
+           label = linlab, col = "red3", parse = TRUE) +
   theme_bw(); p
 
 ## ---- direct ----
@@ -131,24 +134,31 @@ ggs_compare_partial(fit.ggs)
 ggs_geweke(fit.ggs)
 ggs_caterpillar(fit.ggs)
 
-postmean <- summary(stan2coda(fit.stan))$stat[,1]
+postmean <- summary(stan2coda(fit.stan))$stat[, 1]
+postsd <- summary(stan2coda(fit.stan))$stat[, 2]
 b.alpha <- postmean[grep("alpha", names(postmean))]
 b.lambda <- postmean[grep("lambda", names(postmean))]
 b.psi <- postmean[grep("psi", names(postmean))]
+b.alpha.se <- postsd[grep("alpha", names(postsd))]
+b.lambda.se <- postsd[grep("lambda", names(postsd))]
+b.psi.se <- postsd[grep("psi", names(postsd))]
 ynew <- postmean[grep("ynew", names(postmean))]
 b.rmse <- sqrt(mean((ynew - f(x)) ^ 2))
+b.dens <- postmean[grep("lp__", names(postmean))] - (N / 2) * log(2 * pi)
 
 ## ---- compare ----
-met1 <- c(get_intercept(mod1), get_lambda(mod1), get_psi(mod1), mod1$time$time, get_prederror(mod1)[2])
-met2 <- c(get_intercept(mod2), get_lambda(mod2), get_psi(mod2), mod2$time$time, get_prederror(mod2)[2])
-met3 <- c(b.alpha, b.lambda, b.psi, 216.562, b.rmse)
+met1 <- c(get_intercept(mod1), NA,  get_lambda(mod1), get_se(mod1)[1], get_psi(mod1),
+          get_se(mod1)[3], logLik(mod1), mod1$time$time, get_prederror(mod1)[2])
+met2 <- c(get_intercept(mod2), NA, get_lambda(mod2), get_se(mod2)[1], get_psi(mod2),
+          get_se(mod2)[3], logLik(mod2), mod2$time$time, get_prederror(mod2)[2])
+met3 <- c(b.alpha, b.alpha.se, b.lambda, b.lambda.se, b.psi, b.psi.se, b.dens,
+          231.762, b.rmse)
 tab <- cbind(met1, met2, met3)
 colnames(tab) <- c("Direct optim.", "EM alg.", "HMC")
-rownames(tab) <- c("Intercept", "lambda", "psi", "Time (sec)", "RMSE")
+rownames(tab) <- c("Intercept", "se int", "lambda", "se lam", "psi", "se psi",
+                   "Log density", "Time (sec)", "RMSE")
 tab
 
 ## ---- save.plots ----
-# ggsave("figure/04-post_reg_cred.pdf", p.cred, "pdf", width = 6.5, height = 4)
-# ggsave("figure/04-post_reg_ppc.pdf", p.ppc, "pdf", width = 6.5, height = 4)
-# move_fig_to_chapter()
-
+ggsave("figure/04-example_data.pdf", p, "pdf", width = 6.5, height = 4)
+move_fig_to_chapter()

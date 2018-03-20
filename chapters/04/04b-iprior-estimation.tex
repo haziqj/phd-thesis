@@ -1,7 +1,5 @@
-Depending on the type of regression model, an appropriate function space  $\cF$ needs to be chosen, and the reproducing kernel for the function space identified.
-Using an I-prior on the regression function $f\in\cF$ with prior mean $f_0\in\cF$, the interest is then to obtain a posterior estimate of $f$.
-We denote the dependence of the kernel $h$ on the parameters $\eta$ by $h_\eta$.
-The regression model to be estimated is always of the form
+After selecting a RKHS/RKKS $\cF$ of functions over $\cX$ suitable for the regression problem at hand, one then proceeds to estimate the posterior distribution of the regression function.
+The I-prior model \eqref{eq:model1} subject to \eqref{eq:model1ass} and $f\in\cF$ has the simple and convenient representation
 \begin{align}\label{eq:model2}
   \begin{gathered}
     y_i = \alpha + f_0(x_i) +
@@ -15,10 +13,11 @@ The regression model to be estimated is always of the form
     (w_1,\dots,w_n)^\top \sim \N_n(\bzero,\bPsi),
   \end{gathered}
 \end{align}
-although the indices may need to be adjusted for the individual model at hand, especially when dealing with ANOVA RKKSs.
+where $f_0:\cX\to\bbR$ is a function chosen a priori representing the `best guess' of $f$, and the dependence of the kernel of $\cF$ on parameters $\eta$ is emphasised through the subscript in $h_\eta:\cX\times\cX\to\bbR$.
+
 The parameters of the I-prior model are collectively denoted by $\theta = \{\alpha,\eta,\bPsi \}$.
 Given $\theta$ and a prior choice for $f_0$, the posterior regression function is determined solely by the posterior distribution of the $w_i$'s.
-Under all of these normality assumptions, using standard multivariate normal results one finds that the posterior of $\bw := (w_1,\dots,w_n)^\top$ is $\bw|\by \sim \N_n(\wtilde, \tilde\bV_w )$, where
+Using standard multivariate normal results, one finds that the posterior distribution for $\bw := (w_1,\dots,w_n)^\top$ is $\bw|\by \sim \N_n(\wtilde, \tilde\bV_w )$, where
 \begin{align}\label{eq:posteriorw}
   \begin{gathered}
     \wtilde = \bPsi \bH_\eta \bV_y^{-1} (\by - \alpha\bone_n - \bff_0)
@@ -26,26 +25,27 @@ Under all of these normality assumptions, using standard multivariate normal res
     \tilde\bV_w = \big(\bH_\eta\bPsi\bH_\eta + \bPsi^{-1}\big)^{-1} = \bV_y^{-1},
   \end{gathered}
 \end{align}
-where $\bff_0=\big(f_0(x_1),\dots,f_0(x_n) \big)^\top$, $\bH_\eta$ is the kernel matrix with $(i,j)$ entries equal to $h_\eta(x_i,x_j)$, and $\bV_y$ is the variance of the marginal distribution for $\by = (y_1,\dots,y_n)$.
-See Appendix \ref{apx:posteriorw} for a derivation.
+%where $\bff_0=\big(f_0(x_1),\dots,f_0(x_n) \big)^\top$, $\bH_\eta$ is the kernel matrix with $(i,j)$ entries equal to $h_\eta(x_i,x_j)$, and $\bV_y$ is the variance of the marginal distribution for $\by = (y_1,\dots,y_n)$.
+using the familiar notation that we introduced in \hltodo{Section 1.4}.
+See \autoref{apx:posteriorw} for a derivation.
+By linearity, the posterior distribution for $f$ is also normal.
 
 In each modelling scenario, there are a number of kernel parameters $\eta$ that need to be estimated from the data.
 Assuming that the covariate space is $\cX = \cX_1\times\cdots\times\cX_p$, and there is an ANOVA like decomposition of the function space $\cF$ into its constituents spaces $\cF_1,\dots,\cF_p$, then at the very least, there are $p$ scale parameters $\lambda_1,\dots,\lambda_p$ for each of the RKHSs.
-Depending on the RKHS used, there could be either kernel parameters that need to be optimised---the Hurst index for the fBm RKHS, the lengthscale for the SE RKHS, and the offset for the polynomial RKKS.
-Default settings for these parameters may be used, and if this is the case, only scale parameters need to be estimated, and the estimation procedure can be made more efficient as the kernel matrices need not be recomputed each time.
-This is explained in further detail in \hltodo{Section 4.X}.
-
-For simplicity, the following additional assumptions are imposed on the I-prior model \eqref{eq:model2}:
-\begin{enumerate}
-  \item[A1.] Set $\alpha = 0$ and replace the responses by their centred versions $y_i \mapsto \tilde y_i = y_i - \frac{1}{n}\sum_{i=1}^n$.  
-  \item[A2.] Assume a zero prior mean $f_0(x) = 0$ for all $x\in\cX$.
-  \item[A3.] Assume identical and independent errors, $\bPsi = \psi\bI_n$.
-\end{enumerate}
-Assumptions A1 and A2 are motivated by the discussion in Section \ref{sec:intercept}.
-Although assumption A3 is not strictly necessary, it is often a reasonable one and one that simplifies the estimation procedure greatly.
+Depending on the RKHS used, there could be more kernel parameters that need to be optimised, for instance, the Hurst index for the fBm RKHS, the lengthscale for the SE RKHS, and/or the offset for the polynomial RKKS.
+However, these may be treated as fixed parameters as well.
+%Default settings for these parameters may be used, and if this is the case, only scale parameters need to be estimated, and the estimation procedure can be made more efficient as the kernel matrices need not be recomputed each time.
+%This is explained in further detail in \hltodo{Section 4.X}.
 
 The following subsections describe possible estimation procedures for the hyperparameters of the model.
-Implementation of these estimation procedures are  done in \proglang{R}, mainly using the \pkg{iprior} package \citep{jamil2017}.
+Henceforth, for simplicity, the following additional standing assumptions are imposed on the I-prior model \eqref{eq:model2}:
+\begin{enumerate}[label=A\arabic*,ref=A\arabic*]
+  \item \textbf{Centred responses}. Set $\alpha = 0$ and replace the responses by their centred versions $y_i \mapsto \tilde y_i = y_i - \frac{1}{n}\sum_{i=1}^n$. \label{ass:A1}  
+  \item \textbf{Zero prior mean}. Assume a zero prior mean $f_0(x) = 0$ for all $x\in\cX$. \label{ass:A2} 
+  \item \textbf{Iid errors}. Assume identical and independent (iid) errors random variables, i.e., $\bPsi = \psi\bI_n$. \label{ass:A3} 
+\end{enumerate}
+Assumptions \ref{ass:A1} and \ref{ass:A2} are motivated by the discussion in \autoref{sec:intercept}.
+Although assumption \ref{ass:A3} is not strictly necessary, it is often a reasonable one and one that simplifies the estimation procedure greatly.
 
 %Recall that the ANOVA kernel can be viewed as a sum of $2^p$ terms consisting of products of kernels with increasing order of interactions.
 
@@ -80,18 +80,19 @@ Implementation of these estimation procedures are  done in \proglang{R}, mainly 
 
 \subsection{The intercept and the prior mean}\label{sec:intercept}
 
-In most statistical models, an intercept is a necessary inclusion to aid interpretation.
-In the regression model stated in \eqref{eq:model1}, a lack of an intercept would fail to account for the correct location of the regression function with respect to the $y$-axis.
+In most statistical models, an intercept is a necessary inclusion which aids interpretation.
+In the context of the I-prior model \eqref{eq:model2}, a lack of an intercept would fail to account for the correct locational shift of the regression function along the $y$-axis.
 Further, when zero-mean functions are considered, the intercept serves as being the `grand mean' value of the responses.
 
-There are two ways of including an intercept in the I-prior model.
-One is by including the tensor sum of the RKHS of constant functions to $\cF$, and the other is to simply treat the intercept as a parameter of the model to be estimated.
-%The third is to treat the prior mean of $f$ as a constant function, i.e. a hyperparameter to be estimated.
+The addition of an intercept to the regression model may be viewed in one of two ways.
+The first is to view it as a function belonging to the RKHS of constant functions $\cF_0$, and thereby tensor summing this space to $\cF$.
 In the polynomial and ANOVA RKKSs, we saw that an intercept is naturally induced by the inclusion of a RKHS of constant functions in their construction.
+The second is to simply treat the intercept as a parameter of the model to be estimated.
+%The third is to treat the prior mean of $f$ as a constant function, i.e. a hyperparameter to be estimated.
 In any of the other RKHSs described in Chapter 2, an intercept would need to be added separately.
 
-These two methods convey the same mathematical model, and there is very little difference in the way of interpretation, although estimation is completely different. 
-In the former method, the intercept-less RKHS/RKKS $\cF$ with kernel $h$ is made to include an intercept by modifying the kernel to be $h + 1$.
+These two methods convey the same mathematical model, and there is very little difference in the way of interpretation, although estimation is entirely different. 
+In the first method, the intercept-less RKHS/RKKS $\cF$ with kernel $h$ is made to include an intercept by modifying the kernel to be $h + 1$.
 The intercept will then be implicitly taken care of without having dealt with it explicitly.
 However, it can be obtained by realising that for $\alpha\in\cF_0$ the RKHS of constant functions, then $\alpha = \sum_{i=1}^n w_i$.
 
@@ -99,7 +100,7 @@ On the other hand, consider the intercept as a parameter $\alpha$ to be estimate
 Obtaining an estimate $\alpha$ using a likelihood-based argument is rather simple.
 From \eqref{eq:model2}, $\E y_i = \alpha + f_0(x_i)$ for all $i=1,\dots,n$, so the maximum likelihood estimate for $\E y$ is its sample mean $\bar y = \frac{1}{n}\sum_{i=1} y_i$, and hence the ML estimate for $\alpha$ is $\hat\alpha = \bar y - \frac{1}{n} \sum_{i=1}^n f_0(x_i)$.
 Alternatively, the estimation of $\alpha$ under a fully Bayesian treatment is possible by assuming an appropriate hyperprior on it, such as a conjugate normal prior $\N(a,A^{-1})$.
-If so, the conditional posterior of $\alpha$ given $\bw$, $\theta$ and $f_0$ is also normal with mean $\tilde a$ and variance $\tilde A$, where
+If so, the conditional posterior of $\alpha$ given $\bw$, $\eta$, $\bPsi$ and $f_0$ is also normal with mean $\tilde a$ and variance $\tilde A$, where
 \[
   \tilde A = \sum_{i,j=1}^n \psi_{ij} + A
   \hspace{0.5cm}\text{and}\hspace{0.5cm}
@@ -114,6 +115,7 @@ Note that the posterior mean for $\alpha$ is
 \end{align*}
 which, in the iid errors case, is seen to be a weighted sum of the ML estimate $\hat\alpha$ and the prior mean $a$.
 Unless there is a strong reason to add prior information to the intercept, the ML estimate seems to be the simplest approach.
+Assumption \ref{ass:A1} implies a ML estimation of the intercept parameter.
 
 Now, a note on the prior mean $f_0$.
 For kernels with the property that $h(x,x^*) \to 0$ as $D(x,x^*) \to \infty$ for $x \in \cX_{\text{train}}$ and $x^* \in \cX_\text{new}$ such as the SE kernel, this means that predictions outside the training set will be zero and thus rely on the prior mean $f_0$.
@@ -125,26 +127,23 @@ Of course, should it be felt appropriate, a non-zero function $f_0$ may be impos
 If $f_0(x) = \mu_0 \in \bbR$ for all $x\in\cX$, then this basically implies another intercept in the model, if it is not already present.
 Note that when treating $\mu_0$ as a hyperparameter to be estimated, then this does not yield a fully identified model, and only $\alpha +\mu_0$ may be estimated.
 
-
- 
-
-
 %Without it and in cases where $f(0)=0$, arbitrary steepness is added to the regression function, and this is undesirable when there is no justification for the overall regression function to pass through the origin.
 
 \subsection{Direct optimisation}
 
-Assuming A1 and A2, a direct optimisation of the parameters $\theta=\{\eta,\bPsi \}$ using the log-likelihood of $\theta$ is straightforward to implement.
+Under assumptions \ref{ass:A1} and \ref{ass:A2}, a direct optimisation of the parameters $\theta=\{\eta,\bPsi \}$ using the log-likelihood of $\theta$ is straightforward to implement.
 Denote $\bSigma_\theta := \bH_\eta\bPsi\bH_\eta + \bPsi^{-1} = \bV_y$.
-From \eqref{eq:model2}, the log-likelihood of $\theta$ is given by
+From \eqref{eq:model2}, the (marginal) log-likelihood of $\theta$ is given by
 %
 \begin{align}
   L(\theta)
   &= \log \int p(\by|\bw)p(\bw) \dint \bw \nonumber \\
-  &= -\half[n]\log 2\pi - \half\log\vert \bSigma_\theta \vert - \half \tilde\by^\top \bSigma_\theta^{-1} \tilde\by \label{eq:marglogliky}
+  &= -\half[n]\log 2\pi - \half\log\vert \bSigma_\theta \vert - \half \tilde\by^\top \bSigma_\theta^{-1} \tilde\by \label{eq:marglogliky}.
 \end{align}
 %
-This is typically done using conjugate gradients with a Cholesky decomposition on the covariance kernel to maintain stability, but the \pkg{iprior} package opts for an eigendecomposition of the kernel matrix $\bH_{\eta} = \bV\cdot\text{diag}(u_1,\dots,u_n)\cdot\bV^\top$ instead.
-Further, assuming A3 and since $\bH_{\eta}$ is a symmetrix matrix, we have that $\bV\bV^\top = \bI_n$, and thus
+The term marginal refers to the fact that we are averaging out the random function represented by $\bw$.
+Direct optimisation is typically done using conjugate gradients with a Cholesky decomposition on the covariance kernel to maintain stability, but we opt for an eigendecomposition of the kernel matrix $\bH_{\eta} = \bV\cdot\text{diag}(u_1,\dots,u_n)\cdot\bV^\top$ instead.
+Further, under assumption \ref{ass:A3} and since $\bH_{\eta}$ is a symmetric matrix, we have that $\bV\bV^\top = \bI_n$, and thus
 %
 \[
   \bV_y = \bV \cdot \text{diag} (\psi u_1^2 + \psi^{-1},\dots,\psi u_n^2 + \psi^{-1}) \cdot \bV^\top
@@ -155,10 +154,10 @@ This method is relatively robust to numerical instabilities and is better at ens
 The eigendecomposition is performed using the \pkg{Eigen} \proglang{C++} template library and linked to \pkg{iprior} using \pkg{Rcpp} \citep{eddelbuettel2011rcpp}.
 The hyperparameters are transformed by the \pkg{iprior} package so that an unrestricted optimisation using the quasi-Newton L-BFGS algorithm provided by \code{optim()} in \proglang R.
 Note that minimisation is done on the deviance scale, i.e., minus twice the log-likelihood.
-The direct optimisation method can be prone to local optima, in which case repeating the optimisation at different starting points and choosing the one which yields the highest likelihood is one way around this.
+The direct optimisation method can be \hltodo[Show ridge in the log-likelihood plot.]{prone to local optima}, in which case repeating the optimisation at different starting points and choosing the one which yields the highest likelihood is one way around this.
 
 Let $\bU$ be the Fisher information matrix for $\theta \in\bbR^q$.
-Standard calculations show that under the marginal distribution $\tilde\by \sim \N_n\big(\bzero, \bSigma_\theta \big)$, the $(i,j)$th coordinate of $\bU$ is 
+Standard calculations (\autoref{apx:fishermultinormal}) show that under the marginal distribution $\tilde\by \sim \N_n\big(\bzero, \bSigma_\theta \big)$, the $(i,j)$th coordinate of $\bU$ is 
 \[
   u_{ij} = 
   \half \tr\left(
@@ -167,14 +166,13 @@ Standard calculations show that under the marginal distribution $\tilde\by \sim 
   \right)
 \]
 where the derivative of a matrix with respect to a scalar is the element-wise derivative of the matrix.
-With $\hat\theta$ denoting the ML estimate for $\theta$, under suitable conditions, $\surd n (\hat\theta - \theta)$ has an asymptotic multivariate normal distribution with mean zero and covariance matrix $\bU^{-1}$.
+With $\hat\theta$ denoting the ML estimate for $\theta$, under suitable conditions, $\surd n (\hat\theta - \theta)$ has an asymptotic multivariate normal distribution with mean zero and covariance matrix $\bU^{-1}$ \citep{casella2002statistical}.
 In particular, the standard errors for $\theta_k$ are the diagonal elements of $\bU^{-1/2}$.
 
 \subsection{Expectation-maximisation algorithm}
 
-We describe an expectation-maximisation algorithm to estimate both the posterior regression function and the hyperparameters of \eqref{eq:model2} simultaneously.
-Assume A1 and A2 applies.
-Evidently, \eqref{eq:model2} lends itself to resembling a random-effects model.
+Evidently, \eqref{eq:model2} lends itself to resembling a random-effects model, for which the EM algorithm can easily be employed to estimate its hyperparameters.
+Assume \ref{ass:A1} and \ref{ass:A2} holds.
 By treating the complete data as $\{\by,\bw \}$ and the $w_i$'s as ``missing'', the $t$th iteration of the E-step entails computing
 %
 \begin{align}
@@ -194,10 +192,10 @@ By treating the complete data as $\{\by,\bw \}$ and the $w_i$'s as ``missing'', 
 \end{align}
 %
 where $\tilde\bw^{(t)} = \E[\bw|\by,\theta^{(t)}]$ and $\tilde\bW^{(t)} = \E[\bw\bw^\top|\by,\theta^{(t)}]$ are the first and second posterior moments of $\bw$ calculated at the $t$th EM iteration.
-These can be computed directly from \eqref{eq:posteriorw}, substituting $\theta^{(t)}$ as appropriate.
-Note that \eqref{eq:QfnEstep} follows as a direct consequence of the results in Appendix \ref{apx:posteriorw}.
+These can be computed directly from \eqref{eq:posteriorw}, substituting for $\theta^{(t)} = \{\eta^{(t)}, \bPsi^{(t)} \}$ as appropriate.
+Note that \eqref{eq:QfnEstep} follows as a direct consequence of the results in  \autoref{apx:posteriorw}.
 
-Assume that A3 applies.
+Now, assume that \ref{ass:A3} holds.
 The M-step then assigns $\theta^{(t+1)}$ the value of $\theta$ which maximises the $Q$ function above.
 This boils down to solving the first order conditions
 %
@@ -209,7 +207,7 @@ This boils down to solving the first order conditions
 \end{align}
 %
 equated to zero.
-As $\partial\bSigma_\theta/\partial\psi = \bH_\eta^2 - \psi^{-2}$, the solution to \eqref{eq:empsi} is obtained as
+As $\partial\bSigma_\theta/\partial\psi = \bH_\eta^2 - \psi^{-2}\bI_n$, the solution to \eqref{eq:empsi} is obtained as
 \begin{align}\label{eq:closedformpsi}
   \psi^{(t+1)} = 
   \left\{ \frac{\tr \Wtilde^{(t)}}{\tilde\by^\top\tilde\by + \tr(\bH_\eta^2\Wtilde^{(t)}) - 2\tilde\by^\top\bH_\eta\wtilde^{(t)}} \right\}^{1/2}.
@@ -219,17 +217,17 @@ Such cases are described in further detail in \hltodo{Section X}.
 In cases where closed-form solutions do exist for $\eta$, then it is just a matter of iterating the update equations until a suitable convergence criterion is met (e.g. no more sizeable increase in successive log-likelihood values).
 In cases where closed-form solutions do not exist for $\eta$, the $Q$ function is again optimised with respect to $\eta$ using the L-BFGS algorithm.
 
-In our experience, EM algorithm is more stable than direct maximisation, in that it is less prone to the likelihood exploding should any of the parameters approach problematic boundary values.
-As such, the EM is especially suitable if there are many scale parameters to estimate. 
-On the flip side, it is typically slow to converge.
+In our experience, the EM algorithm is more stable than direct maximisation, in the sense that the EM steps increase the likelihood in a gentle manner that prevents sudden explosions of the likelihood.
+The reason for this is that the $Q$ function is generally convex in the parameters (at the very least, it is convex in each coordinate of $\theta$, in most cases anyway).
+As such, the EM is especially suitable if there are many scale parameters to estimate, but on the flip side, it is typically slow to converge.
 The \pkg{iprior} package provides a method to automatically switch to the direct optimisation method after running several EM iterations.
 This then combines the stability of the EM with the speed of direct optimisation.
-Section X also describes various strategies to run the EM algorithm efficiently.
+%Section X also describes various strategies to run the EM algorithm efficiently.
 
-As a final remark, it is well known that the EM algorithm increases the value of the log-likelihood at each iteration.
-It is also known that the EM sequence $\theta^{(t)}$ eventually convergences to some $\theta^*$, but the fact that $\theta^*$ is the ML estimate is not guaranteed.
-The paper by \citet{wu1983convergence} details the conditions necessary for the EM to produce ML estimates.
-If the EM tends to get stuck in some local maxima of the likelihood, then a general strategy is to restart the EM from multiple starting values. 
+%As a final remark, it is well known that the EM algorithm increases the value of the log-likelihood at each iteration.
+%It is also known that the EM sequence $\theta^{(t)}$ eventually convergences to some $\theta^*$, but the fact that $\theta^*$ is the ML estimate is not guaranteed.
+%The paper by \citet{wu1983convergence} details the conditions necessary for the EM to produce ML estimates.
+%If the EM tends to get stuck in some local maxima of the likelihood, then a general strategy is to restart the EM from multiple starting values. 
 
 
 \subsection{Markov chain Monte Carlo methods}
@@ -239,15 +237,72 @@ Markov chain Monte Carlo (MCMC) methods can then be employed to sample from the 
 Additionally, the posterior distribution encapsulates the uncertainty about the parameter, for which inference can be made.
 Posterior sampling can be done using Gibbs-based methods in \pkg{WinBUGS} \citep{lunn2000winbugs} or \pkg{JAGS} \citep{plummer2003jags}, and both have interfaces to \proglang{R} via \pkg{R2WinBUGS} \citep{sturtz2005r2winbugs} and \pkg{runjags} \citep{denwood2016runjags} respectively.
 Hamiltonian Monte Carlo (HMC) sampling is also a possibility, and the \proglang{Stan} project \citep{carpenter2016stan} together with the package \pkg{rstan} \citep{rstan}  makes this possible in \proglang{R}.
-All of these MCMC packages require the user to code the model individually, and we are not aware of the existence of MCMC-based packages which are able to estimate GPR models.
+
+On the software side, all of these MCMC packages require the user to code the model individually, and we are not aware of the existence of MCMC-based packages which are able to estimate GPR models.
 This makes it inconvenient for GPR and I-prior models, because in addition to the model itself, the kernel functions need to be coded as well and ensuring computational efficiency would be a difficult task.
-Note that this full Bayesian method is not implemented in \pkg{iprior}, but described here for completeness.
+%Note that this full Bayesian method is not implemented in \pkg{iprior}, but described here for completeness.
+
+Speaking of efficiency, it is more advantageous to marginalise the I-prior and work with the marginal model \eqref{eq:marglogliky}, rather than the hierarchical specification \eqref{eq:model2}.
+The reason for this is that the latter model has a parameter space whose dimension is $O(n)$, while the former only samples the hyperparameters.
+The posterior sampling for the $w_i$'s in (equivalently, the posterior Gaussian process $f(x) = \sum_{i=1}^n h_\lambda(x,x_i)w_i$) is performed using the normal posterior distribution in \eqref{eq:posteriorw}.
 
 \subsection{Comparison of estimation methods}
+\label{sec:compareestimation}
 
-\hltodo{
-Running example: smoothing in one dimension.
-Run three methods of estimation, compare parameter estimates, MSE of prediction.
-Runtime?
-Highlight difficulties of MCMC.
-}
+Consider a one-dimensional smoothing example.
+$n=150$ data pairs $(y_i,x_i)$ have been randomly sampled according to the true relationship 
+\begin{align}\label{eq:examplesmoothingdata}
+  \begin{gathered}
+    r_i = \const + \myoverbrace{
+    0.35 \cdot \phi(x_i|1,0.8^2) + 0.65 \cdot \phi(x_i|4,1.5^2)
+    + \ind(x_i > 4.5)\cdot e^{1.25(x_i-4.5)}\phantom{\Big)}
+    }{f_\text{true}(x_i)},
+  \end{gathered}
+\end{align}
+where $\phi(\cdot|\mu,\sigma^2)$ is the probability density function of the normal distribution with mean $\mu$ and variance $\sigma^2$.
+The observed $y_i$'s are thought to be noisy versions of the true points, i.e. $y_i = r_i + \epsilon_i$, with $\epsilon_i$ following an indescript, not necessarily normal, distribution.
+The predictors $x_1,\dots,x_n$ have been sampled roughly from the interval $(-1,6)$, and the sampling was intentionally not uniform so that there is slight sparsity in the middle.
+\autoref{fig:examplesmoothingdata} plots the sampled points and the true regression function.
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figure/04-example_data}
+  \caption{A plot of the sampled data points according to equation \eqref{eq:examplesmoothingdata}, with the true regression function superimposed.}
+  \label{fig:examplesmoothingdata}
+\end{figure}
+
+We attempt to estimate $f_\text{true}$ by a function $f$ belonging to the fBm-0.5 RKHS $\cF_\lambda$, with an I-prior on $f$.
+There are two parameters that need to be estimated: the scale parameter $\lambda$ for the fBm-0.5 RKHS, and the error precision $\psi$.
+These can be estimated using the maximum likelihood methods described above, namely by direct optimisation and the EM algorithm.
+These two methods are implemented in the \pkg{iprior} package. 
+A full Bayesian treatment is possible, and we use the \pkg{rstan} implementation of \proglang{Stan} to perform Hamiltonian Monte Carlo sampling of the posterior densities.
+A vague prior choice for $\lambda$ and $\psi$ are prescribed, namely
+\[
+  \lambda,\psi \iid \N_+(0,100),
+\]
+where $\N_+(\mu,\sigma^2)$ represents the \emph{half-normal} distribution\footnote{The random variable $X \sim \N_+(\mu,\sigma^2)$ has the density $p(x) = \phi(x|\mu,\sigma^2)\ind(x \geq 0)$.}.
+We have also set an improper prior density $p(\alpha) \propto \const$ for the intercept.
+The advantage of HMC is that efficiency is not dictated by conjugacy, so there is freedom to choose any appropriate prior choice on the parameters.
+
+\begin{table}[hbt]
+\centering
+\caption{Table comparing the estimated parameter values, (marginal) log-likelihood values, and also time taken for the three estimation methods.}
+\label{tab:comparemethodsestimate}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+               & Direct optimisation & EM algorithm & Hamiltonian MC          \\ \midrule
+Intercept ($\alpha$)      & 16.1 (NA)           & 16.1 (NA)    & 16.1 (0.17)  \\
+Scale ($\lambda$)      & 5.01 (1.23)         & 5.01 (1.26)  & 5.61 (1.42)     \\
+Precision ($\psi$)         & 0.236 (0.03)        & 0.236 (0.03) & 0.237 (0.03)\\[0.5em]
+Log density    & -339.7              & -339.7       & -341.1                  \\
+Predictive RMSE & 0.574               & 0.575        & 0.582                   \\[0.5em]
+Iterations     & 12                  & 266          & 2000                    \\
+Time taken (s) & 0.96                & 3.65         & 232                     \\ \bottomrule
+\end{tabular}
+\end{table}
+
+Table \ref{tab:comparemethodsestimate} tabulates the estimated parameter values, (marginal) log-likelihood values, and also time taken for the three estimation methods.
+The three methods concur on the estimated parameter values, although the scale parameter has been estimated slightly differently, which is possibly attributed to the effect of the prior for $\lambda$.
+The resulting log-likelihood value for the Bayesian method is lower than the ML methods, which also took the longest to compute.
+Although the EM algorithm took longer than the direct optimisation method to compute, the time taken per iteration is significantly shorter than one Newton iteration.
+%In this simple example, there were no numerical issues encountered with the direct optimisation method, but in more complex examples (see \hltodo{Section X}), instabilities could arise.

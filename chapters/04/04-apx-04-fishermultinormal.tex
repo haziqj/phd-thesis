@@ -1,0 +1,49 @@
+\section{Derivation of the Fisher information for multivariate normal distributions}
+\label{apx:fishermultinormal}
+
+Let $X\sim\N_p(0,\Sigma_\theta)$, that is, the covariance matrix $\Sigma_\theta$ depends on a real, $q$-dimensional vector $\theta$.
+Define the derivative of a matrix $\Sigma \in \bbR^{p\times p}$ with respect to a scalar $z$, denoted $\partial\Sigma/\partial z \in \bbR^{p\times p}$, by $(\partial\Sigma/\partial z)_{ij} = \partial \Sigma_{ij}/\partial z$, i.e. derivatives are taken elementwise.
+The two identities below are useful:
+\begin{gather}
+  \frac{\partial}{\partial z} \tr\Sigma = \tr \frac{\partial\Sigma}{\partial z} \\
+  \frac{\partial}{\partial z} \log \abs{\Sigma} = \tr\left( \Sigma^{-1} \frac{\partial\Sigma}{\partial z} \right) \\
+  \frac{\partial\Sigma^{-1}}{\partial z} = -\Sigma^{-1} \frac{\partial\Sigma}{\partial z}\Sigma^{-1}
+\end{gather}
+A useful reference for these identities is \citet{petersen2008matrix}.
+
+\newcommand{\dSi}{\frac{\partial\Sigma_\theta}{\partial \theta_i}}
+\newcommand{\dSinv}{\frac{\partial\Sigma_\theta^{-1}}{\partial \theta_i}}
+\newcommand{\dSj}{\frac{\partial\Sigma_\theta}{\partial \theta_j}}
+\newcommand{\dSjnv}{\frac{\partial\Sigma_\theta^{-1}}{\partial \theta_j}}
+\newcommand{\dStwo}{\frac{\partial^2\Sigma_\theta}{\partial \theta_i\theta_j}}
+
+Taking derivative of the log-likelihood for $\theta$ with respect to the $i$'th component yields
+\begin{align*}
+  \frac{\partial}{\partial \theta_i} L(\theta|X) 
+  &= -\half \frac{\partial}{\partial \theta_i} \log \abs{\Sigma_\theta} - \half \frac{\partial}{\partial \theta_i} \tr(\Sigma_\theta^{-1}XX^\top) \\
+  &= -\half \tr \left(\Sigma_\theta^{-1} \frac{\partial\Sigma_\theta}{\partial \theta_i}  \right) - \half \tr \left( \frac{\partial\Sigma_\theta^{-1}}{\partial \theta_i} XX^\top \right) \\
+  &= -\half \tr \left( \Sigma_\theta^{-1} \frac{\partial\Sigma_\theta}{\partial \theta_i}  -\Sigma_\theta^{-1} \frac{\partial\Sigma_\theta}{\partial \theta_i}\Sigma_\theta^{-1} XX^\top \right).
+\end{align*}
+Taking derivatives again, this time with respect to $\theta_j$, we get
+\begin{align*}
+  \frac{\partial^2}{\partial \theta_i\theta_j} L(\theta|X) 
+  &= -\half \frac{\partial}{\partial \theta_j} \tr \left( 
+  \Sigma_\theta^{-1} \frac{\partial\Sigma_\theta}{\partial \theta_i}  
+  - \Sigma_\theta^{-1} \frac{\partial\Sigma_\theta}{\partial \theta_i}\Sigma_\theta^{-1} XX^\top \right) \\
+  &= -\half \tr \bigg( 
+  \dSjnv \dSi + \Sigma_\theta^{-1} \dStwo
+  - \dSjnv \dSi \Sigma_\theta^{-1} XX^\top \\          
+  &\hspace{2.5cm} - \Sigma_\theta^{-1}\dStwo\Sigma_\theta^{-1} XX^\top
+  - \Sigma_\theta^{-1} \dSi\dSjnv XX^\top
+  \bigg).
+\end{align*}
+The Fisher information matrix $U$ contains $(i,j)$ entries equal to the expectation of $-\frac{\partial^2}{\partial \theta_i\theta_j} L(\theta|X)$. 
+Using the fact that 1) $\E [\tr \Sigma] = \tr (\E \Sigma)$, 2) $\E [XX^\top] = \Sigma_\theta$; and 3) the trace is invariant under cyclic permutations, we get
+\begin{align*}
+  U_{ij} 
+  &= \half \tr \left( 
+  \cancel{\dSjnv \dSi} + \cancel{\Sigma_\theta^{-1}\dStwo}
+  - \cancel{\dSjnv \dSi}  - \cancel{\Sigma_\theta^{-1}\dStwo} -  \dSi\dSjnv \right) \\
+  &=  \half \tr \left(\Sigma_\theta^{-1} \dSi \Sigma_\theta^{-1} \dSj \right)
+\end{align*}
+as required.  

@@ -30,6 +30,11 @@
 \usepackage{enumitem}  % replacing enumerate
 \usepackage{xr}  % Cross-referencing between files
 
+% Git info
+\usepackage[maxdepth=8,mark,raisemark=0.8834\paperheight]{gitinfo2}
+\renewcommand{\gitMark}{Branch:\;\gitBranch\,@\,\gitAbbrevHash{} \textbullet{} Change:\;\gitAuthorIsoDate}
+\renewcommand{\gitMarkFormat}{\color{gray}\small\ttfamily}
+
 % Colour-blind safe pallete
 \definecolor{colblu}{RGB}{0,114,178}
 \definecolor{colcya}{RGB}{86,180,233}

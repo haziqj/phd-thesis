@@ -10,24 +10,29 @@ str(cattle)
 
 ## ---- cows.first ----
 # Model 1: weight ~ f(time)
+set.seed(456)
 (mod1 <- iprior(weight ~ time, cattle, kernel = "fbm", method = "mixed"))
 
 ## ---- cows.rest ----
 # Model 2: weight ~ f(time) + f(treatment) + f(time dependent treatment)
+set.seed(456)
 mod2 <- iprior(weight ~ group * time, cattle, kernel = "fbm",
-               method = "mixed")
+               method = "em", control = list(restarts = TRUE))
 
 # Model 3: weight ~ f(time) + f(cow index) + f(time dependent cow index)
+set.seed(456)
 mod3 <- iprior(weight ~ id * time, cattle, kernel = "fbm",
                method = "mixed")
 
 # Model 4: weight ~ f(time) + f(cow index) +  f(treatment)
 #                   + f(time dependent cow index)
 #                   + f(time dependent treatment)
+set.seed(456)
 mod4 <- iprior(weight ~ group * time +  id * time, cattle,
                kernel = "fbm", method = "mixed")
 
 # Model 5: weight ~ f(time:cow:treatment)
+set.seed(456)
 mod5 <- iprior(weight ~ id * group * time, cattle, kernel = "fbm",
                method = "mixed")
 

@@ -1,4 +1,4 @@
-\documentclass[a4paper,showframe,11pt,draft]{report}
+\documentclass[a4paper,showframe,11pt]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
@@ -15,26 +15,35 @@
 \begin{document}
 \hChapterStandalone[4]{Regression modelling using I-priors}
 
-In the previous chapter, we defined an I-prior for the normal regression model \eqref{eq:model1} subject to \eqref{eq:model1ass} and $f$ belonging to a reproducing kernel Hilbert or Krein space of functions.
+In the previous chapter, we defined an I-prior for the normal regression model \eqref{eq:model1} subject to \eqref{eq:model1ass} and $f$ belonging to a reproducing kernel Hilbert or Krein space of functions $\cF$, as a Gaussian distribution on $f$ with covariance function equal to the Fisher information for $f$.
 We also saw how new function spaces can be constructed via the polynomial and ANOVA RKKS.
-In this chapter, we shall describe various regression models, and connect them to an appropriate RKKS, so that an I-prior may be defined on it.
-Methods for estimating I-prior models will also be described.
-Finally, several examples of I-prior modelling are presented.
+In this chapter, we shall describe various regression models, and identify them with appropriate RKKSs, so that an I-prior may be defined on it.
 
+Methods for estimating I-prior models are described in Section \ref{sec:ipriorestimation}.
+Estimation here refers to obtaining the posterior distribution of the regression function under an I-prior, while optimising the kernel parameters of $\cF$ and the error precision $\bPsi$.
+Likelihood based methods, namely direct optimisation of the likelihood and the expectation-maximisation (EM) algorithm, are the preferred estimation methods of choice.
+Having said this, it is also possible to estimate I-prior models under a full Bayesian paradigm by employing Markov chain Monte Carlo methods to sample from the relevant posterior densities.
+
+Careful considerations of the computational aspects are required to ensure efficient estimation of I-prior models, and these are discussed in Section \ref{sec:ipriorcompcons}.
+The culmination of the computational work of I-prior estimation is the \pkg{iprior} package \citep{jamil2017}, which is a publicly available \proglang{R} package that has been published to CRAN.
+
+Finally, several examples of I-prior modelling are presented in Section \ref{sec:ipriorexamples}: in particular, a multilevel data set, a longitudinal data set, and a data set involving a functional covariate, are analysed using the I-prior methodology.
+
+\newpage
 \section{Various regression models}\label{sec:various-regression}
-%\input{04a-various-regression.tex}
+\input{04a-various-regression.tex}
 
-\section{Estimation}
+\section{Estimation}\label{sec:ipriorestimation}
 \input{04b-iprior-estimation}
 
-\section{Computational considerations}
-%\input{04c-iprior-computational}
+\section{Computational considerations}\label{sec:ipriorcompcons}
+\input{04c-iprior-computational}
 
 \section{Post-estimation}
-\input{04c-iprior-post-estimation}
+%\input{04d-iprior-post-estimation}
 
-\section{Examples}
-%\input{04c-examples}
+\section{Examples}\label{sec:ipriorexamples}
+%\input{04e-examples}
 
 \section{Conclusion}
 
@@ -69,14 +78,15 @@ The second is a quasi-Newton acceleration of the EM algorithm as proposed by \ci
 A slight change to the EM gradient algorithm in the M-step steers the EM algorithm to the Newton-Raphson algorithm, thus exploiting the benefits of the EM algorithm in the early stages (monotonic increase in likelihood) and avoiding the pitfalls of Newton-Raphson (getting stuck in local optima).
 The PXEM and quasi-Newton EM algorithms require an in-depth reassessment of the EM algorithm to specifically tailor them to I-prior models, which we leave as future work.
 
-\section*{Miscellanea}
-\input{04-omitted}
+\section{Miscellanea}
+\input{04-misc}
 
 \ifstandalone
   \section*{Appendix}
   \input{04-apx-01-posterior}
   \input{04-apx-02-expem}
   \input{04-apx-03-postestimation}
+  \input{04-apx-04-fishermultinormal}
 \fi
 
 \hClosingStuffStandalone

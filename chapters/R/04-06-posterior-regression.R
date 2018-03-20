@@ -138,13 +138,27 @@ ggplot() +
   geom_ribbon(data = dat.fit, fill = "grey", alpha = 0.5,
               aes(x = x.true, ymin = y.fitted + qnorm(0.05 / 2) * sdev,
                   ymax = y.fitted + qnorm(1 - 0.05 / 2) * sdev)) +
-  geom_point(data = dat, aes(x = x, y = y), col = "grey10") +
-  geom_line(data = dat.fit, aes(x = x.true, y = y.fitted), col = "red3",
-            size = 0.8) +
+  geom_point(data = dat, aes(x = x, y = y), col = "grey10", shape = 21) +
+  geom_line(data = dat.fit, aes(x = x.true, y = y.fitted, col = "1", linetype = "1"), size = 0.8) +
+  geom_line(data = dat.truth, aes(x = x, y = y, col = "2", linetype = "2"), size = 0.8) +
   # labs(title = "Fitted regression line with 95% credibility interval for predicted values") +
-  annotate(geom = "text", x = 7 - 0.5, y = dat.fit$y.fitted[1000] - 1.2,
-           label = linlab, col = "red3", parse = TRUE) +
-  theme_reg -> p.cred
+  # annotate(geom = "text", x = 7 - 0.5, y = dat.fit$y.fitted[1000] - 1.2,
+           # label = linlab, col = "red3", parse = TRUE) +
+  scale_colour_manual(name = "", values = c("black", "red3"),
+                      labels = c("Estimated", "Truth")) +
+  scale_linetype_manual(name = "", values = c("solid", "dashed"),
+                        labels = c("Estimated", "Truth")) +
+  theme_bw() +
+  theme(
+    axis.ticks = element_blank(),
+    axis.text = element_blank(),
+    panel.grid = element_blank(),
+    legend.key.width = unit(3, "line"),
+    legend.justification = c(1, 0),
+    legend.position = c(1 - 0.001, 0 + 0.001),
+    legend.text.align = 0,
+    legend.background = element_rect(fill = scales::alpha('white', 0))
+  ) -> p.cred; p.cred
 
 ## ---- ppc ----
 p.ppc <- ggplot() +
