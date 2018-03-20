@@ -162,8 +162,8 @@ Standard calculations show that under the marginal distribution $\tilde\by \sim 
 \[
   u_{ij} = 
   \half \tr\left(
-  \bSigma_\theta^{-1} \frac{\partial\bV_y}{\partial\theta_i}
-  \bSigma_\theta^{-1} \frac{\partial\bV_y}{\partial\theta_j} 
+  \bSigma_\theta^{-1} \frac{\partial\bSigma_\theta}{\partial\theta_i}
+  \bSigma_\theta^{-1} \frac{\partial\bSigma_\theta}{\partial\theta_j} 
   \right)
 \]
 where the derivative of a matrix with respect to a scalar is the element-wise derivative of the matrix.
@@ -247,6 +247,7 @@ Note that this full Bayesian method is not implemented in \pkg{iprior}, but desc
 
 \hltodo{
 Running example: smoothing in one dimension.
-Data simulated, what are the true parameters?
-Run three methods of estimation, compare solutions, bias, MSE of prediction.
+Run three methods of estimation, compare parameter estimates, MSE of prediction.
+Runtime?
+Highlight difficulties of MCMC.
 }

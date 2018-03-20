@@ -28,7 +28,7 @@ ggplot2::theme_set(theme_bw())
 chapter.no <- substr(current_input(), start = 0, stop = 2)
 knitr::opts_chunk$set(fig.align = "center", prompt = TRUE, myspac = TRUE,
                       fig.path = paste0("figure/", chapter.no, "-"))
-knitr::knit_theme$set("bclear")
+# knitr::knit_theme$set("bclear")
 options(prompt = "R> ", continue = "+  ", width = 70,
         knitr.table.format = "latex")
 knit_hooks$set(myspac = function(before, options, envir) {
