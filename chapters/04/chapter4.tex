@@ -40,19 +40,19 @@ Finally, several examples of I-prior modelling are presented in Section \ref{sec
 \input{04c-iprior-computational}
 
 \section{Post-estimation}
-%\input{04d-iprior-post-estimation}
+\input{04d-iprior-post-estimation}
 
 \section{Examples}\label{sec:ipriorexamples}
-%\input{04e-examples}
+\input{04e-examples}
 
 \section{Conclusion}
 
-The steps for I-prior modelling are basically three-fold:
+The steps for I-prior modelling are essentially three-fold:
 \begin{enumerate}
-  \item Select an appropriate function space; equivalently, the kernels for which a specific effect is desired on the covariates. Several modelling examples are described in Section \ref{sec:various-regression}.
+  \item Select an appropriate function space (equivalently, kernels) for which specific effects are desired on the covariates. 
 %  Choices included a linear effect (canonical RKHS), a polynomial effect (polynomial RKKS), smoothing effect (fBm or SE RKHS), 
-  \item Estimate the hyperparameters (these included the RKHS scale parameter(s), error precision, and any other kernel parameters such as the Hurst index of fBm) of the I-prior model and obtain the posterior regression function.
-  \item Post-estimation procedures include
+  \item Estimate the posterior regression function and optimise the hyperparameters, which include the RKHS scale parameter(s), error precision, and any other kernel parameters such as the Hurst index.
+  \item Perform post-estimation procedures such as
   \begin{itemize}
     \item Posterior predictive checks;
     \item Model comparison via log-likelihood ratio tests/empirical Bayes factors; and
@@ -62,21 +62,17 @@ The steps for I-prior modelling are basically three-fold:
 
 The main sticking point with the estimation procedure is the involvement of the $n\times n$ kernel matrix, for which its inverse is needed.
 This requires $O(n^2)$ storage and $O(n^3)$ computational time.
-The Nyström method of approximating the kernel matrix reduces complexity to $O(nm)$ storage and approximately $O(nm^2)$, and is highly advantageous if $m \ll n$.
+%The Nyström method of approximating the kernel matrix reduces complexity to $O(nm)$ storage and approximately $O(nm^2)$, and is highly advantageous if $m \ll n$.
 The computational issue faced by I-priors are mirrored in Gaussian process regression, so the methods to overcome these computational challenges in GPR can be explored further.
 However, most efficient computational solutions exploit the nature of the SE kernel structure, which is the most common kernel used in GPR.
+Nonetheless, we suggest the following as considerations for future work:
+\begin{enumerate}
+  \item \textbf{Sparse variational approximations}. By using inducing points or stochastic variational inference, such methods can greatly reduce computational storage and speed requirements \hltodo{citation}. A recent paper by \citet{cheng2017variational} suggested a variational algorithm with linear complexity for GPR-type models.
+  \item \textbf{Accelerating the EM algorithm further}. Two methods can be explored. The first is called parameter-expansion EM algorithm (PXEM) by \citep{liu1998parameter}, which has been shown to be promising for random-effects type models. It involves correcting the M-step by a `covariance adjustment', so that extra information can be capitalised on to improve convergence rates. The second is a quasi-Newton acceleration of the EM algorithm as proposed by \citet{lange1995quasi}. A slight change to the EM gradient algorithm in the M-step steers the EM algorithm to the Newton-Raphson algorithm, thus exploiting the benefits of the EM algorithm in the early stages (monotonic increase in likelihood) and avoiding the pitfalls of Newton-Raphson (getting stuck in local optima). Both algorithms require an in-depth reassessment of the EM algorithm to be tailored to I-prior models.
+\end{enumerate}
 
-Several avenues have been discussed to make the estimation procedure more efficient, but improvements can be had.
-One promising avenue to achieve efficient estimation for I-prior models is by using variational methods.
-A sparse variational approximation (typically by using inducing points) or stochastic variational inference can greatly reduce computational storage and speed requirements.
-A recent paper by \citet{cheng2017variational} suggested a variational algorithm with linear complexity for GPR-type models.
 
-On the topic of accelerating the EM algorithm, besides the MOEM procedure, there are two other algorithms that could be explored.
-The first is called parameter-expansion EM algorithm (PXEM) by \citep{liu1998parameter}, which has been shown to be promising for random-effects type models.
-It involves correcting the M-step by a `covariance adjustment', so that extra information can be capitalised on to improve convergence rates.
-The second is a quasi-Newton acceleration of the EM algorithm as proposed by \citet{lange1995quasi}.
-A slight change to the EM gradient algorithm in the M-step steers the EM algorithm to the Newton-Raphson algorithm, thus exploiting the benefits of the EM algorithm in the early stages (monotonic increase in likelihood) and avoiding the pitfalls of Newton-Raphson (getting stuck in local optima).
-The PXEM and quasi-Newton EM algorithms require an in-depth reassessment of the EM algorithm to specifically tailor them to I-prior models, which we leave as future work.
+
 
 \section{Miscellanea}
 \input{04-misc}

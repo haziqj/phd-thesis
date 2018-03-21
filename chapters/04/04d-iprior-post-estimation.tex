@@ -1,10 +1,12 @@
 One of the perks of a (semi-)Bayesian approach to regression modelling is that we are able to use Bayesian post-estimation machinery involving the relevant posterior distributions.
 With the normal I-prior model, there is the added benefit that posterior distributions are easily obtained in closed form.
-The plots that are shown in this subsection is a continuation from the example in \hltodo{Section X}.
+The plots that are shown in this subsection is a continuation of the example from \autoref{sec:compareestimation}.
 
-Recall that for the regression function as specified in \eqref{eq:model2}, its posterior regression function is found to be $f(x) = \sum_{i=1}^n h_{\hat\eta}(x,x_i)\tilde w_i$, where $\hat\eta$ is the ML estimate for the kernel parameters, and the $\tilde w_i$'s are multivariate-normally distributed with mean and variance according to \eqref{eq:posteriorw}.
+Recall that for the I-prior model \eqref{eq:model2}, the regression function $f(x) = \sum_{i=1}^n h_{\hat\eta}(x,x_i)\tilde w_i$
+%, where $\hat\eta$ is the ML estimate for the kernel parameters, 
+has the posterior Gaussian distribution specified by the  multivariate-normal mean and variance of the $\tilde w_i$'s given in \eqref{eq:posteriorw}.
 Denote by $\bh_{\hat\eta}(x)$ the $n$-vector with entries equal to $h_{\hat\eta}(x,x_i)$.
-Therefore, the posterior density for the regression function is
+Precisely, the posterior density for the regression function is
 \begin{align}
   p\big(f(x) | \by \big) \sim \N \Big( 
   \bh_{\hat\eta}(x)\hat\bw, 
@@ -23,18 +25,18 @@ Here, the hats on the parameters indicate the use of the optimised model paramet
 Prediction of a new data point is also of interest.
 A priori, assume that $y_\new = \hat\alpha + f(x_\new) + \epsilon_\new$, where $\epsilon_\new \sim \N(0,\psi^{-1}_\new)$, and $f\sim \text{I-prior}$.
 Denote the covariance between $\epsilon_\new$ and $\bepsilon = (\epsilon_1,\dots,\epsilon_n)^\top$ by $\bsigma_\new^\top \in \bbR^n$.
-Under an iid model (assumption A3), then $\psi_\new = \psi = \Var \epsilon_i$ for any $i\in\{1,\dots,n\}$, and $\bsigma_\new^\top=\bzero$, but otherwise, these extra parameters need to be dealt with somehow, either by specifying them a priori or estimating them again, which seems excessive.
+Under an iid model (assumption \ref{ass:A3}), then $\psi_\new = \psi = \Var \epsilon_i$ for any $i\in\{1,\dots,n\}$, and $\bsigma_\new^\top=\bzero$, but otherwise, these extra parameters need to be dealt with somehow, either by specifying them a priori or estimating them again, which seems excessive.
 In any case, using a linearity argument, the posterior distribution for $y_\new$ is normal, with mean and variance given by
 \begin{gather}
-  \E[y_\new|\by] = \hat\alpha + \E \big[ f(x_\new) |\by \big] + \text{mean correction term} \\
+  \E[y_\new|\by] = \hat\alpha + \E \big[ f(x_\new) |\by \big] + \text{correction term} \\
   \text{and} \nonumber \\
   \Var[y_\new|\by] 
-  = \Var\big[f(x_\new)|\by\big] + \psi^{-1}_\new + \text{variance correction term}.
+  = \Var\big[f(x_\new)|\by\big] + \psi^{-1}_\new + \text{correction term}.
 \end{gather}
-A derivation is presented in Appendix \ref{apx:postpred}.
-Note that the mean and variance correction term vanishes under an iid assumption A3.
+A derivation is presented in \autoref{apx:postpred}.
+Note, that the mean and variance correction term vanishes under an iid assumption \ref{ass:A3}.
 The posterior distribution for $y_\new$ can be used in several ways. 
-Among them, is to construct a $100(1 - \alpha/2)\%$ credibility interval for the (mean) predicted value $y_\new$ using
+Among them, is to construct a $100(1 - \alpha)\%$ credibility interval for the (mean) predicted value $y_\new$ using
 \[
   \E[y_\new|\by] \pm \Phi^{-1}(1 - \alpha/2) \cdot \Var[y_\new|\by]^{\half},
 \]
@@ -59,16 +61,12 @@ A log-likelihood comparison is possible using an asymptotic chi-squared distribu
 This is assuming model $M_1$ is nested within $M_2$, which is the case for ANOVA-type constructions.
 Note that if two models have the same number of parameters, then the model with the higher likelihood is preferred.
 
-As a remark, this method of comparing marginal likelihoods can be seen as Bayesian model selection using \emph{empirical Bayes factors}, where the Bayes factor of comparing model $M_1$ to model $M_2$ is defined as
-\[
-  \BF(M_1,M_2) = \frac{\int p(\by|\theta_1,\bff)p(\bff) \dint \bff }{\int p(\by|\theta_2,\bff)p(\bff) \dint \bff}
-\]
-The word ‘empirical’ stems from the fact that the parameters are estimated via an empirical Bayes approach (maximum marginal likelihood).
-This approach is fine when the number of comparisons to be made is small, but can be computationally unfeasible when many marginal likelihoods need to be pairwise compared.
-In Chapter 6, we explore a fully Bayesian approach to explore the entire model space for the special case of linear models.
-
-%From \eqref{eq:marglogliky}, the (marginal) log-likelihood for $\theta$ is 
-%\[
-%  L(\theta|\by) = -\half[n]\log 2\pi - \half \log \bSigma_\theta 
-%\]
-
+\begin{remark}
+  This method of comparing marginal likelihoods can be seen as Bayesian model selection using \emph{empirical Bayes factors}, where the Bayes factor of comparing model $M_1$ to model $M_2$ is defined as
+  \[
+    \BF(M_1,M_2) = \frac{\int p(\by|\theta_1,\bff)p(\bff) \dint \bff }{\int p(\by|\theta_2,\bff)p(\bff) \dint \bff}.
+  \]
+  The word ‘empirical’ stems from the fact that the parameters are estimated via an empirical Bayes approach (maximum marginal likelihood).
+  This approach is fine when the number of comparisons to be made is small, but can be computationally unfeasible when many marginal likelihoods need to be pairwise compared.
+  In \hltodo{Chapter 6}, we explore a fully Bayesian approach to explore the entire model space for the special case of linear models.
+\end{remark}

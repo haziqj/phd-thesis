@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.1.22)  20 MAR 2018 15:57
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.1.22)  21 MAR 2018 01:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -875,20 +875,45 @@ Package: enumitem 2011/09/28 v3.5.2 Customized lists
 (/usr/local/texlive/2017/texmf-dist/tex/latex/tools/xr.sty
 Package: xr 1994/05/28 v5.02 eXternal References (DPC)
 )
+(/usr/local/texlive/2017/texmf-dist/tex/latex/gitinfo2/gitinfo2.sty
+Package: gitinfo2 2015/11/22 v2.0.7 git revision information
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2017/11/22 v2.5 e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count197
+)
+(/usr/local/texlive/2017/texmf-dist/tex/generic/xstring/xstring.sty
+(/usr/local/texlive/2017/texmf-dist/tex/generic/xstring/xstring.tex
+\@xs@message=\write19
+\integerpart=\count198
+\decimalpart=\count199
+)
+Package: xstring 2013/10/13  v1.7c  String manipulations (C Tellechea)
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/eso-pic/eso-pic.sty
+Package: eso-pic 2015/07/21 v2.0g eso-pic (RN)
+)
+Package gitinfo2 Info: gitinfo2 found : ../../.git/gitHeadInfo.gin
+(gitinfo2)              on input line 128.
+
+(../../.git/gitHeadInfo.gin)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/gitinfo2/gitexinfo.sty
+Package: gitexinfo 2015/11/22 v2.0.7 Auxiliary package for gitinfo2
+))
 (/usr/local/texlive/2017/texmf-dist/tex/latex/algorithms/algorithm.sty
 Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
 nment
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count197
+\c@float@type=\count266
 \float@exts=\toks28
 \float@box=\box47
 \@float@everytoks=\toks29
 \@floatcapt=\box48
 )
 \@float@every@algorithm=\toks30
-\c@algorithm=\count198
+\c@algorithm=\count267
 )
 (/usr/local/texlive/2017/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
 Package: algpseudocode 
@@ -897,40 +922,28 @@ Package: algpseudocode
 Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
 
 Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
-\c@ALG@line=\count199
-\c@ALG@rem=\count266
-\c@ALG@nested=\count267
+\c@ALG@line=\count268
+\c@ALG@rem=\count269
+\c@ALG@nested=\count270
 \ALG@tlm=\skip56
 \ALG@thistlm=\skip57
-\c@ALG@Lnr=\count268
-\c@ALG@blocknr=\count269
-\c@ALG@storecount=\count270
-\c@ALG@tmpcounter=\count271
+\c@ALG@Lnr=\count271
+\c@ALG@blocknr=\count272
+\c@ALG@storecount=\count273
+\c@ALG@tmpcounter=\count274
 \ALG@tmplength=\skip58
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
 ) (/usr/local/texlive/2017/texmf-dist/tex/latex/biblatex/biblatex.sty
 Package: biblatex 2017/12/19 v3.10 programmable bibliographies (PK/JW/AB)
 
-(/usr/local/texlive/2017/texmf-dist/tex/latex/etoolbox/etoolbox.sty
-Package: etoolbox 2017/11/22 v2.5 e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count272
-)
 (/usr/local/texlive/2017/texmf-dist/tex/latex/logreq/logreq.sty
 Package: logreq 2010/08/04 v1.0 xml request logger
-\lrq@indent=\count273
+\lrq@indent=\count275
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/logreq/logreq.def
 File: logreq.def 2010/08/04 v1.0 logreq spec v1.0
 ))
-(/usr/local/texlive/2017/texmf-dist/tex/generic/xstring/xstring.sty
-(/usr/local/texlive/2017/texmf-dist/tex/generic/xstring/xstring.tex
-\@xs@message=\write19
-\integerpart=\count274
-\decimalpart=\count275
-)
-Package: xstring 2013/10/13  v1.7c  String manipulations (C Tellechea)
-)
 \c@tabx@nest=\count276
 \c@listtotal=\count277
 \c@listcount=\count278
@@ -1591,7 +1604,7 @@ Package: todonotes 2012/07/25
 .................................................
 . LaTeX info: "xparse/define-command"
 . 
-. Defining command \hltodo with sig. 'omo' on line 109.
+. Defining command \hltodo with sig. 'omo' on line 114.
 .................................................
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/psnfss/pifont.sty
@@ -1876,17 +1889,17 @@ Package: glossary-tree 2017/11/14 v4.35 (NLCT)
 \openout3 = `04e-examples.glo'.
 
 Package glossaries Info: Writing glossary file 04e-examples.glo on input line 1
-22.
+27.
 \glo@symbols@file=\write24
 \openout3 = `04e-examples.slo'.
 
 Package glossaries Info: Writing glossary file 04e-examples.slo on input line 1
-22.
+27.
 \glo@abbreviations@file=\write25
 \openout3 = `04e-examples.glo-abr'.
 
 Package glossaries Info: Writing glossary file 04e-examples.glo-abr on input li
-ne 122.
+ne 127.
 \04e-examples@idxfile=\write26
 \openout3 = `04e-examples.idx'.
 
@@ -2330,6 +2343,12 @@ LaTeX Font Info:    Try loading font information for T1+cmss on input line 72.
 File: t1cmss.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 
+LaTeX Warning: Reference `ass:A1' on page 1 undefined on input line 73.
+
+
+LaTeX Warning: Reference `ass:A3' on page 1 undefined on input line 73.
+
+
 LaTeX Warning: Reference `eq:examplesmoothingdata' on page 1 undefined on input
  line 78.
 
@@ -2357,12 +2376,16 @@ Package xcolor Warning: Incompatible color definition on input line 84.
 
 Package xcolor Warning: Incompatible color definition on input line 104.
 
+LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 119
+.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/base/ts1cmtt.fd
+File: ts1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
 \openout3 = `04e-examples.mw'.
 
-[1
+ [1{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
-{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-(./04e-examples.mw)
+] (./04e-examples.mw)
 \openout3 = `04e-examples.mw'.
 
 \openout3 = `04e-examples.ist'.
@@ -2523,12 +2546,12 @@ Package xcolor Warning: Incompatible color definition on input line 144.
 
 Package xcolor Warning: Incompatible color definition on input line 163.
 
-<figure/04-nystrom_plot-1.pdf, id=38, 361.35pt x 221.82875pt>
+<figure/04-nystrom_plot-1.pdf, id=40, 361.35pt x 221.82875pt>
 File: figure/04-nystrom_plot-1.pdf Graphic file (type pdf)
 <use figure/04-nystrom_plot-1.pdf>
 Package pdftex.def Info: figure/04-nystrom_plot-1.pdf  used on input line 166.
 (pdftex.def)             Requested size: 204.9466pt x 125.8141pt.
-<figure/04-nystrom_plot-2.pdf, id=39, 361.35pt x 221.82875pt>
+<figure/04-nystrom_plot-2.pdf, id=41, 361.35pt x 221.82875pt>
 File: figure/04-nystrom_plot-2.pdf Graphic file (type pdf)
 <use figure/04-nystrom_plot-2.pdf>
 Package pdftex.def Info: figure/04-nystrom_plot-2.pdf  used on input line 167.
@@ -2568,11 +2591,7 @@ Package xcolor Warning: Incompatible color definition on input line 186.
 
 Package xcolor Warning: Incompatible color definition on input line 224.
 
-LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 253
-.
-(/usr/local/texlive/2017/texmf-dist/tex/latex/base/ts1cmtt.fd
-File: ts1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-)
+
 Overfull \vbox (0.9521pt too high) detected at line 260
  []
 
@@ -2585,7 +2604,7 @@ Overfull \vbox (0.9521pt too high) detected at line 260
 
 Package xcolor Warning: Incompatible color definition on input line 263.
 
-<figure/04-IGF_mod_iprior_plot-1.pdf, id=87, 505.89pt x 281.05pt>
+<figure/04-IGF_mod_iprior_plot-1.pdf, id=89, 505.89pt x 281.05pt>
 File: figure/04-IGF_mod_iprior_plot-1.pdf Graphic file (type pdf)
 <use figure/04-IGF_mod_iprior_plot-1.pdf>
 Package pdftex.def Info: figure/04-IGF_mod_iprior_plot-1.pdf  used on input lin
@@ -2611,7 +2630,7 @@ Package xcolor Warning: Incompatible color definition on input line 320.
 
 Package xcolor Warning: Incompatible color definition on input line 356.
 
-<figure/04-IGF_plot_beta-1.pdf, id=102, 505.89pt x 252.945pt>
+<figure/04-IGF_plot_beta-1.pdf, id=104, 505.89pt x 252.945pt>
 File: figure/04-IGF_plot_beta-1.pdf Graphic file (type pdf)
 <use figure/04-IGF_plot_beta-1.pdf>
 Package pdftex.def Info: figure/04-IGF_plot_beta-1.pdf  used on input line 359.
@@ -2676,7 +2695,7 @@ Overfull \hbox (11.78252pt too wide) in paragraph at lines 487--487
 
 Package xcolor Warning: Incompatible color definition on input line 542.
 
-<figure/04-cows_plot-1.pdf, id=140, 505.89pt x 223.83624pt>
+<figure/04-cows_plot-1.pdf, id=139, 505.89pt x 223.83624pt>
 File: figure/04-cows_plot-1.pdf Graphic file (type pdf)
 <use figure/04-cows_plot-1.pdf>
 Package pdftex.def Info: figure/04-cows_plot-1.pdf  used on input line 545.
@@ -2706,7 +2725,7 @@ Package xcolor Warning: Incompatible color definition on input line 578.
 
 \openout3 = `04e-examples.mw'.
 
-<figure/04-tecator_data-1.pdf, id=167, 397.485pt x 231.86626pt>
+<figure/04-tecator_data-1.pdf, id=164, 397.485pt x 231.86626pt>
 File: figure/04-tecator_data-1.pdf Graphic file (type pdf)
 <use figure/04-tecator_data-1.pdf>
 Package pdftex.def Info: figure/04-tecator_data-1.pdf  used on input line 581.
@@ -2849,14 +2868,14 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 819.
 
  ) 
 Here is how much of TeX's memory you used:
- 46436 strings out of 492980
- 873533 string characters out of 6132509
- 1663203 words of memory out of 5000000
- 49039 multiletter control sequences out of 15000+600000
- 558533 words of font info for 96 fonts, out of 8000000 for 9000
+ 46725 strings out of 492980
+ 878206 string characters out of 6132509
+ 1668393 words of memory out of 5000000
+ 49311 multiletter control sequences out of 15000+600000
+ 558054 words of font info for 96 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,21n,104p,10398b,1658s stack positions out of 5000i,500n,10000p,200000b,80000s
-pdfTeX warning (dest): name{Hfootnote.4} has been referenced but does not exi
+pdfTeX warning (dest): name{Hfootnote.3} has been referenced but does not exi
 st, replaced by a fixed one
 
 pdfTeX warning (dest): name{cite.0@zhu2014structured} has been referenced but d
@@ -2877,7 +2896,7 @@ d but does not exist, replaced by a fixed one
 pdfTeX warning (dest): name{cite.0@thodberg1996review} has been referenced but 
 does not exist, replaced by a fixed one
 
-pdfTeX warning (dest): name{Hfootnote.3} has been referenced but does not exist
+pdfTeX warning (dest): name{Hfootnote.2} has been referenced but does not exist
 , replaced by a fixed one
 
 pdfTeX warning (dest): name{cite.0@jmcm} has been referenced but does not exist
@@ -2885,9 +2904,6 @@ pdfTeX warning (dest): name{cite.0@jmcm} has been referenced but does not exist
 
 pdfTeX warning (dest): name{cite.0@kenward1987method} has been referenced but d
 oes not exist, replaced by a fixed one
-
-pdfTeX warning (dest): name{Hfootnote.2} has been referenced but does not exist
-, replaced by a fixed one
 
 pdfTeX warning (dest): name{cite.0@nlme} has been referenced but does not exist
 , replaced by a fixed one
@@ -2912,26 +2928,25 @@ al/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local
 xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texli
 ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texliv
 e/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/
-2017/texmf-dist/fonts/type1/public/cm-super/sfbx0900.pfb></usr/local/texlive/20
-17/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/texlive/2017
-/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2017/t
-exmf-dist/fonts/type1/public/cm-super/sfrb0900.pfb></usr/local/texlive/2017/tex
-mf-dist/fonts/type1/public/cm-super/sfrb1095.pfb></usr/local/texlive/2017/texmf
--dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2017/texmf-d
-ist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2017/texmf-dis
-t/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2017/texmf-dist/
-fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2017/texmf-dist/fo
-nts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2017/texmf-dist/font
-s/type1/public/cm-super/sfss0900.pfb></usr/local/texlive/2017/texmf-dist/fonts/
-type1/public/cm-super/sfss1095.pfb></usr/local/texlive/2017/texmf-dist/fonts/ty
-pe1/public/cm-super/sfti1095.pfb></usr/local/texlive/2017/texmf-dist/fonts/type
-1/public/cm-super/sftt0900.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/
-public/cm-super/sftt1000.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/pu
-blic/cm-super/sftt1095.pfb>
-Output written on 04e-examples.pdf (17 pages, 766285 bytes).
+2017/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/texlive/20
+17/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2017
+/texmf-dist/fonts/type1/public/cm-super/sfrb0900.pfb></usr/local/texlive/2017/t
+exmf-dist/fonts/type1/public/cm-super/sfrb1095.pfb></usr/local/texlive/2017/tex
+mf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2017/texmf
+-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2017/texmf-d
+ist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2017/texmf-dis
+t/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2017/texmf-dist/
+fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2017/texmf-dist/fo
+nts/type1/public/cm-super/sfss0900.pfb></usr/local/texlive/2017/texmf-dist/font
+s/type1/public/cm-super/sfss1095.pfb></usr/local/texlive/2017/texmf-dist/fonts/
+type1/public/cm-super/sfti1095.pfb></usr/local/texlive/2017/texmf-dist/fonts/ty
+pe1/public/cm-super/sftt0900.pfb></usr/local/texlive/2017/texmf-dist/fonts/type
+1/public/cm-super/sftt1000.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/
+public/cm-super/sftt1095.pfb>
+Output written on 04e-examples.pdf (17 pages, 763808 bytes).
 PDF statistics:
- 316 PDF objects out of 1000 (max. 8388607)
- 257 compressed objects within 3 object streams
- 47 named destinations out of 1000 (max. 500000)
+ 312 PDF objects out of 1000 (max. 8388607)
+ 254 compressed objects within 3 object streams
+ 46 named destinations out of 1000 (max. 500000)
  75 words of extra memory for PDF output out of 10000 (max. 10000000)
 
