@@ -1,17 +1,17 @@
-From Lemma \ref{thm:fisherregf}, the formula for the Fisher information uses $n$ points of the observed data $x_i\in\cX$.
+From \cref{thm:fisherregf}, the formula for the Fisher information uses $n$ points of the observed data $x_i\in\cX$.
 This seems to suggest that the Fisher information only exists for a finite subspace of the RKHS $\cF$.
 Indeed, this is the case, and we will be specific about the subspace for which there is Fisher information.
-Consider the following set, a similar one considered in the proof of the Moore-Aronszajn theorem (Theorem \ref{thm:moorea}):
+Consider the following set, a similar one considered in the proof of the Moore-Aronszajn theorem (\cref{thm:moorea}):
 \begin{align}\label{eq:subspaceFn}
 \cF_n = \left\{ f:\cX \to \bbR \, \bigg| \, f(x) = \sum_{i=1}^n h(x,x_i)w_i, \ w_i \in \bbR, \ i=1,\dots,n \right\}.  
 \end{align}
 Since $h(\cdot,x_i) \in \cF$, then any $f \in \cF_n$ is also in $\cF$ by linearity, and thus $\cF_n$ is a subset of $\cF$.
 Further, $\cF_n$ is closed under addition and multiplication by a scalar, and is therefore a subspace of $\cF$.
-Unlike in Theorem \ref{thm:moorea}, this is a finite subspace with dimension $n$.
+Unlike in \cref{thm:moorea}, this is a finite subspace with dimension $n$.
 
 Let $\cF_n^\bot$ be the orthogonal complement of $\cF_n$ in $\cF$.
 By the orthogonal decomposition theorem, any regression function $f\in\cF$ can be uniquely decomposed as $f = f_n + r$, with $f_n \in \cF_n$ and $r \in \cF_n^\bot$, where $\mathcal F = \mathcal F_n \oplus  \cF_n^\bot$.
-We saw earlier in Theorem \ref{thm:moorea} that $\cF$ is the closure of $\cF_n$, so therefore $\cF$ is dense in $\cF_n$, and hence by Corollary \ref{thm:orthdecomp2} we have that $\cF_n^\bot = \{0\}$.
+We saw earlier in \cref{thm:moorea} that $\cF$ is the closure of $\cF_n$, so therefore $\cF$ is dense in $\cF_n$, and hence by \cref{thm:orthdecomp2} we have that $\cF_n^\bot = \{0\}$.
 Alternatively, we could have argued the following: any $r \in \cF_n^\bot$ is orthogonal to each of the $h(\cdot,x_i)\in\cF$, so by the reproducing property of $h$, $r(x_i) = \ip{r,h(\cdot,x_i)}_\cF = 0$.
 This seems to suggest the statement in the following corollary.
 
@@ -52,7 +52,7 @@ $\norm{f}_{\cF_n}^2 = \sum_{i,j=1}^n w_i(\bPsi^{-1})_{ij}w_j$.
 This is stated in the next lemma.
 
 \begin{lemma}
-  Let $\cF_n$ as in \eqref{eq:subspaceFn} be equipped with the inner product
+  Let $\cF_n$ as in \cref{eq:subspaceFn} be equipped with the inner product
   \begin{align}\label{eq:Fninnerprod}
     \ip{f, f'}_{\cF_n} = \sum_{i=1}^n\sum_{j=1}^n w_i(\bPsi^{-1})_{ij}w_j' = \bw^\top\bPsi\bw' 
   \end{align}

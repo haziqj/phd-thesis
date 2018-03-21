@@ -18,7 +18,7 @@ In addition, assume $\nu$ is a probability measure over $\Theta$ so that $(\Thet
 In deriving the maximum entropy distribution, we will need to maximise the functional $H$ with respect to $p$.
 Typically this is done using calculus of variations techniques of functional derivatives.
 Since we have already introduced concepts of Fréchet and Gâteaux derivatives earlier, we shall use those instead.
-Assume that the entropy $H$ is Fréchet differentiable at $p$, and that the probability densities $p$ under consideration belong to the Hilbert space of square integrable functions $\L^2(\Theta,\nu)$ with inner product $\ip{\theta,\theta'}_\Theta = \int \theta\theta' \dint\nu$.
+Assume that the entropy $H$ is Fréchet differentiable at $p$, and that the probability densities $p$ under consideration belong to the Hilbert space of square integrable functions $\L^2(\Theta,\nu)$ with inner product $\ip{p,p'}_{L^2(\Theta,\nu)} = \int pp' \dint\nu$.
 Now since the Fréchet derivative of $H$ at $p$ is assumed to exist, it is equal to the Gâteaux derivative, which can be computed as follows:
 \begin{align*}
   \partial_q H(p) 
@@ -36,7 +36,7 @@ Now since the Fréchet derivative of $H$ at $p$ is assumed to exist, it is equal
   &= \d H(p)(q).   
 \end{align*}
 By definition, the gradient of $H$ at $p$, denoted $\nabla H(p)$, is equal to $- 1 - \log p$.
-This agrees with the usual functional derivative of the entropy obtained via standard calculus of variations, which is usually denoted $\partial H / \partial p$.
+This agrees with the usual functional derivative of the entropy obtained via standard calculus of variations, which is typically denoted $\partial H / \partial p$.
 We now present another well known result from information theory, regarding the form of the maximum entropy distribution.
 
 \begin{lemma}[Maximum entropy distribution]\label{thm:maxentr}
@@ -86,7 +86,7 @@ We now present another well known result from information theory, regarding the 
   Now, if $\Theta \equiv \bbR^m$ and $\nu$ is the Lebesgue measure, then $D(\theta,\theta_0)^2 = \norm{\theta-\theta_0}_{\bbR^m}^2$, so $\tilde p$ is recognised as a multivariate normal density centred at $\theta_0$ with identity covariance matrix.
 \end{proof}
 
-Returning to the normal regression model of \eqref{eq:model1} subject to \eqref{eq:model1ass}, we shall now derive the maximum entropy prior for $f$ in some RKHS $\cF$.
+Returning to the normal regression model of \cref{eq:model1} subject to \cref{eq:model1ass}, we shall now derive the maximum entropy prior for $f$ in some RKHS $\cF$.
 One issue that we have is that the set $\cF$ is potentially ``too big'' for the purpose of estimating $f$, that is, for certain pairs of functions $\cF$, the data do not allow an assessment of whether one is closer to the truth than the other.
 In particular, the data do not contain information to distinguish between two functions $f$ and $g$ in $\cF$ for which $f(x_i) = g(x_i), i=1,\dots,n$.
 Since the Fisher information for a linear functional of a non-zero $f \in \cF_n$ is non-zero, there is information to allow a comparison between any pair of functions in $f_0 + \cF_n := \{f_0 + f \,|\, f_0 \in \cF, f \in \cF_n \}$.
@@ -116,7 +116,14 @@ We now state and prove the I-prior theorem.
   Therefore, $p(r) = 0$, and one needs only consider distributions over $\cF_n$ when building distributions over $\cF$.
   
   The norm on $\cF_n$ induces the metric $D(f,f') = \norm{f - f'}_{\cF_n}$.
-  \hltodo[Shouldn't $f$ and $f_0$ be in $\cF$?]{Thus, for $f,f_0 \in \cF$ of the forms $f = \sum_{i=1}^n h(\cdot,x_i)w_i$ and $f_0 = \sum_{i=1}^n h(\cdot,x_i)w_i$ (i.e., $f,f_0 \in \cF_n$)},
+  For $f,f_0 \in \cF$, take the 
+  \hltodo[Double check this proof.]{orthogonal projections} of these vectors onto $\cF_n$
+  \[
+    f = \sum_{i=1}^n h(\cdot,x_i)w_i + r_f
+    \hspace{0.5cm}\text{and}\hspace{0.5cm}
+    f_0 = \sum_{i=1}^n h(\cdot,x_i)w_{i0} + r_0
+  \]
+  and compute the squared distance between them:
   \begin{align*}
     D(f,f_0)^2 
     &= \norm{f - f_0}_{\cF_n}^2 \\
@@ -125,7 +132,7 @@ We now state and prove the I-prior theorem.
     &= (\bw - \bw_0)^\top\bPsi^{-1} (\bw - \bw_0).
 %    &= \bw^\top\bPsi^{-1}\bw - 2\bw^\top\bPsi^{-1}\bw' + \bw'^\top\bPsi^{-1}\bw'j
   \end{align*}
-  Thus, by Lemma \ref{thm:maxentr}, the maximum entropy distribution for $f = \sum_{i=1}^n h(\cdot,x_i)w_i$ is
+  Thus, by \cref{thm:maxentr}, the maximum entropy distribution for $f = \sum_{i=1}^n h(\cdot,x_i)w_i$ is
   \[
     (w_1,\dots,w_n)^\top \sim \N_n(\bw_0,\bPsi).
   \]

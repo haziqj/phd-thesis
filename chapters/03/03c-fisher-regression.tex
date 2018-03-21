@@ -1,17 +1,14 @@
 We are now equipped to derive the Fisher information for our regression function.
 For convenience, we restate the regression model and its assumptions.
-The regression model relating response variables $y_i \in \bbR$ and the covariates $x_i \in \cX \subseteq \bbR^p$, for $i=1,\dots,n$ is
-\begin{align}
-  y_i = \alpha + f(x_i) + \epsilon_i \tag{\ref{eq:model1}},
-\end{align}
-subject to
-\begin{align}
+The regression model relating response variables $y_i \in \bbR$ and the covariates $x_i \in \cX $, for $i=1,\dots,n$ is
+\begin{gather}
+  y_i = \alpha + f(x_i) + \epsilon_i \tag{\ref{eq:model1}} \\
   (\epsilon_1, \dots, \epsilon_n)^\top \sim \N_n(0, \bPsi^{-1}) \tag{\ref{eq:model1ass}}
-\end{align}
+\end{gather}
 where $\alpha \in \bbR$ is an intercept and $f$ is in an RKHS $\cF$ with kernel $h_\eta:\cX \times \cX \to \bbR$.
 
 \begin{lemma}[Fisher information for regression function]\label{thm:fisherregf}
-  For the regression model stated in \eqref{eq:model1} subject to \eqref{eq:model1ass} and $f \in \cF$ where $\cF$ is an RKHS with kernel $h$, the Fisher information for $f$ is given by
+  For the regression model \cref{eq:model1} subject to \cref{eq:model1ass} and $f \in \cF$ where $\cF$ is an RKHS with kernel $h$, the Fisher information for $f$ is given by
   \[
     \cI(f) = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(\cdot,x_i) \otimes h(\cdot,x_j)
   \]
@@ -76,15 +73,15 @@ where $\alpha \in \bbR$ is an intercept and $f$ is in an RKHS $\cF$ with kernel 
 \end{proof}
 
 The above lemma gives the form of the Fisher information for $f$ in a rather abstract fashion.
-Consider the following example of applying Lemma \eqref{thm:fisherregf} to obtain the Fisher information for a standard linear regression model.
+Consider the following example of applying Lemma \cref{thm:fisherregf} to obtain the Fisher information for a standard linear regression model.
 
 \begin{example}[Fisher information for linear regression]
-  As before, suppose model \eqref{eq:model1} subject to \eqref{eq:model1ass} and $f\in\cF$, an RKHS.
+  As before, suppose model \cref{eq:model1} subject to \cref{eq:model1ass} and $f\in\cF$, an RKHS.
   For simplicity, we assume iid errors, i.e. $\bPsi = \psi \bI_n$.
   Let $\cX = \bbR^p$, and the feature space $\cV = \bbR^p$ be equipped with the usual dot product $\ip{\cdot,\cdot}_\cV:\cV \otimes \cV \to \bbR$ defined by $v^\top v$.
   Consider also the identity feature map $\phi:\cX \to \cV$ defined by $\phi(\bx)=\bx$.
   For some $\boldsymbol\beta \in \cV$, the linear regression model is such that $f(\bx) = \bx^\top \boldsymbol\beta = \ip{\phi(\bx),\boldsymbol\beta}_\cV$.
-  Therefore, according to Lemma \eqref{thm:fisherregf}, the Fisher information for $\beta$ is
+  Therefore, according to Lemma \cref{thm:fisherregf}, the Fisher information for $\beta$ is
   \begin{align*}
     \cI(\boldsymbol\beta) 
     &= \sum_{i=1}^n\sum_{j=1}^n \psi \cdot \phi(\bx_i) \otimes \phi(\bx_j) \\
@@ -98,8 +95,8 @@ Consider the following example of applying Lemma \eqref{thm:fisherregf} to obtai
 
 We can also compute the Fisher information for linear functionals of $f$, and in particular, for point evaluation functionals of $f$, thereby allowing us to compute the Fisher information at two points $f(x)$ and $f(x')$.
 
-\begin{corollary}[Fisher information between two linear functionals of the regression function]\label{thm:fisherreglinfunc}
-	For our regression model as defined in \eqref{eq:model1} subject to \eqref{eq:model1ass} and $f$ belonging to a RKHS $\mathcal F$ with kernel $h$, the Fisher information at two points $f(x)$ and $f(x')$
+\begin{corollary}[Fisher information between two linear functionals of $f$]\label{thm:fisherreglinfunc}
+	For \hspace{0.5pt} our \hspace{0.5pt} regression model as defined in \cref{eq:model1} subject to \cref{eq:model1ass} and $f$ belonging to a RKHS $\mathcal F$ with kernel $h$, the Fisher information at two points $f(x)$ and $f(x')$
 %	, written $\cI\big(f(x),f(x')\big)$, is given by
 	is given by
 	\[
@@ -109,7 +106,7 @@ We can also compute the Fisher information for linear functionals of $f$, and in
 
 \begin{proof}
   In a RKHS $\mathcal F$, the reproducing property gives $f(x) = \langle f, h(\cdot, x) \rangle_{\mathcal F}$ and in particular, $\langle h(\cdot,x), h(\cdot, x') \rangle_{\mathcal F} = h(x,x')$. 
-  By \eqref{eq:fisher-linear-functional}, we have that
+  By \cref{eq:fisher-linear-functional}, we have that
   \begin{align*}
     \cI(f)\big(h(\cdot,x),h(\cdot,x') \big)
     &= \big\langle \cI(f), h(\cdot, x) \otimes h(\cdot, x') \big\rangle_{\mathcal F \otimes \mathcal F} \\
@@ -124,5 +121,5 @@ We can also compute the Fisher information for linear functionals of $f$, and in
   The second to last line follows from the definition of the usual inner product for tensor spaces, and the last line follows by the reproducing property.
 \end{proof}
 
-An inspection of the formula in Corollary \ref{thm:fisherreglinfunc} reveals the fact that the Fisher information for $f(x)$, $\cI \big(f(x),f(x) \big)$, is positive if and only if $h(x,x_i)\neq 0$ for at least one $i \in \{1,\dots,n \}$.
+An inspection of the formula in \cref{thm:fisherreglinfunc} reveals the fact that the Fisher information for $f(x)$, $\cI \big(f(x),f(x) \big)$, is positive if and only if $h(x,x_i)\neq 0$ for at least one $i \in \{1,\dots,n \}$.
 In practice, this condition is often satisfied for all $x$, so this result might be considered both remarkable and reassuring, because it suggests we can estimate $f$ over its entire domain, no matter how big, even though we only have a finite amount of data points.

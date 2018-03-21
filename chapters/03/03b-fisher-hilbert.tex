@@ -14,7 +14,7 @@ We discuss a generalisation of the concept of differentiability from real-valued
 \end{definition}
 
 \begin{remark}
-  Since $\d f(x)$ is a bounded, linear operator, by Lemma \cref{thm:boundcont}, it is also continuous. 
+  Since $\d f(x)$ is a bounded, linear operator, by \cref{thm:boundcont}, it is also continuous. 
 \end{remark}
 
 \begin{remark}
@@ -101,7 +101,7 @@ Nevertheless, the reasons we bring up Gâteaux derivatives is because it is usua
 
 On the other hand, Gâteaux differentiability does not necessarily imply Fréchet differentiability.
 A sufficient condition for Fréchet differentiability is  that the Gâteaux derivative is continuous at the point of differentiation, i.e., the map $\partial f: \cU \to (\cV;\cW)$ is continuous at $x\in\cU$.
-In other words, if $\partial f(x)$ is a bounded linear operator and the convergence in \eqref{eq:frecimplygat} is uniform with respect to all $v$ such that $\norm{v}_\cV=1$, then $\d f(x)$ exists and $\d f(x) = \partial f(x)$ \citep[p. 57 \& 66]{tapia1971diff}.
+In other words, if $\partial f(x)$ is a bounded linear operator and the convergence in \cref{eq:frecimplygat} is uniform with respect to all $v$ such that $\norm{v}_\cV=1$, then $\d f(x)$ exists and $\d f(x) = \partial f(x)$ \citep[p. 57 \& 66]{tapia1971diff}.
 
 Consider now the function $\d f(x):\cV\to\cW$ and suppose that $f$ is twice Fréchet differentiable at $x\in\cU$, i.e. $\d f(x)$ is Fréchet differentiable at $x\in\cU$ with derivative $\d^2 f(x):\cV\times\cV \to \cW$.
 Then, $\d f(x)$ is also Gâteaux differentiable at the point $x$ and the two differentials coincide.
@@ -111,7 +111,7 @@ In particular, we have
 \end{align}
 by a similar argument in the proof above.
 We will use this fact when we describe the Hessian in a little while.
-%Again, if the convergence in \eqref{eq:frech2gat} is uniform with respect to all $v,v'\in\cV$ such that $\norm{v}_\cV = \norm{v'}_\cV = 1$, then $\d^2 f(x) $ exists and equals 
+%Again, if the convergence in \cref{eq:frech2gat} is uniform with respect to all $v,v'\in\cV$ such that $\norm{v}_\cV = \norm{v'}_\cV = 1$, then $\d^2 f(x) $ exists and equals 
 
 There is also the concept of \emph{gradients} in Hilbert space.
 Recall that the Riesz representation theorem says that the mapping $A:\cV\to\cV'$ from the Hilbert space $\cV$ to its continuous dual space $\cV'$ defined by $A = \ip{\cdot,v}_\cV$ for some $v\in\cV$ is an isometric isomorphism.
@@ -129,14 +129,14 @@ We define the gradient as follows.
 \end{definition}
 
 \begin{remark}
-  Alternatively, the gradient can be motivated using the Riesz representation theorem in Definition \ref{def:frechet}3 of the Fréchet derivative.
+  Alternatively, the gradient can be motivated using the Riesz representation theorem in \cref{def:frechet} of the Fréchet derivative.
   Since $\cV'\ni T:\cV\to\bbR$, there is a unique element $v^*\in\cV$ such that $T(v)=\ip{v^*,v}_\cV$ for any $v\in\cV$.
   The element $v^*\in\cV$ is called the gradient of $f$ at $x$.
 \end{remark}
 
 Since the gradient of $f$ is an operator on $\cU$ to $\cV$, it may itself have a (Fréchet) derivative.
 Assuming existence, i.e., $f$ is twice Fréchet differentiable at $x \in \cU$, we call this derivative the \emph{Hessian} of $f$.
-From \eqref{eq:frech2gat}, it must be that
+From \cref{eq:frech2gat}, it must be that
 \begin{align*}
   \d^2 f(x)(v,v') &= \lim_{t\to 0} \frac{\d f(x + t v)(v') - \d f(x)(v')}{t} \\
   &= \lim_{t\to 0} \frac{\ip{\nabla f(x+tv), v'}_\cV - \ip{\nabla f(x), v'}_\cV}{t} \\
@@ -166,7 +166,7 @@ Letting $\cV$, $\cW$ and $\cU$ be as before, we now define the Hessian for the f
 
 With the differentiation tools above, we can now derive the Fisher information that we set out to derive at the beginning of this section.
 Let $Y$ be a random variable with density in the parametric family $\{p(\cdot|\theta) \,|\, \theta \in \Theta \}$, where $\Theta$ is now assumed to be a Hilbert space with inner product $\ip{\cdot,\cdot}_\Theta$.
-\hltodo[Why wouldn't it be >0 ?]{If $p(Y|\theta) > 0$}, the log-likelihood function of $\theta$ is the real-valued function $L(\cdot|Y):\Theta\to\bbR$ defined by $\theta \mapsto \log p(Y|\theta)$. 
+If $p(Y|\theta) > 0$, the log-likelihood function of $\theta$ is the real-valued function $L(\cdot|Y):\Theta\to\bbR$ defined by $\theta \mapsto \log p(Y|\theta)$. 
 The score $S$, assuming existence, is defined to be the (Fréchet) derivative of $L(\cdot|Y)$ at $\theta$, i.e. $S:\Theta \to \L(\Theta,\bbR) \equiv \Theta'$ defined by $S = \d L(\cdot | Y)$.
 The second (Fréchet) derivative of $L(\cdot|Y)$ at $\theta$ is then $\d^2 L(\cdot|Y): \Theta \to \L(\Theta \times \Theta,\bbR)$.
 We now prove the following proposition.
@@ -205,8 +205,18 @@ The expectation of the score for any $b\in\Theta$ is shown to be
   &= \left\langle \left(\nabla \int p(Y|\cdot) \dint Y\right)(\theta)  , b \right\rangle_\Theta \\
   &=0.
 \end{align*}
-The interchange of the integration and the Fréchet differential is allowed under certain conditions \citep{kammar2016}.
+The interchange of Lebesgue integrals and Fréchet differentials is allowed under certain conditions\footnotemark~\citep{kammar2016}.
 The derivative of $\int p(Y|\cdot)\dint Y$ at any value of $\theta\in\Theta$ is the zero vector as it is the derivative of a constant (i.e., 1).
+\footnotetext{
+  The conditions are: 
+  \begin{enumerate}
+    \item $L(\cdot|Y)$ is Frechét differentiable on $\cU\subseteq\Theta$ for almost every $Y\in\bbR$.
+    \item $L(\theta|Y)$ and $\d L(\theta|Y)(b)$ are both integrable with respect to $Y$, for any $\theta \in \cU\subseteq\Theta$ and $b\in\Theta$.
+    \item There is an integrable function $g(Y)$ such that $L(\theta|Y) \leq g(Y)$ for all $\theta \in \Theta$ and almost every $Y\in\bbR$.
+  \end{enumerate}
+  These conditions as stated are analogous to the measure theoretic requirements for Leibniz's integral rule to hold (differentiation under the integral sign).
+  For nice and well-behaved probability densities, like the normal density that we will be working with, this isn't an issue.
+}
 
 Using the classical notion that the Fisher information is the variance of the score function, then, for fixed $b,b'\in\Theta$, combined with the fact that $\E[\d L(\theta|Y)]$ is a zero mean function, we have that 
 \begin{align*}
@@ -254,169 +264,25 @@ It would seem that $\E[- \nabla^2 L(\theta|Y)(b)]$ is an operator from $\Theta$ 
 Therefore, $\cI(\theta) = \E[- \nabla^2 L(\theta|Y)]$.
 \end{proof}
 
-There are three equivalent interpretations of the Fisher information $\cI(\theta)$ for $\theta$, much like the covariance operator, which are 
+The Fisher information $\cI(\theta)$ for $\theta$, much like the covariance operator, can be viewed in one of three ways: 
 \begin{enumerate}
   \item As its general form, i.e. an element in $\Theta\otimes\Theta$;
   \item As an operator $\cI(\theta):\Theta\to\Theta$ defined by $\cI(\theta)(b) = \E[- \nabla^2 L(\theta|Y)](b)$; and finally
   \item As a bilinear form $\cI(\theta):\Theta\times\Theta\to\bbR$ defined by $\cI(\theta)(b,b') = \ip{-\E \nabla^2 L(\theta|Y)(b), b'}_\Theta$ $= \E [-\d^2 L(\theta|Y)(b,b') ]$.
 \end{enumerate}
-In particular, viewed as a bilinear form, the evaluation of the Fisher information for $\theta$ at two points $b$ and $b'$ in $\Theta$ is seen as the Fisher information 
-\hltodo[Is it really between two things?]{between} 
-two continuous, linear functionals of $\theta$.
-\hltodo{REASONS? linear isometry?}
+In particular, viewed as a bilinear form, the evaluation of the Fisher information for $\theta$ at two points $b$ and $b'$ in $\Theta$ is seen as the Fisher information between two continuous, linear functionals of $\theta$.
 %This is because the continuity of the linear differential operator ensures that the Fisher information is an element of the continuous dual $\Theta'$.
-For brevity, we denote this $\cI(\theta_b,\theta_{b'})$.
+For brevity, we denote this $\cI(\theta_b,\theta_{b'})$, where $\theta_b = \ip{\theta,b}_\theta$ for some $b\in\Theta$.
 The natural isometry between $\Theta$ and $\Theta'$ then allows us to write 
 \begin{align}\label{eq:fisher-linear-functional}
   \cI(\theta_b,\theta_{b'}) = \ip{\cI(\theta), b \otimes b'}_{\Theta\otimes\Theta} = \big\langle\cI(\theta), \ip{\cdot,b}_\Theta \otimes \ip{\cdot,b'}_\Theta \big\rangle_{\Theta'\otimes\Theta'}.
 \end{align}
 
-
 %\begin{example}[Fisher information in Euclidean space]
-%  In this example, we will derive the Fisher information for the parameters of a normal distribution using the formulae in Proposition \ref{thm:fisherinfohilbert} and the differentiation techniques in Hilbert space.
+%  In this example, we will derive the Fisher information for the parameters of a normal distribution using the formulae in \cref{thm:fisherinfohilbert} and the differentiation techniques in Hilbert space.
 %  Let $Y \sim \N(\mu,\psi^{-1})$. 
 %  Using the exponential family natural parameterisation, denote by $\theta = (\mu\psi,-\psi/2)^\top \in \Theta \subset \bbR^2$, and this space is equipped with the usual dot product inner product.
 %  Also define the sufficient statistic $T(Y) = (Y, Y^2)^\top$
 %  The log-likelihood function for $\theta$ is $L(\theta) = \const + \ip{\theta,T(Y)}$
 %\end{example}
 
-
-%\subsection{Tensor product spaces}
-%\hltodo{Move this to Chapter 2}
-%
-%\begin{definition}[Tensor products]
-%  Let $x_1\in\cH_1$ and $x_2\in\cH_2$ be two elements of two real Hilbert spaces.
-%  Then, the tensor product $x_1 \otimes x_2:\cH_1\times\cH_2\to\bbR$, is a bilinear form defined as
-%  \[
-%    (x_1\otimes x_2)(y_1,y_2) = \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2}
-%  \]
-%  for any $(y_1,y_2)\in\cH_1\times\cH_2$.
-%\end{definition}
-%
-%\begin{definition}[Tensor product space]
-%  The tensor product space $\cH_1\otimes\cH_2$ is the completion of the space
-%  \[
-%    \cA = \left\{ \sum_{j=1}^J x_{1j} \otimes x_{2j} \,\Bigg\vert\, x_{1j}\in\cH_1, x_{2j}\in\cH_2, J \in \bbN \right\}
-%  \]
-%  with respect to the norm induced by the inner product
-%  \[
-%    \left\langle  \sum_{j=1}^J x_{1j} \otimes x_{2j},  \sum_{k=1}^K y_{1k} \otimes y_{2k} \right\rangle_\cA = \sum_{j=1}^J\sum_{k=1}^K \ip{x_{1j},y_{1k}}_{\cH_1} \ip{x_{2j},y_{2k}}_{\cH_2}.
-%  \]
-%\end{definition}
-%
-%An operator interpretation of the tensor product.
-%For each pair of elements $(x_1,x_2) \in \cH_1\times\cH_2$, we define the operator $A:\cH_1\to\cH_2$ in the following way:
-%\begin{align*}
-%  A_{x_1,x_2}:\cH_1&\to\cH_2 \\
-%  y_1&\mapsto \ip{x_1,y_1}_{\cH_1}x_2
-%\end{align*}
-%For some $y_1\in\cH_1$ and $y_2\in\cH_2$, we have that
-%\begin{align*}
-%  \ip{A_{x_1,x_2}(y_1),y_2}_{\cH_2} 
-%  &= \big\langle \ip{x_1,y_1}_{\cH_1}x_2 , y_2 \big\rangle_{\cH_2} \\
-%  &= \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2} \\
-%  &= (x_1\otimes x_2)(y_1,y_2).
-%\end{align*}
-%It is seen that the tensor product $x_1\otimes x_2$ is is associated with the rank one operator $B:\cH_1'\to\cH_2$ defined by $z \mapsto z(x_1)x_2$ with $z = \ip{x_1,\cdot}_{\cH_1}$.
-%We write $B = x_1 \otimes x_2$.
-%\hltodo[From Wikipedia. But don't really get it, although it might explain the Fisher information between linear functionals.]{Therefore, this extends a linear identification between $\cH_1\otimes\cH_2$ and the space of finite-rank operators from $\cH_1'$ to $\cH_2$.}
-%We now have three distinct interpretations of the tensor product:
-%\begin{itemize}
-%  \item \textbf{Bilinear form} (as defined in Definition 3.5). 
-%  \begin{align*}
-%    x_1 \otimes x_2:\cH_1 \times \cH_2 &\to \bbR \\
-%    (y_1,y_2) &\mapsto \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2}
-%  \end{align*}
-%  for $x_1,y_1\in\cH_1$ and $x_2,y_2\in\cH_2$.
-%  \item \textbf{Operator}.
-%  \begin{align*}
-%    x_1 \otimes x_2:\cH_1 &\to \cH_2 \\
-%    y_1 &\mapsto \ip{x_1,y_1}_{\cH_1}x_2
-%  \end{align*}  
-%  \item \textbf{General form} (as an element in the tensor space).
-%  \[
-%    x_1 \otimes x_2 \in \cH_1 \otimes \cH_2.
-%  \]
-%\end{itemize}
-%
-%\subsection{Random elements in a Hilbert space}
-%
-%\hltodo{Move this to Chapter 2}
-%
-%Let $\cH$ be a real Hilbert space. 
-%We can define a metric on $\cH$ using $D(x,x') = \norm{x-x'}_\cH$, where the norm on $\cH$ is the norm induced by the inner product.
-%A collection $\Sigma$ of subsets of $\cH$ is called a \emph{$\sigma$-algebra} if $\emptyset \in \Sigma$, $S \in \Sigma$ implies its complement $S^c \in \Sigma$, and $S_j\in\Sigma$, $j\geq 1$ implies $\bigcup_{j=1}^\infty S_j \in \Sigma$.
-%The smallest $\sigma$-algebra containing all open subsets of $\cH$ is called the \emph{Borel $\sigma$-algebra}, and its members the Borel sets.
-%Denote by $\cB(\cH)$ the Borel $\sigma$-algebra of $\cH$.
-%The metric space $(\cH,D)$ is called \emph{separable} if it has a countable dense subset, i.e., there are $x_1,x_2,\cdots$ in $\cH$ such that the closure $\overline{\{x,_1,x_2,\cdots\}} = \cH$.
-%
-%Recall that a function $\nu:\Sigma\to[0,\infty]$ is called a \emph{measure} if it satisfies
-%\begin{itemize}
-%  \item \textbf{Non-negativity:} $\nu(S) \geq 0$ for all $S$ in $\Sigma$;
-%  \item \textbf{Null empty set:} $\nu(\emptyset) = 0$; and
-%  \item \textbf{$\sigma$-additivity:} for all countable, mutually disjoint sets $\{S_i\}_{i=1}^\infty$,
-%  \[
-%    \nu\left(\bigcup_{i=1}^\infty S_i \right) = \sum_{i=1}^\infty \nu(S_i).
-%  \] 
-%\end{itemize}
-%A measure $\nu$ on $\big(\cH,\cB(\cH)\big)$ is called a \emph{Borel measure} on $\cH$.
-%We shall only concern ourselves with finite Borel measures. 
-%In addition, if $\nu(\cH) = 1$ then $\nu$ is a \emph{(Borel) probability measure} and the measure space $\big(\cH,\cB(\cH),\nu\big)$ is a \emph{(Borel) probability space}.
-%
-%Let $(\Omega,\cE,\Prob)$ be a probability space.
-%We say that a mapping $X:\Omega\to\cH$ is a \emph{random element} in $\cH$ if $X^{-1}(B)\in\cE$ for every Borel set, i.e., $X$ is a function such that for every $B\in\cB(\cH)$, its preimage $X^{-1}(B) = \{\omega \in \Omega \,|\, X(\omega) \in B \}$ lies in $\Sigma$.
-%This is simply a generalisation of the definition of random variables in regular Euclidean space.
-%From this definition, we can also properly define random functions $f$ in a Hilbert space of functions $\cF$.
-%In any case, every random element $X$ induces a probability measure on $\cH$ defined by
-%\[
-%  \nu(B) = \Prob\big(X^{-1}(B)\big) = \Prob\big( \omega \in \Omega | X(\omega) \in B  \big) = \Prob(X \in B).
-%\]
-%The measure $\nu$ is called the \emph{distribution} of $X$.
-%The \emph{density} $p$ of $X$ is a measurable function with the property that
-%\[
-%  \Prob(X \in B) = \int_{X^{-1}(B)} \omega \dint\Prob(\omega) = \int_B p(x) \dint\nu(x).
-%\]
-%
-%\begin{definition}[Mean vector]
-%  Let $\nu$ be a Borel probability measure on a real Hilbert space $\cH$.
-%  Supposing that a random element $X$ of $\cH$ is \emph{integrable}, that is to say
-%  \[
-%    \E \norm{X}_\cH = \int_\cH \norm{x}_\cH \dint\nu(x) < \infty,
-%  \]
-%  then the unique element $\mu\in\cH$ satisfying 
-%  \[
-%    \ip{\mu,x'} = \int_\cX \ip{x,x'}_\cX \dint\nu(x) = \E\ip{X,x'}_\cH
-%  \]
-%  for all $x' \in \cH$ is called the \emph{mean vector}. 
-%\end{definition}
-%
-%\begin{definition}[Covariance operator]
-%  Let $\nu$ be a Borel probability measure on a real Hilbert space $\cH$.
-%  Suppose that a random element $X$ of $\cH$ is \emph{square integrable}, i.e., $\E \norm{X}_\cH^2 < \infty$, and let $\mu$ be the mean vector of $X$.
-%  Then the \emph{covariance operator} $C$ is defined by the mapping
-%  \begin{align*}
-%    C:\cH &\to \cH \\
-%    x &\mapsto \E\big[\ip{X - \mu, x}_{\cH}(X - \mu) \big].
-%  \end{align*}
-%  The covariance operator $C$ is also an element of $\cH\otimes\cH$ that satisfies
-%  \begin{align*}
-%    \ip{C,x\otimes x'}_{\cH\otimes\cH} 
-%    &= \int_\cH \ip{z-\mu, x}_\cH\ip{z-\mu,x'}_\cH \dint\nu(z) \\
-%    &= \E\big[\ip{X-\mu,x}_\cH \ip{X-\mu,x'}_\cH\big]
-%  \end{align*}
-%  for all $x,x'\in\cH$.
-%\end{definition}
-%
-%From the definition of the covariance operator, we see that it induces a symmetric, bilinear form, which we shall denote by $\Cov:\cH\times\cH\to\bbR$, through
-%\begin{align*}
-%  \ip{Cx,x'}_\cH 
-%  &= \big\langle\E\big[\ip{X - \mu, x}_{\cH}(X - \mu) \big], x' \big\rangle_\cH \\
-%  &= \E\big[\ip{X-\mu,x}_\cH \ip{X-\mu,x'}_\cH\big] \\
-%  &=: \Cov(x,x').
-%\end{align*}
-%
-%\begin{definition}[Gaussian vectors]
-%  A random element $X$ is called \emph{Gaussian} if $\ip{X,x}_\cH$ has a normal distribution for all fixed $x\in\cH$.
-%  A Gaussian vector $X$ is characterised by its mean element $\mu\in\cH$ and its covariance $C\in\cH\otimes\cH$.
-%\end{definition}
-%

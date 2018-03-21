@@ -234,6 +234,10 @@
 
 % Overbrace and underbrace$\!\:\!$
 \newcommand{\greyoverbrace}[2]{{\color{gray}\overbrace{\color{black}#1}^{#2}}}
+\newcommand{\grayoverbrace}[2]{{\color{gray}\overbrace{\color{black}#1}^{#2}}}
+
+% Comments grey text
+\newcommand{\mycomment}[2][10pt]{\hspace{#1}\rlap{\color{gray}\text{#2}}}
 
 % \obot and \bigobot from the matha and mathx font (from mathabx.sty)
 \DeclareFontFamily{U}{matha}{\hyphenchar\font45}

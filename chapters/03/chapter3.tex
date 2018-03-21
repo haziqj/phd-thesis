@@ -1,4 +1,4 @@
-\documentclass[a4paper,showframe,11pt,draft]{report}
+\documentclass[a4paper,showframe,11pt]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
@@ -40,25 +40,22 @@ Such a distribution on $f$ is called the I-prior distribution.
 \section{The I-prior}
 \input{03e-iprior-derivation}
 
-\section{Rate of convergence}
-\hltodo{Should I say something about this? Rates can be better than GPR?}
-
 \section{Conclusion}
 
-In estimating the regression function $f$ of the normal model in \eqref{eq:model1} subject to \eqref{eq:model1ass}, and $f$ belonging to an RKHS $\cF$, we established that the entropy maximising prior distribution for $f$ is Gaussian with some prior mean $f_0$ that needs to be chosen, and covariance function equal to the Fisher information for $f$.
+In estimating the regression function $f$ of the normal model in \cref{eq:model1} subject to \cref{eq:model1ass}, and $f$ belonging to an RKHS $\cF$, we established that the entropy maximising prior distribution for $f$ is Gaussian with some prior mean $f_0$ that needs to be chosen, and covariance function equal to the Fisher information for $f$.
 We call this the I-prior for $f$.
 
 The dimension of the function space $\cF$ could be huge, infinite-dimensional even, while the task of estimating $f\in\cF$ only relies on a finite amount of data point.
-However, we are certain that the Fisher information for $f$ exists only for the finite subspace $\cF_n$ as defined in \eqref{eq:subspaceFn}, and it is zero everywhere else.
+However, we are certain that the Fisher information for $f$ exists only for the finite subspace $\cF_n$ as defined in \cref{eq:subspaceFn}, and it is zero everywhere else.
 This suggests that the data only allows us to provide an estimation to the function $f\in\cF$ by considering functions in an (at most) $n$-dimensional subspace instead.
 In other words, it would be futile to consider functions in a space larger than this, and hence there is an element of dimension reduction here, especially when $\dim(\cF) \gg n$.
 
-By equipping the subspace $\cF_n$ with the inner product  \eqref{eq:Fninnerprod}, $\cF_n$ is revealed to be a RKHS with reproducing kernel equal to the Fisher information for $f$.
+By equipping the subspace $\cF_n$ with the inner product \cref{eq:Fninnerprod}, $\cF_n$ is revealed to be a RKHS with reproducing kernel equal to the Fisher information for $f$.
 Importantly, functions in the subspace $\cF_n$ are structurally similar to the functions in the parent space $\cF$.
 The problem at hand then boils down to a Gaussian process regression using the kernel of the RKHS $\cF_n$, which is the Fisher information for $f$.
 
 \newpage
-\section*{Miscellanea}
+\section{Miscellanea}
 \input{03-misc}
 
 \hClosingStuffStandalone
