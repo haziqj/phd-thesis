@@ -57,7 +57,7 @@ The two lemmas below formalise these two facts.
   Again, for the remainder of the statement in the lemma, we refer to \citet[Theorem 13]{berlinet2011reproducing}.
 \end{proof}
 
-A familiar fact from linear algebra is realised here from Lemmas \ref{thm:sumkernels} and \ref{thm:prodkernels}: 
+A familiar fact from linear algebra is realised here from \cref{thm:sumkernels,thm:prodkernels}: 
 %1) Multiplying a positive definite matrix by a positive constant results in a positive definite matrix; 
 1) the addition of positive definite matrices is a positive definite matrix; and 
 2) the \emph{Hadamard product}\footnotemark~of two positive definite matrices is a positive definite matrix.
@@ -150,7 +150,7 @@ It is sometimes known as the bias term.
 
 \subsection{The ANOVA RKKS}
 
-We find it useful to begin this subsection by spending some time to elaborate on the classical \gls{anova} decomposition, and the associated notions of main effects and interactions.
+We find it useful to begin this subsection by spending some time to elaborate on the classical \gls*{anova} decomposition, and the associated notions of main effects and interactions.
 This will go a long way in understanding the thinking behind constructing an ANOVA-like RKKS of functions.
 
 \subsubsection{The classical ANOVA decomposition}
@@ -229,15 +229,15 @@ Each of the terms will satisfy the condition $A_kf_\cK = 0, \forall k \in \cK \i
 \end{example}
 
 \subsubsection{Functional ANOVA decomposition}
-
+\vspace{-5pt}
 Let us now extend the ANOVA decomposition idea to a general function $f:\cX\to\bbR$ in some vector space $\cF$.
 Specifically, we shall consider the (Hilbert) space of square integrable functions over $\cX$ with measure $\nu$, $\cF \equiv \text{L}^2(\cX,\nu)$.
-We shall jump straight into the multiway ANOVA analogue for functional decomposition, and to that end, consider $x=(x_1,\dots,x_p) \in \prod_{k=1}^p \cX_k =: \cX$, where each of the spaces $\cX_k$ has measure $\nu_k$, and thus $\nu=\nu_1\otimes\cdots\otimes\nu_d$.
+We shall jump straight into the multiway ANOVA analogue for functional decomposition, and to that end, consider $x=(x_1,\dots,x_p) \in \prod_{k=1}^p \cX_k =: \cX$ a measurable space, where each of the spaces $\cX_k$ has measure $\nu_k$, and $\nu=\nu_1\times\cdots\times\nu_d$ is the product measure on $\cX$.
 As $\cX$ need not necessarily be a collection of finite sets, we need to figure out a suitable linear operator that performs an ``averaging'' of some sort.
 
 Consider the linear operator $A_k:\cF\to \cF_{-k}$, where $\cF_{-k}$ is a vector space of functions for which the $k$th component is constant over $\cX$, defined by
 \begin{align}\label{eq:avgoper}
-  A_k f = \int_{\cX_k} f(x_1,\dots,x_p) d\nu(x_k).
+  A_k f = \int_{\cX_k} f(x_1,\dots,x_p) \dint \nu(x_k).
 \end{align}
 Thus, for the one-way ANOVA ($p=1$), we get
 \begin{align}\label{eq:functionalanova1}
@@ -248,23 +248,23 @@ Thus, for the one-way ANOVA ($p=1$), we get
 \end{align}
 and for the two-way ANOVA ($p=2$), we have $f = f_0 + f_1 + f_2 + f_{12}$, with
 \begin{align*}
-  f_0 &= \int_{\cX_1}\int_{\cX_2} f(x_1,x_2) \d\nu(x_1)\d\nu(x_2) \\
-  f_1 &= \int_{\cX_2} \left( f(x_1,x_2) - \int_{\cX_1} f(x_1,x_2) \d\nu(x_1) \right) \d\nu(x_2)\\  
-  f_2 &= \int_{\cX_1} \left( f(x_1,x_2) - \int_{\cX_2} f(x_1,x_2) \d\nu(x_2) \right) \d\nu(x_1)\\  
-  f_{12} &= f(x_1,x_2) - \int_{\cX_1} f(x_1,x_2) \d\nu(x_1) - \int_{\cX_2} f(x_1,x_2) \d\nu(x_2) \\
-  &\phantom{==} + \int_{\cX_1}\int_{\cX_2} f(x_1,x_2) \d\nu(x_1)\d\nu(x_2).
+  f_0 &= \int_{\cX_1}\int_{\cX_2} f(x_1,x_2) \dint\nu(x_1)\dint\nu(x_2) \\
+  f_1 &= \int_{\cX_2} \left( f(x_1,x_2) - \int_{\cX_1} f(x_1,x_2) \dint\nu(x_1) \right) \dint\nu(x_2)\\  
+  f_2 &= \int_{\cX_1} \left( f(x_1,x_2) - \int_{\cX_2} f(x_1,x_2) \dint\nu(x_2) \right) \dint\nu(x_1)\\  
+  f_{12} &= f(x_1,x_2) - \int_{\cX_1} f(x_1,x_2) \d\nu(x_1) - \int_{\cX_2} f(x_1,x_2) \dint\nu(x_2) \\
+  &\phantom{==} + \int_{\cX_1}\int_{\cX_2} f(x_1,x_2) \d\nu(x_1) \dint\nu(x_2).
 \end{align*}
 
-As a remark, the averaging operator $A_k$ defined in \eqref{eq:avgoper} is indeed true to its name, in that it calculates the mean function of $f$ over the $k$th coordinate. 
+As a remark, the averaging operator $A_k$ defined in \cref{eq:avgoper} is indeed true to its name, in that it calculates the mean function of $f$ over the $k$th coordinate. 
 For comparison, this is identical to the second type of restriction we considered in the classical ANOVA previously (i.e., setting $\sum_j \mu_j = 0$).
 We must also have, as before, that $A_kf_\cK = 0, \forall k \in \cK \in \cP_p$.
-For the one-way functional ANOVA decomposition in \eqref{eq:functionalanova1}, it must be that $f_1$ is a zero-mean function.
+For the one-way functional ANOVA decomposition in \cref{eq:functionalanova1}, it must be that $f_1$ is a zero-mean function.
 As for the two-way ANOVA, it is the case that $\int_{\cX_k} f_1(x_1,x_2) \d\nu(x_k) = 0, k=1,2$, and $\int_{\cX_1}\int_{\cX_2} f_{12}(x_1,x_2) \d\nu(x_1)\d\nu(x_1) = 0$.
 
-We notice that the decomposition in \eqref{eq:functionalanova1} is orthogonal:
+We notice that the decomposition in \cref{eq:functionalanova1} is orthogonal:
 
 \begin{claim}
-  For the ANOVA decomposition in \eqref{eq:functionalanova1}, $f_0$ and $f_1$ are orthogonal for the usual $\text{L}^2$ inner product.
+  For the ANOVA decomposition in \cref{eq:functionalanova1}, $f_0$ and $f_1$ are orthogonal for the usual $\text{L}^2$ inner product.
 \end{claim}
 
 \begin{proof}
@@ -314,20 +314,20 @@ To clarify,
   \item Similarly for the rest of the spaces in the summand, of which there are $2^p$ members all together. 
 \end{itemize}
 
-Therefore, given an arbitrary function $f\in\cF$, the projection of $f$ onto the above respective orthogonal spaces in \eqref{eq:funcanovaspace} leads to the \emph{functional ANOVA representation}
+Therefore, given an arbitrary function $f\in\cF$, the projection of $f$ onto the above respective orthogonal spaces in \cref{eq:funcanovaspace} leads to the \emph{functional ANOVA representation}
 \begin{align}\label{eq:functionalanova2}
   f(x) = \mu + \sum_{j=1}^p f_j(x_j) + \mathop{\sum_{j,k=1}^p}_{j<k} f_{jk}(x_j,x_k) + \cdots + f_{1\cdots p}(x).
 \end{align}
 
 \begin{definition}[Functional ANOVA representation]
   Let $\cP_d = \cP(\{1,\dots,d\})$, the power set of $\{1,\dots,d\}$.
-  For any function $f \in \cF\equiv\text{L}^2(\cX_1\times\cdots\times\cX_d,\nu_1\otimes\cdots\otimes\nu_d)$, the formula for $f$ in \eqref{eq:functionalanova2} is known as the \emph{functional ANOVA representation} of $f$ if $\forall k \in \cK \in \cP_p$,
+  For any function $f \in \cF\equiv\text{L}^2(\cX_1\times\cdots\times\cX_d,\nu_1\otimes\cdots\otimes\nu_d)$, the formula for $f$ in \cref{eq:functionalanova2} is known as the \emph{functional ANOVA representation} of $f$ if $\forall k \in \cK \in \cP_p$,
   \begin{align}\label{eq:funcanovaorth}
     A_k f_\cK = \int_{\cX_\cK} f_\cK(x_\cK) \d\nu_k(x_k) = 0,
   \end{align}
   where $\cX_\cK = \prod_{k\in\cK} \cX_k$, and $x_\cK = \{x_k, k \in \cK \}$ is an element of this space.
   In other words, the integral of $f_\cK$ with respect to any of the variables indexed by the elements in $\cK$ (itself an element of the power set), is zero.
-  The requirement \eqref{eq:funcanovaorth} ensures orthogonality of the summands in \eqref{eq:functionalanova2}.
+  The requirement \cref{eq:funcanovaorth} ensures orthogonality of the summands in \cref{eq:functionalanova2}.
 \end{definition}
 
 \footnotetext{There is an isomorphism $\text{L}^2(\cX_1\times\cdots\times\cX_d,\nu_1\otimes\cdots\otimes\nu_d) \cong \text{L}^2(\cX_1,\nu_1) \otimes \cdots \otimes \text{L}^2(\cX_d,\nu_d)$. See, for example, \citet{reed1972methods,kree1974produits}.}
@@ -362,8 +362,8 @@ For the constant term, main effects, and two-way interaction terms, the familiar
 \subsubsection{The ANOVA kernel}
 
 At last, we come to the section of deriving the ANOVA RKKS, and, rest assured, the preceding long build-up will prove to be not in vain.
-The main idea is to construct an RKKS such that the functions that lie in them will have the ANOVA representation in \eqref{eq:functionalanova2}.
-The bulk of the work has been done, and in fact we know exactly how this ANOVA RKKS should be structured---it is the space as specified in \eqref{eq:funcanovaspace}. 
+The main idea is to construct an RKKS such that the functions that lie in them will have the ANOVA representation in \cref{eq:functionalanova2}.
+The bulk of the work has been done, and in fact we know exactly how this ANOVA RKKS should be structured---it is the space as specified in \cref{eq:funcanovaspace}. 
 The ANOVA RKKS will be constructed by a similar manipulation of the individual kernels representing the RKHS building blocks.
 
 \begin{definition}[The ANOVA RKKS]
@@ -376,14 +376,14 @@ The ANOVA RKKS will be constructed by a similar manipulation of the individual k
 \end{definition}
 
 The construction an ANOVA RKKS is very very simple in through multiplication of univariate kernels.
-Expanding out equations \eqref{eq:anovarkks}, we see that it is in fact a sum of products of kernels with increasing orders of interaction:
+Expanding out equations \cref{eq:anovarkks}, we see that it is in fact a sum of products of kernels with increasing orders of interaction:
 \begin{align*}
   h_\lambda(x,x') 
 %  &= \prod_{k=1}^p \big( 1 + \lambda_k h_k(x_k,x_k') \big) \\
   &= 1 + \sum_{j=1}^p \lambda_j h_j(x_j,x_j') + \mathop{\sum_{j,k=1}^p}_{j<k} \lambda_j\lambda_k h_j(x_j,x_j')h_k(x_k,x_k') \\
   &\phantom{==} + \cdots + \prod_{j=1}^p \lambda_j h_j(x_j,x_j').
 \end{align*}
-It is now clear from the expansion that the ANOVA RKKS yields functions that resemble those with the ANOVA representation in \eqref{eq:functionalanova2}:
+It is now clear from the expansion that the ANOVA RKKS yields functions that resemble those with the ANOVA representation in \cref{eq:functionalanova2}:
 The mean value of the function stems from the `1', i.e. it lies in an RKHS of constant functions; the main effects are represented by the sum of the individual kernels; the two-way interaction terms are represented by the second-order kernel interactions; and so on.
 
 %One thing to note is that restricting the $\lambda$ parameters to the positive orthant might give unsatisfactory results---what if the effect of two functions are in truth opposing one another?
@@ -409,7 +409,7 @@ With this in mind, the ANOVA RKKS then gives us an objective way of model-buildi
 %One thing's for sure---everything is ANOVA.
 
 %\begin{remark}
-%  Unfortunately, even if centred RKHSs are used as the building blocks of the ANOVA RKKS, the properties of the function represented by \eqref{eq:functionalanova2} may not be preserved.
+%  Unfortunately, even if centred RKHSs are used as the building blocks of the ANOVA RKKS, the properties of the function represented by \cref{eq:functionalanova2} may not be preserved.
 %  In particular, any of the individual functions $f_\cK$, for $\cK$ in the power set, are not necessarily zero mean functions.
 %  Furthermore, any two terms in the summand are generally not orthogonal.
 %  \hltodo[What are advantages of using ANOVA? I feel this has not been addressed properly.]{Consequently, interpretation based on an ANOVA motivation may not be valid, but in spirit, they provide a conceptually strong basis for building new RKKSs from existing ones.}

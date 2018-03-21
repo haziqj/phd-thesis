@@ -31,6 +31,16 @@
 \usepackage{enumitem}  % replacing enumerate
 \usepackage{xr}  % Cross-referencing between files
 
+% Show labels in margins. See https://tex.stackexchange.com/questions/45634/printing-labels-along-with-equation-numbers
+\usepackage{seqsplit}
+\usepackage{xstring}
+\usepackage[notref,notcite]{showkeys}
+\renewcommand*\showkeyslabelformat[1]{%
+\noexpandarg%
+\StrSubstitute{#1}{ }{~}[\TEMP]%
+\parbox[c]{1.2\marginparwidth}{\raggedright\singlespacing\normalfont\small\ttfamily\expandafter\seqsplit\expandafter{\TEMP}}
+}
+
 % Git info
 \usepackage[maxdepth=8,mark,raisemark=0.8834\paperheight]{gitinfo2}
 \renewcommand{\gitMark}{Branch:\;\gitBranch\,@\,\gitAbbrevHash{}~\textbullet{}~Change:\;\gitAuthorIsoDate~\textbullet{}~haziqj}
@@ -257,7 +267,4 @@
   linkcolor=colblu,
   citecolor=colblu
 }
-\usepackage[inline]{showlabels}
-\renewcommand{\showlabelsetlabel}[1]
-         {\begin{tabular}{r} \showlabelfont #1 \\ ~ \\ \end{tabular}}
-%\renewcommand{\showlabelrefline}{\color{red}\hrule width 0.1em height 1.5ex depth 0pt}
+

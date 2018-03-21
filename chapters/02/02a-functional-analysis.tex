@@ -20,9 +20,9 @@ Inner products need not necessarily be positive definite, and we shall revisit t
 However, for the purposes of the discussion moving forward, the inner products that are referenced are the positive definite kind, unless otherwise stated.
 
 We can always define a \emph{norm} on $\cF$ using the inner product as 
-\begin{align}\label{eq:normip}
+\begin{equation}\label{eq:normip}
   \norm{f}_\cF = \sqrt{\ip{f,f}_\cF}.
-\end{align}
+\end{equation}
 Norms are another form of structure that specifically captures the notion of length. 
 This is defined below.
 
@@ -53,7 +53,7 @@ and the \emph{polarisation identity}
 for some $f,g\in\cF$.
 
 A vector space endowed with an inner product (c.f. norm) is called an inner product space (c.f. normed vector space).
-As a remark, inner product spaces can always be equipped with a norm using \eqref{eq:normip}, but not always the other way around.
+As a remark, inner product spaces can always be equipped with a norm using \cref{eq:normip}, but not always the other way around.
 A norm needs to satisfy the parallelogram law for an inner product to be properly defined.
 
 The norm $||\cdot||_{\mathcal F}$, in turn, induces a metric (a notion of distance) on $\mathcal F$: $D(f,g) = ||f-g||_{\mathcal F}$, for $f,g\in\cF$.
@@ -124,7 +124,7 @@ An interesting property of these operators to look at, besides linearity, is whe
 \end{definition}
 
 Continuity in the sense of linear operators here means that a convergent sequence in $\cF$ can be mapped to a convergent sequence in $\cG$.
-For a special case of linear operator, the evaluation functional, this means that a function in $\cF$ is continuous if the evaluation functional is continuous---more on this later in Section \ref{sec:rkhstheory}.
+For a special case of linear operator, the evaluation functional, this means that a function in $\cF$ is continuous if the evaluation functional is continuous---more on this later in  \cref{sec:rkhstheory}.
 There is an even stronger notion of continuity called the \emph{Lipschitz continuity}.
 
 \begin{definition}[Lipschitz continuity]
@@ -135,7 +135,7 @@ There is an even stronger notion of continuity called the \emph{Lipschitz contin
   \]
 \end{definition}
 
-Clearly, Lipschitz continuity implies uniform continuity: choose $\delta = \delta(\epsilon) := \epsilon/M$ and replace this in Definition \ref{def:continuity}.
+Clearly, Lipschitz continuity implies uniform continuity: choose $\delta = \delta(\epsilon) := \epsilon/M$ and replace this in  \cref{def:continuity}.
 A continuous, linear operator is also one that is bounded:
 
 \begin{definition}[Bounded operator]\label{def:boundedop}
@@ -174,7 +174,7 @@ So important is the concept of linearity and continuity, that there are speciall
 \end{definition}
 
 As it turns out, the algebraic dual space and continuous dual space coincide in finite-dimensional Hilbert spaces:
-take any $L\in\cF'$; since $L$ is finite-dimensional, it is bounded, and therefore continuous (see Lemma \ref{thm:boundcont}) so $L\in\cF'$ and $\cF^* \subseteq \cF'$; but $\cF' \subseteq \cF^*$ trivially, so $\cF^* \equiv \cF'$.
+take any $L\in\cF'$; since $L$ is finite-dimensional, it is bounded, and therefore continuous (see \cref{thm:boundcont}) so $L\in\cF'$ and $\cF^* \subseteq \cF'$; but $\cF' \subseteq \cF^*$ trivially, so $\cF^* \equiv \cF'$.
 For infinite-dimensional Hilbert spaces, this is not so, but in any case, we will only be considering the continuous dual space in this thesis.
 The following result is an important one, which states that (continuous) linear functionals of an inner product space are nothing more than just inner products.
 

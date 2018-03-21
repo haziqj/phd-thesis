@@ -1,5 +1,5 @@
 %To state the obvious, multiplication of a kernel by a negative scalar results in a negative definite function.
-%Such actions arise when building new function spaces from existing ones, such as via a polynomial-type or ANOVA-type construction, as we will see later in Section \ref{sec:constructrkks}.
+%Such actions arise when building new function spaces from existing ones, such as via a polynomial-type or ANOVA-type construction, as we will see later in \cref{sec:constructrkks}.
 %Do we forfeit all the nice properties of RKHS?
 %As it turns out no, for the most relevant parts anyway.
 In this section, we shall review basic Kreĭn and reproducing kernel Kreĭn space theory, and comment on the similarity and differences between it and RKHS.
@@ -7,7 +7,7 @@ Kreĭn spaces are spaces endowed with a Hilbertian topology, characterised by an
 %To quote \citet{ong2004learning}, Kreĭn spaces are inner product spaces endowed with a Hilbertian topology, yet their inner product is no longer positive. 
 
 \begin{definition}[Negative and indefinite inner products]
-  Let $\ip{\cdot,\cdot}_\cF$ be an inner product of a vector space $\cF$, as per Definition \ref{def:innerprod}.
+  Let $\ip{\cdot,\cdot}_\cF$ be an inner product of a vector space $\cF$, as per \cref{def:innerprod}.
   An inner product is said to be \emph{negative-definite} if for all $f\in\cF$, $\ip{f,f}_\cF \leq 0$.
   It is \emph{indefinite} if it is neither positive- nor negative-definite.
 \end{definition}
@@ -54,7 +54,7 @@ The strong topology on $\cF$ is defined to be the topology arising from the norm
   A Krein space $\cF$ of real-valued functions $f:\mathcal X \rightarrow \mathbb R$ on a non-empty set $\mathcal X$ is called a \emph{reproducing kernel Krein space} if the evaluation functional $\delta_x: f \mapsto f(x)$ is continuous on $\cF$, $\forall x \in \cX$, endowed with its strong topology (i.e. the topology of its associated Hilbert space $\cF_\cH$).
 \end{definition}
 
-One might wonder whether the uniqueness theorem (Theorem \ref{thm:rkhsunique}) holds for RKKS.
+One might wonder whether the uniqueness theorem (\cref{thm:rkhsunique}) holds for RKKS.
 Indeed, for every RKKS $\cF$ of functions over a set $\cX$, there corresponds a unique reproducing kernel $\hXXR$.
 
 \begin{lemma}[Uniqueness of kernel for RKKS]
@@ -105,4 +105,4 @@ This subject has been studied by various authors, one may refer to works by \cit
 
 The take-away message as we close this section is that there is no bijection, but a surjection, between the set of RKKS and the set of bivariate, symmetric functions over $\cX\times\cX$.
 In any case, Hilbertian topology applies to Kreĭn spaces via the associated Hilbert space, and in particular, RKKS provide a functional space for which evaluation functionals are continuous.
-The motivation for the use of Kreĭn spaces will become clear when constructing function spaces out of (scaled) building block RKHS later in Section \ref{sec:constructrkks}.
+The motivation for the use of Kreĭn spaces will become clear when constructing function spaces out of (scaled) building block RKHS later in \cref{sec:constructrkks}.

@@ -1,0 +1,36 @@
+\subsection{A vector space... of `functions'?}
+
+At first glance, this may seem strange, that the notion of functions (as mappings from input to output space) and vector spaces are somehow equatable.
+Upon further thought, one realises that firstly, two functions of a similar, particular form may be added together (in some meaningful way) resulting in a function in that same form. 
+Secondly, multiplication of a function by a scalar $c$ can be thought of as $c$ times the output of that function.
+Indeed, running through the checklist of what constitutes a vector space, we find that a ``space of functions'' satisfies them all.
+In modern linear algebra texts, this checklist is the eight axioms of vector spaces over a field $\bbF$: The vectors forms an abelian group under addition, and this group has an $\bbF$-module structure.
+
+
+%FOR TOPOLOGICAL SPACES ONLY: 
+%On the other hand, a set which contains all of its limit points is said to be \emph{closed}.
+%Clearly, a complete set must be closed, but a closed set need not necessarily be complete.
+
+%\begin{corollary}[Riesz norm]
+%  For any $f\in\cF$ a Hilbert space, define $L(f) = \ip{f,g}_\cF$ for some $g\in\cF$.
+%  Then $\norm{L}_{\cF'} = \norm{g}_\cF$. 
+%\end{corollary}
+%
+%\begin{proof}
+%%  $L$ as defined by $L = \ip{\cdot,g}_\cF$ for some $g\in\cF$ is a linear operator $L:\cF\to\cF'$,
+%%  so from Definition \ref{def:boundedop} of operator norms,
+%%  \begin{align*}
+%%    \norm{L} &= \sup_{f\in\cF} \frac{\norm{L(f)}_{\cF'}}{\norm{f}_\cF} \\
+%%    &= \sup_{f\in\cF} \frac{|\ip{f,g}_{\cF}|}{\norm{f}_\cF} \\
+%%    &=  \frac{|\ip{g,g}_{\cF}|}{\norm{g}_\cF} \\
+%%    &= \norm{g}_\cF
+%%  \end{align*}
+%%  by the Cauchy-Schwarz inequality.
+%%  Alternative proof:
+%  By Cauchy-Schwarz,
+%  \[
+%    |L(f)| \leq \norm{f}_\cF\norm{g}_\cF
+%  \]
+%  so $\norm{L}_{\cF'}\leq \norm{g}_\cF$.
+%  But  $|L(g)| = \norm{g}_\cF^2$, so in fact $\norm{L}_{\cF'} = \norm{g}$
+%\end{proof}

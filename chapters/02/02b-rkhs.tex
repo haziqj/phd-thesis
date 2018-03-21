@@ -147,7 +147,7 @@ The rest of this subsection is a discussion of this assertion, which is proven b
   \end{align*}
   Thus, the evaluation functional is (uniformly) continuous on $\cF$, and by definition, $\cF$ is a RKHS.
   Now suppose that $\cF$ is a RKHS, and $h$ is a kernel function over $\cX\times\cX$.
-  The reproducing property of $h$ is had by following the argument preceding Definition \ref{def:repkern}.
+  The reproducing property of $h$ is had by following the argument preceding \cref{def:repkern}.
  
   As for uniqueness, assume that the RKHS $\cF$ has two reproducing kernels $h_1$ and $h_2$. 
   Then, $\forall f\in\cF$ and $\forall x\in\cX$,
@@ -173,7 +173,7 @@ The rest of this subsection is a discussion of this assertion, which is proven b
   \[\label{eq:rkhsinnerprod}
     \left\langle \sum_{i=1}^n w_i h(\cdot,x_i), \sum_{j=1}^m w_j' h(\cdot,x_j') \right\rangle_{\cF_0} = \sum_{i=1}^n\sum_{j=1}^m w_i w_j' h(x_i,x_j').
   \]
-  It may be shown that this indeed a valid inner-product satisfying the conditions laid in Definition \ref{def:innerprod}.
+  It may be shown that this indeed a valid inner-product satisfying the conditions laid in \cref{def:innerprod}.
   At this point, the reproducing property is already had:
   \begin{align*}
     \big\langle f_n, h(\cdot,x) \big\rangle_{\cF_0} 
@@ -235,7 +235,7 @@ The rest of this subsection is a discussion of this assertion, which is proven b
 %    &= \sqrt{h(x,x)} \cdot \Vert f_n \Vert_{\cF_0}
 %  \end{align*}
 %  so convergence in norm implies pointwise convergence.
-%  By a similar argument in the proof of Corollary \ref{thm:normpointconv}, we also get that pointwise convergence is implied by convergence in norm for this space.
+%  By a similar argument in the proof of \cref{thm:normpointconv}, we also get that pointwise convergence is implied by convergence in norm for this space.
 %  In particular, for every Cauchy sequence $\{f_n\}_{n=1}^\infty$ in $\cF_0$, $\big\{f_n(x)\big\}_{n=1}^\infty$ is a Cauchy sequence on the real line.
 %  Complete the space $\cF_0$ by adjoining all of these limits to it, and call this completed space $\cF$.
 %  
@@ -249,7 +249,7 @@ The rest of this subsection is a discussion of this assertion, which is proven b
 \end{proof}
 
 A consequence of the above proof is that we can show that any function $f$ in a RKHS $\mathcal F$ with kernel $h$ can be written in the form $f(x) = \sum_{i=1}^n h(x, x_i)w_i$, with some $(w_1,\dots,w_n)\in\bbR^n$, $n \in \mathbb N$. 
-More precisely, $\mathcal F$ is the completion of the space $\mathcal G = \text{span}\{h(\cdot,x) \, | \, x \in \mathcal X \}$ endowed with the inner product as stated in \eqref{eq:rkhsinnerprod}.
+More precisely, $\mathcal F$ is the completion of the space $\mathcal G = \text{span}\{h(\cdot,x) \, | \, x \in \mathcal X \}$ endowed with the inner product as stated in \cref{eq:rkhsinnerprod}.
 
 
 
