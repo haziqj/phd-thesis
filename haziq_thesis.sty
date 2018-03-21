@@ -14,7 +14,8 @@
 \usepackage[]{xcolor}  % options: usenames, dvipsnames, svgnames, table
 \usepackage{soul}  % for highlighting text
 \usepackage{url}
-\usepackage{hyperref}
+\usepackage{hyperref}  % hyperref setup at the bottom
+
 %\usepackage{fancyhdr}  % headers and footers
 %	\pagestyle{fancy}
 %	\renewcommand{\headrulewidth}{0pt} \renewcommand{\footrulewidth}{0pt}
@@ -32,7 +33,7 @@
 
 % Git info
 \usepackage[maxdepth=8,mark,raisemark=0.8834\paperheight]{gitinfo2}
-\renewcommand{\gitMark}{Branch:\;\gitBranch\,@\,\gitAbbrevHash{} \textbullet{} Change:\;\gitAuthorIsoDate}
+\renewcommand{\gitMark}{Branch:\;\gitBranch\,@\,\gitAbbrevHash{}~\textbullet{}~Change:\;\gitAuthorIsoDate~\textbullet{}~haziqj}
 \renewcommand{\gitMarkFormat}{\color{gray}\small\ttfamily}
 
 % Colour-blind safe pallete
@@ -45,6 +46,7 @@
 \definecolor{colred}{RGB}{238,51,51}%{213,94,0}
 \definecolor{colora}{RGB}{230,159,0}
 \definecolor{colyel}{RGB}{240,228,66}%{255,238,51}
+\definecolor{citecol}{RGB}{0,0,0.5}
 
 % Coding
 %\usepackage{verbatim}
@@ -63,11 +65,11 @@
 %\usepackage[longnamesfirst]{natbib}
 %  \bibpunct{(}{)}{;}{a}{,}{,~}
 %  \addto\captionsenglish{\renewcommand{\bibname}{References}}  % change the name of Bibliography section
-\usepackage[style=authoryear, firstinits=true, maxcitenames=2,
+\usepackage[style=authoryear, firstinits=false, giveninits=false, maxcitenames=2,
   minnames=1, maxbibnames=99, backend=biber, natbib]{biblatex}
 \setlength\bibitemsep{1.5\itemsep}
 \AtEveryCite{\color{colblu}}
-
+    
 % Paragraph settings
 \usepackage{parskip}  
 \setlength{\parindent}{15pt}  % default indentation
@@ -115,6 +117,8 @@
 \usepackage{pifont}
   \newcommand{\cmark}{\ding{51}}  % check mark
   \newcommand{\xmark}{\ding{55}}  % x mark
+%\usepackage{rotating}
+%  \renewcommand{\showlabelsetlabel}[1]{\begin{turn}{90}\showlabelfont #1\end{turn}}
 
 % Comments grey text
 \newcommand{\mycomment}[2][10pt]{\hspace{#1}\rlap{\color{gray}\text{#2}}}
@@ -174,29 +178,35 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % For my thesis - adds a chapter heading, including to-do list and TOC (STANDALONE VERSION)
+
+% Textbox freely placed on page. Adapted from https://tex.stackexchange.com/questions/24663/how-to-place-a-floating-text-box-at-a-specified-location-in-page-coordinates
+\newcommand{\placetextbox}[3]{% \placetextbox{<horizontal pos>}{<vertical pos>}{<stuff>}
+  \setbox0=\hbox{#3}% Put <stuff> in a box
+\AddToShipoutPictureFG*{\put(\LenToUnit{#1\paperwidth},\LenToUnit{#2\paperheight}){\makebox[0pt][c]{\begin{tabular}{l}#3\end{tabular}}}}
+}%
+
 \newcommand{\hChapterStandalone}[2][1]{
   \ifstandalone
-  {
     \begingroup
     \let\clearpage\relax  % Don't allow page break
     \pagenumbering{roman}
-    \listoftodos[\vspace{-2.8cm}To-do list]
-    \tableofcontents
+    {\hypersetup{allcolors=.} %pdfborder=0 0 0
+      \listoftodos[\vspace{-3.03cm}To-do list]
+      \vspace{-1em}
+      \tableofcontents
+    }
     \endgroup
-    
-    \newpage
+
     \pagenumbering{arabic}
-    \let\clearpage\relax
-    \noindent
-    Haziq Jamil \\
-    {\it\small Department of Statistics} \\
-    {\it\small London School of Economics and Political Science} \\
-    \small\today
-    \vspace{-3\baselineskip}
-    
     \setcounter{chapter}{#1-1}
     \chapter{#2}
-  }
+    
+    \placetextbox{0.475}{0.8175}{
+      Haziq Jamil \\[-0.3em]
+      {\it\small Department of Statistics} \\[-0.35em]
+      {\it\small London School of Economics and Political Science} \\[-0.35em]
+      {\small PhD thesis: `Regression modelling using Fisher information covariance kernels (I-priors)'}
+    }
   \fi
 }
 
@@ -238,3 +248,16 @@
   \hLists
 }
 
+% Cleverref needs to be loaded last
+\usepackage[capitalise,noabbrev,nameinlink]{cleveref}
+\Crefname{misc}{Miscellanea}{Miscellanea}
+\Crefname{equation}{}{}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=colblu,
+  citecolor=colblu
+}
+\usepackage[inline]{showlabels}
+\renewcommand{\showlabelsetlabel}[1]
+         {\begin{tabular}{r} \showlabelfont #1 \\ ~ \\ \end{tabular}}
+%\renewcommand{\showlabelrefline}{\color{red}\hrule width 0.1em height 1.5ex depth 0pt}

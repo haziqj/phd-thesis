@@ -26,8 +26,8 @@ Using standard multivariate normal results, one finds that the posterior distrib
   \end{gathered}
 \end{align}
 %where $\bff_0=\big(f_0(x_1),\dots,f_0(x_n) \big)^\top$, $\bH_\eta$ is the kernel matrix with $(i,j)$ entries equal to $h_\eta(x_i,x_j)$, and $\bV_y$ is the variance of the marginal distribution for $\by = (y_1,\dots,y_n)$.
-using the familiar notation that we introduced in \hltodo{Section 1.4}.
-See \autoref{apx:posteriorw} for a derivation.
+using the familiar notation that we introduced in \cref{sec:introregiprior}.
+For a derivation, see \cref{apx:posteriorw}.
 By linearity, the posterior distribution for $f$ is also normal.
 
 In each modelling scenario, there are a number of kernel parameters $\eta$ that need to be estimated from the data.
@@ -38,13 +38,13 @@ However, these may be treated as fixed parameters as well.
 %This is explained in further detail in \hltodo{Section 4.X}.
 
 The following subsections describe possible estimation procedures for the hyperparameters of the model.
-Henceforth, for simplicity, the following additional standing assumptions are imposed on the I-prior model \eqref{eq:model2}:
+Henceforth, for simplicity, the following additional standing assumptions are imposed on the I-prior model \cref{eq:model2}:
 \begin{enumerate}[label=A\arabic*,ref=A\arabic*]
   \item \textbf{Centred responses}. Set $\alpha = 0$ and replace the responses by their centred versions $y_i \mapsto \tilde y_i = y_i - \frac{1}{n}\sum_{i=1}^n$. \label{ass:A1}  
   \item \textbf{Zero prior mean}. Assume a zero prior mean $f_0(x) = 0$ for all $x\in\cX$. \label{ass:A2} 
   \item \textbf{Iid errors}. Assume identical and independent (iid) errors random variables, i.e., $\bPsi = \psi\bI_n$. \label{ass:A3} 
 \end{enumerate}
-Assumptions \ref{ass:A1} and \ref{ass:A2} are motivated by the discussion in \autoref{sec:intercept}.
+Assumptions \ref{ass:A1} and \ref{ass:A2} are motivated by the discussion in \cref{sec:intercept}.
 Although assumption \ref{ass:A3} is not strictly necessary, it is often a reasonable one and one that simplifies the estimation procedure greatly.
 
 %Recall that the ANOVA kernel can be viewed as a sum of $2^p$ terms consisting of products of kernels with increasing order of interactions.
@@ -81,7 +81,7 @@ Although assumption \ref{ass:A3} is not strictly necessary, it is often a reason
 \subsection{The intercept and the prior mean}\label{sec:intercept}
 
 In most statistical models, an intercept is a necessary inclusion which aids interpretation.
-In the context of the I-prior model \eqref{eq:model2}, a lack of an intercept would fail to account for the correct locational shift of the regression function along the $y$-axis.
+In the context of the I-prior model \cref{eq:model2}, a lack of an intercept would fail to account for the correct locational shift of the regression function along the $y$-axis.
 Further, when zero-mean functions are considered, the intercept serves as being the `grand mean' value of the responses.
 
 The addition of an intercept to the regression model may be viewed in one of two ways.
@@ -98,7 +98,7 @@ However, it can be obtained by realising that for $\alpha\in\cF_0$ the RKHS of c
 
 On the other hand, consider the intercept as a parameter $\alpha$ to be estimated.
 Obtaining an estimate $\alpha$ using a likelihood-based argument is rather simple.
-From \eqref{eq:model2}, $\E y_i = \alpha + f_0(x_i)$ for all $i=1,\dots,n$, so the maximum likelihood estimate for $\E y$ is its sample mean $\bar y = \frac{1}{n}\sum_{i=1} y_i$, and hence the ML estimate for $\alpha$ is $\hat\alpha = \bar y - \frac{1}{n} \sum_{i=1}^n f_0(x_i)$.
+From \cref{eq:model2}, $\E y_i = \alpha + f_0(x_i)$ for all $i=1,\dots,n$, so the maximum likelihood estimate for $\E y$ is its sample mean $\bar y = \frac{1}{n}\sum_{i=1} y_i$, and hence the ML estimate for $\alpha$ is $\hat\alpha = \bar y - \frac{1}{n} \sum_{i=1}^n f_0(x_i)$.
 Alternatively, the estimation of $\alpha$ under a fully Bayesian treatment is possible by assuming an appropriate hyperprior on it, such as a conjugate normal prior $\N(a,A^{-1})$.
 If so, the conditional posterior of $\alpha$ given $\bw$, $\eta$, $\bPsi$ and $f_0$ is also normal with mean $\tilde a$ and variance $\tilde A$, where
 \[
@@ -157,7 +157,7 @@ Note that minimisation is done on the deviance scale, i.e., minus twice the log-
 The direct optimisation method can be \hltodo[Show ridge in the log-likelihood plot.]{prone to local optima}, in which case repeating the optimisation at different starting points and choosing the one which yields the highest likelihood is one way around this.
 
 Let $\bU$ be the Fisher information matrix for $\theta \in\bbR^q$.
-Standard calculations (\autoref{apx:fishermultinormal}) show that under the marginal distribution $\tilde\by \sim \N_n\big(\bzero, \bSigma_\theta \big)$, the $(i,j)$th coordinate of $\bU$ is 
+Standard calculations (\cref{apx:fishermultinormal}) show that under the marginal distribution $\tilde\by \sim \N_n\big(\bzero, \bSigma_\theta \big)$, the $(i,j)$th coordinate of $\bU$ is 
 \[
   u_{ij} = 
   \half \tr\left(
@@ -193,8 +193,9 @@ By treating the complete data as $\{\by,\bw \}$ and the $w_i$'s as ``missing'', 
 %
 where $\tilde\bw^{(t)} = \E[\bw|\by,\theta^{(t)}]$ and $\tilde\bW^{(t)} = \E[\bw\bw^\top|\by,\theta^{(t)}]$ are the first and second posterior moments of $\bw$ calculated at the $t$th EM iteration.
 These can be computed directly from \eqref{eq:posteriorw}, substituting for $\theta^{(t)} = \{\eta^{(t)}, \bPsi^{(t)} \}$ as appropriate.
-Note that \eqref{eq:QfnEstep} follows as a direct consequence of the results in  \autoref{apx:posteriorw}.
+Note that \eqref{eq:QfnEstep} follows as a direct consequence of the results in  \cref{apx:posteriorw}.
 
+\hltodo[Change this section slightly. Just talk about maximising Q. Special cases in later sections.]{}
 Now, assume that \ref{ass:A3} holds.
 The M-step then assigns $\theta^{(t+1)}$ the value of $\theta$ which maximises the $Q$ function above.
 This boils down to solving the first order conditions
@@ -213,7 +214,6 @@ As $\partial\bSigma_\theta/\partial\psi = \bH_\eta^2 - \psi^{-2}\bI_n$, the solu
   \left\{ \frac{\tr \Wtilde^{(t)}}{\tilde\by^\top\tilde\by + \tr(\bH_\eta^2\Wtilde^{(t)}) - 2\tilde\by^\top\bH_\eta\wtilde^{(t)}} \right\}^{1/2}.
 \end{align}
 The solution to \eqref{eq:emtheta} can also be found in closed-form, but only in cases where the full-data likelihood in $\eta$ emits itself as belonging to an exponential family likelihood.
-Such cases are described in further detail in \hltodo{Section X}.
 In cases where closed-form solutions do exist for $\eta$, then it is just a matter of iterating the update equations until a suitable convergence criterion is met (e.g. no more sizeable increase in successive log-likelihood values).
 In cases where closed-form solutions do not exist for $\eta$, the $Q$ function is again optimised with respect to $\eta$ using the L-BFGS algorithm.
 
@@ -262,7 +262,7 @@ $n=150$ data pairs $(y_i,x_i)$ have been randomly sampled according to the true 
 where $\phi(\cdot|\mu,\sigma^2)$ is the probability density function of the normal distribution with mean $\mu$ and variance $\sigma^2$.
 The observed $y_i$'s are thought to be noisy versions of the true points, i.e. $y_i = r_i + \epsilon_i$, with $\epsilon_i$ following an indescript, not necessarily normal, distribution.
 The predictors $x_1,\dots,x_n$ have been sampled roughly from the interval $(-1,6)$, and the sampling was intentionally not uniform so that there is slight sparsity in the middle.
-\autoref{fig:examplesmoothingdata} plots the sampled points and the true regression function.
+\cref{fig:examplesmoothingdata} plots the sampled points and the true regression function.
 
 \begin{figure}[hbt]
   \centering

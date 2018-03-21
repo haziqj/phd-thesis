@@ -34,7 +34,7 @@ The RKKS $\cF_\lambda$ therefore has kernel
 \[
   h(\bx_i,\bx_j) = \sum_{k=1}^p \lambda_k  x_{ik} x_{jk},
 \]
-and hence each regression coefficient can now be written as $\beta_k =  \sum_{j=1}^n  \lambda_k x_{jk}w_j$.
+and hence each regression coefficient can now be written as $\beta_k =  \sum_{j=1}^n  \lambda_k x_{jk}w_j$, for which we see the $\lambda_k$'s scaling role on the $x_{jk}$'s.
 Thus, the corresponding I-prior for $\boldsymbol{\beta}$ is
 \[
   \boldsymbol{\beta} \sim \N_p(\bzero, \lambda^2 \bX^\top\bLambda \bPsi \bLambda \bX),
@@ -46,7 +46,7 @@ This approach is disadvantageous when $p$ is large, in which case there would be
 
 \begin{remark}
   The I-prior for $\boldsymbol{\beta}$ in \eqref{eq:ipriorcanonical} bears resemblance to the $g$-prior \citep{zellner1986assessing}, and in fact, the $g$-prior can be interpreted as an I-prior if the inner product of $\cX$ is the Mahalonobis inner product.
-  See Miscellanea \ref{misc:gprior} for a discussion.
+  See \cref{misc:gprior} for a discussion.
 \end{remark}
 
 \subsection{Multilevel linear modelling}
@@ -70,14 +70,14 @@ The I-prior for $f-\alpha$ is assumed to lie in the function space $\cF-\alpha$,
   h_\lambda\big((\bx_i^{(j)},j),(\bx_i^{(j')},j')\big) = \lambda_1 h_1(\bx_i^{(j)},\bx_{i'}^{(j')}) + \lambda_2 h_2(j,j') + \lambda_1\lambda_2 h_1(\bx_i^{(j)},\bx_{i'}^{(j')})h_2(j,j'),
 \]
 with $h_1$ the centred canonical kernel and $h_2$ the Pearson kernel.
-The reason for not including an RKHS of constant functions in $\cF$ is because the overall intercept is usually simpler to estimate as an external parameter (see \hltodo{Section X}).
+The reason for not including an RKHS of constant functions in $\cF$ is because the overall intercept is usually simpler to estimate as an external parameter (see \cref{sec:intercept}).
 
-We can show that the regression function \eqref{eq:anovamultilevel} corresponds to the standard way of writing the multilevel model, 
+We can show that the regression function \cref{eq:anovamultilevel} corresponds to the standard way of writing the multilevel model, 
 \[
   f(\bx_i^{(j)}, j) = \beta_0 + \bx_i^{(j)\top}\boldsymbol{\beta}_1 + \beta_{0j} + \bx_i^{(j)\top}\boldsymbol{\beta}_{1j}.   
 \]
 and determine the prior distributions on $(\beta_{0j},\boldsymbol{\beta}_{1j}^\top)^\top \in \bbR^{p+1}$.
-For the interested reader, the details are in Miscellanea \ref{misc:multilevelmodels}.
+For the interested reader, the details are in \cref{misc:multilevelmodels}.
 The standard multilevel random effects assumption is that $(\beta_{0j},\boldsymbol{\beta}_{1j}^\top)^\top$ is normally distributed with mean zero and covariance matrix $\bPhi$.
 In total, there are $p+1$ regression coefficients and $(p+1)(p+2)/2$ covariance parameters in $\Phi$ to be estimated.
 In contrast, the I-prior model is parameterised by only two RKKS scale parameters---one for $\cF_1$ and one for $\cF_2$---and the error precision $\psi$.
@@ -179,7 +179,7 @@ Thus, with a centring with respect to the empirical distribution $\Prob_n$ of $\
 According to \citet[Section 10]{van2008reproducing}, $\cF$ contains absolutely continuous functions possessing a square integrable weak derivative satisfying $f(0)=0$.
 The norm is given by $\norm{f}^2_\cF = \int \dot f^2 \d x$.
 The posterior mean of $f$ based on an I-prior is then a (one-dimensional) smoother for the data.
-For $f$ of the form $f = \sum_{i=1}^n h(\cdot,x_i)w_i$, i.e., $f\in\cF_n$, the finite subspace of $\cF$ as in \hltodo{Section}, then \citet{bergsma2017} shows that $f$ can be represented as 
+For $f$ of the form $f = \sum_{i=1}^n h(\cdot,x_i)w_i$, i.e., $f\in\cF_n$, the finite subspace of $\cF$ as in \cref{sec:inducedFisherRKHS}, then \citet{bergsma2017} shows that $f$ can be represented as 
 \begin{align}\label{eq:ipriorbrownianbridge}
   f(x) = \int_{-\infty}^x \beta(t) \dint t
 \end{align}
@@ -193,7 +193,7 @@ The I-prior for $f$ is piecewise linear with knots at $x_1,\dots,x_n$, and the s
 The implication is that the I-prior automatically adapts to irregularly spaced $x_i$: in any region where there are no observations, the resulting smoother is linear.
 This is explained by the reduced Fisher information about the derivative of the regression curve in regions with no observation.
 
-In \citep{bergsma2017}, it is stated that the covariance function for $\beta$ is 
+In \citet{bergsma2017}, it is stated that the covariance function for $\beta$ is 
 \[
   \Cov\big(\beta(x),\beta(x') \big) = n\big( \min\{\Prob_n(X < x), \Prob_n(X_n < x') \} -  \Prob_n(X < x) \Prob_n(X_n < x') \big)
 \]
@@ -227,7 +227,7 @@ Another advantage of the I-prior methodology is the ability to fit single or mul
 The Hurst parameter $\gamma \in (0,1)$ of the fBm RKHS can also be treated as a free parameter for added flexibility, but for most practical applications, we find that the default setting of $\gamma = 1/2$ performs sufficiently well.
 
 \begin{remark}
-  From \eqref{eq:ipriorbrownianbridge}, the prior process for $f$ is thus an integrated Brownian bridge. 
+  From \cref{eq:ipriorbrownianbridge}, the prior process for $f$ is thus an integrated Brownian bridge. 
   This shows a close relation with cubic spline smoothers, which can be interpreted as the posterior mean when the prior is an integrated Wiener process \citep{wahba1990spline}.
   Unlike I-priors however, cubic spline smoothers do not have automatic boundary corrections, and typically the additional assumption is made that the smoothing curve is linear at the boundary knots.
 \end{remark}

@@ -1,4 +1,4 @@
-\documentclass[a4paper,showframe,11pt,draft]{report}
+\documentclass[a4paper,showframe,11pt]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
@@ -10,7 +10,7 @@
 
 \begin{document}
 \hChapterStandalone[1]{Introduction}
-                
+
 Regression\index{regression} analysis is undoubtedly one of the most important tools available at a practitioner's disposal to understand the relationship between one or more explanatory variables $x$, and the independent variable of interest, $y$.
 This relationship is usually expressed as $y \approx f(x;\theta)$, where $f$ is called the \emph{regression function}, and this is   dependent on one or more parameters denoted by $\theta$.
 Regression analysis concerns the estimation of said regression function, and once a suitable estimate $\hat f$ has been found, post-estimation procedures such as prediction, and inference surrounding $f$ or $\theta$, may be performed.
@@ -18,12 +18,12 @@ Regression analysis concerns the estimation of said regression function, and onc
 Estimation of the regression function may be done in many ways.
 This thesis concerns the use of \emph{I-priors} \citep{bergsma2017}, in a semi-Bayesian\index{Bayes} manner, for regression modelling.
 The I-prior is an objective, entropy-maximising prior for the regression function which makes use of its Fisher information.
-The essence of regression modelling using I-priors is introduced briefly below, but as the development of I-priors is fairly recent, and we dedicate a full chapter (Chapter 2) to describe the concept fully.
+The essence of regression modelling using I-priors is introduced briefly below, but as the development of I-priors is fairly recent, we dedicate two full chapters (Chapters 2 and 3) to describe the concept fully.
 
 This thesis has three main chapters which we hope to present as methodological innovations surrounding the use of I-priors for regression modelling.
-Chapter 3 describes computational methods relating to the estimation of I-prior models.
-Chapter 4 extends the I-prior methodology to fit discrete outcome models.
-Chapter 5 discusses the use of I-priors for model selection. 
+Chapter 4 describes computational methods relating to the estimation of I-prior models.
+Chapter 5 extends the I-prior methodology to fit discrete outcome models.
+Chapter 6 discusses the use of I-priors for model selection. 
 This short chapter ultimately provides an outline of the thesis, in addition to introducing the statistical model of interest.
 
 \section{Regression models}
@@ -40,11 +40,11 @@ Additionally, it is assumed that the errors $\epsilon_i$ are normally distribute
   (\epsilon_1, \dots, \epsilon_n)^\top \sim \N_n(0, \bPsi^{-1}).
 \end{align}
 where $\bPsi = (\psi_{ij})_{i,j=1}^n$ is the precision matrix.
-We shall often refer to model \eqref{eq:model1} subject to \eqref{eq:model1ass} as the \emph{normal regression model}.
+We shall often refer to model \cref{eq:model1} subject to \cref{eq:model1ass} as the \emph{normal regression model}.
 The choice of multivariate normal errors is not only a convenient one (as far as distributional assumptions go), but one that is motivated by the principle of maximum entropy.
 
 Interestingly, a wide variety of statistical models can be captured by the seemingly humble normal regression model, simply by varying the form of the regression function $f$.
-For instance, when $f$ can be parameterised linearly as $f(x_i) = x_i \beta$, $\beta \in \bbR^p$, we then have the ordinary linear regression---a staple problem in statistics and other quantitative fields.
+For instance, when $f$ can be parameterised linearly as $f(x_i) = x_i^\top \beta$, $\beta \in \bbR^p$, we then have the ordinary linear regression---a staple problem in statistics and other quantitative fields.
 
 We might also have that the data is separated naturally into groups or levels by design, for example, data from stratified sampling, students within schools, or longitudinal measurements over time.
 In such a case, we might want to consider a regression function with additive components
@@ -54,7 +54,7 @@ In such a case, we might want to consider a regression function with additive co
 \]
 %
 where $x_i^{(j)}$ denotes the $p$-dimensional $i$th observation for group $j\in\{1,\dots,m\}$.
-Again, assuming a linear parameterisation, this is recognisable as the multilevel or random-effects linear model, with $f_2$ representing the varying intercept via $f_2(j) = \alpha_{j}$, $f_{12}$ representing the varying slopes via $f_{12}(x_{ij},j) = x_{i} \beta_{j}$, with $\beta_j \in \bbR^p$, and $f_1$ representing the fixed-effects linear component $x_i\beta$ as above.
+Again, assuming a linear parameterisation, this is recognisable as the multilevel or random-effects linear model, with $f_2$ representing the varying intercept via $f_2(j) = \alpha_{j}$, $f_{12}$ representing the varying slopes via $f_{12}(x_{ij},j) = x_{i}^\top \beta_{j}$, with $\beta_j \in \bbR^p$, and $f_1$ representing the fixed-effects linear component $x_i^\top\beta$ as above.
 
 Moving on from linear models, smoothing models may be of interest as well.
 A myriad of models exist for this type of problem, with most classed as nonparametric regression, and the more popular ones include LOcal regrESSion (LOESS), kernel regression, and smoothing splines.
@@ -62,7 +62,7 @@ Semiparametric regression models, on the other hand, combines the linear compone
 
 Further, the regression problem is made more intriguing when the set of covariates $\cX$ is functional---in which case the linear regression model aims to estimate coefficient functions $\beta:\cT \to \bbR$ from the model
 \[
-  y_i = \int_\cT x_i(t)\beta(t)\d t + \epsilon_i.
+  y_i = \int_\cT x_i(t)\beta(t) \dint t + \epsilon_i.
 \]
 Nonparametric and semiparametric regression with functional covariates have also been widely explored.
 Models of this nature still fall under the remit of the normal regression model by selecting a regression functional with domain over the functional covariates.
@@ -70,7 +70,7 @@ Models of this nature still fall under the remit of the normal regression model 
 \section{Vector space of functions}
 
 It would be beneficial to prescribe some sort of structure for which 1) we may choose a regression function appropriately, and 2) this function will generalise well to unseen data (prediction). 
-This needed structure is given to us by assuming that our regression function for the normal model lies in some \gls{rkhs} $\cF$ equipped with the reproducing kernel $h:\cX \times \cX \to \bbR$.
+This needed structure is given to us by assuming that our regression function for the normal model lies in some \gls*{rkhs} $\cF$ equipped with the reproducing kernel $h:\cX \times \cX \to \bbR$.
 Often, the reproducing kernel (or simply kernel, for short) is indexed by one or more parameters which we shall denote as $\eta$.
 Correspondingly, the kernel is rightfully denoted as $h_\eta$ to indicate the dependence of the parameters on the kernels, though where this is seemingly obvious, might be omitted.
 Throughout this thesis we shall make the assumption that our regression function lies in a reproducing kernel Hilbert space $\cF$.
@@ -103,7 +103,7 @@ and when used, defines the \emph{least squares regression}.
 For the normal model, the minimiser of the empirical risk measure under the squared loss function is also the maximum likelihood (ML) estimate of $f$, since $\text{ER}[f]$ would be twice the negative log-likelihood of $f$, up to a constant.
 
 \footnotetext{
-More appropriately, the risk functional $\text{R}[f] = \int \Lambda(y,f(x)) \d \Prob(y,x)$, i.e., the expectation of the loss function under some probability measure of the observed sample, should be used.
+More appropriately, the risk functional $\text{R}[f] = \int \Lambda(y,f(x)) \dint \Prob(y,x)$, i.e., the expectation of the loss function under some probability measure of the observed sample, should be used.
 Often the true probability measure is not known, so the empirical risk measure is used instead.
 }
 
@@ -136,6 +136,7 @@ For the normal regression model with $f \in \cF$, an RKHS, it can be shown that 
 The exact solution for the coefficients $\bw = (w_1,\dots,w_n)^\top$ are in fact $\bw = \big(\bH + \bPsi^{-1}\big)^{-1}(\by - \bff_0)$, where $\bH = \big(h(x_i,x_j) \big)_{i,j=1}^n$ (often referred to as the Gram matrix or kernel matrix) and $(\by - \bff_0) = (y_1 - f_0(x_1), \dots, y_n - f_0(x_n))^\top$.
 
 \section{Regression using I-priors}
+\label{sec:introregiprior}
 
 Building upon the Bayesian interpretation of regularisation, \citet{bergsma2017} proposes a prior distribution for the regression function such that its realisations admit the form for the solution given in the representer theorem.
 %Denoting the I-prior by $\pi$, we say that the function $f$ follows an I-prior $f \sim \pi$.
@@ -146,7 +147,7 @@ Building upon the Bayesian interpretation of regularisation, \citet{bergsma2017}
 %\end{align}
 %%
 %where $w_1,\dots,w_n$ are real-valued. %\footnotemark.
-The \emph{I-prior} for the regression function $f$ in \eqref{eq:model1} subject to \eqref{eq:model1ass} is defined as the distribution of a random function of the form \eqref{eq:repform} when the $w_i$ are distributed according to 
+The \emph{I-prior} for the regression function $f$ in \cref{eq:model1} subject to \cref{eq:model1ass} is defined as the distribution of a random function of the form \cref{eq:repform} when the $w_i$ are distributed according to 
 %
 \[
   (w_1,\dots,w_n)^\top \sim \N_n(\bzero,\bPsi),
@@ -167,7 +168,7 @@ More on the I-prior in Chapter 2.
 
 %\footnotetext{
 %That is to say, $\cF$ is spanned by the functions $h(\cdot,x)$. 
-%More precisely, $\cF$ is the completion of the space $\cG = \text{span}\{h(\cdot,x) | x \in \cX \}$ endowed with the squared norm $\norm{f}^2_\cG = \sum_{i=1}^n\sum_{i=1}^n w_i w_j h(x_i,x_j)$ for $f$ of the form \eqref{eq:ipriorre}. 
+%More precisely, $\cF$ is the completion of the space $\cG = \text{span}\{h(\cdot,x) | x \in \cX \}$ endowed with the squared norm $\norm{f}^2_\cG = \sum_{i=1}^n\sum_{i=1}^n w_i w_j h(x_i,x_j)$ for $f$ of the form \cref{eq:ipriorre}. 
 %See, for example, \cite{berlinet2011reproducing} for details.
 %}
 
@@ -189,7 +190,7 @@ The posterior mean for $f$ evaluated at a point $x \in \cX$ is given by
 \end{align}
 %
 where we have defined $\bh_\eta(x)$ to be the vector of length $n$ with entries $h_\eta(x,x_i)$ for $i=1,\dots,n$.
-Incidentally, the elements of the $n$-vector $\tilde \bw$ defined in \eqref{eq:postmean} are the posterior means of the random variables $w_i$ in the formulation \eqref{eq:repform}.
+Incidentally, the elements of the $n$-vector $\tilde \bw$ defined in \cref{eq:postmean} are the posterior means of the random variables $w_i$ in the formulation \cref{eq:repform}.
 The point-evaluation posterior variance for $f$ is given by
 %
 \begin{align}\label{eq:postvar}
@@ -203,7 +204,7 @@ Prediction for a new data point $x_\new \in \cX$ then concerns obtaining the \em
 \]
 %
 where we had defined $f_\new := f(x_\new)$.
-This is again a normal distribution in the case of the normal model, with the same mean\footnotemark~as in \eqref{eq:postmean}, but a slightly different variance.
+This is again a normal distribution in the case of the normal model, with the same mean\footnotemark~as in \cref{eq:postmean}, but a slightly different variance.
 These are of course well-known results in Gaussian process literature---see, for example, \citet{rasmussen2006gaussian} for details.
 
 \footnotetext{
@@ -255,7 +256,7 @@ The I-prior methodology has the following advantages:
   
 \end{enumerate}
 
-The main drawback of using I-prior models computational in nature, namely, the requirement of working with an $n \times n$ matrix and its inverse, as seen in Equations \eqref{eq:postmean} and \eqref{eq:postvar}, regardless of estimation method (ML or Bayes).
+The main drawback of using I-prior models computational in nature, namely, the requirement of working with an $n \times n$ matrix and its inverse, as seen in Equations \cref{eq:postmean} and \cref{eq:postvar}, regardless of estimation method (ML or Bayes).
 Analysis of data sets that are not more than a few thousand in size can be considered feasible; anything more than this is debilitatingly slow to compute.
 In addition, care must be taken to avoid numerical instabilities when calculating the marginal log-likelihood during parameter estimation, which can affect gradient based optimisation or the EM algorithm.
 
@@ -271,28 +272,30 @@ Deviating from the normality assumption would require approximation techniques t
 This thesis is structured as follows:
 
 \begin{itemize}
-  \item Following this introductory chapter, \textbf{Chapter 2} gives a brief overview of functional analysis. 
-  This allows us to better explain and derive the I-prior for the normal regression model. 
-  Note that the reader does not require any in-depth knowledge of RKHSs nor functional analysis to perform I-prior modelling.
+  \item Following this introductory chapter, \textbf{Chapter 2} provides a brief overview of functional analysis, and in particular, descriptions of interesting function spaces for regression.
+  In \textbf{Chapter 3}, the concept of the Fisher information is extended to potentially infinite-dimensional parameters.
+  This allows us to define the Fisher information for the regression function which parameterises the normal regression model, and we explain how this relates to the I-prior.
+%  This allows us to better explain and derive the I-prior for the normal regression model. 
+%  Note that the reader does not require any in-depth knowledge of RKHSs nor functional analysis to perform I-prior modelling.
   
-  \item The aforementioned computational methods relating to the estimation of I-prior models are explored in \textbf{Chapter 3}, namely the direct optimisation of the log-likelihood, the EM algorithm, and MCMC methods.
+  \item The aforementioned computational methods relating to the estimation of I-prior models are explored in \textbf{Chapter 4}, namely the direct optimisation of the log-likelihood, the EM algorithm, and MCMC methods.
   The goal is to describe a stable and efficient algorithm for estimating I-prior models.
   The \proglang{R} package \pkg{iprior} is the culmination of the effort put in towards completing this chapter, which has been made publicly available on the Comprehensive \proglang{R} Archive Network (CRAN).
   \hltodo{This chapter has also been submitted for publication to Computational Statistics and Data Analysis.}
 
   \item Many models of interest involve response variables of a categorical nature.
-  A naïve implementation of the I-prior model is certainly possible, but there is certainly a more proper way to account for non-normality of errors.
-  \textbf{Chapter 4} extends the I-prior methodology to discrete outcomes.
+  A naïve implementation of the I-prior model is certainly possible, but there is  a more proper way to account for non-normality of errors.
+  \textbf{Chapter 5} extends the I-prior methodology to discrete outcomes.
   There, the non-Gaussian likelihood that arises in the posteriors are approximated by way of variational inference.
   The advantages of the I-prior in normal regression models carry over into categorical response models.
 
-  \item \textbf{Chapter 5} attempts to contribute to the field of model selection.
+  \item \textbf{Chapter 6} attempts to contribute to the field of model selection.
   The use of I-priors in the normal model, like Gaussian process priors, allow model comparison to be done easily.
   Specifically for linear models with $p$ variables to select from, model comparison requires elucidation of $2^p$ marginal likelihoods, and this becomes infeasible when $p$ is large.
   We use a stochastic search method to choose models that have high posterior probabilities of occurring, equivalent to choosing models that have large Bayes factors.
 \end{itemize}
 
-Chapters 3--5 contain computer implementations of the statistical methodologies described therein, and the code for replication are made available at \url{http://myphdcode.haziqj.ml}.
+Chapters 4--6 contain computer implementations of the statistical methodologies described therein, and the code for replication are made available at \url{http://myphdcode.haziqj.ml}.
 
 \hClosingStuffStandalone
 \end{document}

@@ -14,7 +14,7 @@
 \hChapterStandalone[3]{Fisher information and the I-prior}
 
 Traditionally, Fisher information is calculated for unknown parameters $\theta$ of probability distribution from observable random variables.
-In a similar light, we can treat the regression function $f$ in the model stated in \eqref{eq:model1}, subject to \eqref{eq:model1ass}, as the unknown ``parameter'' for which we would like information regarding.
+In a similar light, we can treat the regression function $f$ in the model stated in \cref{eq:model1}, subject to \cref{eq:model1ass}, as the unknown ``parameter'' for which we would like information regarding.
 In this chapter, we extend the notion of Fisher information to abstract objects in Hilbert spaces, and also to linear functionals of these objects.
 This will allow us to achieve our aim of deriving the Fisher information for our regression function.
 
@@ -34,6 +34,7 @@ Such a distribution on $f$ is called the I-prior distribution.
 \input{03c-fisher-regression}
 
 \section{The induced Fisher information RKHS}
+\label{sec:inducedFisherRKHS}
 \input{03d-induced-fisher-RKHS}
 
 \section{The I-prior}
@@ -57,8 +58,8 @@ Importantly, functions in the subspace $\cF_n$ are structurally similar to the f
 The problem at hand then boils down to a Gaussian process regression using the kernel of the RKHS $\cF_n$, which is the Fisher information for $f$.
 
 \newpage
-\section*{Omitted}
-\input{03-omitted}
+\section*{Miscellanea}
+\input{03-misc}
 
 \hClosingStuffStandalone
 \end{document}
