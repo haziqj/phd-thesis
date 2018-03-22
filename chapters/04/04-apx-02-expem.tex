@@ -31,14 +31,14 @@ Now, the ML estimate for $\bfeta$  is obtained by solving
 \end{align}
 equated to zero.
 Note that we are allowed to change the order of integration and differentation provided the integrand is continuously differentiable.
-So the only difference between the first order condition of \eqref{eq:expEM1} and that of \eqref{eq:expEM2} is that the sufficient statistics involving the unknown $\bw$ are replaced by their conditional or posterior expectations.
+So the only difference between the first order condition of \cref{eq:expEM1} and that of \cref{eq:expEM2} is that the sufficient statistics involving the unknown $\bw$ are replaced by their conditional or posterior expectations.
 %but this is not an issue: by the law of total expectations, $\E\bT(\bz) = \E \bT(\by,\bw) = \E \big[ \E_\bw[\bT(\by,\bw)|\by] \big]$
 %so solving $\bT(\bz) = \E \bT(\bz)$ for $\btheta$ is not possible without some manipulation.
 
 A useful identity to know is that $\frac{\partial}{\partial\bfeta} A^*(\bfeta) = \E_\bz \bT(\bz)$ \citep[Theorem 3.4.2 \& Exercise 3.32(a)]{casella2002statistical}, which can be expressed in terms of the original parameters $\btheta$.
-As a consequence, solving for the ML estimate for $\btheta$ from the FOC equations \eqref{eq:expEM2} is possible without having to deal with the derivative of $A^*$ with respect to the natural parameters.
+As a consequence, solving for the ML estimate for $\btheta$ from the FOC equations \cref{eq:expEM2} is possible without having to deal with the derivative of $A^*$ with respect to the natural parameters.
 Having said this, an analytical solution in $\btheta$ may not exist, because the relationship of $\btheta$ could be implicit in the set of equations $\E_\bw \big[ \bT(\bw,\by) | \by, \btheta \big] = \E_{\by,\bw}\left[ \bT(\by,\bw) | \btheta \right]$.
-One way around this is to employ an iterative procedure, as detailed in Algorithm \ref{alg:EM3}.
+One way around this is to employ an iterative procedure, as detailed in \cref{alg:EM3}.
 
 \begin{algorithm}[hbt]
 \caption{Exponential family EM}\label{alg:EM3}
@@ -52,9 +52,9 @@ One way around this is to employ an iterative procedure, as detailed in Algorith
 \end{algorithmic}
 \end{algorithm}
 
-To see how Algorithm \ref{alg:EM3} motivates the EM algorithm, consider the following argument.
+To see how \cref{alg:EM3} motivates the EM algorithm, consider the following argument.
 Recall that for the EM algorithm, the function $Q_t(\bfeta) = \E_\bw[\log p(\by,\bw|\bfeta) | \by,\bfeta^{(t)}]$ is maximised at each iteration $t$.
-For exponential families of the form \eqref{eq:pdfexpfamnat}, the $Q_t$ function turns out to be
+For exponential families of the form \cref{eq:pdfexpfamnat}, the $Q_t$ function turns out to be
 \[
  Q_t(\bfeta) = \E_\bw \big[ \ip{\bfeta, \bT(\bz)} | \by,\bfeta^{(t)} \big] -  A^*(\bfeta) + \log B(\bz),
 \]
@@ -63,8 +63,8 @@ and this is maximised at the value of $\bfeta$ satisfying
   \frac{\partial}{\partial\bfeta} Q_t(\bfeta)
   &= \E_\bw \big[ \bT(\by,\bw) | \by,\bfeta^{(t)} \big] - \frac{\partial}{\partial\bfeta}A^*(\bfeta) = 0,
 \end{align*}
-a similar condition to \eqref{eq:expEM2} when obtaining ML estimate of $\bfeta$.
-Thus, $Q_t$ is maximised by the solution to line 4 in Algorithm \eqref{alg:EM3}.
+a similar condition to \cref{eq:expEM2} when obtaining ML estimate of $\bfeta$.
+Thus, $Q_t$ is maximised by the solution to line 4 in Algorithm \cref{alg:EM3}.
 
 
 

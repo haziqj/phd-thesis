@@ -23,7 +23,7 @@ Then
 %
 obtained via the Woodbury matrix identity, is potentially a much cheaper operation which scales $O(nq^2)$: $O(q^3)$ to do the inversion, and $O(nq)$ to do the multiplication (because typically the inverse is premultiplied to a vector).
 When using the linear kernel for a low-dimensional covariate then the above method is exact.
-This fact is clearly demonstrated by the equivalence of the $p$-dimensional linear model implied by \eqref{eq:ipriorcanonical} with the $n$-dimensional I-prior model using the canonical RKHS.
+This fact is clearly demonstrated by the equivalence of the $p$-dimensional linear model implied by \cref{eq:ipriorcanonical} with the $n$-dimensional I-prior model using the canonical RKHS.
 If $p \ll n$ then certainly using the linear representation is much more efficient.
 
 However, other interesting kernels such as the fractional Brownian motion (fBm) kernel or the squared exponential kernel results in kernel matrices which are full rank.
@@ -124,7 +124,7 @@ For a brief review of more sophisticated methods of selecting $\cM$, see \citet[
 \subsection{An efficient EM algorithm}
 \label{sec:efficientEM1}
 
-The evaluation of the $Q$ function in \eqref{eq:QfnEstep} is $O(n^3)$, because a change in the values of $\theta$ requires evaluating $\bSigma_\theta = \psi\bH_\eta^2 + \psi^{-1}\bI_n$, for which squaring $\bH_\eta$ takes the bulk of the computational time.
+The evaluation of the $Q$ function in \cref{eq:QfnEstep} is $O(n^3)$, because a change in the values of $\theta$ requires evaluating $\bSigma_\theta = \psi\bH_\eta^2 + \psi^{-1}\bI_n$, for which squaring $\bH_\eta$ takes the bulk of the computational time.
 In this section, we describe an efficient method of evaluating $Q$ if the I-prior model only involves estimating the RKHS scale parameters and the error precision under assumptions \ref{ass:A1}--\ref{ass:A3}.
 
 %Separate the RKHS scale parameters $\lambda$ from the other kernel parameters $\xi$ such as the Hurst index of the fBm RKHS, lengthscale of the SE RKHS, and offset parameter of the polynomial RKKS, and write $\theta = \{\lambda_1,\dots,\lambda_p,\psi,\xi \}$.
@@ -199,7 +199,7 @@ A practical situation where this might be useful is when we would like to repeat
 \subsection{The exponential family EM algorithm}
 
 In the original EM paper by \citet{dempster1977maximum}, the EM algorithm was demonstrated to be easily administered to complete data likelihoods belonging to the exponential family for which the maximum likelihood estimates are easily computed.
-If this is the case, then the M-step simply involves replacing the unknown sufficient statistics in the ML estimates with their \emph{conditional expectations} (see Appendix \ref{apx:expem} for details).
+If this is the case, then the M-step simply involves replacing the unknown sufficient statistics in the ML estimates with their \emph{conditional expectations} (see \cref{apx:expem} for details).
 Certain I-prior models emit this property, namely regression functions belonging to the full or limited ANOVA RKKS, and we describe its estimation below.
 
 Assume \ref{ass:A1}--\ref{ass:A3} applies, and that only the error precision $\psi$ and the RKHS scale parameters $\lambda_1,\dots,\lambda_p$ need to be estimated, i.e. all other kernel parameters are fixed---a similar situation was described in the previous subsection.
@@ -224,7 +224,7 @@ where $r_k$ and $s_k$ are both functions over $\cX\times\cX$, defined respective
 The reason for splitting $h_\lambda$ like this will become apparently momentarily.
 
 Programmatically this looks complicated to implement in software, but in fact it is not.
-Consider again the instruction list $\cQ$ for the ANOVA RKKS (Example 3, Section \ref{sec:efficientEM1}).
+Consider again the instruction list $\cQ$ for the ANOVA RKKS (Example 3, \cref{sec:efficientEM1}).
 We can split this list into two: $\cR_k$ as those elements of $\cQ$ which involve the index $k$, and $\cS_k$ as those elements of $\cQ$ which do not involve the index $k$.
 %Additionally, define $\cR_k^\lambda$ as the index set $\cR_k$ which removes occurrences of $k$ from its elements.
 Let $\zeta_k$, $e_k$ be the sets of $\lambda$ and $h$ after applying the instructions of $\cR_k$ 
@@ -262,15 +262,14 @@ Notice that the above likelihood is an exponential family distribution with the 
   T_2 =  \psi\tilde\by^\top \bR_k \bw - \half[\psi]\tr(\bU_k^2 \bw\bw^\top).
 \]
 This likelihood is maximised at $\hat\lambda_k = T_2/2T_1$, but of course, the variables $w_1,\dots,w_n$ are never observed.
-As per the exponential family EM routine, replace occurrences of $\bw$ and $\bw\bw^\top$ with their respective conditional expectations, i.e. $\bw\mapsto\E[\bw|\by] = \wtilde$ and $\bw\bw^\top\mapsto\E[\bw\bw^\top|\by] = \tilde\bV_w + \wtilde\wtilde^\top$ as defined in \eqref{eq:posteriorw}.
-That the $\lambda_k$'s have closed-form expressions, together with the closed-form expression for $\psi$ in \eqref{eq:closedformpsi}, greatly simplifies the EM algorithm.
+As per the exponential family EM routine, replace occurrences of $\bw$ and $\bw\bw^\top$ with their respective conditional expectations, i.e. $\bw\mapsto\E[\bw|\by] = \wtilde$ and $\bw\bw^\top\mapsto\E[\bw\bw^\top|\by] = \tilde\bV_w + \wtilde\wtilde^\top$ as defined in \cref{eq:posteriorw}.
+That the $\lambda_k$'s have closed-form expressions, together with the closed-form expression for $\psi$ in \cref{eq:closedformpsi}, greatly simplifies the EM algorithm.
 At the M-step, one simply updates the parameters in turn, and as such, there is no maximisation per se.
-This form of the EM algorithm is known as the \emph{conditional expectation-maximisation} algorithm \citep{meng1993maximum}.
 
-The algorithm is summarised in Algorithm \ref{alg:EM2}.
+The algorithm is summarised in \cref{alg:EM2}.
 The exponential family EM for ANOVA-type I-prior models require $O(n^3)$ computational time at each step, which is spent on computing the matrix inverse in the E-step.
 The M-step takes at most $O(n^2)$ time to compute.
-As a remark, it is not necessary that $h_\lambda$ is the full ANOVA RKKS; any of the examples 1--3 in \autoref{sec:efficientEM1} can be estimated using this method, since they are seen as special cases of the ANOVA decomposition.
+As a remark, it is not necessary that $h_\lambda$ is the full ANOVA RKKS; any of the examples 1--3 in \cref{sec:efficientEM1} can be estimated using this method, since they are seen as special cases of the ANOVA decomposition.
 %This is also true if we decide to drop any of the terms in the ANOVA kernel.
 
 \begin{algorithm}[hbt]
@@ -328,7 +327,7 @@ As a remark, it is not necessary that $h_\lambda$ is the full ANOVA RKKS; any of
 %  \]
 %\end{enumerate}
 
-While the exponential family EM algorithm takes similar computational time as the efficient EM algorithm described in \autoref{sec:efficientEM1}, there is one compelling reason to consider Algorithm \ref{alg:EM2}: conjugacy of the exponential family of distributions.
+While the exponential family EM algorithm takes similar computational time as the efficient EM algorithm described in \cref{sec:efficientEM1}, there is one compelling reason to consider \cref{alg:EM2}: conjugacy of the exponential family of distributions.
 Realise that $\lambda_k|(\by,\bw,\lambda_{-k},\psi)$ is in fact normally distributed, with mean and variance given by $T_2/2T_1$ and $1/2T_1$ respectively.
 If we were so compelled to assign a normal prior on each of the $\lambda_k$'s, then the conditionally dependent log-likelihood of $\lambda_k$, $L(\lambda_k|\by,\bw,\lambda_{-k},\psi)$, would have a normal log-likelihood prior involving $\lambda_k$ added on.
 Importantly, viewed as a posterior log-density for $\lambda_k$, the posterior density for $\lambda_k$ would also be a normal distribution.
@@ -340,7 +339,7 @@ In the next chapter on binary and multinomial regression using I-priors, the exp
 
 \begin{remark}
   Earlier, we restricted attention to ANOVA RKKS. 
-  Hopefully, it is now apparent that ANOVA kernels are a requirement for Algorithm \ref{alg:EM2} to work easily.
+  Hopefully, it is now apparent that ANOVA kernels are a requirement for \cref{alg:EM2} to work easily.
   As soon as higher degrees of the $\lambda_k$'s come into play, e.g. using the polynomial kernel, then the ML estimate for $\lambda_k$ involve solving a polynomial of degree $2d-1$ the FOC equations.
   Although this is not in itself hard to do, the elegance of the algorithm, especially viewed as having the normal conjugacy property for the $\lambda_k's$, is lost.
 \end{remark}
@@ -360,4 +359,4 @@ Instead of using this update value of the parameter, modify it instead, and use
 where $\omega$ is an \emph{over-relaxation} parameter.
 Under mild conditions, among them that $Q(\theta^{(t+1)}) > Q(\theta^{(t)})$, the MOEM estimate does not decrease the log-likelihood at each step.
 This condition is a slight inconvenience to check under the usual EM algorithm, but is a great companion to exponential family EM algorithm.
-From \eqref{eq:logliklambdak}, we see that $Q(\lambda_k) = \E_\bw \big[ L(\lambda_k|\theta\backslash\{\lambda_k \} ) | \by,\theta^{(t)} \big]$ is quadratic in $\lambda_k$, therefore any $\omega \in [0,1]$ will maintain monotonicity of the EM algorithm.
+From \cref{eq:logliklambdak}, we see that $Q(\lambda_k) = \E_\bw \big[ L(\lambda_k|\theta\backslash\{\lambda_k \} ) | \by,\theta^{(t)} \big]$ is quadratic in $\lambda_k$, therefore any $\omega \in [0,1]$ will maintain monotonicity of the EM algorithm.

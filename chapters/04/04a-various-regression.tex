@@ -1,4 +1,4 @@
-In the introductory chapter (Section 1.1), we described several interesting regression models.
+In the introductory chapter (\cref{sec:introregmod}), we described several interesting regression models.
 The goal of this section is to formulate the I-prior model that describes each of these models.
 This is done by carefully choosing the RKHS/RKKS $\cF$ of real functions over a set $\cX$ to which the regression function $f$ belongs.
 Without loss of generality and for simplicity, assume a prior mean of zero for the I-prior distribution.
@@ -22,7 +22,7 @@ As expected, the covariance matrix for $\boldsymbol\beta$ is recognised as the s
 
 %Functions in the canonical RKHS are of the form $f(\bx) = \bx^\top\boldsymbol\beta$.
 If the covariates are not scaled similarly, then the values of $f$ are incoherent---if $x_1$  measures weight in kilograms and $x_2$ height in centimetres, what measurement does $\beta_1x_1 + \beta_2x_2$ represent?
-To overcome this, one could decompose the regression function into
+\hltodo[Can't I just standardise $x$?]{To overcome this}, one could decompose the regression function into
 \[
   f(\bx_i) = f_1(x_{i1}) + \cdots + f_p(x_{ip}) 
 \]
@@ -45,7 +45,7 @@ Note that $\cF_\lambda$ can be seen as a special case of the ANOVA RKKS, in whic
 This approach is disadvantageous when $p$ is large, in which case there would be numerous scale parameters to estimate.
 
 \begin{remark}
-  The I-prior for $\boldsymbol{\beta}$ in \eqref{eq:ipriorcanonical} bears resemblance to the $g$-prior \citep{zellner1986assessing}, and in fact, the $g$-prior can be interpreted as an I-prior if the inner product of $\cX$ is the Mahalonobis inner product.
+  The I-prior for $\boldsymbol{\beta}$ in \cref{eq:ipriorcanonical} bears resemblance to the $g$-prior \citep{zellner1986assessing}, and in fact, the $g$-prior can be interpreted as an I-prior if the inner product of $\cX$ is the Mahalonobis inner product.
   See \cref{misc:gprior} for a discussion.
 \end{remark}
 
@@ -132,7 +132,7 @@ In addition, one may add flexibility to the model in two possible ways:
   \end{table}
   \vspace{-1.5em}
   The $y$'s are the responses, $x$'s covariates, and $z$'s group-level covariates.
-  If $\iota:(i,j)\mapsto k$ is a function which maps the dual index set $(i,j)$ to the single index set $k\in\{1,\dots,n\}$, then the multilevel regression function can be expressed as the regression function in model \eqref{eq:model1}.
+  If $\iota:(i,j)\mapsto k$ is a function which maps the dual index set $(i,j)$ to the single index set $k\in\{1,\dots,n\}$, then the multilevel regression function can be expressed as the regression function in model \cref{eq:model1}.
 \end{remark}
 
 
@@ -161,7 +161,7 @@ Choices for $\cF_1$ and $\cF_2$ are plentiful.
 In fact, any of the RKHS/RKKS described in Chapter 3 can be used to either model a linear dependence (canonical RKHS), nominal dependence (Pearson RKHS), polynomial dependence (polynomial RKKS) or smooth dependence (fBm or SE RKHS) on the $x_i$'s and $t$'s on $f$.
 
 \begin{remark}
-  Although \eqref{eq:longitudinalanova} is a special case of the multilevel model decomposition \eqref{eq:anovamultilevel} for which $x_i = x_i(t)$ (time-varying covariates), it is different to how longitudinal models are normally treated using a mixed effects model.
+  Although \cref{eq:longitudinalanova} is a special case of the multilevel model decomposition \cref{eq:anovamultilevel} for which $x_i = x_i(t)$ (time-varying covariates), it is different to how longitudinal models are normally treated using a mixed effects model.
   As a multilevel model, longitudinal models treat the individuals as the groups or clusters (level two), and the time points as the various measurements within the clusters (level one).
 \end{remark}
 

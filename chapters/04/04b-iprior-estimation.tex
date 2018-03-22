@@ -1,5 +1,5 @@
 After selecting a RKHS/RKKS $\cF$ of functions over $\cX$ suitable for the regression problem at hand, one then proceeds to estimate the posterior distribution of the regression function.
-The I-prior model \eqref{eq:model1} subject to \eqref{eq:model1ass} and $f\in\cF$ has the simple and convenient representation
+The I-prior model \cref{eq:model1} subject to \cref{eq:model1ass} and $f\in\cF$ has the simple and convenient representation
 \begin{align}\label{eq:model2}
   \begin{gathered}
     y_i = \alpha + f_0(x_i) +
@@ -133,7 +133,7 @@ Note that when treating $\mu_0$ as a hyperparameter to be estimated, then this d
 
 Under assumptions \ref{ass:A1} and \ref{ass:A2}, a direct optimisation of the parameters $\theta=\{\eta,\bPsi \}$ using the log-likelihood of $\theta$ is straightforward to implement.
 Denote $\bSigma_\theta := \bH_\eta\bPsi\bH_\eta + \bPsi^{-1} = \bV_y$.
-From \eqref{eq:model2}, the (marginal) log-likelihood of $\theta$ is given by
+From \cref{eq:model2}, the (marginal) log-likelihood of $\theta$ is given by
 %
 \begin{align}
   L(\theta)
@@ -171,7 +171,7 @@ In particular, the standard errors for $\theta_k$ are the diagonal elements of $
 
 \subsection{Expectation-maximisation algorithm}
 
-Evidently, \eqref{eq:model2} lends itself to resembling a random-effects model, for which the EM algorithm can easily be employed to estimate its hyperparameters.
+Evidently, \cref{eq:model2} lends itself to resembling a random-effects model, for which the EM algorithm can easily be employed to estimate its hyperparameters.
 Assume \ref{ass:A1} and \ref{ass:A2} holds.
 By treating the complete data as $\{\by,\bw \}$ and the $w_i$'s as ``missing'', the $t$th iteration of the E-step entails computing
 %
@@ -192,10 +192,9 @@ By treating the complete data as $\{\by,\bw \}$ and the $w_i$'s as ``missing'', 
 \end{align}
 %
 where $\tilde\bw^{(t)} = \E[\bw|\by,\theta^{(t)}]$ and $\tilde\bW^{(t)} = \E[\bw\bw^\top|\by,\theta^{(t)}]$ are the first and second posterior moments of $\bw$ calculated at the $t$th EM iteration.
-These can be computed directly from \eqref{eq:posteriorw}, substituting for $\theta^{(t)} = \{\eta^{(t)}, \bPsi^{(t)} \}$ as appropriate.
-Note that \eqref{eq:QfnEstep} follows as a direct consequence of the results in  \cref{apx:posteriorw}.
+These can be computed directly from \cref{eq:posteriorw}, substituting for $\theta^{(t)} = \{\eta^{(t)}, \bPsi^{(t)} \}$ as appropriate.
+Note that \cref{eq:QfnEstep} follows as a direct consequence of the results in  \cref{apx:posteriorw}.
 
-\hltodo[Change this section slightly. Just talk about maximising Q. Special cases in later sections.]{}
 Now, assume that \ref{ass:A3} holds.
 The M-step then assigns $\theta^{(t+1)}$ the value of $\theta$ which maximises the $Q$ function above.
 This boils down to solving the first order conditions
@@ -208,12 +207,14 @@ This boils down to solving the first order conditions
 \end{align}
 %
 equated to zero.
-As $\partial\bSigma_\theta/\partial\psi = \bH_\eta^2 - \psi^{-2}\bI_n$, the solution to \eqref{eq:empsi} is obtained as
+As $\partial\bSigma_\theta/\partial\psi = \bH_\eta^2 - \psi^{-2}\bI_n$, the solution to \cref{eq:empsi} for $\psi$ is separable in $\eta$.
+Meaning, given values for $\eta$, the solution $\psi^{(t+1)}$ emits a closed form 
 \begin{align}\label{eq:closedformpsi}
   \psi^{(t+1)} = 
   \left\{ \frac{\tr \Wtilde^{(t)}}{\tilde\by^\top\tilde\by + \tr(\bH_\eta^2\Wtilde^{(t)}) - 2\tilde\by^\top\bH_\eta\wtilde^{(t)}} \right\}^{1/2}.
 \end{align}
-The solution to \eqref{eq:emtheta} can also be found in closed-form, but only in cases where the full-data likelihood in $\eta$ emits itself as belonging to an exponential family likelihood.
+We use this fact to form a sequential updating scheme $\eta^{(t)} \to \psi^{(t+1)} \to \eta^{(t+1)} \to \cdots$, and this form of the EM algorithm is known as the \emph{expectation conditional maximisation} algorithm \citep{meng1993maximum}.
+The solution to \cref{eq:emtheta} can also be found in closed-form given values $\psi$, for many models, but in general, this is not the case. 
 In cases where closed-form solutions do exist for $\eta$, then it is just a matter of iterating the update equations until a suitable convergence criterion is met (e.g. no more sizeable increase in successive log-likelihood values).
 In cases where closed-form solutions do not exist for $\eta$, the $Q$ function is again optimised with respect to $\eta$ using the L-BFGS algorithm.
 
@@ -242,9 +243,9 @@ On the software side, all of these MCMC packages require the user to code the mo
 This makes it inconvenient for GPR and I-prior models, because in addition to the model itself, the kernel functions need to be coded as well and ensuring computational efficiency would be a difficult task.
 %Note that this full Bayesian method is not implemented in \pkg{iprior}, but described here for completeness.
 
-Speaking of efficiency, it is more advantageous to marginalise the I-prior and work with the marginal model \eqref{eq:marglogliky}, rather than the hierarchical specification \eqref{eq:model2}.
+Speaking of efficiency, it is more advantageous to marginalise the I-prior and work with the marginal model \cref{eq:marglogliky}, rather than the hierarchical specification \cref{eq:model2}.
 The reason for this is that the latter model has a parameter space whose dimension is $O(n)$, while the former only samples the hyperparameters.
-The posterior sampling for the $w_i$'s in (equivalently, the posterior Gaussian process $f(x) = \sum_{i=1}^n h_\lambda(x,x_i)w_i$) is performed using the normal posterior distribution in \eqref{eq:posteriorw}.
+The posterior sampling for the $w_i$'s in (equivalently, the posterior Gaussian process $f(x) = \sum_{i=1}^n h_\lambda(x,x_i)w_i$) is performed using the normal posterior distribution in \cref{eq:posteriorw}.
 
 \subsection{Comparison of estimation methods}
 \label{sec:compareestimation}
@@ -267,7 +268,7 @@ The predictors $x_1,\dots,x_n$ have been sampled roughly from the interval $(-1,
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.8\textwidth]{figure/04-example_data}
-  \caption{A plot of the sampled data points according to equation \eqref{eq:examplesmoothingdata}, with the true regression function superimposed.}
+  \caption{A plot of the sampled data points according to equation \cref{eq:examplesmoothingdata}, with the true regression function superimposed.}
   \label{fig:examplesmoothingdata}
 \end{figure}
 
