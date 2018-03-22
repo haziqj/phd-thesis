@@ -107,6 +107,82 @@ and
   &= n\psi\lambda_1\lambda_2^2  \left(  2\bar \bx -  \bar\bx^{(j)}  -  \bar \bx^{(j')}  \right).
 \end{align*}
 
+\subsection{A recap on the exponential family EM algorithm}
+\label{apx:expem}
+
+Consider the density function $p(\cdot|\btheta)$ of the complete data $\bz = \{\by,\bw\}$, which depends on parameters $\btheta = (\theta_1,\dots,\theta_s)^\top \in\Theta\subseteq\bbR^s$, belonging to an exponential family of distributions.
+This density takes the form $p(\bz|\btheta) = B(\bz) \exp \big( \ip{\bfeta(\btheta), \bT(\bz)} -  A(\btheta) \big)$, where $\bfeta:\bbR^s \mapsto \bbR$ is a link function,  $\bT(\bz) = \big(T_1(\bz),\dots,T_s(\bz)\big)^\top \in \bbR^s$ are the sufficient statistics of the distribution, and $\ip{\cdot,\cdot}$ is the usual Euclidean dot product.
+It is often easier to work in the \emph{natural parameterisation} of the exponential family distribution
+\begin{align}\label{eq:pdfexpfamnat}
+  p(\bz|\bfeta) = B(\bz) \exp \big( \ip{\bfeta, \bT(\bz)} -  A^*(\bfeta) \big)
+\end{align}
+by defining $\bfeta := \big(\eta_1(\btheta),\dots,\eta_r(\btheta)\big) \in \cE$, and $\exp A^*(\bfeta) = \int B(\bz) \, \exp \, \ip{\bfeta, \bT(\bz)}  \dint \bz$ to ensure the density function normalises to one.
+As an aside, the set $\cE := \big\{ \bfeta = (\eta_1,\dots,\eta_s) \,|\, \int  \exp A^*(\bfeta) < \infty \big\}$ is called the \emph{natural parameter space}.
+If $\dim \cE = r < s = \dim \Theta$, then the the pdf belongs to the \emph{curved exponential family} of distributions.
+If $\dim \cE = r = s = \dim \Theta$, then the family is a \emph{full exponential family}.
+
+Assuming the latent $\bw$ variables are observed and working with the natural parameterisation, then the complete maximum likelihood (ML) estimate for $\bfeta$ is obtained by solving 
+\begin{align}\label{eq:expEM1}
+  \frac{\partial}{\partial\bfeta}\log p(\bz|\bfeta)
+  &= \bT(\bz) - \frac{\partial}{\partial\bfeta} A^*(\bfeta) = 0.
+\end{align}
+Of course, the variable $\bw$ are never observed, so the ML estimate for $\bfeta$ can only be informed from what is observed.
+Let $p(\by|\bfeta) = \int p(\by,\bw|\bfeta) \dint \bw$ represent the marginal density of the observations $\by$.
+Now, the ML estimate for $\bfeta$  is obtained by solving
+\begin{align}
+  \frac{\partial}{\partial\bfeta}\log p(\by|\bfeta)
+  &= \frac{1}{p(\by|\bfeta)} \cdot \frac{\partial}{\partial\bfeta}  p(\by|\bfeta) \nonumber \\
+  &= \frac{1}{p(\by|\bfeta)} \cdot \frac{\partial}{\partial\bfeta} \left( \int p(\by,\bw|\bfeta) \dint \bw \right) \nonumber \\
+  &= \frac{1}{p(\by|\bfeta)} \cdot \int \left( \frac{\partial}{\partial\bfeta} p(\by,\bw|\bfeta) \right) \dint \bw \nonumber \\
+  &= \frac{1}{p(\by|\bfeta)} \cdot \int \left( p(\by,\bw|\bfeta) \frac{\partial}{\partial\bfeta} \log p(\by,\bw|\bfeta) \right) \dint \bw \nonumber \\
+  &= \int \left( \bT(\by,\bw) - \frac{\partial}{\partial\bfeta} A^*(\bfeta) \right) p(\bw|\by,\bfeta) \dint \bw \nonumber \\
+  &= \E_\bw \big[ \bT(\by,\bw) | \by \big] - \frac{\partial}{\partial\bfeta} A^*(\bfeta) \label{eq:expEM2}
+\end{align}
+equated to zero.
+Note that we are allowed to change the order of integration and differentation provided the integrand is continuously differentiable.
+So the only difference between the first order condition of \cref{eq:expEM1} and that of \cref{eq:expEM2} is that the sufficient statistics involving the unknown $\bw$ are replaced by their conditional or posterior expectations.
+%but this is not an issue: by the law of total expectations, $\E\bT(\bz) = \E \bT(\by,\bw) = \E \big[ \E_\bw[\bT(\by,\bw)|\by] \big]$
+%so solving $\bT(\bz) = \E \bT(\bz)$ for $\btheta$ is not possible without some manipulation.
+
+A useful identity to know is that $\frac{\partial}{\partial\bfeta} A^*(\bfeta) = \E_\bz \bT(\bz)$ \citep[Theorem 3.4.2 \& Exercise 3.32(a)]{casella2002statistical}, which can be expressed in terms of the original parameters $\btheta$.
+As a consequence, solving for the ML estimate for $\btheta$ from the FOC equations \cref{eq:expEM2} is possible without having to deal with the derivative of $A^*$ with respect to the natural parameters.
+Having said this, an analytical solution in $\btheta$ may not exist, because the relationship of $\btheta$ could be implicit in the set of equations $\E_\bw \big[ \bT(\bw,\by) | \by, \btheta \big] = \E_{\by,\bw}\left[ \bT(\by,\bw) | \btheta \right]$.
+One way around this is to employ an iterative procedure, as detailed in \cref{alg:EM3}.
+
+\begin{algorithm}[hbt]
+\caption{Exponential family EM}\label{alg:EM3}
+\begin{algorithmic}[1]
+  \State \textbf{initialise} $\btheta^{(0)}$ and $t\gets 0$
+  \While{not converged}
+    \State E-step: $\tilde\bT^{(t+1)}(\by,\bw) \gets \E_\bw \big[ \bT(\bw,\by) | \by, \btheta^{(t)} \big]$
+    \State M-step: $\btheta^{(t+1)} \gets$ solution to $\tilde\bT^{(t+1)}(\by,\bw) = \E_{\by,\bw}\left[ \bT(\by,\bw) | \btheta \right]$
+    \State $t \gets t + 1$
+  \EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+To see how \cref{alg:EM3} motivates the EM algorithm, consider the following argument.
+Recall that for the EM algorithm, the function $Q_t(\bfeta) = \E_\bw[\log p(\by,\bw|\bfeta) | \by,\bfeta^{(t)}]$ is maximised at each iteration $t$.
+For exponential families of the form \cref{eq:pdfexpfamnat}, the $Q_t$ function turns out to be
+\[
+ Q_t(\bfeta) = \E_\bw \big[ \ip{\bfeta, \bT(\bz)} | \by,\bfeta^{(t)} \big] -  A^*(\bfeta) + \log B(\bz),
+\]
+and this is maximised at the value of $\bfeta$ satisfying
+\begin{align*}
+  \frac{\partial}{\partial\bfeta} Q_t(\bfeta)
+  &= \E_\bw \big[ \bT(\by,\bw) | \by,\bfeta^{(t)} \big] - \frac{\partial}{\partial\bfeta}A^*(\bfeta) = 0,
+\end{align*}
+a similar condition to \cref{eq:expEM2} when obtaining ML estimate of $\bfeta$.
+Thus, $Q_t$ is maximised by the solution to line 4 in Algorithm \cref{alg:EM3}.
+
+
+
+%In other words, the ML estimate for $\btheta$ satisfies $\{ \btheta | \bT(\bz) = \E \bT(\bz) \} $
+%Assume the inverse mapping $\bfeta^{-1}$ exists, then the ML estimates $\hat\btheta$ can be obtained as $\bfeta^{-1}(\hat\btheta)$ due to the invariance property of ML estimates.
+
+
+
+
 \subsection{A brief introduction to Hamiltonian Monte Carlo}
 \label[misc]{misc:hmc}
 

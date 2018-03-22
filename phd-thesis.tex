@@ -1,4 +1,4 @@
-\documentclass[a4paper,11pt,showframe]{report}
+\documentclass[a4paper,showframe,11pt]{report}
 \usepackage{haziq_thesis}
 \usepackage{haziq_maths}
 \usepackage{haziq_glossary}
@@ -11,20 +11,30 @@
 %%% TITLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{Regression modelling using priors with Fisher information covariance kernels (I-priors)}
-\author{	Haziq Jamil\\
-			\normalsize{\it{Department of Statistics}}\\
-			\normalsize{\it{London School of Economics and Political Science}}
+\author{
+  Md. Haziq Md. Jamil\\
+  \normalsize{\it{Department of Statistics}}\\
+  \normalsize{\it{London School of Economics and Political Science}}
 }
 \date{\normalsize\today}
 \maketitle
 %{\let\newpage\relax\maketitle}  % if need some text before the title use this
-\pagenumbering{roman}
+%\pagenumbering{roman}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% FRONT MATTER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage  % dedication
+\setcounter{page}{2}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.35\textwidth]{figure/bismillah}
+\end{figure}
+\begin{center}
+  \textit{To my parents.}
+\end{center}
+
 \chapter*{Abstract} \input{chapters/frontmatter/abstract}
-%\chapter*{Dedication} To Naqiyyah.
 \chapter*{Declaration} \input{chapters/frontmatter/declaration}
 %\chapter*{Acknowledgements} \input{chapters/frontmatter/acknowledgments}
 
@@ -37,23 +47,19 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% BODY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\pagenumbering{arabic}
 
 \chapter{Introduction} 
-\subimport{chapters/01/}{introduction}
+\subimport{chapters/01/}{chapter1}
 
-%\chapter{Reproducing kernel Hilbert and Krein spaces}
-%\subimport{chapters/02/}{rkks}
+\chapter{Vector space of functions}
+\subimport{chapters/02/}{chapter2}
 
-%\chapter{Fisher information and the I-prior}
-%\subimport{chapters/02/}{fisher-iprior}
+\chapter{Fisher information and the I-prior}
+\subimport{chapters/03/}{chapter3}
 
-%\chapter{Estimation and computational methods for I-prior models}
-%\subimport{chapters/03/}{iprior-computation}
-%
-%\chapter{Examples of I-prior models}
-%\subimport{chapters/04/}{iprior-examples}
-%
+\chapter{Modelling with I-priors}
+\subimport{chapters/04/}{chapter4}
+
 %\chapter{I-priors for categorical responses}
 %\subimport{chapters/05/}{iprobit}
 %
@@ -79,9 +85,11 @@
 %%% APPENDIX %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
-
-\chapter{Appendix for I-probit}
-%\subimport{chapters/appendix/}{iprobit-proofs}
+\chapter{Regression modelling using I-priors}
+\subimport{chapters/04/}{04-apx-01-posterior}
+%\subimport{chapters/04/}{04-apx-02-expem}
+\subimport{chapters/04/}{04-apx-03-postestimation}
+\subimport{chapters/04/}{04-apx-04-fishermultinormal}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \printindex
