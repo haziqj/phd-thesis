@@ -1,0 +1,54 @@
+%As with I-prior models, an estimate of the posterior regression function is sought, with the posterior mean typically a reasonable estimate.
+%Define $\bff_j = \big(f_j(x_1),\dots,f_j(x_n) \big) \in \bbR^n$ and $\by = (y_1,\dots,y_n) \in \{1,\dots,m\}^n$.
+%For each of the $m$ regression functions, its posterior distribution is given by
+%\[
+%  p(\bff_j|\by) = \frac{p(\by|\bff_j)p(\bff_j)}{\int p(\by|\bff_j)p(\bff_j) \d \bff_j}.
+%\]
+%This does not present itself in closed-form, due to the intractability of the marginalising integral in the denominator.
+%The challenge of estimation is then to first overcome this intractability by means of a suitable approximation of the integral.
+%Several methods may be employed, namely quadrature methods, Laplace approximation, and Markov chain Monte Carlo (MCMC) methods, but these all fail in the face of high dimensionality when the sample size $n$ is large.
+
+
+The parameters to estimate in the probit I-prior model are $\theta = (\alpha_1, \dots, \alpha_{m-1}, \eta_1, \dots, \eta_{m-1})$, i.e. the $m-1$ sets of intercepts and RKHS parameters after accounting for identifiability.
+The likelihood function $L(\cdot)$ for $\theta$ using all $n$ observations $\{(y_1,x_1),\dots,(y_n,x_n)\}$ is obtained by integrating out the I-prior from the categorical likelihood, as follows:
+\begin{align}
+  L(\theta) 
+  &= \int p(\by | \balpha, \bff, \bSigma) \, p(\bff|\eta, \bSigma) \d \bff \nonumber \\
+  &= \int \prod_{i=1}^n \prod_{j=1}^m \Big( g^{-1}_\bSigma\big(\alpha_j + f_j(x_i)\big)_{j=1}^m \Big)^{[y_i=j]} \cdot \N_{nm}(\bzero, \bG_{\eta} (\bSigma^{-1} \otimes \bI_n) \bG_{\eta}) \d \bff \label{eq:intractablelikelihood}
+\end{align}
+where we have denoted the probit relationship from \eqref{eq:pij} using the function $g_\bSigma^{-1}:\bbR^m \to [0,1]$.
+Unlike in the continuous response models, the I-prior cannot be easily integrated out due to the conditional categorical PMF of the $y_i$'s, which they themselves involve integrals of normal densities. 
+Thus, the intractable integral above presents a practical challenge which makes estimation via direct maximisation of the likelihood difficult to accomplish. 
+Methods of approximating the integral in \eqref{eq:intractablelikelihood} such as quadrature methods, Laplace approximation and MCMC tend to fail or are unsatisfactorily slow to accomplish.
+The main reason for this is the dimension of this integral, which is $nm$, and in particular, for large sample sizes and/or number of classes, is unfeasible for such methods.
+
+\subsection{Laplace approximation}
+
+\subsection{Markov chain Monte Carlo methods}
+
+\subsection{Variational inference}
+
+We turn to variational inference as a method of estimation. Variational methods are widely discussed in the machine learning literature, and there have been efforts to popularise it in statistics \citep{blei2017variational}.
+Suppose that, in a fully Bayesian setting, we append the unknown model parameters to the vector $\bff_j$ to form $\bz_j = (\bff_j, \alpha_j, \eta_j)$.
+The crux of variational inference is this: Find a suitably close distribution function $q(\bz_j)$ that approximates the true posterior $p(\bz_j|\by)$, where closeness here is defined in the Kullback-Leibler divergence sense,
+\[
+  \KL(q||p) = \int q(\bff_j) \log \frac{q(\bz_j)}{p(\bz_j|\by)} \d \bz_j.
+\]
+One may then show that log marginal density (the log of the intractable integral) holds the following bound:
+\[
+  \log p(\by) = \int p(\by|\bz_j)p(\bz_j) \d \bz_j = \cL(q) + \KL(q||p) \geq \cL(q),
+\]
+where $\cL$ is some known functional of $q$. 
+The bound achieves equality if and only if $q \equiv p$, but of course the true form of the posterior is unknown to us.
+Minimising $\KL(q||p)$ with respect to some constraints is a problem of calculus of variations, which incidentally is where variational inference takes its name.
+The constraint considered in this paper is simply that the approximate posterior $q$ factorises into $M$ disjoint factors.
+That is, suppose the elements of $\bz_j$ is partitioned into $M$ disjoint groups $\bz_j = (z_j^{(1)},\dots,z_j^{(M)})$, then the restriction
+\[
+  q(\bz_j) = \prod_{k=1}^m q_k(z_j^{(k)})
+\]
+for $q$ is considered.
+This factorised form of variational inference is known in the statistical physics literature as the \emph{mean-field theory} \citep{itzykson1991statistical}.
+By factorising appropriately, we can obtain approximated posteriors for the regression function and the parameters of the I-prior model.
+The algorithm itself typically condenses to that of a simple, sequential updating scheme, akin to the expectation-maximisation (EM) algorithm for exponential families \citep{mclachlan2007algorithm}, which is very fast to implement compared to the other methods described in the previous paragraph.
+
+\subsection{Comparison of estimation methods}

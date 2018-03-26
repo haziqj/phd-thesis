@@ -1,0 +1,84 @@
+The linear multinomial probit model is well known to be unidentified, and the reason for this is two-fold.
+Firstly, an addition of a constant to the latent variables $y_{ij}^*$'s in \cref{eq:latentmodel} will not change which latent variable is maximal, and therefore leaves the model unchanged.
+Secondly, all latent variables can be scaled by some positive constant without changing which latent variable is largest.
+Therefore, a \emph{linear parameterisation} for the multinomial probit model is not identified as there can be more than one set of parameters for which the class probabilities are the same.
+To fix this issue, constraints are imposed on location and scale of the latent variables.
+
+However, for the I-probit model, this is not the case, because the model is not related to the parameters $\theta$ linearly.
+One cannot simply add to or multiply $\theta$ by a constant and expect the model to be left unchanged.
+Thus, the I-probit model is identified in the parameter set $\theta$ without having to impose any restrictions, particularly on the precision matrix $\bPsi$.
+
+To see how the I-probit model is location identified, suppose a constant $a$ is added to the latent variables.
+This would then imply the relationship
+\[
+  a + y_{ij}^* = 
+  \greyoverbrace{a + \alpha_j}{\alpha_j^*}  + f_j(x_i) + \epsilon_{ij},
+\]
+which is similar to adding the constant $a$ to all of the intercept parameters $\alpha_j$---denote these new intercepts by $\alpha_j^*$.
+As a requirement of the functional ANOVA decomposition, the $\alpha_j^*$'s need to sum to zero, but we already have that $\sum_{j=1}^m \alpha_j=0$, so it must be that $a =0$.
+This also highlights the reason why the grand intercept $\alpha$ is not included in the model.
+
+As for identification in scale, consider multiplying the latent variables by $c>0$.
+The argument usually goes like this: the scaled latent variables $cy^*_{ij}$ must have been generated from the model $c\theta$.
+However, we have that 
+\begin{align*}
+  c\bV_y^*(\theta)
+  &= c (\bPsi \otimes \bH_\eta^2) + c (\bPsi^{-1} \otimes \bI_n) \\
+  &= (c \bPsi \otimes \bH_\eta^2) + (c \bPsi^{-1} \otimes \bI_n) \\
+  &\neq \bV_y^*(c\theta).
+\end{align*}
+
+
+
+
+
+\newpage
+%\hltodo{Here also describe the three models: full, independent, normalised}
+%\hltodo[On identifiability]{On identifiability. Is it a problem? It depends. But more importantly, do we care about it? If we don't do anything about it, and the model is not identified, what's the worst that could happen? For one thing, many sets of theta give the same likelihood, so inference about these parameters cannot be done (although we show that this is not true actually! for I-priors at least.) Any problems with estimation? Nope. At least not in the variational bayesian method. This issue manifests itself in multiple local optima, but given some starting values there shouldn't be any label switching issue. But do we care about inference about the parameters in the first place? Most likely no. We care about probabilities, log odds, LRT, Bayes factors... but the question is, is the model identified? That kind of depends on what it meant by identifiability in a Bayesian context. If, treating the parameters as parameters instead of random values, depending on how you parameterise the model it is identified in those parameters or not. The I-prior model is identified in its parameters, but not in, say the latent variables themselves. so, given a fixed value for theta, you get the ystars. a unique value of theta will give you that ystar. but you can change ystar but shifting and scaling it to give you the same probabilities.}
+
+
+%The above two reasons are apparent from \eqref{eq:latentmodel}, but can be argued formally as follows.
+%Let $\Upsilon:\bbR^m \to \{1,\dots,m\}$ be a function which maps $\by_i^* \mapsto y_i$ defined by
+%\[
+%  \Upsilon(y^*_{i1},\dots,y^*_{im}) = \sum_{k=1}^m k \cdot [y_{ik}^* = \max_{k'} y_{ik'}^* ].
+%\]
+%Clearly, $\Upsilon(y^*_{i1},\dots,y^*_{im}) = \Upsilon(a + cy^*_{i1},\dots,a + cy^*_{im})$, for any real value of $a$ and $c > 0$.
+%From equation \eqref{eq:multinomial-latent}, we see that $a + cy_{ij}^* = a + c\alpha_j + cf_j(x_i) + c\epsilon_{ij}$, and so $(a + cy^*_{i1},\dots,a + cy^*_{im})^\top$ follows an $m$-variate normal distribution with mean $(a + c\alpha_j)\bone_m + c\bff(x_i)$ and covariance matrix $c^2\bSigma$.
+%It follows, due to \eqref{eq:pij}, that the categorical distribution for $y_i$ using the latent normal distribution $\N_m(\alpha_j\bone_m + \bff(x_i), \bSigma)$ is the same as the one using the latent normal distribution $\N_m((a + c\alpha_j)\bone_m + c\bff(x_i), c^2\bSigma)$.
+%Therefore, the likelihood given an observation $(y_i, x_i)$ for the set of parameters $(\alpha_j\bone_m + \bff(x_i), \bSigma)$ and $((a + c\alpha_j)\bone_m + c\bff(x_i), c^2\bSigma)$ would be equivalent, and thus the model is not fully identified\footnotemark.
+%\footnotetext{If we only require probabilities (as a function of the parameters) to be estimated, then identifiability is not a concern. This is the approach taken by \cite{girolami2006variational}.}
+
+\subsubsection{Full I-probit model}
+
+To solve the\hltodo[Is this correct terminology?]{location identification\!\!}, we must anchor on one of the latent variables.
+%, since only differences are identified.
+In our case, set the last latent variable $y_{im}^* = 0, \forall i = 1,\dots,n$. 
+This means that we only have $m-1$ sets of intercepts and RKHS parameters to estimate.
+\hltodo[Is it?]{Although it is sufficient to just fix one of the intercepts to for location identification}, setting the last latent variable to zero also implies some restrictions on the covariance matrix $\bSigma$, which also fixes scale identification as we will see.
+
+%Let $\epsilon_i = (\epsilon_{i1},\dots,\epsilon_{im})^\top \iid \N_m(\bzero, \bSigma)$.
+%\[
+%  \bSigma =
+%  \begin{pmatrix}
+%    \sigma_{1}^2 &\sigma_{12}  &\cdots &\sigma_{1m} \\
+%    \cdot        &\sigma_{2}^2 &\cdots &\sigma_{2m} \\
+%    \vdots       &\vdots       &\ddots &\vdots \\
+%    \cdot        &\cdot        &\cdots &\sigma_m^2 \\
+%  \end{pmatrix}
+%\]
+
+To solve scale identification, some restrictions on the covariance matrix $\bSigma$ needs to be made.
+In the unrestricted case, there are $m(m+1)/2$ covariance parameters to estimate (upper triangular covariances and diagonal variances) in total. 
+However, only $m(m-1)/2 - 1$ are identified, therefore requiring $m + 1$ restrictions \citep{Keane1992,train2009discrete}. 
+Getting rid of one latent variable to fix the location identification shrinks $\bSigma$ to $(m-1) \times (m-1)$ in size, and now only $m(m-1)/2$ parameters need to be estimated. 
+Therefore, one more restriction needs to be made, and the convention is for the first element in $\bSigma$---the variance of $\epsilon_{i1}$---to be set to one. 
+
+
+
+
+
+%most economics articles prefer to estimate scaled probit models. in fact, it is an advantage of it! but do we care about the scale? maybe care more about IIA, which can't do without scales i suppose.
+%We can see that if $\bPsi = \bI_m$, $\bV_f = \diag(\bH_{\eta_1},\dots,\bH_{\eta_m})$ as is the case in the normalised I-probit model. While this previously allowed for calculation of the inverse $\bV_f^{-1}$ in $O(mn^3)$ time, unfortunately the fully scaled I-probit model takes $O(m^3n^3)$ time as $\bV_f$ is dense.
+%Dive in with the restriction that scales are set to 1, for no other reason than to make life simpler... cite previous work in machine learning where this is done. 
+%In the name of simplicity, we restrict all of the error variances $\sigma_j=1$, and independence of errors within each class, i.e. $\Cov[\epsilon_{ij},\epsilon_{ik}] = 0$ for each $j,k \in \{1,\dots,m\}$ and $j\neq k$.
+%The main reason for doing this is to obtain a more tractable result with the normal distribution, i.e., the probablity distribution function (PDF) of the joint distribution of $\epsilon_i = (\epsilon_{i1},\dots,\epsilon_{im})^\top$ is now a product of $m$ univariate standard normal PDFs.

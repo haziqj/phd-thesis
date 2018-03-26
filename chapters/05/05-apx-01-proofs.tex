@@ -1,0 +1,112 @@
+Fact: $X \sim \N(a,A)$ and $Y \sim \N(b,B)$, then 
+\[
+  p(x)p(y) \propto \N(c,C)
+\]
+where $C = (A^{-1} + B^{-1})^{-1}$ and $c = C(A^{-1}a + B^{-1}b)$.
+
+\subsection{Proof of Lemma}
+
+\begin{proof}
+\begin{enumerate}[label=(\roman*)]
+  \item Due to the independence structure in the pdf of $\bX$, it is easy to consider the expectations of each of the components separately and marginalising out the rest of the components. For $i \neq j$, we have
+  \begin{align*}
+    \E[x_i] 
+    &= C^{-1} \idotsint \ind[x_k < x_j, \forall k \neq j] \cdot x_i  \prod_{k=1}^d \frac{1}{\sigma_k}\phi \left( \frac{x_k - \mu_k}{\sigma_k} \right) \d x_1 \cdots \d x_d \\
+    &= C^{-1} \iint \ind[x_i < x_j] \frac{x_i}{\sigma_i} \, \phi \left( \frac{x_i - \mu_i}{\sigma_i} \right)  \prod_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right) \frac{1}{\sigma_j}\phi \left( \frac{x_j - \mu_j}{\sigma_j} \right) \d x_i \d x_j \\
+    &= C^{-1} \iint \ind[\sigma_i z_i + \mu_i < \sigma_j z_j + \mu_j] (\sigma_i z_i + \mu_i) \phi (z_i)  \prod_{k \neq i,j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \phi (z_j) \d z_i \d z_j \\
+    &= \mu_i C^{-1} \iint \ind[ z_i < (\sigma_j z_j + \mu_j - \mu_i) / \sigma_i] \phi (z_i)  \prod_{k \neq i,j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \phi (z_j) \d z_i \d z_j \\*    
+    &\phantom{==} + \sigma_i C^{-1} \iint \ind[z_i < (\sigma_j z_j + \mu_j - \mu_i) / \sigma_i] z_i \phi (z_i)  \prod_{k \neq i,j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \phi (z_j) \d z_i \d z_j \\
+    &= \mu_i C^{-1} 
+    \overbrace{
+    \int  \prod_{k \neq j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \phi (z_j) \d z_j
+    }^{C} \\  
+    &\phantom{==} + \sigma_i C^{-1} \int \ind[ z_i < (\sigma_j z_j + \mu_j - \mu_i) / \sigma_i] z_i \phi (z_i) \prod_{k \neq i,j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \phi (z_j) \d z_i \d z_j \\
+  \end{align*}
+  The integral involving $z_i$ in the second part of the sum is recognised as the (unnormalised) expectation of the lower-tail of a univariate standard normal distribution truncated at $\tau_{ij} = (\sigma_j z_j + \mu_j - \mu_i) / \sigma_i$. That is,
+  \[
+    \E[Z_i | Z_i < \tau_{ij}] 
+    = \big[\Phi(\tau_{ij})\big]^{-1} \int \ind [z_i < \tau_{ij}] z_i \phi(z_i) \d z_i 
+    = - \frac{\phi(\tau_{ij})}{\Phi(\tau_{ij})}
+  \] Plugging this expression back into the derivation of this expectation, we get
+  \begin{align*}
+  \E[X_i] 
+  &= \mu_i -  \sigma_i C^{-1} \int 
+  \phi \left( \frac{\sigma_j z_j + \mu_j - \mu_i}{\sigma_i} \right)
+  \prod_{k \neq i,j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \phi (z_j) \d z_j \\
+  &= \mu_i - \sigma_i C^{-1} \E \left[ \phi \left( \frac{\sigma_j Z_j + \mu_j - \mu_i}{\sigma_i} \right)
+  \prod_{k \neq i,j} \Phi \left( \frac{\sigma_j Z_j + \mu_j - \mu_k}{\sigma_k} \right) \right].
+  \end{align*}
+  
+  The expectation for the $j$th component is
+  \begin{align*}
+    \E[X_j] 
+    &= C^{-1} \idotsint \ind[x_k < x_j, \forall k \neq j] \cdot x_j  \prod_{k=1}^d \frac{1}{\sigma_k}\phi \left( \frac{x_k - \mu_k}{\sigma_k} \right) \d x_1 \cdots \d x_d \\
+    &= C^{-1} \int x_j  \prod_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right) 
+    \cdot \frac{1}{\sigma_j} \phi \left( \frac{x_j - \mu_j}{\sigma_j} \right) \d x_j  \\    
+    &= C^{-1} \int (\sigma_j z_j + \mu_j)  \prod_{k \neq j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \cdot \phi (z_j) \d z_j  \\   
+    &= \mu_j C^{-1} 
+    \overbrace{
+    \int  \prod_{k \neq j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \cdot \phi (z_j) \d z_j
+    }^{C}  \\   
+    &\phantom{==} + \sigma_j C^{-1} \int  \prod_{k \neq j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \cdot z_j \phi (z_j) \d z_j \\
+    &= \mu_j + \sigma_j C^{-1} \E \left[ Z_j \prod_{k \neq j} \Phi \left( \frac{\sigma_j Z_j + \mu_j - \mu_k}{\sigma_k} \right) \right] \\
+    &= \mu_j + \sigma_j  \mathop{\sum_{i=1}^d}_{i \neq j} \sigma_i C^{-1} \E \Bigg[ \phi \left( \frac{\sigma_j Z_j + \mu_j - \mu_i}{\sigma_i} \right) \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{\sigma_j Z_j + \mu_j - \mu_k}{\sigma_k} \right) \Bigg] \\
+    &= \mu_j - \sigma_j \sum_{i \neq j} \big(\E[X_i] - \mu_i \big)
+  \end{align*}
+  where we have made use of Lemma \ref{lem:EZgZ} in the second last step of the above.
+
+  \item The differential entropy is given by
+  \begin{align*}
+    \cH(p) &= -\int p(\bx) \log p(\bx) \d \bx = -\E \left[ \log p(\bx) \right] \\
+    &= -\E \left[-\log C - \half[d] \log 2\pi - \half \sum_{i=1}^d \log \sigma_i^2 - \half \sum_{i=1}^d \left( \frac{x_i - \mu_i}{\sigma_i} \right)^2 \right] \\
+    &= \log C + \half[d] \log 2\pi + \half \sum_{i=1}^d \log \sigma_i^2 + \half \sum_{i=1}^d \frac{1}{\sigma_i^2} \E [ x_i - \mu_i ]^2.
+  \end{align*}
+\end{enumerate}  
+\end{proof}
+
+\begin{lemma}\label{lem:EZgZ}
+  Let $Z \sim \N(0,1)$. Then for all $m \in \{\bbN \, | \, m > 1\}$ and $(\mu, \sigma) \in \bbR \times \bbR^+$, 
+  \[
+    \E \Bigg[ Z \mathop{\prod_{k=1}^m}_{k \neq j} \Phi(\sigma_k Z + \mu_k) \Bigg]
+    = \mathop{\sum_{i=1}^m}_{i \neq j} \E \Bigg[ \sigma_i \phi(\sigma_i Z + \mu_i) \mathop{\prod_{k=1}^m}_{k \neq i,j} \Phi (\sigma_k Z + \mu_k) \Bigg]
+  \]
+  for some $j \in \{1, \dots, m\}$.
+\end{lemma}
+
+\begin{proof}
+  Use the fact that for any differentiable function $g$, $\E[Zg(Z)] = \E[g'(Z)]$, and apply the result with the function $g_m:z \mapsto \prod_{k \neq j} \Phi(\sigma_k z + \mu_k)$. All that is left is to derive the derivative of $g$, and we use an inductive proof to do this. 
+  
+  We adopt the following notation for convenience:
+  \begin{align*}
+    \phi_i = \phi(\sigma_i z + \mu_i) \\
+    \Phi_i = \Phi(\sigma_i z + \mu_i) 
+  \end{align*}
+  
+  The simplest case is when $m=2$, which can be trivially shown to be true. Without loss of generality, let $j=1$. Then
+  \begin{align*}
+    g_2(z) &= \Phi_2 \\
+    \Rightarrow g_2'(z) &= \sigma_2 \phi_2 = \mathop{\sum_{i=1}^2}_{i \neq 1} \Bigg[ \sigma_i \phi_i \mathop{\sum_{k=1}^2}_{k \neq 1,2} \Phi_k \Bigg].
+  \end{align*}
+  
+  Now assume that the inductive hypothesis holds for some $m \in \{\bbN \, | \, m > 1\}$. That is, the derivative of
+  \[
+    g_m(z) = \mathop{\prod_{k=1}^m}_{k \neq j} \Phi_k
+  \]
+  which is
+  \[
+    g_m'(z) = \mathop{\sum_{i=1}^m}_{i \neq j} \bigg[  \sigma_i \phi_i \mathop{\prod_{k=1}^m}_{k \neq i,j} \Phi_k \bigg],
+  \]
+  is assumed to be true. Assume that without loss of generality, $j \neq m+1$. Then the derivative of
+  \[
+    g_{m+1}(z) = \mathop{\prod_{k=1}^{m+1}}_{k \neq j} \Phi_k = g_m(z) \Phi_{m+1}
+  \]
+  is found to be
+  \begin{align*}
+    g_{m+1}'(z) &= \sigma_{m+1} \phi_{m+1} g_m(z) + g_m'(z) \Phi_{m+1} \\
+    &= \sigma_{m+1} \phi_{m+1} \mathop{\prod_{k=1}^m}_{k \neq j} \Phi_k + \mathop{\sum_{i=1}^m}_{i \neq j} \bigg[  \sigma_i \phi_i \mathop{\prod_{k=1}^m}_{k \neq i,j} \Phi_k \bigg] \Phi_{m+1} \\
+    &= \sigma_{m+1} \phi_{m+1} \mathop{\prod_{k=1}^{m+1}}_{k \neq j, m+1} \Phi_k + \mathop{\sum_{i=1}^m}_{i \neq j} \bigg[  \sigma_i \phi_i \mathop{\prod_{k=1}^{m+1}}_{k \neq i,j} \Phi_k \bigg] \\
+    &= \mathop{\sum_{i=1}^{m+1}}_{i \neq j} \bigg[  \sigma_i \phi_i \mathop{\prod_{k=1}^{m+1}}_{k \neq i,j} \Phi_k \bigg] \\
+    &= g_{m+1}'(z).
+  \end{align*}
+  Thus, by induction and linearity of expectations, the proof is complete.
+\end{proof}

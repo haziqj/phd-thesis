@@ -1,0 +1,326 @@
+\section{Derivations}
+
+\subsection{The joint likelihood}
+
+\begin{align*}
+  p(\by, \by^*, \bw, \lambda, \alpha)
+  &= p(\by | \by^*, \bw, \alpha, \lambda) p(\by^*, \bff, \bw, \alpha, \lambda) \\
+  &= p(\by|\by^*) p(\by^* | \bff) p(\bw) p(\lambda) p(\alpha)
+\end{align*}
+
+\subsection{Relevant distributions}
+
+\begin{align*}
+  p(\by|\by^*) &= \prod_{i=1}^n \prod_{j=1}^m p_{ij} 
+  = \prod_{i=1}^n \prod_{j=1}^m \ind[y_{ij}^* = \max_k y_{ik}^*]^{\ind[y_i = j]} \\
+  \\
+  p(\by^*|\bff) &= \prod_{i=1}^n \prod_{j=1}^m \N(f_{ij},1) \\
+  &= \exp \left[-\half[nm]\log 2\pi - \half \sum_{i=1}^n \sum_{j=1}^m (y_{ij}^* - f_{ij})^2 \right] \\
+  &= \exp \left[-\half[nm]\log 2\pi - \half \norm{\by^* - \bff}^2 \right] \\
+  \\
+  f_{ij} &= \alpha_j + \sum_{k=1}^n  h_{\lambda_j}(x_i, x_k)w_{kj} \\
+  \\
+  p(\bw) &= \prod_{i=1}^n \prod_{j=1}^m p(w_{ij}) \\
+  &= \prod_{i=1}^n \prod_{j=1}^m \N(0,1) \\
+  &= \exp \left[-\half[nm]\log 2\pi - \half \sum_{i=1}^n \sum_{j=1}^m w_{ij}^2 \right] \\
+  &= \exp \left[-\half[nm]\log 2\pi - \half \bw^\top \bw \right] \\
+  \\
+p(\lambda,\alpha) &\propto \const  
+\end{align*}
+
+\subsection{Mean field approximation}
+
+\begin{align*}
+  p(\by^*, \bw, \alpha, \lambda | \by) 
+  &\equiv q(\by^*)q(\bw)q(\lambda)q(\alpha) \\
+  &\equiv \prod_{i,j} q(y_{ij}^*)q(\bw)q(\lambda)q(\alpha)
+\end{align*}
+
+The first line is by assumption, while the second line follows from an induced factorisation, as we will see later. Denote by $\tilde q$ the distributions which minimise the KL divergence (maximises the lower bound). Then, for each of $\xi \in \{ \by^*, \bw, \alpha, \lambda \}$, $\tilde q$ satisfies
+\[
+  \log \tilde q(\xi) = \E_{-\xi} [\log p(\by, \by^*, \bw, \alpha, \lambda)] + \const
+\]
+
+\subsubsection{$\tilde q(\by^*)$}
+
+In this subsection, we use the notation $y_i^* = (y_{i1}^*, \dots, y_{im}^*)$ to denote the vector of length $m$ containing the latent variables for response $i$. The joint distribution for $\by^* = (y_1^*, \dots, y_n^*)^\top$ is a product of the distribution for each of the components $y_i^*$ - this is a consequence of the independence structure across observations. Therefore, we can consider the variational density for each $y_i^*$ separately.
+
+Consider the case where $y_i$ takes one particular value $j \in \{1,\dots,m\}$. The mean-field density $q(y_{i}^*)$ for each $i=1,\dots,n$ is found to be
+\begin{align*}
+  \log \tilde q(y_{i}^*) 
+  &=  \ind[y_{ij}^* = \max_k y_{ik}^*] \cdot \E_{\bw, \alpha, \lambda} \left[ -\half \sum_{k=1}^m(y_{ik}^* - f_{ik})^2  \right] + \const \\
+  &= \ind[y_{ij}^* = \max_k y_{ik}^*] \cdot \left[ -\half \sum_{k=1}^m(y_{ik}^* - \tilde f_{ik})^2  \right] + \const \\*
+  &\equiv
+  \begin{cases}
+    \prod_{k=1}^m \N(\tilde f_{ik}, 1) & \text{ if } y_{ij}^* > y_{ik}^*, \forall k \neq j \\
+    0 & \text{ otherwise} \\
+  \end{cases}
+\end{align*}
+where $\tilde f_{ik} = \E[\alpha_k] + \sum_{l=1}^m h_{\E[\lambda_k]}(x_i, x_l)\E[w_{il}]$, and expectations are taken under the optimal mean-field distribution $\tilde q$. The distribution for $q(y_i^*)$ is a truncated $m$-variate normal distribution such that the $j$th component is always largest. It is worth investigating the properties of this distribution, and we now present some relevant definitions and results.
+
+\begin{definition}[Conically-truncated multivariate normal distribution]\label{definition:conically-truncated-normal}
+  Let $\bX = (X_1, \dots, X_d)$ be a $d$-dimensional random variable with pdf defined as
+  \[
+    p(\bx) = 
+    \begin{cases}
+      \prod_{i=1}^d \N(\mu_i,\sigma_i) & \text{ if } X_j > X_i, \forall i \neq j \\
+      0 &\text{ otherwise } \\
+    \end{cases}
+  \]
+  for some $j \in \{ 1,\dots,d \}$. We denote the distribution of $\bX$ by $\N^{(j)}(\bmu, \bSigma)$, with $\bmu = (\mu_1, \dots,\mu_d)$ and $\bSigma = \diag(\sigma_1^2, \dots, \sigma_d^2)$. The pdf of $\bX$ has support on the set $\{\bbR^d \, | \, x_j > x_i, \forall i \neq j \}$ and the following functional form:
+  \[
+    p(\bx) = \frac{C^{-1}}{\sigma_1 \cdots \sigma_d (2\pi)^{d/2}}\exp\left[- \half \sum_{i=1}^d \left( \frac{x_i - \mu_i}{\sigma_i} \right)^2 \right]
+  \]
+  where $\phi$ is the pdf of a standard normal distribution and
+  \[
+    C = \E_Z \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j}{\sigma_i}Z + \frac{\mu_j - \mu_i}{\sigma_i} \right) \bigg]
+  \]
+  where $Z \sim \N(0,1)$. In the case where all variances are unity, the pdf of $\bX \sim \N^{(j)}(\bmu, \bI_d)$ is
+  \[
+    p(\bx) = \Bigg\{ (2\pi)^{d/2} 
+    \E_Z \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(Z + \mu_j - \mu_i \right) \bigg] 
+    \Bigg\}^{-1} \exp\left[- \half \sum_{i=1}^d (x_i - \mu_i)^2 \right].
+  \]
+\end{definition}
+
+\begin{proof}
+  A derivation of the functional form for the pdf of $X \sim \N^{(j)}(\bmu, \bSigma)$ is given. Using the fact that $\int p(x) \d x = 1$, and that
+  \begin{align*}
+    \int &\ind[x_i < x_j, \forall i \neq j] \prod_{i=1}^d \N(\mu_i, \sigma_i^2) \d x_1 \cdots \d x_d \\*
+    &=  \int \ind[x_i < x_j, \forall i \neq j] \prod_{i=1}^d \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma} \right) \right] \d x_1 \cdots \d x_d \\
+    &=  \int \ind[x_i < x_j, \forall i \neq j] \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right)\mathop{\prod_{i=1}^d}_{i \neq j} \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma_i} \right) \right] \d x_1 \cdots \d x_d \\    
+    &= \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{x_j - \mu_i}{\sigma_i} \right) \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right) \d x_j \\
+    &= \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j z_j + \mu_j - \mu_i}{\sigma_i} \right) \phi(z_j) \d z_j \\
+    &\phantom{==} {\color{gray} (\text{by using the standardisation } z_j = (x_j - \mu_j) / \sigma_j)} \\    
+    &= \E \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j}{\sigma_i}Z_j + \frac{\mu_j - \mu_i}{\sigma_i} \right) \bigg] \\
+%    &= \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{(\mu_j - \mu_i)/\sigma_i}{\sqrt{1 + \sigma_j^2/\sigma_i^2}} \right), \hspace{1cm} \rlap{\color{gray}\text{by} \hyperref[lem:expectation-of-prod-phi]{Lemma \ref{lem:expectation-of-prod-phi}} }
+  \end{align*}
+  the proof follows directly.
+\end{proof}
+
+\begin{lemma}\label{lem:expectation-entropy-truncated-mvn}
+  Let $X \sim \N^{(j)}(\bmu, \bSigma)$ with pdf $p(\bx)$ as defined in Definition \ref{definition:conically-truncated-normal}. Then
+  \begin{enumerate}[label=(\roman*)]
+    \item The expectation $\E[\bX] = \big(\E[X_1], \dots, \E[X_d] \big)$ is given by
+    \[
+      \E[X_i] =
+      \begin{cases}
+        \mu_i - \sigma_i C^{-1} \E_Z\left[\phi_i \prod_{k \neq i,j} \Phi_k \right] 
+        %\Big/ \E_Z \left[ \Phi_i \prod_{k \neq i,j} \Phi_k \right] 
+        &\text{ if } i \neq j \\
+        \mu_j - \sigma_j \sum_{i \neq j} \big(\E[X_i] - \mu_i \big) &\text{ if } i = j \\
+      \end{cases}
+    \]
+%    \item $\Var[\bX] = ???$
+    \item The differential entropy $\cH(p)$ is given by
+    \[
+    \cH(p) = \log C + \half[d] \log 2\pi + \half \sum_{i=1}^d \log \sigma_i^2 + \half \sum_{i=1}^d \frac{1}{\sigma_i^2} \E [ x_i - \mu_i ]^2
+    \]
+  \end{enumerate} 
+  where $C = \E \left[ \prod_{i \neq j} \Phi_i \right]$, and we had defined
+  \begin{align*}
+    \phi_i = \phi_i(Z) &= \phi \left( \frac{\sigma_j Z + \mu_j - \mu_i}{\sigma_i} \right) \\
+    \Phi_i = \Phi_i(Z) &= \Phi \left( \frac{\sigma_j Z + \mu_j - \mu_i}{\sigma_i} \right) \\    
+  \end{align*}
+  with $Z \sim \N(0,1)$, and $\phi(\cdot)$ and $\Phi(\cdot)$ the pdf and cdf of $Z$ respectively.
+\end{lemma}
+
+As we know, $y_i$ takes on any one value from the set $\{1,\dots,m\}$. Thus, we have that the distribution of $(y^*_{i1}, \dots, y^*_{im})$ is $\N^{(y_i)}(\bmu_i, \bI_m)$, where $\bmu_i = (\tilde f_{i1}, \dots, \tilde f_{im})$. The expectation is given by
+\[
+  \E[y_{ik}^*] = 
+  \begin{cases}
+    \tilde f_{ik} - C_i^{-1}\displaystyle{ \E_Z\bigg[\phi_{ik}(Z) \prod_{l \neq k,y_i} \Phi_{il}(Z) \bigg] }
+    &\text{ if } k \neq y_i \\[1.5em]
+    \tilde f_{iy_i} - \sum_{k \neq y_i} \big(\E[y_{ik}^*] - \tilde f_{ik} \big) &\text{ if } k = y_i \\
+  \end{cases}
+\]
+where
+\begin{align*}
+  \phi_{ik}(Z) &= \phi(Z + \tilde f_{iy_i} - \tilde f_{ik}) \\
+  \Phi_{ik}(Z) &= \Phi(Z + \tilde f_{iy_i} - \tilde f_{ik}) \\
+  C_i &= \E_Z \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(Z + \tilde f_{iy_i} - \tilde f_{ik}) \right) \bigg]  
+\end{align*}
+and $Z \sim \N(0,1)$ with PDF and CDF $\phi(\cdot)$ and $\Phi(\cdot)$ respectively. In order to calculate these expectations, we need to compute the following integrals:
+\begin{align*}
+  \E_Z\left[\phi_{ik}(Z) \prod_{l \neq k,j} \Phi_{il}(Z) \right]
+  &= \int \phi_{ik}(z) \prod_{l \neq k,j} \Phi_{il}(z) \phi(z) \d z, \ \ \ \forall k \neq y_i \\
+  C_i = \E_Z\left[\prod_{l \neq j} \Phi_{il}(Z) \right] 
+  &= \int \prod_{l \neq j} \Phi_{il}(z) \phi(z) \d z 
+\end{align*}
+Since these are functions of a Gaussian pdf, these can be computed rather efficiently using quadrature methods.
+
+\subsubsection{$\tilde q(\bw)$}
+
+For each $j = 1,\dots, m$, denote $\by^*_j = (y_{1j}^*, \dots, y_{nj}^*)^\top$ as the vector of length $n$ containing all latent observations for each class. Then,
+\begin{align*}
+  \log \tilde q(\bw) 
+  &= \E_{\by^*, \alpha, \lambda} \left[ 
+  - \half \sum_{j=1}^m \, \norm{ \by^*_j - \alpha_j\bone_{n} - \bH_{\lambda_j} \bw_j }^2 
+  - \half \sum_{j=1}^m \, \norm{\bw_j}^2 
+  \right] + \const \\
+  &= -\half \sum_{j=1}^m \E_{\by^*, \alpha, \lambda} \left[  
+  \bw_j^\top \mathbf H_{\lambda_j}^2 \bw_j + \bw_j^\top\bw_j 
+  - 2(\by_j^* - \alpha_j\bone_n)^\top\bH_{\lambda_j}\bw_j 
+  \right] + \const \\
+  &= -\half \sum_{j=1}^m \Big(  \bw_j^\top (\E[\mathbf H_{\lambda_j}^2] + \bI_{n}) \bw_j - 2(\E[\by_j^*] - \E[\alpha_j]\bone_{n})^\top\E[\mathbf H_{\lambda_j}]\bw_j \Big) + \const
+\end{align*}
+Let $\bA_j = \E[\mathbf H_{\lambda_j}^2] + \bI_{n}$ and $\ba_j = \E[\mathbf H_{\lambda_j}](\E[\by_j^*] - \E[\alpha_j]\bone_{n})$. Then, using the fact that
+\[
+  \bw_j^\top \bA_j \bw_j - 2 \ba_j^\top\bw_j = (\bw_j - \bA_j^{-1}\ba_j)^\top\bA_j(\bw_j - \bA_j^{-1}\ba_j),
+\]
+we see the $\log \tilde q(\bw)$ is a sum of quadratic terms in $\bw_j$, and we recognise this as the kernel of the product of indepdendent multivariate normal densities. Therefore, for each $j=1,\dots,m$,
+\[
+  \tilde q(\bw_j) \equiv \N(\bA_j^{-1}\ba_j, \bA_j^{-1}),
+\]
+and $\tilde q(\bw) = \prod_{j=1}^m \tilde q(\bw_j)$. Because of this induced factorisation, we can obtain mean-field densities for each $\bw_j$ separately. For convenience later in deriving the lower bound, we note that the second moment of $\tilde q(\bw_j)$ is equal to $\E[\bw_j\bw_j^\top] = \bA_j^{-1}(\bI_{n} + \ba_j\ba_j^\top\bA_j^{-1}) =: \btW_j$.
+
+\subsubsection{$\tilde q(\lambda)$}
+
+For $j = 1,\dots,m$,
+\begin{align*}
+  \log \tilde q(\lambda_j) 
+  &= \E_{\by^*, \bw, \alpha} \left[ 
+  - \half \sum_{j=1}^m \, \norm{\by_j^* - \alpha_j\bone_{n} - \lambda_j\bH\bw_j}^2  
+  \right] + \const \\
+  &= - \half \sum_{j=1}^m \E_{\by^*, \bw, \alpha} \left[ 
+  \lambda_j^2 \, \bw_j^\top \bH^2 \bw_j 
+  - 2\lambda_j (\by_j^* - \alpha_j\bone_{n})^\top \bH \bw_j \right] 
+  + \const \\  
+  &= - \half \sum_{j=1}^m \Big( \lambda_j^2 \tr \left(  \bH^2 \E[\bw_j \bw_j^\top] \right) - 2 \lambda_j (\E[\by_j^*] - \E[\alpha_j]\bone_{n})^\top \bH \E[\bw_j] \Big) + \const
+\end{align*}
+By completing the squares, we recognise this is as the kernel of the product of independent univariate normal densities. Thus, each $\lambda_j \sim \N(d_j/c_j, 1/c_j)$, where
+\begin{gather*}
+  c_j = \tr \left(  \bH^2 \E[\bw_j \bw_j^\top] \right) 
+  \ \text{ and } \
+  d_j = (\E[\by_j^*] - \E[\alpha_j]\bone_{n})^\top \bH \E[\bw_j].
+\end{gather*}
+
+Supposing we use the same covariance kernel (and therefore scale parameter) for each regression class, the distribution for $\lambda$ is easily seen as
+\[
+  \lambda \sim \N \left( \frac{\sum_{j=1}^m d_j}{\sum_{j=1}^m c_j}, \frac{1}{\sum_{j=1}^m c_j} \right).
+\]
+
+\subsubsection{$\tilde q(\alpha)$}
+
+For $j = 1,\dots,m$, denote $\bH_i$ as the row vector of the kernel matrix $\bH$. Then,
+\begin{align*}
+  \log \tilde q(\alpha) 
+  &= \E_{\by^*, \bw, \lambda} \left[ 
+  - \half \sum_{j=1}^m \sum_{i=1}^n \left( y_{ij}^* - \alpha_j 
+  - \lambda_j \textstyle\sum_{k=1}^n h(x_i, x_k)w_{kj} \right)^2  
+  \right] + \const \\  
+  &= - \half \sum_{j=1}^m \E_{\by^*, \bw, \lambda} \left[ 
+  n \alpha_j^2 - 2\alpha_j \sum_{i=1}^n(y_{ij}^* - \lambda_j \bH_i \bw_j) 
+  \right] + \const \\  
+  &= - \half[n] \sum_{j=1}^m \left[ \left( \alpha_j - \frac{1}{n} \sum_{i=1}^n(\E[y_{ij}^*] - \E[\lambda_j] \bH_i \bw_j) \right)^2 \right] + \const \\  
+\end{align*}
+which is of course the kernel of the product of $m$ univariate normal densities, each with mean and variance 
+\[
+   \tilde \alpha_j = \frac{1}{n} \sum_{i=1}^n \big(\E [y_{ij}^*] - \E[\lambda_j]\bH_i \E[\bw_j]  \big)
+   \ \text{ and } \ 
+   v_{\alpha_j} = \frac{1}{n}.
+\]
+
+Suppose that we use a single intercept parameter $\alpha$. In this case, $\alpha$ is is also normally distributed with mean and variance
+\[
+   \tilde \alpha = \frac{1}{nm} \sum_{j=1}^m \sum_{i=1}^n \big(\E [y_{ij}^*] - \E[\lambda_j]\bH_i \E[\bw_j]  \big)
+   \ \text{ and } \ 
+   v_{\alpha} = \frac{1}{nm}.
+\]
+
+\subsection{Monitoring the lower bound}
+
+A convergence criterion would be when there is no more significant increase in the lower bound $\cL$, as defined by
+\begin{align*}
+  \cL &= \int q(\by^*,\bw,\lambda,\alpha) \log \left[ \frac{p(\by,\by^*,\bw,\lambda,\alpha)}{q(\by^*,\bw,\lambda,\alpha)} \right] \d\by^* \d\bw \d\lambda \d\alpha \\
+  &= \E[\log p(\by,\by^*,\bw,\lambda,\alpha)] - \E[\log q(\by^*,\bw,\lambda,\alpha)] \\[8pt]
+  &= \cancel{\E\left[\log \prod_{i=1}^n \prod_{j=1}^m p(y_{i}|y_{ij}^*)\right]}
+  + \E\left[ \log p(\by^* | \bff) \right]
+  + \E\left[ \log p(\bw) \right] 
+  + \cancel{\E\left[ \log p(\lambda) \right]}
+  + \cancel{\E\left[ \log p(\alpha) \right]}  \\
+  &\phantom{==} - \E\left[ \log q(\by^*) \right]
+  - \E\left[ \log q(\bw) \right]
+  - \E\left[ \log q(\lambda) \right]
+  - \E\left[ \log q(\alpha) \right]
+\end{align*}
+
+Note that the categorical pmf $p(y_i|y_{ij}^*)$ becomes degenerate once the latent variables are known, so this term is cancelled out. With the exception of $q(\by^*)$, all of the distributions are Gaussian. The following results will be helpful. 
+
+\begin{definition}[Differential entropy]
+  The differential entropy $\cH$ of a pdf $p(x)$ is given by
+  \[
+    \cH(p) = -\int p(x) \log p(x) \d x = -\E_p[\log p(x)].
+  \]
+\end{definition}
+
+\begin{lemma}\label{thm:normentropy}
+  Let $p(x)$ be the pdf of a random variable $x$. Then if
+  \begin{enumerate}[label=(\roman*)]
+    \item $p$ is a univariate normal distribution with mean $\mu$ and variance $\sigma^2$,
+    \[
+      \cH(p) = \half (1 + \log 2\pi) + \half \log \sigma^2
+    \]
+    \item $p$ is a $d$-dimensional normal distribution with mean $\mu$ and variance $\Sigma$,
+    \[
+      \cH(p) = \half[d] (1 + \log 2\pi) + \half \log \vert \Sigma \vert 
+    \]
+  \end{enumerate}
+\end{lemma}
+
+\subsubsection{Terms involving distributions of $\by^*$}
+
+\begin{align*}
+  \E\left[ \log p(\by^* | \bff) \right] - \E\left[ \log q(\by^*) \right]
+  &= \sum_{i=1}^n \sum_{j=1}^m \E \left[ \log p(y_{ij}^* | f_{ij}) \right] + \sum_{i=1}^n \cH\big(q(y_i^*)\big) \\
+  &= \cancel{\sum_{i=1}^n \sum_{j=1}^m \left( -\half\log 2\pi -\half \E[y_{ij}^* - f_{ij}]^2 \right)} \\
+  &\phantom{==} \cancel{+ \sum_{i=1}^n \sum_{j=1}^m \left( \half\log 2\pi + \half \E[y_{ij}^* - f_{ij}]^2 \right)} + \sum_{i=1}^n \log C_i \\
+\end{align*}
+
+\subsubsection{Terms involving distributions of $\bw$}
+
+\begin{align*}
+  \E\left[ \log p(\bw) \right] - \E\left[ \log q(\bw) \right]
+  &= \sum_{j=1}^m \Big( \E\left[ \log p(\bw_j) \right] - \E\left[ \log q(\bw_j) \right] \Big)  \\
+  &= \sum_{j=1}^m \left( -\half[n] \log 2\pi - \half \E[\bw_j^\top\bw_j] + \cH\big(q(\bw_j)\big) \right) \\
+  &= \sum_{j=1}^m \left( \cancel{-\half[n] \log 2\pi} - \half\tr\left( \E[\bw_j\bw_j^\top]\right) + \half[n] (1 + \cancel{\log 2\pi}) - \half \log \abs{\bA_j} \right) \\
+  &= \half[nm] - \half \sum_{j=1}^m \left( \tr \btW_j + \log \abs{\bA_j} \right)
+\end{align*}
+
+\subsubsection{Terms involving distribution of $q(\lambda)$}
+
+\begin{align*}
+  -\E\left[ \log q(\lambda) \right] 
+  &= \sum_{j=1}^m \cH\big(q(\lambda_j)\big)  \\
+  &= \sum_{j=1}^m \left( \half (1 + \log 2\pi) - \half \log c_j \right) \\
+  &= \half[m](1 + \log 2\pi) - \half \sum_{j=1}^m \log c_j
+\end{align*}
+or if using single $\lambda$
+\begin{align*}
+  -\E\left[ \log q(\lambda) \right] 
+  &= \half(1 + \log 2\pi) - \half  \log  \sum_{j=1}^m c_j .
+\end{align*}
+
+\subsubsection{Terms involving distribution of $q(\alpha)$}
+
+\begin{align*}
+  -\E\left[ \log q(\alpha) \right] 
+  &= \sum_{j=1}^m \cH\big(q(\alpha_j)\big) \\
+  &= \half[m] (1 + \log 2\pi - \log n)
+\end{align*}
+or if using single $\alpha$
+\begin{align*}
+  -\E\left[ \log q(\alpha) \right] 
+  &= \half (1 + \log 2\pi - \log nm).
+\end{align*}
+
+\subsubsection{The lower bound}
+
+\begin{align*}
+  \cL 
+  &= \sum_{i=1}^n \log C_i + \half[nm] - \half \sum_{j=1}^m \left( \tr \btW_j + \log \abs{\bA_j} \right) \\
+  &\phantom{==} + \half[m](1 + \log 2\pi) - \half \sum_{j=1}^m \log c_j + \half[m] (1 + \log 2\pi - \log n) \\
+  &= \half[m]\big(n + 2(1 + \log 2\pi) - \log n \big)
+  - \half \sum_{j=1}^m \left( \tr \btW_j + \log \abs{\bA_j} + \log c_j \right) + \sum_{i=1}^n \log C_i
+\end{align*}
+Of course, if using either single $\alpha$ or single $\lambda$, then the formula needs to be adjusted accordingly.

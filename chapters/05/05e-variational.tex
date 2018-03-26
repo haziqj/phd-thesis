@@ -1,0 +1,282 @@
+We present a variational inference algorithm to estimate the parameters of interest and values for the latent variables.
+Begin by assuming some prior distribution on the parameters $p(\theta) = p(\balpha)p(\eta)p(\bSigma)$. 
+Although one may devote more attention to the prior specification of these parameters, for our purposes it suffices that they are independent component-wise, and the PDFs belong to the exponential family of distributions with known hyperparameters.
+The exponential family requirement greatly eases the complexity of deriving the variational algorithm later on\footnote{
+Of interest, one may even opt to assign improper priors on $\theta$ and the algorithm would still work.
+This is akin to obtaining empirical Bayes estimate of the $\theta$ if seen from an EM algorithm standpoint.
+}.
+
+Recall the fact that $\bff = \bG\bw$ from \eqref{eq:ipriorw}, where $\bw \sim \N_{nm}(\bzero, \bSigma^{-1} \otimes \bI_n)$.
+The required posterior distribution is then $
+  p(\by^*,\bw,\theta|\by) \propto p(\by|\by^*)p(\by^*|\bw,\theta)p(\bw|\theta)p(\theta)
+$.
+This is approximated by a mean-field distribution of the form $q(\by^*,\bw,\theta) \equiv q(\by^*)q(\bw)q(\theta)$, and also $q(\theta) = q(\balpha)q(\eta)q(\bSigma)$.
+Denote by $\tilde q$ the distributions which minimise the Kullbeck-Leibler divergence (maximise the variational lower bound).
+By appealing to \cite[equation 10.9, p.466]{bishop2006pattern}, we find that for each $\xi \in \{ \by^*,\bw,\theta \}$, $\tilde q$ satisfies
+\begin{align}\label{eq:qtilde}
+  \log \tilde q(\xi) = \E_{-\xi} [\log p(\by, \by^*, \bw, \theta)] + \const
+\end{align}
+where expectation of the log joint density of $(\by, \by^*, \bw, \theta)$ is taken with respect to all of the parameters except the one currently in consideration.
+Estimates of the parameters are then obtained by taking the mean of this approximate posterior distribution.
+In practice, rather than an explicit calculation of the normalising constant, one simply needs to inspect the equation \eqref{eq:qtilde} to recognise it as a known log-density function, which is the case when exponential family distributions are considered.
+In other situations, it is possibly to perform some form of sampling method (such as a Metropolis random walk) to obtain quantities of interest, for example $\E[\xi]$.
+
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[scale=1.1, transform shape]
+    \tikzstyle{main}=[circle, minimum size=10mm, thick, draw=black!80, node distance=16mm]
+    \tikzstyle{connect}=[-latex, thick]
+    \tikzstyle{box}=[rectangle, draw=black!100]
+      \node[main, draw=black!0] (blank) [xshift=-0.55cm] {};  % pushes image to right slightly
+      \node[main, fill=black!10] (H) [] {$x_i$};
+      \node[main] (Sigma) [below=of H, yshift=-1.2cm, xshift=0.6cm] {$\bSigma$};
+      \node[main, double, double distance=0.6mm] (f) [right=of H, xshift=0.5cm] {$f_{ij}$};
+      \node[main, double, double distance=0.6mm] (ystar) [right=of f, xshift=0cm] {$y_{ij}^*$};
+      \node[main, double, double distance=0.6mm] (pij) [right=of ystar, xshift=0cm] {$p_{ij}$};
+      \node[main] (lambda) [above=of f, xshift=0cm, yshift=-0.3cm] {$\eta_j$};        
+      \node[main] (alpha) [above=of ystar, xshift=0cm, yshift=-0.3cm] {$\alpha_j$};  
+      \node[main, fill = black!10] (y) [right=of pij, xshift=0.2cm] {$y_{i}$};
+      \node[main] (w) [below=of f, yshift=0.3cm] {$w_{ij}$};  
+      \path (alpha) edge [connect] (ystar)
+            (lambda) edge [connect] (f)
+            (H) edge [connect] node [above] {$h \ \ $} (f)
+    		(f) edge [connect] (ystar)
+    		(ystar) edge [connect] node [above] {$g^{-1}$}  (pij)
+            (pij) edge [connect] (y)
+            (Sigma) edge [connect] (w)
+    		(w) edge [connect] (f);
+      \node[rectangle, draw=black!100, fit={($(H.north west) + (0.2,0cm)$) ($(y.north east) + (-0.2,0.4cm)$) (w)}] {}; 
+      \node[rectangle, fit= (w) (y), label=below right:{$i=1,\dots,n$}, xshift=0.95cm, yshift=0.5cm] {};  % the label
+      \node[rectangle, draw=black!100, fit={(lambda) ($(pij.north east) + (0.5cm,0.7cm)$) ($(w.south west) + (-0.5,-0.7cm)$)}] {}; 
+      \node[rectangle, fit={(f) ($(ystar.north east) + (0.5cm,0.7cm)$) ($(w.south west) + (-0.5,-0.7cm)$)}, label=below right:{$j=1,\dots,m$}, xshift=0.63cm, yshift=0.37cm] {}; 
+    \end{tikzpicture}
+    \caption{A DAG of the probit I-prior  model. Observed nodes are shaded, while double-lined nodes represented known or calculable quantities. There are at most $m-1$ sets of intercept ($\alpha_j$) and RKHS parameters ($\eta_j$)  to estimate due to identifiability. Depending on the specification of $\bSigma$, this may need to be estimated too.}
+\end{figure}
+
+We now present the $\tilde q$ distributions, which we call the posteriors, instead of the mean-field variational densities, when it is unambiguous to do so.
+A note on notation: We will typically refer to posterior means of the parameters $\by^*$, $\bw$, $\theta$ and so on by use of a tilde.
+For instance, we write $\tilde\bw$ to mean $\E_{\tilde q}[\bw]$, the expected value of $\bw$ under the pdf $\tilde q(\bw)$.
+
+Write $\by_i^* = (y_{i1}^*,\dots,y_{im}^*)^\top$.
+Due to the independence of each $\by_{i}^*|\theta,x_i \sim \N_m(\balpha + \bff(x_i),\bSigma)$, we have an induced factorisation of the posterior $q(\by^*) = \prod_{i=1}^n q(\by_i^*)$.
+Each $q(\by_i^*)$ follows a \emph{conically truncated multivariate normal disribution}, i.e., for $i=1,\dots,n$, $\by_i^*$ is distributed according to
+\begin{align}\label{eq:ystardist}
+  \by_i^* \iid
+  \begin{cases}
+    \N_m(\tilde \alpha + \tilde \bff(x_i), \tilde\bSigma) & \text{ if } y_{ij}^* > y_{ik}^*, \forall k \neq j \\
+    0 & \text{ otherwise}. \\
+  \end{cases}
+\end{align}
+The posterior mean for the latent variables, $\tilde\by_i^* = (\tilde y_{i1}^*,\dots,\tilde y_{im}^*)$ depends on the value observed for $y_i \in \{1,\dots,m\}$. 
+The expected value $\tilde\by_i^*$ for this truncated multinormal variable is tricky to compute.
+One strategy might be Monte Carlo integration---using samples from $\N_m(\tilde \alpha + \tilde \bff(x_i), \tilde\bSigma)$, zero out those that do not satisfy the condition $y_{ij}^* > y_{ik}^*, \forall k \neq j$, then take the sample average.
+If the independent I-probit is considered, the expected value can be considered component-wise, where each component of this expectation is given by
+\begin{align}\label{eq:ystarupdate}
+  \tilde y_{ik}^* =
+  \begin{cases}
+    \tilde\alpha_k + \tilde f_{ik} - \sigma_k C_i^{-1} \displaystyle{  \int \phi_{ik}(z) \prod_{l \neq k,j} \Phi_{il}(z) \phi(z) \d z }
+    &\text{ if } k \neq y_i \\[1.5em]
+    \tilde\alpha_{y_i} + \tilde f_{iy_i} - \sigma_{y_i} \sum_{k \neq y_i} \big(\tilde y_{ik}^* - \tilde f_{ik} \big) 
+    &\text{ if } k = y_i \\
+  \end{cases}
+\end{align}
+with 
+\begin{align*}
+  \phi_{ik}(Z) &= \phi \left(\frac{\sigma_{y_i}}{\sigma_k} Z + \frac{\tilde\alpha_{y_i} + \tilde f_{iy_i} - \tilde\alpha_k - \tilde f_{ik}}{\sigma_k} \right) \\
+  \Phi_{ik}(Z) &= \Phi \left(\frac{\sigma_{y_i}}{\sigma_k} Z + \frac{\tilde\alpha_{y_i} + \tilde f_{iy_i} - \tilde\alpha_k - \tilde f_{ik}}{\sigma_k} \right) \\
+  C_i &= \int \prod_{l \neq j} \Phi_{il}(z) \phi(z) \d z
+\end{align*}
+and $Z \sim \N(0,1)$ with PDF and CDF $\phi(\cdot)$ and $\Phi(\cdot)$ respectively. 
+The integrals that appear above are functions of a unidimensional Gaussian pdf, and these can be computed rather efficiently using quadrature methods.
+
+This time, collect all $n$ latent observations for each class and write ${\by_j^*}' = (y_{1j}^*,\dots,y_{nj}^*)^\top$ and $\bw_j = (w_{1j},\dots,w_{nj})$, $j=1,\dots,m$.
+Denote also $\by^*$ and $\bw$ as the vectors concatenating all $j$ vector components which results in a vector of length $nm$ for each.
+By doing so, we have that $\bff = \bG\bw$ from \eqref{eq:ipriorw}, where $\bw \sim \N_{nm}(\bzero, \bSigma^{-1} \otimes \bI_n)$ and thus $\by^* \sim \N_{nm}(\balpha + \bG\bw, \bSigma \otimes \bI_n)$.
+With these two Gaussian densities, we find that the posterior for $\bw$ is also Gaussian with $\tilde q(\bw) \equiv \N_{nm}(\tilde \bw, \tilde\bV_w)$, where
+\[
+  \tilde \bw = \tilde \bV_w\tilde\bG (\tilde\bSigma^{-1} \otimes \bI_n) (\tilde\by^* - \tilde\balpha) \ \text{ and } \ \tilde \bV_w = \big(\tilde\bG(\tilde\bSigma^{-1} \otimes \bI_n)\tilde\bG + (\tilde\bSigma \otimes \bI_n) \big)^{-1}
+\]
+This multivariate normal of dimension $nm$ could present a challenge to work with, in particular the matrix inverse process required in calculating the posterior covariance matrix $\bV_w$.
+Note that $\bG(\bSigma^{-1} \otimes \bI_n)\bG$ is in fact the covariance matrix for the I-prior, and has the structure of $\bV_f$ in equation \eqref{eq:vf}.
+If the independent I-probit model is assumed, then the posterior covariance matrix $\bV_w$ has a simpler structure as the covariance terms disappear, which implies that the components $\bw_j$ would be independently distributed. 
+This results in $m$ of these $n$-variate Gaussian distributions with mean and covariance matrix given by
+\[
+  \tilde \bw_j = \sigma_j^{-2}\tilde \bV_{w_j}\tilde\bH_{\eta_j} (\tilde\by^*_j - \tilde\alpha_j\bone_n) \ \text{ and } \ \tilde \bV_w = \big(\sigma_j^{-2}\tilde\bH_{\eta_j}^2 + \sigma_j^{2}\bI_n \big)^{-1}.
+\]
+Each of these covariance matrices require $O(n^3)$ to compute and there are $m$ of them, so in total $O(mn^3)$ computational time is required.
+This is much less time than the $O(m^3n^3)$ required than the full I-probit model.\hltodo[I think this can be improved by exploiting matrix normal distributions and Kronecker products, but don't know how yet.]{}
+
+%This time, collect all values of $w_{ij}$ into a matrix $\bw$ of dimensions $n \times m$.
+%The posterior for $\bw$ is said to follow a \emph{matrix normal} distribution with mean $\tilde \bw$ and scale matrices $\bS_1$ and $\bS_2$, with dimensions $n \times n$ and $m \times m$ respectively.
+%This is written as $\bw \sim \MN_{n,m}(\tilde \bw, \bS_1, \bS_2)$.
+%The values of this posterior distribution are found to be
+%\begin{align*}
+%  \begin{gathered}
+%    \tilde \bw = \bS_2^{-1} 
+%    \tilde\bSigma^{-1} (\tilde\by^* - \tilde\balpha) \bH_{\eta_j}
+%%    \begin{pmatrix}
+%%      \bH_{\eta_1} \cdots \bH_{\eta_m}
+%%    \end{pmatrix} 
+%     \\
+%    \bS_1 = \bI_n \\
+%    \bS_2 =
+%  \end{gathered}
+%\end{align*}
+%where $\bG = 
+%\begin{pmatrix}
+%  \bH_{\eta_1} \cdots \bH_{\eta_m}
+%\end{pmatrix}_{n \times nm} 
+%\times 
+%\begin{pmatrix}
+%  \bI_n \cdots \bI_n
+%\end{pmatrix}_{nm \times n}^\top = \sum_{k=1}^m \bH_{\eta_k}$ is a $n \times n$ matrix.
+
+The posterior density $\tilde q$ involving the RKHS parameters is of the form
+\[
+  \log\tilde q(\eta) =  -\half\E_{-\eta} \Big[ (\by^* - \balpha - \bG_\eta\bw)^\top (\bSigma^{-1} \otimes \bI_n) (\by^* - \balpha - \bG_\eta\bw) \Big] + \log p(\eta) + \const,
+\]
+where $p(\eta)$ is a prior distribution for $\eta$.
+The RKHS parameters are contained in the kernel matrices within the $\bG_\eta$ matrix, and the subscript $\eta$ emphasises this fact.
+The relevance of exponential family distributions for the priors are seen here---if the prior is normal, for example, then the PDF $\tilde q(\eta)$ is also normal.
+Alternatively, samples $\eta^{(1)},\dots,\eta^{(T)}$ from $\tilde q(\eta)$ may be obtained using a Metropolis algorithm, and quantities such as $\tilde\bH_{\eta_j} = \E_q[\bH_{\eta_j}]$ may be approximated using $\frac{1}{T}\sum_{t=1}^T \tilde\bH_{\eta_j^{(t)}}$.
+We note also that the RKHS parameters may be considered by class if the independent I-probit model is considered.
+
+Moving on to the estimation of the covariance matrix $\bSigma$.
+For this part, we revert back to considering the IID observations $\by_i^* = (y_{i1}^*,\dots,y_{im}^*)^\top \sim \N_m(\balpha - \bff(x_i), \bSigma)$. 
+Create new random variables $\bu_1,\dots,\bu_n$ defined by $\bu_i = \bSigma\bP\bw$, where $\bw^\top = (\bw_1^\top,\dots,\bw_m^\top)$ is as before.
+Since the vector $\bw$ is sorted according to class instead of observations, an appropriate permutation matrix $\bP$ is required to match this with the $\bu_i$'s.
+Specifically, the permutation matrix is such that if $\bu \sim \N_{nm}(\bzero, \bSigma^{-1} \otimes \bI_n)$, then $\bP\bu \sim \N_{nm}(\bzero, \bI_n \otimes\bSigma^{-1})$.
+Therefore, $\bu_i \iid \N_m(\bzero, \bSigma)$, and the posterior mean and variance for $\bu_i$ may be given as $\tilde \bu_i = \tilde\bSigma\bP_i\tilde\bw$ and $\tilde\bV_{u_i} = \tilde\bSigma\bP_i\tilde\bV_w\bP_i^\top\tilde\bSigma \vphantom{\iid}$.
+This step is required so that the resulting posterior for $\bSigma$ is conjugate with an inverse Wishart prior on $\bSigma \sim \invWis(\bA, a)$.
+We obtain an inverse Wishart distribution for $\bSigma$, i.e. $\tilde q(\bSigma) \equiv \invWis(\bA_1 + \bA_2 + \bA, 2nm + a)$, where
+\begin{align*}
+  \begin{gathered}
+  \bA_1 = \E_{\by^*,\bw,\balpha} \left[ \sum_{i=1}^n (\by^*_i - \balpha - \bff(x_i))(\tilde\by^*_i - \balpha - \bff(x_i))^\top \right]   \\
+  \bA_2 = \sum_{i=1}^n \left[\bu_i\bu_i^\top + \tilde\bV_{u_i} \right].
+  \end{gathered}
+\end{align*}
+The challenge here is that it involves the second posterior moment of the conically truncated multivariate normal distribution for $\by^*$, which may be obtained by sampling or numerical integration as described earlier.
+
+As a remark on identifiability, we might require that one of the components of $\bSigma$ be fixed, e.g. $\bSigma_{11} = 1$.
+\cite{mcculloch2000bayesian} gives a Gibbs sampling algorithm which we find useful for our variational algorithm as well.
+Partition $\bSigma$ as follows:
+\[
+  \bSigma = \begin{pmatrix}
+    1       &\bzeta^\top \\
+    \bzeta  &\bZ + \bzeta\bzeta^\top
+  \end{pmatrix}.
+\]
+We can choose the priors $\bzeta \sim \N_{m-1}(\bzero,\bB)$ and $\bZ \sim \invWis(\bA,a)$, independent of each other with appropriately chosen hyperparameters.
+Define $\tilde\bepsilon_i = \by^*_i - \tilde\balpha - \tilde\bff(x_i) = (\tilde\epsilon_{i1},\dots,\tilde\epsilon_{im})^\top$, and let $\upsilon_i = \surd 2 \tilde\epsilon_{i1}$ and $\bnu_i = \surd 2(\tilde\epsilon_{i2},\dots,\tilde\epsilon_{im})^\top$ such that $\surd 2\tilde\epsilon_i^\top = (\upsilon_i, \bnu_i^\top)^\top$.
+The posterior distribution $\tilde q$ for $\bZ$ is inverse Wishart with scale equal to $\bA_3 + \bA$, where\hltodo[These equations can be simplified further.]{}
+\begin{align*}
+  \begin{gathered}
+    \bA_3 = \E_{\bnu,\upsilon_i,\zeta} \left[ \sum_{i=1}^n (\bnu_i - \upsilon_i \bzeta)(\bnu_i - \upsilon_i \bzeta)^\top \right]   \\
+    \end{gathered}
+\end{align*}
+and $2n(m-1)+a$ degrees of freedom.
+The posterior distribution $\tilde q$ for $\bzeta$ is normal with mean and variance $\tilde\bzeta = \frac{1}{n}\sum_{i=1}^n \tilde\upsilon_i \tilde\bV_\zeta \tilde\bZ\tilde\bnu_i$ and $\tilde\bV_\zeta = (\tilde\bupsilon\tilde\bupsilon^\top\tilde\bZ^{-1} +\bB)^{-1}$.
+
+If the independent I-probit model is considered, then $\bSigma = \diag(\sigma_1^2,\dots,\sigma_m^2)$, class independence holds so we can use independent inverse gamma distributions as a prior for $\bSigma$, i.e. $ p(\bSigma) = \prod_{j=1}^m  p(\sigma_j^2)$, where each $p(\sigma_j) \equiv \Gamma^{-1}(r,s)$.
+The posterior for $\bSigma$ will also be of a similar factorised form , namely $\tilde q(\bSigma) = \prod_{j=1}^m \tilde q(\sigma_j^2)$, where $\tilde q(\sigma_j^2)$ is the PDF of an inverse gamma distribution with shape and scale parameters $\tilde r = 2n+r-1$ and $\tilde s = \half\Vert \tilde\by^*_j - \tilde\alpha_j - \tilde\bff_j \Vert^2 + \half \Vert \tilde\bu_j \Vert^2 + s$ respectively.
+
+Finally, the posterior distribution for the intercepts follow a normal distribution should the prior specified on the intercepts also be a normal distribution, e.g. $\balpha \sim \N_m(\bzero,\bA)$.
+The posterior mean and variance for the intercepts are given by
+\[
+  \tilde\balpha = \tilde\bV_\alpha \tilde\bSigma^{-1}\big(\tilde\by_i^* - \tilde\bff(x_i)\big) \ \text{ and } \ \tilde\bV_\alpha = \big(n\tilde\bSigma^{-1} + \bA^{-1}\big)^{-1}.
+\]
+
+Note that the evaluation of each of the component of the posterior depends on some of the components itself, and so this circular dependence is dealt with by using some arbitrary starting values and after which an iterative updating scheme of the components ensues.
+The updating scheme is performed until a maximum number of iterations is reached, or ideally until some of convergence criterion is met.
+In variational inference, the \emph{variational lower bound} is typically used to asses convergence.
+The lower bound is given by
+\begin{align*}
+  \cL 
+  &= \int q(\by^*,\bw,\theta) \log \left[ \frac{p(\by,\by^*,\bw,\theta)}{q(\by^*,\bw,\theta)} \right] \d\by^* \d\bw \d\theta \\
+  &= \E[\log p(\by,\by^*,\bw,\theta)] - \E[\log q(\by^*,\bw,\theta)].
+\end{align*}
+These are calculable once the posterior distributions $\tilde q$ are known---the first term is the expectation of the logarithm of the joint density, whereas the second term factorises into the entropy of its individual components.
+Similar to the EM algorithm, this quantity is\hltodo[Proof?]{expected to increase with every iteration.}
+
+
+The following pseudocode summarises the variational algorithm for I-probit models.
+
+\algrenewcommand{\algorithmiccomment}[1]{{\color{gray}\hskip2em$\triangleright$ #1}}
+\begin{algorithm}[H]
+\caption{VB-EM algorithm for the probit I-prior model}\label{alg:VBEM}
+\begin{algorithmic}[1]
+\Procedure{Initialise}{}
+  \State $\bSigma^{(0)} \gets \bI_m$
+  \For{$j=1,\dots,m$}
+    \State Randomise $\alpha_j^{(0)}$, $\eta_j^{(0)}$, $\bw_j^{(0)}$
+%    \State $\bw_j^{(0)} \gets \bzero_{n}$ %\Comment{or draw $w_i^{(0)} \ \sim \N(0,1)$ for $i=1,\dots,n$.}
+    \State Calculate $\bH_{\eta_j}$ as per kernels chosen
+  \EndFor
+%  \State $\bW^{(t)} \gets \big(\bw_1^{(t+1)} \cdots  \bw_m^{(t+1)} \big)$
+  \State $\bG^{(t)} \gets \diag(\bH_{\eta_1}, \dots, \bH_{\eta_m})$
+\EndProcedure
+\Statex
+%\Procedure{Update for $\bff$ } {time $t$}
+%  \For{$j=1,\dots,m$}
+%    \State $\bff_j^{(t+1)} \gets \alpha_j^{(t)}\bone_{n} + \bH_{\eta_j}\bw_j^{(t)}$
+%  \EndFor
+%  \State $\bF^{(t+1)} \gets \big(\bff_1^{(t+1)} \cdots  \bff_m^{(t+1)} \big)$
+%\EndProcedure
+%\Statex
+\Procedure{Update for $\by^*$ }{time $t$}
+  \For{$i=1,\dots,n$}
+    \State $j \gets y_i$
+    \If{Independent I-probit model}
+      \State $(y_{i1}^{*(t+1)},\dots,y_{im}^{*(t+1)}) \gets \E[\by_i^*]$ as per \eqref{eq:ystarupdate}
+    \Else
+      \State Sample from truncated normal as per \eqref{eq:ystardist}
+      \State $(y_{i1}^{*(t+1)},\dots,y_{im}^{*(t+1)}) \gets$ sample mean
+    \EndIf  
+  \EndFor
+\EndProcedure	
+\Statex
+\Procedure{Update for $\bw$ }{time $t$}
+  \State $\bV_w^{(t+1)} \gets \big(\bG(\bSigma^{-1} \otimes \bI_n)\bG + (\bSigma \otimes \bI_n) \big)^{-1}$ 
+  \Comment{Simpler if independent I-probit}
+  \State $\bw^{(t+1)} \gets \bV_w\bG^{(t+1)} (\bSigma^{-1} \otimes \bI_n) (\by^* - \balpha)$ 
+\EndProcedure	
+\Statex
+\Procedure{Update for $\eta$ }{time $t$}
+  \State Metropolis sampling from density\vspace{-0.5em} \Comment{Simpler calculations if only RKHS scales}
+  \[
+    \tilde q(\eta) \propto \exp\left[ (\by^{*(t)} - \balpha^{(t)} - \bG^{(t)}\bw^{(t)})^\top (\bSigma^{-1} \otimes \bI_n) (\by^{*(t)} - \balpha^{(t)} - \bG^{(t)}\bw^{(t)}) \right] \vspace{-0.7em}
+  \]
+  \State $\eta^{(t+1)} \text{ and } \bG^{(t+1)} \gets$ sample mean
+\EndProcedure	
+\algstore{VBEMbreak1}	
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+\begin{algorithmic}[1]
+\algrestore{VBEMbreak1}
+\Procedure{Update for $\bSigma$ }{time $t$}
+  \State $\bu^{(t)} \gets \bSigma^{(t)}\bP\bw$ and $\bV_u^{(t)} \gets \bSigma^{(t)}\bP\bV_w^{(t)}\bP^\top\bSigma^{(t)}$
+  \State $\bA_1 \gets \sum_{i=1}^n  \E_{\by^*} \left[ (\by^*_i - \balpha^{(t)} - \bff_i^{(t)})(\by^*_i - \balpha^{(t)} - \bff_i^{(t)})^\top \right]$  
+  \State $\bA_2 \gets \sum_{i=1}^n \left(\bu_i\bu_i^\top + \bV_{u_i} \right)$
+  \State $\bSigma^{(t+1)} \gets (\bA_1 + \bA_2)/(2n)$ \Comment{Simpler if independent I-probit}
+\EndProcedure	
+\Statex
+\Procedure{Update for $\balpha$ }{time $t$}
+  \State $\balpha^{(t+1)} \gets \sum_{i=1}^n\big(\by_i^* - \bff^{(t)}(x_i)\big)/n $
+\EndProcedure	
+\Procedure{The VB-EM algorithm}{}
+  \State $t \gets 0$ and initialise $\cL^{(0)}$
+  \While{$\cL^{(t+1)} - \cL^{(t)} > \delta$ \textbf{or} $t < t_{max}$}{}
+    \State \textbf{call} \Call{Update for $\by^*$}{}
+    \State \textbf{call} \Call{Update for $\bw$}{}
+    \State \textbf{call} \Call{Update for $\eta$}{}
+    \State \textbf{call} \Call{Update for $\bSigma$}{}
+    \State \textbf{call} \Call{Update for $\balpha$}{}
+    \State \textbf{call} Calculate variational lower bound $\cL^{(t+1)}$
+    \State $t \gets t + 1$
+  \EndWhile
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}

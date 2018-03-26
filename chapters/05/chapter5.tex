@@ -10,23 +10,118 @@
   \externaldocument{../01/.texpadtmp/chapter1}
   \externaldocument{../02/.texpadtmp/chapter2}
   \externaldocument{../03/.texpadtmp/chapter3}
-  \externaldocument{../03/.texpadtmp/chapter4}
+  \externaldocument{../04/.texpadtmp/chapter4}
 \fi
 
 \begin{document}
-\hChapterStandalone[5]{I-priors for Categorical Responses}
+\hChapterStandalone[5]{I-priors for categorical responses}
 
-\section{Preliminary}
-\input{05star.tex}
+In a regression setting, consider polytomous response variables $y_1,\dots,y_n$, where each $y_i$ takes on exactly one of the values $\{1,\dots,m\}$ from a set of $m$ possible choices.
+Modelling categorical response variables is of profound interest in statistics, econometrics and machine learning, with applications aplenty. 
+In the social sciences, categorical variables often arise from survey responses, and one may be interested in studying correlations between  explanatory variables and the categorical response of interest.
+Economists are often interested in discrete choice models to explain and predict choices between several alternatives, such as consumer choice of goods or modes of transport.
+In this age of big data, machine learning algorithms are used for classification of observations based on what is usually a large set of variables or features.
 
-%\section{Introduction}
-%\input{05a}
-%
-%\section{Estimation}
-%\input{05b}
-%
-%\section{Variational inference}
-%\input{05c}
+As an extension to the I-prior methodology, we propose a flexible modelling framework suitable for regression of categorical response variables.
 
-%\hClosingStuffStandalone
+In the spirit of generalised linear models \citep{mccullagh1989}, we relate the class probabilities of the observations to the I-prior regression model via a link function.
+Perhaps though, it is more intuitive to view it as machine learners do: Since the regression function is ranged on the entire real line, it is necessary to ``squash'' it through some sigmoid function to conform it to the interval $[0,1]$ suitable for probability measures.
+As in GLMs, the $y_i$'s are assumed to follow an\hltodo[Exponential family for $y$ not really necessary, it just follows nicely from the latent variable motivation.]{exponential family distribution}, and in this case, the categorical distribution.
+We denote this by
+\[
+  y_i \sim \Cat(p_{i1},\dots,p_{im}),
+\]
+with the class probabilities satisfying $p_{ij} \geq 0, \forall j=1,\dots,m$ and $\sum_{j=1}^m p_{ij} = 1$. 
+The probability mass function (PMF) of $y_i$ is given by
+\begin{align}\label{eq:catdist}
+  p(y_i) = p_{i1}^{[y_i = 1]} \cdots p_{im}^{[y_i = m]}
+\end{align}
+where the notation $[\cdot]$ refers to the Iverson bracket\footnote{$[A]$ returns 1 if the proposition $A$ is true, and 0 otherwise. The Iverson bracket is a generalisation of the Kronecker delta.}. 
+The dependence of the class probabilities on the covariates is specified through the relationship
+\[
+  g(p_{ij}) = \big(\alpha_j + f_j(x_i)\big)_{j=1}^m
+\]
+where $g:[0,1]\to\bbR^m$ is some specified link function.
+As we will see later, the normality assumption of the errors naturally implies a \emph{probit} link function, i.e., $g$ is the inverse cumulative distribution function (CDF) of a standard normal distribution (or more precisely, a function that \emph{involves} the standard normal CDF).
+Normality is also a required assumption for I-priors to be specified on the regression functions.
+We call this method of probit regression using I-priors the \emph{I-probit} regression model.
+
+Note that the probabilities are modelled per class $j\in\{1,\dots,m\}$ by individual regression curves $f_j$, and in the most general setting, $m$ sets of intercepts $\alpha_j$ and kernel hyperparameters $\eta_j$ must be estimated.
+The dependence of these $m$ curves are specified through covariances $\sigma_{jk} := \Cov[\epsilon_{ij}, \epsilon_{ik}]$, 
+%\[
+%  \Corr(\epsilon_{ij},\epsilon_{ik}) = \frac{\sigma_{jk}}{\sigma_j\sigma_k},
+%\]
+%where $\sigma_{jk} = \Cov[\epsilon_{ij}, \epsilon_{ik}]$, 
+for each $j,k\in\{1,\dots,m\}$ and $j\neq k$.
+While it may be of interest to estimate these covariances, this paper considers cases where the regression functions are class independent, i.e. $\sigma_{jk} = 0,\forall j \neq k$.
+This violates the independence of irrelevant alternatives (IIA) assumption (see Section \ref{sec:iia} for details) crucial in choice models, but not so much necessary for classification when the alternatives are distinctively different.
+
+
+
+The many advantages of the I-prior methodology of \cite{jamil2017} transfer over quite well to the I-probit model for classification and inference.
+In particular, by choosing appropriate RKHSs for the regression functions, we are able to fit a multitude of binary and multinomial models, including multilevel or random-effects models, linear and non-linear classification models, and even spatio-temporal models.
+Examples of these models applied to real-world data is shown in Section \ref{sec:examples}.
+Working in a Bayesian setting together with variational inference allows us to estimate the model much faster than traditional MCMC sampling methods, yet provides us with the conveniences that come with posterior estimates.
+For example, inferences around log-odds is usually cumbersome for probit models, but a credibility interval can easily be obtained by resampling methods from the relevant posteriors, which are normally exponential family distributions in the I-probit model.
+
+
+\newpage
+\section{A naïve model}
+\input{05a-naive}
+
+\section{A latent variable motivation: the I-probit model}
+\input{05b-iprobit}
+
+\section{Identifiability and IIA}\label{sec:iia}
+\input{05c-iia}
+
+\section{Estimation}
+\input{05d-iprobit_est}
+
+\section{A variational algorithm}
+%\input{05e-variational}
+
+\section{Post-estimation}
+%\input{05f-post_est}
+
+\section{Examples}
+
+\section{Discussion}
+
+I-prior extended to non-normal data. 
+Naive works good, but can be better.
+Simply transform the normal model through a squashing function.
+All the nice things about I-prior can be applied here too.
+Probit model variety of binary and multinomial regression models.
+
+Laplace slow, unreliable modes. MCMC also slow. Variational has similarity to EM, but advantageous: easier to calculate posterior s.d., ability to do inference on transformed parameters.
+
+As with the normal model, storage and time requirements slow.
+again, look to machine learning.
+improvements in variational algorithm.
+
+Extend to include class-specific covariates.
+
+improvement in calculating the normal integral?
+Need to see timing where takes longest
+
+In terms of similarity to other works, the generalised additive models (GAMs) of \cite{hastie1986} comes close.
+The setup of GAMs is near identical to the I-probit model, although estimation is done differently. 
+GAMs do not assume smooth functions from any RKHS, but instead estimates the $f$'s using a local scoring method or a local likelihood method.
+Kernel methods for classification are extremely popular in computer science and machine learning; examples include support vector machines \citep{scholkopf2002learning} and Gaussian process classification \citep{rasmussen2006gaussian}, with the latter being more closely related to the I-probit method.
+I-priors differ from Gaussian process priors in the specification of the covariance kernel.
+Gaussian process classification typically uses the logistic link function (or squashing function, to use machine learning nomenclature), and estimation is done most commonly using the Laplace approximation, but other methods such as expectation propagation \citep{minka2001expectation} and MCMC \citep{neal1999} have been explored as well.
+Variational inference for Gaussian process probit models have been studied by \cite{girolami2006variational}, with their work providing a close reference to the variational algorithm employed by us.
+
+
+\section{Miscellanea}
+\input{05-misc}
+
+\ifstandalone
+  \section*{Appendix}
+%  \input{05-apx-01-proofs}
+%  \input{05-apx-02-derivations}
+\fi
+
+\hClosingStuffStandalone
 \end{document}

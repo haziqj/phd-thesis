@@ -1,0 +1,13 @@
+\subsection{A note on computing the multivariate normal integral}
+\label{misc:mnint}
+
+\hltodo{How is this calculated? Simulation usually, but also quadrature methods not too bad if $m$ not too large. Stata sheet useful? Talk about if iid errors.}
+
+Much research has been devoted into developing efficient computational methods for computing these integral, and MCMC methods seem to be the tool of choice in \hltodo[can use Hamiltonian Monte Carlo?]{Bayesian analysis}\citep{mcculloch1994exact,nobile1998hybrid,mcculloch2000bayesian}.
+Things get more tractable if $\bSigma$ is assumed to be diagonal (which corresponds to abandoning the independence of irrelevant alternatives assumption) and much more so if we assume that $\bSigma = \bI_m$.
+The latter yields the \emph{normalised I-probit model}, and a discussion of the merits of this model is given later.
+
+
+
+
+\subsection{Similarity of EM algorithm and variational Bayes}

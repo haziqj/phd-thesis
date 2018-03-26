@@ -1,0 +1,263 @@
+It is convenient, as we did in the previous subsection, to again think of the responses $y_i \in \{1,\dots,m\} = \cM$ as comprising of a binary vector $(y_{i1},\dots,y_{im})$, with a single `1' at the position corresponding to the value that $y_i$ takes. 
+%That is, $y_i = (y_{i1}, \dots, y_{im})$ with
+%\[
+%  y_{ik} =
+%  \begin{cases}
+%    1 &\text{ if } y_i = k \\
+%    0 &\text{ if } y_i \neq k.
+%  \end{cases}
+%\]
+In this formulation, each $y_{ij}$ is distributed as Bernoulli with probability $p_{ij}$. Now, assume that, for each $y_i = (y_{i1}, \dots, y_{im})$, there exists corresponding \emph{continuous, underlying, latent variables} $y_{i1}^*, \dots, y_{im}^*$ such that
+\begin{align}\label{eq:latentmodel}
+  y_i =
+  \begin{cases}
+    1 &\text{ if } y_{i1}^* \geq y_{i2}^*, y_{i3}^*, \dots, y_{im}^* \\
+    2 &\text{ if } y_{i2}^* \geq y_{i1}^*, y_{i3}^*, \dots, y_{im}^* \\
+    \,\vdots \\
+    m &\text{ if } y_{im}^* \geq y_{i2}^*, y_{i3}^*, \dots, y_{i\,m-1}^*. \\
+  \end{cases}  
+\end{align}
+In other words, 
+%$y_{ij} = [y_{ij}^* = \max_k y_{ik}^*]$.
+$y_{ij} = \argmax_{k=1}^m y_{ik}^*$.
+Such a formulation is common in economic choice models, and is rationalised by a utility-maximisation argument: an agent faced with a choice from a set of alternatives will choose the one which benefits them most.
+
+Instead of modelling the observed $y_{ij}$'s directly, we model instead the $n$ latent variables in each class $j=1,\dots,m$ according to the regression problem
+\begin{equation}\label{eq:multinomial-latent}
+  \begin{gathered}
+    y_{ij}^* = \alpha_j + f_j(x_i) + \epsilon_{ij} \\
+    \bepsilon_{i} = (\epsilon_{i1}, \dots, \epsilon_{im})^\top  \iid \N_m(\bzero, \bPsi^{-1}). 
+  \end{gathered}
+\end{equation}
+%with $\alpha_j$ being an intercept, and $f_j:\cX \to \bbR$ a regression function belonging to some RKHS/RKKS of functions $\cF$.
+%having the reproducing kernel $h_{\eta_j}: \cX \times \cX \to \bbR$. 
+We can see some semblance of this model with the one in \cref{eq:naiveclassiprior}, and ultimately the aim is to assign I-priors to the regression function of these latent variables, and we will describe this shortly.
+For now, realise that each $\by_i^* := (y_{i1}^*, \dots, y_{im}^*)^\top$ has the distribution $\N_m(\balpha + \bff(x_i), \bPsi^{-1})$, conditional on the data $x_i$,  the intercepts $\balpha = (\alpha_1,\dots,\alpha_m)^\top$, the evaluations of the functions at $x_i$ for each class $\bff(x_i) = \big(f_1(x_i), \dots, f_m(x_i)\big)^\top$, and the error covariance matrix $\bPsi^{-1}$.
+
+\newcommand{\intset}{\{y_{ij}^* > y_{ik}^* \,|\, \forall k \neq j\}}
+The probability of belonging to class $j$ for observation $i$, i.e. $p_{ij}$, is calculated as
+\begin{align}
+  p_{ij} 
+  &= \Prob(y_i = j) \nonumber \\
+  &= \Prob\big(\intset\big) \nonumber \\
+  &= \int\displaylimits_{\intset} \phi(\by_i^*|\balpha + \bff(x_i), \bPsi^{-1}) \dint\by^* \label{eq:pij},
+  %&=: g_{\bSigma}^{-1} \big( \alpha_j + f_j(x_i) \big)_{j=1}^m \nonumber
+\end{align}
+where $\phi(\cdot|\mu,\Sigma)$ is the density of the multivariate normal with mean $\mu$ and variance $\Sigma$.
+This is the probability that the normal random variable $\by_i^*$ belongs to the set $\intset$, which are cones in $\bbR^m$.
+Since the union of these cones is the entire $m$-dimensional space of reals, the probabilities add up to one and hence they represent a proper probability mass function of the classes.
+%Upon knowing all values for $\alpha_j$, $f_j(x_i)$, and $\bSigma$, one is able to calculate $p_{ij}$ through the relationship \eqref{eq:pij}, which we denote as $g^{-1}$.
+While this does not have a closed-form expression and highlights one of the difficulties of working with probit models, the integral is by no means impossible to compute---see \cref{misc:mnint} for a note regarding this matter.
+
+Note that the dimension of the integral \eqref{eq:pij} is $m-1$, since the $j$'th coordinates is fixed relative to the others.
+Alternatively, we could have specified the model in terms of \emph{relative differences} of the latent variables.
+Choosing the first category as the reference category, define new random variables $z_{ij} = y_{ij}^* - y_{i1}^*$, for $j = 2,\dots,m-1$. 
+The model \cref{eq:latentmodel} is equivalently represented by
+\begin{equation}
+  y_i = 
+  \begin{cases}
+    1 & \text{if } \max (z_{i2},\dots,z_{im}) < 0 \\
+    j & \text{if } \max (z_{i2},\dots,z_{im}) = z_{ij} \geq 0.
+  \end{cases}
+\end{equation} 
+Write $\bz_i = (z_{i2},\dots,z_{im})^\top \in \bbR^{m-1}$.
+Then $\bz_i = \bQ\by^*_i$, where $\bQ \in \bbR^{(m-1)\times m}$  is the $(m-1)$ identity matrix pre-augmented with a column vector of minus ones.
+We have that $\bz_i \iid \N_{m-1}\big(\bQ(\balpha + \bff(x_i)), \bQ\bPsi^{-1}\bQ^\top)\big)$.
+Thus, the class probabilities for $j=2,\dots,m$ are
+\begin{align}
+  p_{ij} = 
+  \int\displaylimits_{\{z_{ik} < 0 \,|\, \forall k \neq j \}} \ind(z_{ij} \geq 0) \,\phi(\bz_i) \dint\bz_i \label{eq:pij2},
+\end{align}
+with $\phi(\bz_i)$ representing the $(m-1)$-variate normal density for $\bz_i$.
+The class probability $p_{i1}$ is simply
+\[
+  p_{i1} = \int\displaylimits_{\{ z_{ik} <0 \}}  \phi(\bz_i) \dint\bz_i = 1 - \sum_{k\neq 1} p_{ik}.
+\]
+From this representation of the model, with $m=2$ (binary outcomes) we see that
+\[
+  p_{i1} = 
+%  \int \ind(z_{i2} < 0) \phi(z_{i2}) \dint z_{i2} = 
+  \Phi \left( \frac{z_{i2} - \mu}{\sigma} \right)
+  \hspace{0.5cm}\text{and}\hspace{0.5cm}
+  p_{i2} = 
+%  \int \ind(z_{i2} \geq 0) \phi(z_{i2}) \dint z_{i2} = 
+  1 - \Phi \left( \frac{z_{i2} - \mu}{\sigma} \right),
+\]
+where $\Phi(\cdot)$ is the CDF of the standard normal univariate distribution, and $\mu$ and $\sigma$ are the mean and standard deviation of the random variable $z_{i2}$.
+
+%\begin{figure}[t]
+%  \centering
+%  \begin{tikzpicture}[scale=1.1, transform shape]
+%    \tikzstyle{main}=[circle, minimum size=10mm, thick, draw=black!80, node distance=16mm]
+%    \tikzstyle{connect}=[-latex, thick]
+%    \tikzstyle{box}=[rectangle, draw=black!100]
+%      \node[main, draw=black!0] (blank) [xshift=-0.55cm] {};  % pushes image to right slightly
+%      \node[main, fill=black!10] (H) [] {$x_i$};
+%      \node[main] (Sigma) [below=of H, yshift=-1.2cm, xshift=0.6cm] {$\bSigma$};
+%      \node[main, double, double distance=0.6mm] (f) [right=of H, xshift=0.5cm] {$f_{ij}$};
+%      \node[main, double, double distance=0.6mm] (ystar) [right=of f, xshift=0cm] {$y_{ij}^*$};
+%      \node[main, double, double distance=0.6mm] (pij) [right=of ystar, xshift=0cm] {$p_{ij}$};
+%      \node[main] (lambda) [above=of f, xshift=0cm, yshift=-0.3cm] {$\eta_j$};        
+%      \node[main] (alpha) [above=of ystar, xshift=0cm, yshift=-0.3cm] {$\alpha_j$};  
+%      \node[main, fill = black!10] (y) [right=of pij, xshift=0.2cm] {$y_{i}$};
+%      \node[main] (w) [below=of f, yshift=0.3cm] {$w_{ij}$};  
+%      \path (alpha) edge [connect] (ystar)
+%            (lambda) edge [connect] (f)
+%            (H) edge [connect] node [above] {$h \ \ $} (f)
+%    		(f) edge [connect] (ystar)
+%    		(ystar) edge [connect] node [above] {$g^{-1}$}  (pij)
+%            (pij) edge [connect] (y)
+%            (Sigma) edge [connect] (w)
+%    		(w) edge [connect] (f);
+%      \node[rectangle, draw=black!100, fit={($(H.north west) + (0.2,0cm)$) ($(y.north east) + (-0.2,0.4cm)$) (w)}] {}; 
+%      \node[rectangle, fit= (w) (y), label=below right:{$i=1,\dots,n$}, xshift=0.95cm, yshift=0.5cm] {};  % the label
+%      \node[rectangle, draw=black!100, fit={(lambda) ($(pij.north east) + (0.5cm,0.7cm)$) ($(w.south west) + (-0.5,-0.7cm)$)}] {}; 
+%      \node[rectangle, fit={(f) ($(ystar.north east) + (0.5cm,0.7cm)$) ($(w.south west) + (-0.5,-0.7cm)$)}, label=below right:{$j=1,\dots,m$}, xshift=0.63cm, yshift=0.37cm] {}; 
+%    \end{tikzpicture}
+%    \caption{A DAG of the probit I-prior  model. Observed nodes are shaded, while double-lined nodes represented known or calculable quantities. There are at most $m-1$ sets of intercept ($\alpha_j$) and RKHS parameters ($\eta_j$)  to estimate due to identifiability. Depending on the specification of $\bSigma$, this may need to be estimated too.}
+%\end{figure}
+
+Now we'll see how to specify an I-prior on the regression problem \cref{eq:multinomial-latent}.
+In the naïve I-prior model, we wrote $f(x_i,j) = \alpha_j + f_j(x_i)$, and specified for $f$ to belong to an ANOVA RKKS with kernel defined in \cref{eq:anovaclass}.
+Instead of doing the same, we take a different approach.
+Treat the $\alpha_j$'s in \cref{eq:multinomial-latent} as intercept parameters to estimate with the additional requirement that $\sum_{j=1}^m \alpha_j = 0$.
+Further, let $\cF$ be a (centred) RKHS/RKKS of functions over $\cX$ with reproducing kernel $h_\eta$.
+Now, consider putting an I-prior on the regression functions $f_j \in \cF$, $j=1\dots,m$, defined by
+\[
+  f_j(x_i) = \sum_{k=1}^n h_\eta(x_i,x_k)w_{ik}
+\]
+with $\bw_i := (w_{i1},\dots,w_{im})^\top \iid \N(0,\bPsi)$.
+This is similar to the naïve I-prior specification \cref{eq:naiveclassiprior}, except that the intercept  have been treated as parameters rather than accounting for them using an RKHS of constant functions.
+In particular, the overall regression relationship still satisfies the ANOVA functional decomposition.
+We find that this method bodes well down the line computationally.
+
+We call the multinomial probit regression model of \cref{eq:latentmodel} subject to \cref{eq:multinomial-latent} and I-priors on $f_j \in \cF$, the \emph{I-probit model}.
+For completeness, this is stated again: for $i=1,\dots,n$, $y_i = \argmax_{k=1}^m y_{ik}^* \in \{1,\dots,m\}$, where, for $j=1,\dots,m$,
+\begin{align}
+  \begin{gathered}
+    y_{ij}^* = \alpha_j + 
+    \greyoverbrace{\sum_{k=1}^n h_\eta(x_i,x_k)w_{ik}}{f_j(x_i)}
+    + \epsilon_{ij} \\
+    \bepsilon_{i} = (\epsilon_{i1}, \dots, \epsilon_{im})^\top  \iid \N_m(\bzero, \bPsi^{-1}) \\
+    \bw_i := (w_{i1},\dots,w_{im})^\top \iid \N(0,\bPsi).
+  \end{gathered}
+\end{align}
+The parameters of the I-probit model are denoted by $\theta = \{\alpha_1,\dots,\alpha_m,\eta,\bPsi \}$.
+Let $\by^* \in \bbR^{n \times m}$ denote the matrix containing $(i,j)$ entries $y_{ij}^*$.
+Using the results in Chapter 4, the marginal distribution of the latent variables is
+\[
+  \vecc \by^* \sim \N_{nm}\big(\balpha, (\bPsi \otimes \bH_\eta^2) + (\bPsi^{-1} \otimes \bI_n)\big).
+\]
+
+\subsection{IIA}
+
+In decision theory, the independence axiom states that an agent's choice between a set of alternatives should not be affected by the introduction or elimination of a (new) choice option.
+The probit model is suitable for modelling multinomial data where the independence axiom, which is also known as the \emph{independence of irrelevant alternatives} (IIA) assumption, is not desired. 
+Such cases arise frequently in economics and social science, and the famous Red-Bus-Blue-Bus example is often used to illustrate IIA.
+Suppose commuters face the decision between taking cars and red busses. 
+The addition of blue busses to commuters' choice should in theory be more likely chosen by those who prefer taking the bus over cars.
+That is, assuming commuters are indifferent about the colour of the bus, commuters who are predisposed to taking the red bus would see the blue bus as an identical alternative.
+ Yet, if IIA is imposed, then the three choices are distinct, and the fact that red and blue busses are substitutable is ignored.
+
+In the I-probit model, the choice dependency is controlled by the error precision matrix $\bPsi$.
+Specifically, the off-diagonal elements $\bPsi_{jk}$ capture the correlation between choices $j$ and $k$.
+Allowing all $m(m+1)/2$ covariance elements of $\bPsi$ leads to the \emph{full I-probit model}, and would not automatically assume an IIA position.
+
+%Although crucial in choice models, it is not so much necessary for classification tasks when the alternatives under consideration are distinctly different.
+%In such cases, one may choose to abandon the IIA
+
+While it is an advantage to be able to model the correlations across choices (unlike in logistic models), it would be a major simplification algorithmically to consider all covariances in $\bPsi$ to be zero.
+This would trigger the IIA assumption in the I-probit model.
+There are applications where the IIA assumption would not adversely affect the analysis, such as when all the choices are mutually exclusive and exhaustive.
+In these situations, it would be beneficial to reduce the I-probit model to a simpler version by assuming $\bPsi = \diag(\psi_1,\dots,\psi_m)$.
+
+The independence assumption causes the distribution of the latent variables to be $y_{ij}^* \sim \N(\alpha_j + f_j(x_i), \sigma_j^2)$ for $j=1,\dots,m$.
+As a continuation of line \eqref{eq:pij}, we can show the class probability $p_{ij}$ to be
+\begin{align*}
+  p_{ij} 
+  &= \idotsint\displaylimits_{\{y_{ij}^* > y_{ik}^* | \forall k \neq j\}} 
+  \prod_{k=1}^m \Big\{ p(y_{ik}^*|\alpha_j + f_k(x_i), \sigma_j^2) \d y_k^* \Big\} \\
+  &= \int \mathop{\prod_{k=1}^m}_{k\neq j} 
+  \Phi \left( \frac{y_{ij}^* - \alpha_k - f_{ik}}{\sigma_k} \right) \cdot
+  \frac{1}{\sigma_j} \phi \left( \frac{y_{ij}^* - \alpha_j - f_{ij}}{\sigma_j} \right)  \d y_{ij}^* \\
+  &= \E_Z \Bigg[ \mathop{\prod_{k=1}^m}_{k\neq j} 
+  \Phi \left(\frac{\sigma_j}{\sigma_k} Z + \frac{\alpha_j + f_{ij} - \alpha_k - f_{ik}}{\sigma_k} \right) \Bigg] \nonumber
+\end{align*}
+where $Z\sim\N(0,1)$, and $\phi(\cdot)$ and $\Phi(\cdot)$ are its PDF and CDF respectively.
+%In the binary case where $m=2$, we set $\sigma_1^2 = 2$ and fix $f_{i2} = 0$, and we get that 
+%\[
+%  p_{i1} = 1 - \Phi(\alpha_1 + f_{i1}) \ \text{ and } \ p_{i2} =  \Phi(\alpha_1 + f_{i1}),
+%\]
+%which clearly shows the probit relationship between the class probabilities and the latent regression.
+The proof of this fact is included in the Appendix.
+With the exception of the binary case, these probabilities still do not have a closed-form expression (per se) and numerical methods are required to calculate them.
+In this simplified version of the I-probit model, the integral is unidimensional and involves the Gaussian PDF, and this can be efficiently obtained using quadrature methods.
+
+
+%\begin{table}[]
+%\centering
+%\caption{My caption}
+%\label{my-label}
+%\begin{tabular}{@{}lp{5cm}p{5cm}@{}}
+%\toprule
+%                    & Naïve model                                                                              & I-probit model                                            \\ \midrule
+%Grand intercept     & Fixed at $\alpha = 1/m$, equivalently $y_{ij}\mapsto y_{ij} - 1/m$ and set $\alpha = 0$. & $\alpha=0$ (otherwise, model is not location identified). \\
+%Intercepts          & $\alpha_j \in \cF_\cM$, a centred RKHS with kernel $a$                                                  & $\alpha_j\in\bbR$, $\sum_{j=1}^m \alpha_j = 0$            \\
+%Interaction effects & $f_j \in \cF_\cM \otimes \cF_\cX$, tensor product interaction space with kernel $ah_\eta$                     & $f_j\in\cF$ with kernel $h_\eta$                                                \\ \bottomrule
+%\end{tabular}
+%\end{table}
+
+
+
+
+%A rearrangement of the error terms is beneficial for the process of deriving the required I-priors.
+%Recall that since each $\bepsilon_i \iid \N_m(\bzero,\bSigma)$ then concatenating all of the error vectors result in $\bepsilon = (\bepsilon_1^\top,\dots,\bepsilon_n^\top)^\top$, and this has distribution $\N_{nm}(\bzero, \bOmega)$, where $\bOmega = \diag(\bSigma,\dots,\bSigma)$.
+%By rearranging the entries of $\bepsilon$ according to class (instead of by observation) and defining $\bepsilon_j'=(\epsilon_{1j},\dots,\epsilon_{nj})^\top$ for $j=1,\dots,m$, we observe that
+%\[
+%  \bepsilon' = 
+%  \begin{pmatrix}
+%    \bepsilon_1' \\
+%    \vdots \\
+%    \bepsilon_m'
+%  \end{pmatrix}
+%  \sim \N_{nm}(\bzero,\bOmega')
+%\]
+%where $\bOmega'$ contains the appropriately rearranged entries of $\bOmega$. 
+%For illustration, an example of this rearrangement is shown in Figure \ref{fig:covrearrange} for $m = 2$ and $n=5$.
+%The subtle difference is that whereas $\bOmega$ is a block diagonal matrix, $\bOmega'$ is comprised of $m^2$ equally sized $n \times n$ partitions of diagonal matrices.
+%However, the number of unique elements in $\bOmega$ and $\bOmega'$ is the same as in the $m \times m$ matrix $\bSigma$, i.e. $m(m+1)/2$.
+%We can also express these matrices in terms of Kronecker products $\bOmega = \bI_n \otimes \bSigma$ and $\bOmega = \bSigma \otimes \bI_n$.
+%
+%Denote $f_{ij} = f_j(x_i)$ as the evaluation of the function $f_j(\cdot)$ at $x_i$, and also $\bff_j = (f_{1j}, \dots, f_{nj})^\top$ as the vector containing all $n$ evaluations pertaining to the $j$th class.
+%Concatenate all of the $\bff_j$'s into one long vector of length $nm$: $\bff = (\bff_1^\top, \dots, \bff_m^\top)^\top$.
+%The I-prior is $\bff \sim \N_{nm}(\bzero,\bV_f)$, where $\bzero$ is an vector of length $nm$ containing zeroes and the covariance matrix $\bV_f$ is has the block matrix structure
+%\begin{align}\label{eq:vf}
+%  \bV_f = \begin{pmatrix}
+%    \bV_{11} & \bV_{12} & \dots  & \bV_{1m} \\
+%    \bV_{21} & \bV_{22} & \dots  & \bV_{2m} \\
+%    \vdots   & \vdots   & \ddots & \vdots \\
+%    \bV_{m1} & \bV_{m2} & \dots  & \bV_{mm} \\
+%  \end{pmatrix},
+%\end{align}
+%and each block entry above is given by
+%\begin{align}\label{eq:fisherinformation}
+%  \bV_{jk}(r,s) = \cI\big( f_j(x_r), f_k(x_s) \big) = \bPsi_{jk} \sum_{r'=1}^n \sum_{s'=1}^n  h_{\eta_j}(x_r, x_{r'}) h_{\eta_k}(x_{s'}, x_s),
+%\end{align}
+%where $\bPsi = \bSigma^{-1}$. 
+%Equation \eqref{eq:fisherinformation} gives the Fisher information for the regression functions $f_j$ and $f_k$, $j,k\in\{1,\dots,m\}$, evaluated at two points $x_r$ and $x_s$, $r,s\in\{1,\dots,n\}$---see \cite{bergsma2017} for details.
+%
+%One may also write $\bff = \bG\bw$ where $\bw \sim \N_{nm}(\bzero, \bOmega'^{-1})$, $\bG = \diag(\bH_{\eta_1},\dots,\bH_{\eta_m})$, and $\bH_{\eta_j}$ are the $n\times n$ kernel matrices with $(r,s)$ entries $h_{\eta_j}(x_r,x_s)$.
+%Realise that $\bOmega^{-1}$ is obtainable by repeating $\bSigma^{-1}$ diagonally, and that $\bOmega'^{-1}$ is then obtained using a similar rearrangement of its rows and columns to that of $\bOmega$.
+%Substituting equation \eqref{eq:fisherinformation} into the model \eqref{eq:multinomial-latent}, we get that
+%\begin{align}
+%  \begin{gathered}\label{eq:ipriorw}
+%    y_{ij}^* = \alpha_j + \sum_{r=1}^n h_{\eta_j}(x_i,x_r)w_{rj} + \epsilon_{ij} \\
+%    (w_{i1},\dots,w_{im}) \iid \N_m(\bzero, \bSigma^{-1}) \\
+%    (\epsilon_{i1},\dots,\epsilon_{im}) \iid \N_m(\bzero, \bSigma)
+%  \end{gathered}
+%\end{align}
+%This formulation will be useful in the variational algorithm later on.
+%
+
+
+
