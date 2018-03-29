@@ -48,13 +48,13 @@ However, we have that
 %Therefore, the likelihood given an observation $(y_i, x_i)$ for the set of parameters $(\alpha_j\bone_m + \bff(x_i), \bSigma)$ and $((a + c\alpha_j)\bone_m + c\bff(x_i), c^2\bSigma)$ would be equivalent, and thus the model is not fully identified\footnotemark.
 %\footnotetext{If we only require probabilities (as a function of the parameters) to be estimated, then identifiability is not a concern. This is the approach taken by \cite{girolami2006variational}.}
 
-\subsubsection{Full I-probit model}
-
-To solve the\hltodo[Is this correct terminology?]{location identification\!\!}, we must anchor on one of the latent variables.
-%, since only differences are identified.
-In our case, set the last latent variable $y_{im}^* = 0, \forall i = 1,\dots,n$. 
-This means that we only have $m-1$ sets of intercepts and RKHS parameters to estimate.
-\hltodo[Is it?]{Although it is sufficient to just fix one of the intercepts to for location identification}, setting the last latent variable to zero also implies some restrictions on the covariance matrix $\bSigma$, which also fixes scale identification as we will see.
+%\subsubsection{Full I-probit model}
+%
+%To solve the\hltodo[Is this correct terminology?]{location identification\!\!}, we must anchor on one of the latent variables.
+%%, since only differences are identified.
+%In our case, set the last latent variable $y_{im}^* = 0, \forall i = 1,\dots,n$. 
+%This means that we only have $m-1$ sets of intercepts and RKHS parameters to estimate.
+%\hltodo[Is it?]{Although it is sufficient to just fix one of the intercepts to for location identification}, setting the last latent variable to zero also implies some restrictions on the covariance matrix $\bSigma$, which also fixes scale identification as we will see.
 
 %Let $\epsilon_i = (\epsilon_{i1},\dots,\epsilon_{im})^\top \iid \N_m(\bzero, \bSigma)$.
 %\[
@@ -67,11 +67,11 @@ This means that we only have $m-1$ sets of intercepts and RKHS parameters to est
 %  \end{pmatrix}
 %\]
 
-To solve scale identification, some restrictions on the covariance matrix $\bSigma$ needs to be made.
-In the unrestricted case, there are $m(m+1)/2$ covariance parameters to estimate (upper triangular covariances and diagonal variances) in total. 
-However, only $m(m-1)/2 - 1$ are identified, therefore requiring $m + 1$ restrictions \citep{Keane1992,train2009discrete}. 
-Getting rid of one latent variable to fix the location identification shrinks $\bSigma$ to $(m-1) \times (m-1)$ in size, and now only $m(m-1)/2$ parameters need to be estimated. 
-Therefore, one more restriction needs to be made, and the convention is for the first element in $\bSigma$---the variance of $\epsilon_{i1}$---to be set to one. 
+%To solve scale identification, some restrictions on the covariance matrix $\bSigma$ needs to be made.
+%In the unrestricted case, there are $m(m+1)/2$ covariance parameters to estimate (upper triangular covariances and diagonal variances) in total. 
+%However, only $m(m-1)/2 - 1$ are identified, therefore requiring $m + 1$ restrictions \citep{Keane1992,train2009discrete}. 
+%Getting rid of one latent variable to fix the location identification shrinks $\bSigma$ to $(m-1) \times (m-1)$ in size, and now only $m(m-1)/2$ parameters need to be estimated. 
+%Therefore, one more restriction needs to be made, and the convention is for the first element in $\bSigma$---the variance of $\epsilon_{i1}$---to be set to one. 
 
 
 

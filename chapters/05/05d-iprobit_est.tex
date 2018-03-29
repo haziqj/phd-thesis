@@ -1,54 +1,150 @@
-%As with I-prior models, an estimate of the posterior regression function is sought, with the posterior mean typically a reasonable estimate.
-%Define $\bff_j = \big(f_j(x_1),\dots,f_j(x_n) \big) \in \bbR^n$ and $\by = (y_1,\dots,y_n) \in \{1,\dots,m\}^n$.
-%For each of the $m$ regression functions, its posterior distribution is given by
-%\[
-%  p(\bff_j|\by) = \frac{p(\by|\bff_j)p(\bff_j)}{\int p(\by|\bff_j)p(\bff_j) \d \bff_j}.
-%\]
-%This does not present itself in closed-form, due to the intractability of the marginalising integral in the denominator.
 %The challenge of estimation is then to first overcome this intractability by means of a suitable approximation of the integral.
 %Several methods may be employed, namely quadrature methods, Laplace approximation, and Markov chain Monte Carlo (MCMC) methods, but these all fail in the face of high dimensionality when the sample size $n$ is large.
 
-
-The parameters to estimate in the probit I-prior model are $\theta = (\alpha_1, \dots, \alpha_{m-1}, \eta_1, \dots, \eta_{m-1})$, i.e. the $m-1$ sets of intercepts and RKHS parameters after accounting for identifiability.
-The likelihood function $L(\cdot)$ for $\theta$ using all $n$ observations $\{(y_1,x_1),\dots,(y_n,x_n)\}$ is obtained by integrating out the I-prior from the categorical likelihood, as follows:
+As with the normal I-prior model, an estimate of the posterior regression function with optimised hyperparameters is sought.
+The log likelihood function $L(\cdot)$ for $\theta$ using all $n$ observations $\{(y_1,x_1),\dots,(y_n,x_n)\}$ is obtained by integrating out the I-prior from the categorical likelihood, as follows:
 \begin{align}
   L(\theta) 
-  &= \int p(\by | \balpha, \bff, \bSigma) \, p(\bff|\eta, \bSigma) \d \bff \nonumber \\
-  &= \int \prod_{i=1}^n \prod_{j=1}^m \Big( g^{-1}_\bSigma\big(\alpha_j + f_j(x_i)\big)_{j=1}^m \Big)^{[y_i=j]} \cdot \N_{nm}(\bzero, \bG_{\eta} (\bSigma^{-1} \otimes \bI_n) \bG_{\eta}) \d \bff \label{eq:intractablelikelihood}
+  &= \log \int p(\by | \bw, \theta) \, p(\bw|\theta) \dint \bw \nonumber \\
+  &= \log \int \prod_{i=1}^n \prod_{j=1}^m \Big( g^{-1}\big(\alpha_k + 
+  \greyoverbrace{f_k(x_i)}{\hidewidth\sum_{i'=1}^n h_\eta(x_i,x_{i'})w_{i'}\hidewidth}
+  \,\big)_{k=1}^m \Big)^{[y_i=j]} \cdot \phi(\bw|\bzero,  \bPsi \otimes \bI_n ) \dint \bw \label{eq:intractablelikelihood}
 \end{align}
-where we have denoted the probit relationship from \eqref{eq:pij} using the function $g_\bSigma^{-1}:\bbR^m \to [0,1]$.
-Unlike in the continuous response models, the I-prior cannot be easily integrated out due to the conditional categorical PMF of the $y_i$'s, which they themselves involve integrals of normal densities. 
-Thus, the intractable integral above presents a practical challenge which makes estimation via direct maximisation of the likelihood difficult to accomplish. 
-Methods of approximating the integral in \eqref{eq:intractablelikelihood} such as quadrature methods, Laplace approximation and MCMC tend to fail or are unsatisfactorily slow to accomplish.
-The main reason for this is the dimension of this integral, which is $nm$, and in particular, for large sample sizes and/or number of classes, is unfeasible for such methods.
+where we have denoted the probit relationship from \eqref{eq:pij} using the function $g^{-1}:\bbR^m \to [0,1]$.
+Unlike in the continuous response models, the integral does not present itself in closed form due to the conditional categorical PMF of the $y_i$'s, which they themselves involve integrals of normal densities.
+Furthermore, the posterior distribution of the regression function, which requires the density of $\bw|\by$, depends on the marginalisation provided by \cref{eq:intractablelikelihood}.
+The challenge of estimation is then to first overcome this intractability by means of a suitable approximation of the integral.
+We present three possible avenues to achieve this aim, namely the Laplace approximation, Markov chain Monte Carlo (MCMC) methods, and  variational Bayes.
+
+%Methods of approximating the integral in \eqref{eq:intractablelikelihood} such as quadrature methods, Laplace approximation and MCMC tend to fail or are unsatisfactorily slow to accomplish.
+%The main reason for this is the dimension of this integral, which is $nm$, and in particular, for large sample sizes and/or number of classes, is unfeasible for such methods.
 
 \subsection{Laplace approximation}
 
+One is interested in the posterior density $p(\bw|\by) \propto p(\by|\bw)p(\bw) =: e^{Q(\bw)}$, with normalising constant equal to the marginal density of $\by$, $p(\by) = \int e^{Q(\bw)} \dint \bw$, and we have established that the calculation of this marginal density is intractable.
+Laplace's method \citep[§4.1.1, pp. 777--778]{kass1995bayes} entails expanding a Taylor series for $Q$ about its posterior mode $\hat\bw = \argmax_\bw p(\by|\bw)p(\bw)$, and this gives the relationship
+\begin{align*}
+  Q(\bw) 
+  &= Q(\hat\bw) + 
+  \cancelto{0}{(\bw - \hat\bw)^\top \nabla Q(\hat\bw)} 
+  - \half (\bw - \hat\bw)^\top \bOmega (\bw - \hat\bw) + \cdots \\
+  &\approx Q(\hat\bw) + 
+  - \half (\bw - \hat\bw)^\top \bOmega (\bw - \hat\bw)
+\end{align*}
+because, assuming that $Q$ has a unique maxima, $\nabla Q$ evaluated at its mode is zero.
+This is recognised as the logarithm of an unnormalised Gaussian density, implying $\bw|\by \sim \N_n(\hat\bw,\bOmega^{-1})$.
+Here, $\bOmega = -\nabla^2 Q(\bw)|_{\bw=\hat\bw}$ is the negative Hessian of $Q$ evaluated at the posterior mode.
+
+The marginal distribution is then approximated by
+\begin{align*}
+  p(\by) 
+  &\approx \int \exp
+  \greyoverbrace{Q(\bw)}{\hidewidth Q(\hat\bw) - \half (\bw - \hat\bw)^\top \bOmega (\bw - \hat\bw)\hidewidth}
+   \dint \bw \\
+  &= (2\pi)^{n/2} \abs{\bOmega}^{-1/2} e^{Q(\hat\bw)} 
+  \int (2\pi)^{-n/2} \abs{\bOmega}^{1/2} \exp \left(- \half (\bw - \hat\bw)^\top \bOmega (\bw - \hat\bw) \right) \dint\bw \\
+  &= (2\pi)^{n/2} \abs{\bOmega}^{-1/2} p(\by|\hat\bw)p(\hat\bw).
+%  &= \cancelto{1}{\int \phi(\bw|\hat\bw,\bOmega^{-1})}
+\end{align*} 
+The log marginal density of course depends on the parameters $\theta$, which becomes the objective function to maximise in a likelihood maximising approach.
+Note that, should a fully Bayesian approach be undertaken, i.e. priors prescribed on the model parameters using $\theta \sim p(\theta)$, then this approach is viewed as a maximum a posteriori approach.
+
+In fact, under an EM algorithm approach, using the approximate posterior density which is normally distributed is simply using the posterior mode in lieu of the actual posterior means.
+\hltodo[Expand on this further.]{}
+
+In any case, each evaluation of the objective function $L(\theta) = \log p(\by|\btheta)$ involves finding the posterior modes $\hat\bw$.
+This is a slow and difficult undertaking, especially for large sample sizes $n$, because the dimension of this integral is exactly the sample size.
+Furthermore, standard errors for the parameters are cumbersome to calculate as well.
+Lastly, as a comment, Laplace's method only approximates the true marginal likelihood well if the true function is small far away from the mode.
+
 \subsection{Markov chain Monte Carlo methods}
+
+\citet{albert1993bayesian} showed that the latent variable approach to probit models can be analysed using exact Bayesian methods, due to the underlying normality structure.
+Paired with corresponding conjugate prior choices, sampling from the posterior is very simple using a Gibbs sampling approach.
+On the other hand, this data augmentation scheme enlarges the variable space to $n+q$ dimensions, where $q$ is the number of parameters to estimate, which is inefficient and computationally challenging especially when $n$ is large.
+It is no longer possible to marginalise the normal latent variables from the model, as this is intractable, just as we discussed previously.
+
+Hamiltonian Monte Carlo is another possibility, since it does not require conjugacy.
+For binary models, this is a feasible approach because the class probabilities are a function of the normal CDF, which means that it is doable in off-the-shelf software such as \proglang{Stan}.
+Things get out of hand with multinomial responses, because the intractability of computing class probabilities is not addressed.
+
+In summary, the computational challenge here stems from two sources: 1) integrating out the random effects $\bw$; and 2) evaluating class probabilities.
+Point 1) is addressed using a Gibbs sampling data augmentation scheme (latent variable approach), but this is not feasible with large $n$.
+Point 2) remains regardless whether Gibbs sampling or HMC is used.
 
 \subsection{Variational inference}
 
 We turn to variational inference as a method of estimation. Variational methods are widely discussed in the machine learning literature, and there have been efforts to popularise it in statistics \citep{blei2017variational}.
-Suppose that, in a fully Bayesian setting, we append the unknown model parameters to the vector $\bff_j$ to form $\bz_j = (\bff_j, \alpha_j, \eta_j)$.
-The crux of variational inference is this: Find a suitably close distribution function $q(\bz_j)$ that approximates the true posterior $p(\bz_j|\by)$, where closeness here is defined in the Kullback-Leibler divergence sense,
+Suppose that, in a fully Bayesian setting, we append the unknown model parameters to the vector $\bw$ to form $\bz = \{\bw, \theta\}$.
+The crux of variational inference is this: find a suitably close distribution function $q(\bz)$ that approximates the true posterior $p(\bz|\by)$, where closeness here is defined in the Kullback-Leibler divergence sense,
 \[
-  \KL(q||p) = \int q(\bff_j) \log \frac{q(\bz_j)}{p(\bz_j|\by)} \d \bz_j.
+  \KL(q\Vert p) = \int \log \frac{q(\bz)}{p(\bz|\by)} q(\bz) \dint \bz.
 \]
 One may then show that log marginal density (the log of the intractable integral) holds the following bound:
+    \begin{align}
+      \log p(\by) &= \log p(\by,\bz) - \log p(\bz|\by) \nonumber \\
+      &= \int \left\{ \log \frac{p(\by,\bz)}{q(\bz)} - \log \frac{p(\bz|\by)}{q(\bz)} \right\} q(\bz) \dint \bz \nonumber \\    
+      &=  \cL(q) +  \KL(q \Vert p) \nonumber \\
+      &\geq \cL(q) \label{eq:varbound}
+    \end{align}
+since the KL divergence is a non-negative quantity.
+The functional $\cL(q)$ given by 
+\begin{align}
+  \cL(q) 
+  &= \int \log \frac{p(\by,\bz)}{q(\bz)} q(\bz) \dint \bz \nonumber \\
+%  &= \E_{\bz\sim q}[\log p(\by,\bz) - \log q(\bz)] \nonumber \\
+  &= \E_{\bz\sim q}[\log p(\by,\bz)] + H(q), \label{eq:elbo1}
+\end{align}
+where $H$ is the entropy functional, is known as the \emph{evidence lower bound} (ELBO), which serves as the proxy objective function in the likelihood maximisation problem.
+Evidently, the closer $q$ is to the true $p$, the better, and this is achieved by maximising $\cL$, or equivalently, minimising the KL divergence\footnote{The astute reader will realise that $\KL(q||p)$ is impossible to compute, since one does not know the true distribution $p(\bz|\by)$. Efforts are concentrated on maximising the ELBO instead.} from $p$ to $q$.
+Note that the bound \cref{eq:varbound} achieves equality if and only if $q \equiv p$, but of course the true form of the posterior is unknown to us.
+Maximising $\cL(q)$ or minimising $\KL(q\Vert p)$ with respect to the density $q$ is a problem of calculus of variations, which incidentally, is where variational inference takes its name.
+
+Maximising $\cL$ over all possible density functions $q$ is not possible without considering certain constraints.
+Two such constraints are described. 
+The first, is to make a distributional assumption regarding $q$, for which it is parameterised by $\nu$.
+For instance, we might choose the closest normal distribution to the posterior $p(\bz|\by)$ in terms of KL divergence.
+In this case, the task is to find optimal mean and variance parameters of a normal distribution.
+
+\begin{figure}[htb]
+  \centering
+  \begin{tikzpicture}
+    \fill (4.05,2.1) circle (0pt) node[right,yshift=1] {$p(\bz|\by)$};
+    \draw[ultra thick] (0,0) ellipse (4cm and 2.2cm);
+    \node at (-2.8,0.7) {$q(\bz;\nu)$};
+    \draw[thick,colred] (-0.8,-0.5) to [curve through={(-2,0) .. (-2,-0.8) .. (1,-0.8) .. (-1,1.5) .. (0,1.5) ..(0.3,0.1) .. (0.5,1.5) .. (2,0) .. (2.1,-0.1) .. (2.2,1.1) .. (3,0.9)}] (3.317,1.225);  % curve using hobby tikz
+    \draw[dashed, very thick,black!50] (3.317,1.225) -- (4.05,2.1);
+    \fill (-0.8,-0.5) circle (2.2pt) node[below] {$\nu^{\text{init}}$};
+    \fill (3.317,1.225) circle (2.2pt) node[left,yshift=-1] {$\nu^*$};
+    \fill (4.05,2.1) circle (2.2pt) node[right,yshift=1] {$p(\bz|\by)$};
+    \node[gray] at (4.5,1.4) {$\KL(q\Vert p)$};
+  \end{tikzpicture}
+  \caption{Schematic view of variational inference. The aim is to find the closest distribution $q$ (parameterised by a variational parameter $\nu$) to $p$ in terms of KL divergence within the set of variational distributions, represented by the ellipse.}
+\end{figure}
+
+The second type of constraint, and the one considered in this thesis, is simply an assumption that the approximate posterior $q$ factorises into $M$ disjoint factors.
+Supposing that the elements of $\bz$ may indeed be partitioned into $M$ disjoint groups $\bz = (z^{(1)},\dots,z^{(M)})$, then the structure
 \[
-  \log p(\by) = \int p(\by|\bz_j)p(\bz_j) \d \bz_j = \cL(q) + \KL(q||p) \geq \cL(q),
-\]
-where $\cL$ is some known functional of $q$. 
-The bound achieves equality if and only if $q \equiv p$, but of course the true form of the posterior is unknown to us.
-Minimising $\KL(q||p)$ with respect to some constraints is a problem of calculus of variations, which incidentally is where variational inference takes its name.
-The constraint considered in this paper is simply that the approximate posterior $q$ factorises into $M$ disjoint factors.
-That is, suppose the elements of $\bz_j$ is partitioned into $M$ disjoint groups $\bz_j = (z_j^{(1)},\dots,z_j^{(M)})$, then the restriction
-\[
-  q(\bz_j) = \prod_{k=1}^m q_k(z_j^{(k)})
+  q(\bz) = \prod_{k=1}^m q_k(z^{(k)})
 \]
 for $q$ is considered.
 This factorised form of variational inference is known in the statistical physics literature as the \emph{mean-field theory} \citep{itzykson1991statistical}.
 By factorising appropriately, we can obtain approximated posteriors for the regression function and the parameters of the I-prior model.
-The algorithm itself typically condenses to that of a simple, sequential updating scheme, akin to the expectation-maximisation (EM) algorithm for exponential families \citep{mclachlan2007algorithm}, which is very fast to implement compared to the other methods described in the previous paragraph.
+The algorithm itself typically condenses to that of a simple, sequential updating scheme, akin to the expectation-maximisation (EM) algorithm for exponential families we saw in Chapter 4, which is very fast to implement compared to the other methods described in the previous subsections.
+A full derivation of the variational algorithm used by us will be described in \cref{sec:iprobitvar}.
+%\citep{mclachlan2007algorithm}
 
 \subsection{Comparison of estimation methods}
+
+\hltodo{Compare: Laplace, variational and HMC.}
+
+The three estimation methods described aim to overcome the intractable integral by means of either a deterministic approximation (Laplace and variational inference) or a stochastic approximation (MCMC).
+In the Laplace and variational method, the posterior distribution of $\bw$ ends up being approximated by a Gaussian distribution, although the mean and variance is different in each method.
+In essence, once $\bw|\by$ is approximately normal, then estimation of the parameters $\theta$ using a direct optimisation approach or an EM-type approach is straightforward.
+On the other hand, MCMC approximates the density $p(\bw|\by)$ using samples generated via Gibbs sampling or HMC, and these samples would asymptotically be representative of draws from the true posterior.
+
+Consider the data set...
+Plot the data. Explain priors for HMC and variational. Compare.
+
+
+
