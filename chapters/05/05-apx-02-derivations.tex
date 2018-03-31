@@ -1,178 +1,203 @@
-\section{Derivations}
+\section{Derivation of the CAVI algorithm}
 
-\subsection{The joint likelihood}
-
+Let $\cZ = \{\by^*,\bw,\balpha,\eta,\bPsi \}$.
+Approximate the posterior for $\cZ$ by a mean-field variational distribution
 \begin{align*}
-  p(\by, \by^*, \bw, \lambda, \alpha)
-  &= p(\by | \by^*, \bw, \alpha, \lambda) p(\by^*, \bff, \bw, \alpha, \lambda) \\
-  &= p(\by|\by^*) p(\by^* | \bff) p(\bw) p(\lambda) p(\alpha)
+  p(\by^*, \bw, \alpha, \eta, \bPsi | \by) 
+  &\approx q(\by^*)q(\bw)q(\balpha)q(\eta)q(\bPsi) \\
+  &= \prod_{i=1}^n q(\by_{i}^*)q(\bw)q(\balpha)q(\eta)q(\bPsi).
 \end{align*}
-
-\subsection{Relevant distributions}
-
-\begin{align*}
-  p(\by|\by^*) &= \prod_{i=1}^n \prod_{j=1}^m p_{ij} 
-  = \prod_{i=1}^n \prod_{j=1}^m \ind[y_{ij}^* = \max_k y_{ik}^*]^{\ind[y_i = j]} \\
-  \\
-  p(\by^*|\bff) &= \prod_{i=1}^n \prod_{j=1}^m \N(f_{ij},1) \\
-  &= \exp \left[-\half[nm]\log 2\pi - \half \sum_{i=1}^n \sum_{j=1}^m (y_{ij}^* - f_{ij})^2 \right] \\
-  &= \exp \left[-\half[nm]\log 2\pi - \half \norm{\by^* - \bff}^2 \right] \\
-  \\
-  f_{ij} &= \alpha_j + \sum_{k=1}^n  h_{\lambda_j}(x_i, x_k)w_{kj} \\
-  \\
-  p(\bw) &= \prod_{i=1}^n \prod_{j=1}^m p(w_{ij}) \\
-  &= \prod_{i=1}^n \prod_{j=1}^m \N(0,1) \\
-  &= \exp \left[-\half[nm]\log 2\pi - \half \sum_{i=1}^n \sum_{j=1}^m w_{ij}^2 \right] \\
-  &= \exp \left[-\half[nm]\log 2\pi - \half \bw^\top \bw \right] \\
-  \\
-p(\lambda,\alpha) &\propto \const  
-\end{align*}
-
-\subsection{Mean field approximation}
-
-\begin{align*}
-  p(\by^*, \bw, \alpha, \lambda | \by) 
-  &\equiv q(\by^*)q(\bw)q(\lambda)q(\alpha) \\
-  &\equiv \prod_{i,j} q(y_{ij}^*)q(\bw)q(\lambda)q(\alpha)
-\end{align*}
-
-The first line is by assumption, while the second line follows from an induced factorisation, as we will see later. Denote by $\tilde q$ the distributions which minimise the KL divergence (maximises the lower bound). Then, for each of $\xi \in \{ \by^*, \bw, \alpha, \lambda \}$, $\tilde q$ satisfies
+The first line is by assumption, while the second line follows from an induced factorisation on the latent propensities, as we will see later. 
+If needed, we also assume that $q(\eta)$ factorises into its constituents components.
+Recall that, for each $\xi\in\cZ$, the optimal mean-field variational density $\tilde q$ for $\xi$ satisfies
 \[
-  \log \tilde q(\xi) = \E_{-\xi} [\log p(\by, \by^*, \bw, \alpha, \lambda)] + \const
+  \log \tilde q(\xi) = \E_{-\xi} [\log p(\by, \cZ)] + \const \tag{\ref{eq:qtilde}}
 \]
-
-\subsubsection{$\tilde q(\by^*)$}
-
-In this subsection, we use the notation $y_i^* = (y_{i1}^*, \dots, y_{im}^*)$ to denote the vector of length $m$ containing the latent variables for response $i$. The joint distribution for $\by^* = (y_1^*, \dots, y_n^*)^\top$ is a product of the distribution for each of the components $y_i^*$ - this is a consequence of the independence structure across observations. Therefore, we can consider the variational density for each $y_i^*$ separately.
-
-Consider the case where $y_i$ takes one particular value $j \in \{1,\dots,m\}$. The mean-field density $q(y_{i}^*)$ for each $i=1,\dots,n$ is found to be
+Write $\bff = \bH_\eta \bw \in \bbR^{n\times m}$.
+The joint likelihood $p(\by, \cZ)$ is given by
 \begin{align*}
-  \log \tilde q(y_{i}^*) 
-  &=  \ind[y_{ij}^* = \max_k y_{ik}^*] \cdot \E_{\bw, \alpha, \lambda} \left[ -\half \sum_{k=1}^m(y_{ik}^* - f_{ik})^2  \right] + \const \\
-  &= \ind[y_{ij}^* = \max_k y_{ik}^*] \cdot \left[ -\half \sum_{k=1}^m(y_{ik}^* - \tilde f_{ik})^2  \right] + \const \\*
+  p(\by, \cZ) 
+  &= p(\by|\cZ)p(\cZ) \\
+  &= p(\by|\by^*) p(\by^* | \balpha,\bw,\eta,\bPsi) p(\bw|\bPsi) p(\eta) p(\bPsi)p(\balpha).
+\end{align*}
+For reference, the relevant distributions are listed below.
+
+\begin{itemize}
+  \item {\boldmath$p(\by|\by^*)$}. For each observation $i\in\{1,\dots,n\}$, given the corresponding latent propensities $\by^*_i = (y_{i1}^*,\dots,y_{im}^*)$, the distribution for $y_i$ is a degenerate distribution which depends on the $j$'th component of $\by^*_i$ being largest, where the value observed for $y_i$ was $j$. Since each of the $y_i$'s are independent, everything is multiplicative.
+  \begin{align*}
+    p(\by|\by^*) &= \prod_{i=1}^n \prod_{j=1}^m p_{ij} 
+    = \prod_{i=1}^n \prod_{j=1}^m \ind[y_{ij}^* 
+    = \max_k y_{ik}^*]^{\ind[y_i = j]}.
+  \end{align*}
+  
+  \item {\boldmath$p(\by^*|\balpha,\bw,\eta,\bPsi)$}. Given values for the parameters and I-prior random effects, the distribution of the latent propensities is matrix normal
+  \[
+    \by^*|\balpha,\bw,\eta,\bPsi \sim \MN_{n,m}(\bone_n\balpha^\top + \bH_\eta\bw, \bI_n, \bPsi^{-1}).
+  \]
+%  Equivalently, 
+%  \[
+%    \vecc \by^* | \balpha,\bw,\eta,\bPsi \sim \N_{nm}\big(\vecc(\bone_n\balpha^\top + \bH_\eta\bw), \bPsi^{-1} \otimes \bI_n \big).
+%  \]
+%  The $n$ rows of $\by^* = (\by_1^{*\top},\dots,\by_n^{*\top})^\top$ are independent of each other, with each row following a $m$-variate normal distribution $\by_i^* \sim \N_{m}(\balpha + \bff(x_i), \bPsi^{-1})$.
+  Write $\bmu = \bone_n\balpha^\top + \bH_\eta\bw$.
+  Its pdf is
+  \begin{align*}
+    p(\by^*|\balpha,\bw,\eta,\bPsi)
+%    &= \prod_{i=1}^n \phi(\by_i^*|\balpha + \bff(x_i), \bPsi^{-1}) \\
+    &= \exp \left[-\half[nm]\log 2\pi + \half[n]\log\abs{\bPsi} - \half\tr \big((\by^* - \bmu) \bPsi (\by^* - \bmu)^\top  \big)  \right] \\
+    &= \exp \left[-\half[nm]\log 2\pi + \half[n]\log\abs{\bPsi} - \half\sum_{i=1}^n (\by^*_i - \bmu_i)^\top \bPsi (\by^*_i - \bmu_i)   \right],
+  \end{align*}
+  where $\by^*_i \in\bbR^m$ and $\bmu_i \in\bbR^m$ are the rows of $\by^*$ and $\bmu$ respectively.
+  The second line follows directly from the definition of the trace, but  also emanates from the fact that $\by_i^*$ are independent multivariate normal with mean $\bmu_i$ and variance $\bPsi^{-1}$.
+  
+  \item {\boldmath$p(\bw|\bPsi)$}. The $\bw$'s are normal random matrices $\bw \sim \N_{n,m}(\bzero, \bI_n,\bPsi)$ with pdf
+  \begin{align*}
+    p(\bw|\bPsi) 
+    &= \exp \left[-\half[nm]\log 2\pi - \half[n]\log\abs{\bPsi} - \half\tr \big( \bw \bPsi^{-1} \bw^\top \big)  \right] \\
+    &= \exp \left[-\half[nm]\log 2\pi - \half[n]\log\abs{\bPsi} - \half\sum_{i=1}^n  \bw_i^\top \bPsi^{-1} \bw_i   \right].
+  \end{align*}
+  
+  \item {\boldmath$p(\eta)$}. The most common scenario would be $\eta = \{\lambda_1,\dots,\lambda_p\}$ only. In this case, choose independent normal priors for each $\lambda_k \sim \N(m_k,v_k)$, $k=1,\dots,p$, whose pdf is
+  \begin{align*}
+    p(\eta) = \prod_{k=1}^p \exp\left[-\half\log 2\pi - \half\log v_k - \frac{1}{2v_k^2} (\lambda_k - m_k)^2 \right].
+  \end{align*} 
+  An improper prior $p(\eta) \propto \const$ can be used as well, and this is the same as letting $m_k \to 0$ and $v_k\to 0$.
+  The resulting posterior will be proper.
+  If $\eta$ contains other parameters as well, such as the Hurst coefficient $\gamma \in (0,1)$, SE lengthscale $l >0$ or polynomial offset $c>0$, then appropriate priors should be used to match the support of the parameter.
+  Choices include $p(\gamma) = \ind\big(\gamma \in (0,1)\big)$ and $l,c \sim \Gamma(a,b)$.
+  
+  \item {\boldmath$p(\bPsi)$}. For the precision matrix, a Wishart prior with scale matrix $\bG$ and $g$ degrees of freedom, denoted $\bPsi \sim \Wis_m(\bG,g)$, is convenient. It has pdf
+  \[
+    p(\bPsi) = \exp\left[\const + \half[g-m-1]\log \abs{\bPsi} - \half\tr(\bG^{-1}\bPsi)  \right].
+  \]
+  For the independent I-probit model, $\bPsi = \diag(\sigma_1^{-2},\dots,\sigma_m^{-2})$, and we choose independent Gamma distributions for each precision $\sigma_j^{-2} \sim \Gamma(r_j,s_j)$, where $r_j$ and $s_j$ are the shape and scale parameters.
+  Then,
+  \[
+    p(\bPsi) = \prod_{j=1}^m \exp\left[\const + (r_j - 1)\log \sigma_j^{-2} - \frac{\sigma_j^{-2}}{s_j}\right].
+  \] 
+  
+  \item {\boldmath$p(\balpha)$}. Choose independent normal priors for the intercept, $\alpha_j \sim \N(a_j,A_j)$ for $j=1,\dots,m$. The pdf is
+  \[
+    p(\balpha) = \prod_{j=1}^m \exp\left[\log 2\pi - \log A_j - \frac{1}{2A_j} (\alpha_j - a_j)^2  \right].
+  \]
+\end{itemize}
+
+\begin{remark}
+  The priors on the parameters $\{ \balpha,\eta \}$ can be set to very vague or even improper priors, and the resulting posterior will still yield a proper distribution.
+  Using improper priors eases the algebra slightly.
+  For the precision matrix $\bPsi$, it is best to stick with the Wishart prior to avoid positive-definite issues, unless the independent I-probit model is used, in which case Jeffreys' prior for the precisions $p(\sigma_j^{-2})\propto \sigma_j^2$ is a convenient choice.
+\end{remark}
+
+\subsubsection[Derivation of q ystar]{Derivation of $\tilde q(\by^*)$}
+
+The rows of $\by^*$ are independent, and thus we can consider the variational density for each $\by_i^*$ separately.
+Consider the case where $y_i$ takes one particular value $j \in \{1,\dots,m\}$. The mean-field density $q(\by_{i}^*)$ for each $i=1,\dots,n$ is found to be
+\begin{align*}
+  \log \tilde q(\by_{i}^*) 
+  &=  \ind[y_{ij}^* = \max_k y_{ik}^*] \, \E_{\cZ\backslash\{\by^*\}\sim q} \left[ - \half (\by^*_i - \bmu_i)^\top \bPsi (\by^*_i - \bmu_i)  \right] + \const \\
+  &= \ind[y_{ij}^* = \max_k y_{ik}^*] \, \left[ - \half (\by^*_i - \tilde\bmu_i)^\top \tilde\bPsi (\by^*_i - \tilde\bmu_i)  \right] + \const \\
+%  &\equiv
+%  \begin{cases}
+%    \prod_{k=1}^m \N(\tilde f_{ik}, 1) & \text{ if } y_{ij}^* > y_{ik}^*, \forall k \neq j \\
+%    0 & \text{ otherwise} \\
+%  \end{cases}
   &\equiv
   \begin{cases}
-    \prod_{k=1}^m \N(\tilde f_{ik}, 1) & \text{ if } y_{ij}^* > y_{ik}^*, \forall k \neq j \\
+    \phi(\by_i^*|\tilde\bmu_i,\tilde\bPsi) & \text{ if } y_{ij}^* > y_{ik}^*, \forall k \neq j \\
     0 & \text{ otherwise} \\
   \end{cases}
 \end{align*}
-where $\tilde f_{ik} = \E[\alpha_k] + \sum_{l=1}^m h_{\E[\lambda_k]}(x_i, x_l)\E[w_{il}]$, and expectations are taken under the optimal mean-field distribution $\tilde q$. The distribution for $q(y_i^*)$ is a truncated $m$-variate normal distribution such that the $j$th component is always largest. It is worth investigating the properties of this distribution, and we now present some relevant definitions and results.
+where $\tilde\bmu_i = \E\balpha + (\E\bH_\eta \E\bw)_i$, and expectations are taken under the optimal mean-field distribution $\tilde q$. 
+The distribution $q(\by_i^*)$ is a truncated $m$-variate normal distribution such that the $j$'th component is always largest. 
+Unfortunately, the expectation of this distribution cannot be found in closed-form, and must be approximated by techniques such as Monte Carlo integration.
+If, however, the independent I-probit model is used and $\tilde\bPsi$ is diagonal, then \hltodo{Lemma X} provides a simplification.
 
-\begin{definition}[Conically-truncated multivariate normal distribution]\label{definition:conically-truncated-normal}
-  Let $\bX = (X_1, \dots, X_d)$ be a $d$-dimensional random variable with pdf defined as
-  \[
-    p(\bx) = 
-    \begin{cases}
-      \prod_{i=1}^d \N(\mu_i,\sigma_i) & \text{ if } X_j > X_i, \forall i \neq j \\
-      0 &\text{ otherwise } \\
-    \end{cases}
-  \]
-  for some $j \in \{ 1,\dots,d \}$. We denote the distribution of $\bX$ by $\N^{(j)}(\bmu, \bSigma)$, with $\bmu = (\mu_1, \dots,\mu_d)$ and $\bSigma = \diag(\sigma_1^2, \dots, \sigma_d^2)$. The pdf of $\bX$ has support on the set $\{\bbR^d \, | \, x_j > x_i, \forall i \neq j \}$ and the following functional form:
-  \[
-    p(\bx) = \frac{C^{-1}}{\sigma_1 \cdots \sigma_d (2\pi)^{d/2}}\exp\left[- \half \sum_{i=1}^d \left( \frac{x_i - \mu_i}{\sigma_i} \right)^2 \right]
-  \]
-  where $\phi$ is the pdf of a standard normal distribution and
-  \[
-    C = \E_Z \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j}{\sigma_i}Z + \frac{\mu_j - \mu_i}{\sigma_i} \right) \bigg]
-  \]
-  where $Z \sim \N(0,1)$. In the case where all variances are unity, the pdf of $\bX \sim \N^{(j)}(\bmu, \bI_d)$ is
-  \[
-    p(\bx) = \Bigg\{ (2\pi)^{d/2} 
-    \E_Z \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(Z + \mu_j - \mu_i \right) \bigg] 
-    \Bigg\}^{-1} \exp\left[- \half \sum_{i=1}^d (x_i - \mu_i)^2 \right].
-  \]
-\end{definition}
+\subsubsection{Derivation of $\tilde q(\bw)$}
 
-\begin{proof}
-  A derivation of the functional form for the pdf of $X \sim \N^{(j)}(\bmu, \bSigma)$ is given. Using the fact that $\int p(x) \d x = 1$, and that
-  \begin{align*}
-    \int &\ind[x_i < x_j, \forall i \neq j] \prod_{i=1}^d \N(\mu_i, \sigma_i^2) \d x_1 \cdots \d x_d \\*
-    &=  \int \ind[x_i < x_j, \forall i \neq j] \prod_{i=1}^d \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma} \right) \right] \d x_1 \cdots \d x_d \\
-    &=  \int \ind[x_i < x_j, \forall i \neq j] \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right)\mathop{\prod_{i=1}^d}_{i \neq j} \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma_i} \right) \right] \d x_1 \cdots \d x_d \\    
-    &= \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{x_j - \mu_i}{\sigma_i} \right) \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right) \d x_j \\
-    &= \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j z_j + \mu_j - \mu_i}{\sigma_i} \right) \phi(z_j) \d z_j \\
-    &\phantom{==} {\color{gray} (\text{by using the standardisation } z_j = (x_j - \mu_j) / \sigma_j)} \\    
-    &= \E \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j}{\sigma_i}Z_j + \frac{\mu_j - \mu_i}{\sigma_i} \right) \bigg] \\
-%    &= \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{(\mu_j - \mu_i)/\sigma_i}{\sqrt{1 + \sigma_j^2/\sigma_i^2}} \right), \hspace{1cm} \rlap{\color{gray}\text{by} \hyperref[lem:expectation-of-prod-phi]{Lemma \ref{lem:expectation-of-prod-phi}} }
-  \end{align*}
-  the proof follows directly.
-\end{proof}
-
-\begin{lemma}\label{lem:expectation-entropy-truncated-mvn}
-  Let $X \sim \N^{(j)}(\bmu, \bSigma)$ with pdf $p(\bx)$ as defined in Definition \ref{definition:conically-truncated-normal}. Then
-  \begin{enumerate}[label=(\roman*)]
-    \item The expectation $\E[\bX] = \big(\E[X_1], \dots, \E[X_d] \big)$ is given by
-    \[
-      \E[X_i] =
-      \begin{cases}
-        \mu_i - \sigma_i C^{-1} \E_Z\left[\phi_i \prod_{k \neq i,j} \Phi_k \right] 
-        %\Big/ \E_Z \left[ \Phi_i \prod_{k \neq i,j} \Phi_k \right] 
-        &\text{ if } i \neq j \\
-        \mu_j - \sigma_j \sum_{i \neq j} \big(\E[X_i] - \mu_i \big) &\text{ if } i = j \\
-      \end{cases}
-    \]
-%    \item $\Var[\bX] = ???$
-    \item The differential entropy $\cH(p)$ is given by
-    \[
-    \cH(p) = \log C + \half[d] \log 2\pi + \half \sum_{i=1}^d \log \sigma_i^2 + \half \sum_{i=1}^d \frac{1}{\sigma_i^2} \E [ x_i - \mu_i ]^2
-    \]
-  \end{enumerate} 
-  where $C = \E \left[ \prod_{i \neq j} \Phi_i \right]$, and we had defined
-  \begin{align*}
-    \phi_i = \phi_i(Z) &= \phi \left( \frac{\sigma_j Z + \mu_j - \mu_i}{\sigma_i} \right) \\
-    \Phi_i = \Phi_i(Z) &= \Phi \left( \frac{\sigma_j Z + \mu_j - \mu_i}{\sigma_i} \right) \\    
-  \end{align*}
-  with $Z \sim \N(0,1)$, and $\phi(\cdot)$ and $\Phi(\cdot)$ the pdf and cdf of $Z$ respectively.
-\end{lemma}
-
-As we know, $y_i$ takes on any one value from the set $\{1,\dots,m\}$. Thus, we have that the distribution of $(y^*_{i1}, \dots, y^*_{im})$ is $\N^{(y_i)}(\bmu_i, \bI_m)$, where $\bmu_i = (\tilde f_{i1}, \dots, \tilde f_{im})$. The expectation is given by
-\[
-  \E[y_{ik}^*] = 
-  \begin{cases}
-    \tilde f_{ik} - C_i^{-1}\displaystyle{ \E_Z\bigg[\phi_{ik}(Z) \prod_{l \neq k,y_i} \Phi_{il}(Z) \bigg] }
-    &\text{ if } k \neq y_i \\[1.5em]
-    \tilde f_{iy_i} - \sum_{k \neq y_i} \big(\E[y_{ik}^*] - \tilde f_{ik} \big) &\text{ if } k = y_i \\
-  \end{cases}
-\]
-where
-\begin{align*}
-  \phi_{ik}(Z) &= \phi(Z + \tilde f_{iy_i} - \tilde f_{ik}) \\
-  \Phi_{ik}(Z) &= \Phi(Z + \tilde f_{iy_i} - \tilde f_{ik}) \\
-  C_i &= \E_Z \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(Z + \tilde f_{iy_i} - \tilde f_{ik}) \right) \bigg]  
-\end{align*}
-and $Z \sim \N(0,1)$ with PDF and CDF $\phi(\cdot)$ and $\Phi(\cdot)$ respectively. In order to calculate these expectations, we need to compute the following integrals:
-\begin{align*}
-  \E_Z\left[\phi_{ik}(Z) \prod_{l \neq k,j} \Phi_{il}(Z) \right]
-  &= \int \phi_{ik}(z) \prod_{l \neq k,j} \Phi_{il}(z) \phi(z) \d z, \ \ \ \forall k \neq y_i \\
-  C_i = \E_Z\left[\prod_{l \neq j} \Phi_{il}(Z) \right] 
-  &= \int \prod_{l \neq j} \Phi_{il}(z) \phi(z) \d z 
-\end{align*}
-Since these are functions of a Gaussian pdf, these can be computed rather efficiently using quadrature methods.
-
-\subsubsection{$\tilde q(\bw)$}
-
-For each $j = 1,\dots, m$, denote $\by^*_j = (y_{1j}^*, \dots, y_{nj}^*)^\top$ as the vector of length $n$ containing all latent observations for each class. Then,
+The terms involving $\bw$ in \cref{eq:qtilde} are the $p(\by^*|\balpha,\bw,\eta,\bPsi)$ and $p(\bw|\bPsi)$ terms, and the rest are absorbed into the constant.
+The easiest way to derive $\tilde q(\bw)$ is to vectorise $\by^*$ and $\bw$.
+We know that
+\begin{gather*}
+  \vecc \by^* |  \balpha,\bw,\eta,\bPsi \sim \N_{nm}\big(\vecc (\bone_n\balpha^\top + \bH_\eta\bw), \bPsi^{-1}\otimes\bI_n\big) \\
+  \text{and}\\
+  \vecc \bw | \bPsi \sim \N_{nm} (\bzero, \bPsi\otimes\bI_n)
+\end{gather*}
+using properties of matrix normal distributions.
+We also use the fact that $\vecc (\bH_\eta\bw) = (\bI_m \otimes \bH_\eta)\vecc\bw$.  %\diag(\bH_\eta,\dots,\bH_\eta)\vecc\bw = 
+For simplicity, write $\bar\by^* = \vecc(\by^* - \bone_n\balpha^\top)$, and $\bM = (\bI_m \otimes \bH_\eta)$.
+Thus,
 \begin{align*}
   \log \tilde q(\bw) 
-  &= \E_{\by^*, \alpha, \lambda} \left[ 
-  - \half \sum_{j=1}^m \, \norm{ \by^*_j - \alpha_j\bone_{n} - \bH_{\lambda_j} \bw_j }^2 
-  - \half \sum_{j=1}^m \, \norm{\bw_j}^2 
-  \right] + \const \\
-  &= -\half \sum_{j=1}^m \E_{\by^*, \alpha, \lambda} \left[  
-  \bw_j^\top \mathbf H_{\lambda_j}^2 \bw_j + \bw_j^\top\bw_j 
-  - 2(\by_j^* - \alpha_j\bone_n)^\top\bH_{\lambda_j}\bw_j 
-  \right] + \const \\
-  &= -\half \sum_{j=1}^m \Big(  \bw_j^\top (\E[\mathbf H_{\lambda_j}^2] + \bI_{n}) \bw_j - 2(\E[\by_j^*] - \E[\alpha_j]\bone_{n})^\top\E[\mathbf H_{\lambda_j}]\bw_j \Big) + \const
+  &= \E_{\cZ\backslash\{\bw \}\sim q} \left[ 
+  -\half (\bar\by^* - \bM\vecc\bw )^\top(\bPsi^{-1} \otimes \bI_n)^{-1} (\bar\by^* - \bM\vecc\bw )
+  \right] \\
+  &\phantom{==} + \E_{\cZ\backslash\{\bw \}\sim q} \left[ 
+  -\half (\vecc \bw )^\top(\bPsi \otimes \bI_n)^{-1} \vecc (\bw ) \right] + \const \\
+  &= -\half\E_{\cZ\backslash\{\bw \}\sim q} \left[ 
+  (\vecc\bw)^\top \Big( \,
+  \greyoverbrace{\bM^\top(\bPsi \otimes \bI_n)\bM + (\bPsi^{-1} \otimes \bI_n)}{\bA} 
+  \, \Big) \vecc (\bw )
+  \right] \\
+  &\phantom{==} + \E_{\cZ\backslash\{\bw \}\sim q} \Big[ 
+  \greyoverbrace{\bar\by^{*\top} (\bPsi \otimes \bI_n) \bM}{\ba^\top} \vecc (\bw )
+  \Big] + \const \\
+  &= -\half\E_{\cZ\backslash\{\bw \}\sim q} \left[
+  (\vecc\bw - \bA^{-1}\ba)^\top \bA (\vecc\bw - \bA^{-1}\ba)
+  \right] + \const
 \end{align*}
-Let $\bA_j = \E[\mathbf H_{\lambda_j}^2] + \bI_{n}$ and $\ba_j = \E[\mathbf H_{\lambda_j}](\E[\by_j^*] - \E[\alpha_j]\bone_{n})$. Then, using the fact that
-\[
-  \bw_j^\top \bA_j \bw_j - 2 \ba_j^\top\bw_j = (\bw_j - \bA_j^{-1}\ba_j)^\top\bA_j(\bw_j - \bA_j^{-1}\ba_j),
-\]
-we see the $\log \tilde q(\bw)$ is a sum of quadratic terms in $\bw_j$, and we recognise this as the kernel of the product of indepdendent multivariate normal densities. Therefore, for each $j=1,\dots,m$,
-\[
-  \tilde q(\bw_j) \equiv \N(\bA_j^{-1}\ba_j, \bA_j^{-1}),
-\]
-and $\tilde q(\bw) = \prod_{j=1}^m \tilde q(\bw_j)$. Because of this induced factorisation, we can obtain mean-field densities for each $\bw_j$ separately. For convenience later in deriving the lower bound, we note that the second moment of $\tilde q(\bw_j)$ is equal to $\E[\bw_j\bw_j^\top] = \bA_j^{-1}(\bI_{n} + \ba_j\ba_j^\top\bA_j^{-1}) =: \btW_j$.
+This is recognised as a multivariate normal of dimension $nm$ with mean and precision given by $\vecc \tilde\bw = \E[\bA^{-1}\ba]$ and $\tilde\bV_w ^{-1}= \E[\bA]$ respectively.
+With a little algebra, we find that
+\begin{align*}
+  \bV_w^{-1} 
+  &= \E_{\cZ\backslash\{\bw \}\sim q} [\bA] \\
+  &= \E_{\cZ\backslash\{\bw \}\sim q} \left[(\bI_m \otimes \bH_\eta)^\top(\bPsi \otimes \bI_n)(\bI_m \otimes \bH_\eta) + (\bPsi^{-1} \otimes \bI_n) \right] \\
+  &= \E_{\cZ\backslash\{\bw \}\sim q} \left[(\bPsi \otimes \bH_\eta^2) + (\bPsi^{-1} \otimes \bI_n) \right] \\
+  &= (\tilde\bPsi \otimes \tilde\bH_\eta^2) + (\tilde\bPsi^{-1} \otimes \bI_n) 
+\end{align*}
+and making a first-order approximation $(\E \bA )^{-1} \approx \E [\bA^{-1}]$,
+\begin{align*}
+  \vecc \wtilde 
+  &= \E_{\cZ\backslash\{\bw \}\sim q} [\bA^{-1}\ba] \\
+  &= \tilde\bV_w \E_{\cZ\backslash\{\bw \}\sim q} \big[(\bI_m \otimes \bH_\eta) (\bPsi \otimes \bI_n) \vecc(\by^* - \bone_n\balpha^\top)  \big] \\
+  &= \tilde\bV_w \E_{\cZ\backslash\{\bw \}\sim q} \big[(\bPsi \otimes \bH_\eta) \vecc(\by^* - \bone_n\balpha^\top)  \big] \\
+  &= \tilde\bV_w (\tilde\bPsi \otimes \tilde\bH_\eta) \vecc(\tilde\by^* - \bone_n\tilde\balpha^\top).
+\end{align*}
+
+Ideally, we do not want to work with the $nm \times nm$ matrix $\bV_w$, since its inverse is expensive to compute.
+We can exploit the Kronekcer product structure to compute the inverse efficiently.
+Perform an orthogonal eigendecomposition of $\bH_\eta$ to obtain $\bH_\eta = \bV\bU\bV^\top$ and of $\bPsi$ to obtain $\bPsi = \bQ\bP\bQ^\top$.
+This process takes $O(n^3 + m^3) \approx O(n^3)$ time if $m\ll n$.
+Then, manipulate $\bV_w^{-1}$ as follows (for clarity, we drop the tildes from the notations):
+\begin{align*}
+  \bV_w^{-1} 
+  &= (\bPsi \otimes \bH_\eta^2) + (\bPsi^{-1} \otimes \bI_n) \\
+  &= (\bQ\bP\bQ^\top \otimes \bV\bU^2\bV^\top) + (\bQ\bP^{-1}\bQ^\top \otimes \bV\bV^\top) \\
+  &= (\bQ \otimes \bV)(\bP \otimes \bU^2)(\bQ^\top \otimes \bV^\top) + 
+  (\bQ \otimes \bV)(\bP^{-1} \otimes \bI_n)(\bQ^\top \otimes \bV^\top) \\
+  &= (\bQ \otimes \bV)(\bP \otimes \bU^2 + \bP^{-1} \otimes \bI_n)(\bQ^\top \otimes \bV^\top) 
+\end{align*}
+Its inverse is 
+\begin{align*}
+  \bV_w 
+  &=  (\bQ^\top \otimes \bV^\top)^{-1}(\bP \otimes \bU^2 + \bP^{-1} \otimes \bI_n)^{-1} (\bQ \otimes \bV)^{-1} \\
+  &= (\bQ \otimes \bV)(\bP \otimes \bU^2 + \bP^{-1} \otimes \bI_n)^{-1}(\bQ^\top \otimes \bV^\top)
+\end{align*}
+which is easy to compute since the middle term is an inverse of diagonal matrices.
+
+
+
+
+
+
+%Let $\bA_j = \E[\mathbf H_{\lambda_j}^2] + \bI_{n}$ and $\ba_j = \E[\mathbf H_{\lambda_j}](\E[\by_j^*] - \E[\alpha_j]\bone_{n})$. Then, using the fact that
+%\[
+%  \bw_j^\top \bA_j \bw_j - 2 \ba_j^\top\bw_j = (\bw_j - \bA_j^{-1}\ba_j)^\top\bA_j(\bw_j - \bA_j^{-1}\ba_j),
+%\]
+%we see the $\log \tilde q(\bw)$ is a sum of quadratic terms in $\bw_j$, and we recognise this as the kernel of the product of indepdendent multivariate normal densities. Therefore, for each $j=1,\dots,m$,
+%\[
+%  \tilde q(\bw_j) \equiv \N(\bA_j^{-1}\ba_j, \bA_j^{-1}),
+%\]
+%and $\tilde q(\bw) = \prod_{j=1}^m \tilde q(\bw_j)$. Because of this induced factorisation, we can obtain mean-field densities for each $\bw_j$ separately. For convenience later in deriving the lower bound, we note that the second moment of $\tilde q(\bw_j)$ is equal to $\E[\bw_j\bw_j^\top] = \bA_j^{-1}(\bI_{n} + \ba_j\ba_j^\top\bA_j^{-1}) =: \btW_j$.
 
 \subsubsection{$\tilde q(\lambda)$}
 

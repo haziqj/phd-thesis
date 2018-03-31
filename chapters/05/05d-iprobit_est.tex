@@ -75,7 +75,7 @@ Point 2) remains regardless whether Gibbs sampling or HMC is used.
 \subsection{Variational inference}
 
 We turn to variational inference as a method of estimation. Variational methods are widely discussed in the machine learning literature, and there have been efforts to popularise it in statistics \citep{blei2017variational}.
-Suppose that, in a fully Bayesian setting, we append the unknown model parameters to the vector $\bw$ to form $\bz = \{\bw, \theta\}$.
+Suppose that, in a fully Bayesian setting, we append the unknown model parameters to the latent variables to form $\bz = \{\by^*, \bw, \theta\}$.
 The crux of variational inference is this: find a suitably close distribution function $q(\bz)$ that approximates the true posterior $p(\bz|\by)$, where closeness here is defined in the Kullback-Leibler divergence sense,
 \[
   \KL(q\Vert p) = \int \log \frac{q(\bz)}{p(\bz|\by)} q(\bz) \dint \bz.
@@ -125,7 +125,7 @@ In this case, the task is to find optimal mean and variance parameters of a norm
 The second type of constraint, and the one considered in this thesis, is simply an assumption that the approximate posterior $q$ factorises into $M$ disjoint factors.
 Supposing that the elements of $\bz$ may indeed be partitioned into $M$ disjoint groups $\bz = (z^{(1)},\dots,z^{(M)})$, then the structure
 \[
-  q(\bz) = \prod_{k=1}^m q_k(z^{(k)})
+  q(\bz) = \prod_{k=1}^M q_k(z^{(k)})
 \]
 for $q$ is considered.
 This factorised form of variational inference is known in the statistical physics literature as the \emph{mean-field theory} \citep{itzykson1991statistical}.
