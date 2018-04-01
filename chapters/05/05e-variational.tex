@@ -145,7 +145,7 @@ where
 The posterior density $\tilde q$ involving the RKHS parameters is of the form
 \[
   \log\tilde q(\eta) =  -\half\tr\E_{-\eta} \Big[ 
-  (\by^* - \bone_n\balpha^\top - \bH_\eta\bw)^\top \bPsi (\by^* - \bone_n\balpha^\top - \bH_\eta\bw) \Big] + \log p(\eta) + \const,
+  (\by^* - \bone_n\balpha^\top - \bH_\eta\bw) \bPsi (\by^* - \bone_n\balpha^\top - \bH_\eta\bw)^\top \Big] + \log p(\eta) + \const,
 \]
 where $p(\eta)$ is an appropriate prior distribution for $\eta$.
 Generally, samples $\eta^{(1)},\dots,\eta^{(T)}$ from $\tilde q(\eta)$ may be obtained using a Metropolis algorithm, and quantities such as $\tilde\bH_{\eta} = \E_q[\bH_{\eta}]$ may be approximated using $\frac{1}{T}\sum_{t=1}^T \bH_{\eta^{(t)}}$.

@@ -66,9 +66,9 @@ For reference, the relevant distributions are listed below.
   If $\eta$ contains other parameters as well, such as the Hurst coefficient $\gamma \in (0,1)$, SE lengthscale $l >0$ or polynomial offset $c>0$, then appropriate priors should be used to match the support of the parameter.
   Choices include $p(\gamma) = \ind\big(\gamma \in (0,1)\big)$ and $l,c \sim \Gamma(a,b)$.
   
-  \item {\boldmath$p(\bPsi)$}. For the precision matrix, a Wishart prior with scale matrix $\bG$ and $g$ degrees of freedom, denoted $\bPsi \sim \Wis_m(\bG,g)$, is convenient. It has pdf
+  \item {\boldmath$p(\bPsi)$}. For the precision matrix, a Wishart prior with scale matrix $\bG^{-1}$ and $g$ degrees of freedom, denoted $\bPsi \sim \Wis_m(\bG^{-1},g)$, is convenient. It has pdf
   \[
-    p(\bPsi) = \exp\left[\const + \half[g-m-1]\log \abs{\bPsi} - \half\tr(\bG^{-1}\bPsi)  \right].
+    p(\bPsi) = \exp\left[\const + \half[g-m-1]\log \abs{\bPsi} - \half\tr(\bG\bPsi)  \right].
   \]
   For the independent I-probit model, $\bPsi = \diag(\sigma_1^{-2},\dots,\sigma_m^{-2})$, and we choose independent Gamma distributions for each precision $\sigma_j^{-2} \sim \Gamma(r_j,s_j)$, where $r_j$ and $s_j$ are the shape and scale parameters.
   Then,
@@ -88,14 +88,14 @@ For reference, the relevant distributions are listed below.
   For the precision matrix $\bPsi$, it is best to stick with the Wishart prior to avoid positive-definite issues, unless the independent I-probit model is used, in which case Jeffreys' prior for the precisions $p(\sigma_j^{-2})\propto \sigma_j^2$ is a convenient choice.
 \end{remark}
 
-\subsubsection[Derivation of q ystar]{Derivation of $\tilde q(\by^*)$}
+\subsection[Derivation of q ystar]{Derivation of $\tilde q(\by^*)$}
 
 The rows of $\by^*$ are independent, and thus we can consider the variational density for each $\by_i^*$ separately.
 Consider the case where $y_i$ takes one particular value $j \in \{1,\dots,m\}$. The mean-field density $q(\by_{i}^*)$ for each $i=1,\dots,n$ is found to be
 \begin{align*}
   \log \tilde q(\by_{i}^*) 
   &=  \ind[y_{ij}^* = \max_k y_{ik}^*] \, \E_{\cZ\backslash\{\by^*\}\sim q} \left[ - \half (\by^*_i - \bmu_i)^\top \bPsi (\by^*_i - \bmu_i)  \right] + \const \\
-  &= \ind[y_{ij}^* = \max_k y_{ik}^*] \, \left[ - \half (\by^*_i - \tilde\bmu_i)^\top \tilde\bPsi (\by^*_i - \tilde\bmu_i)  \right] + \const \\
+  &= \ind[y_{ij}^* = \max_k y_{ik}^*] \, \left[ - \half (\by^*_i - \tilde\bmu_i)^\top \tilde\bPsi (\by^*_i - \tilde\bmu_i)  \right] + \const \tag{$\star$} \\
 %  &\equiv
 %  \begin{cases}
 %    \prod_{k=1}^m \N(\tilde f_{ik}, 1) & \text{ if } y_{ij}^* > y_{ik}^*, \forall k \neq j \\
@@ -112,7 +112,21 @@ The distribution $q(\by_i^*)$ is a truncated $m$-variate normal distribution suc
 Unfortunately, the expectation of this distribution cannot be found in closed-form, and must be approximated by techniques such as Monte Carlo integration.
 If, however, the independent I-probit model is used and $\tilde\bPsi$ is diagonal, then \hltodo{Lemma X} provides a simplification.
 
-\subsubsection{Derivation of $\tilde q(\bw)$}
+\begin{remark}
+  In ($\star$)  above,  we needn't consider the second order terms in the expectations because they do not involve $\by^*$ and can be absorbed into the constant.
+  To see this,
+  \begin{align*}
+    \E[(\by^*_i - \bmu_i)^\top\bPsi(\by^*_i - \bmu_i)]
+    &= \E[\by^{*\top}_i\bPsi \by^*_i + \bmu_i^\top\bPsi\bmu_i - 2\bmu_i^\top\bPsi\by^*_i] \\
+    &= \by^{*\top}_i\bPsi \by^*_i - 2 \E[\bmu_i^\top] \E[\bPsi]\by^*_i + \const \\
+    &= \by^{*\top}_i\bPsi \by^*_i - 2 \tilde\bmu_i^\top\tilde\bPsi\by^*_i + \const \\
+    &= (\by^*_i - \tilde\bmu_i)^\top \tilde\bPsi (\by^*_i - \tilde\bmu_i) + \const
+  \end{align*}
+  We will see this occurring a lot later on and we shall take note of this fact.
+\end{remark}
+
+
+\subsection[Derivation of q w]{Derivation of $\tilde q(\bw)$}
 
 The terms involving $\bw$ in \cref{eq:qtilde} are the $p(\by^*|\balpha,\bw,\eta,\bPsi)$ and $p(\bw|\bPsi)$ terms, and the rest are absorbed into the constant.
 The easiest way to derive $\tilde q(\bw)$ is to vectorise $\by^*$ and $\bw$.
@@ -154,7 +168,7 @@ With a little algebra, we find that
   &= \E_{\cZ\backslash\{\bw \}\sim q} \left[(\bPsi \otimes \bH_\eta^2) + (\bPsi^{-1} \otimes \bI_n) \right] \\
   &= (\tilde\bPsi \otimes \tilde\bH_\eta^2) + (\tilde\bPsi^{-1} \otimes \bI_n) 
 \end{align*}
-and making a first-order approximation $(\E \bA )^{-1} \approx \E [\bA^{-1}]$,
+and making a first-order approximation $(\E \bA )^{-1} \approx \E [\bA^{-1}]$\footnotemark,
 \begin{align*}
   \vecc \wtilde 
   &= \E_{\cZ\backslash\{\bw \}\sim q} [\bA^{-1}\ba] \\
@@ -162,6 +176,10 @@ and making a first-order approximation $(\E \bA )^{-1} \approx \E [\bA^{-1}]$,
   &= \tilde\bV_w \E_{\cZ\backslash\{\bw \}\sim q} \big[(\bPsi \otimes \bH_\eta) \vecc(\by^* - \bone_n\balpha^\top)  \big] \\
   &= \tilde\bV_w (\tilde\bPsi \otimes \tilde\bH_\eta) \vecc(\tilde\by^* - \bone_n\tilde\balpha^\top).
 \end{align*}
+
+\footnotetext{
+  \citet{groves1969note} show that $\E [\bA^{-1}] = (\E \bA )^{-1} + \bB$, where $\bB$ is a positive-definite matrix.
+}
 
 Ideally, we do not want to work with the $nm \times nm$ matrix $\bV_w$, since its inverse is expensive to compute.
 We can exploit the Kronekcer product structure to compute the inverse efficiently.
@@ -183,49 +201,278 @@ Its inverse is
   &= (\bQ \otimes \bV)(\bP \otimes \bU^2 + \bP^{-1} \otimes \bI_n)^{-1}(\bQ^\top \otimes \bV^\top)
 \end{align*}
 which is easy to compute since the middle term is an inverse of diagonal matrices.
+%We can coerce $\tilde q(\bw)$ into a matrix normal distribution.
+%Consider the middle term:
+%\begin{align*}
+%  (\bP \otimes \bU^2 + \bP^{-1} \otimes \bI_n)^{-1}
+%  &= 
+%\end{align*}
 
-
-
-
-
-
-%Let $\bA_j = \E[\mathbf H_{\lambda_j}^2] + \bI_{n}$ and $\ba_j = \E[\mathbf H_{\lambda_j}](\E[\by_j^*] - \E[\alpha_j]\bone_{n})$. Then, using the fact that
-%\[
-%  \bw_j^\top \bA_j \bw_j - 2 \ba_j^\top\bw_j = (\bw_j - \bA_j^{-1}\ba_j)^\top\bA_j(\bw_j - \bA_j^{-1}\ba_j),
-%\]
-%we see the $\log \tilde q(\bw)$ is a sum of quadratic terms in $\bw_j$, and we recognise this as the kernel of the product of indepdendent multivariate normal densities. Therefore, for each $j=1,\dots,m$,
-%\[
-%  \tilde q(\bw_j) \equiv \N(\bA_j^{-1}\ba_j, \bA_j^{-1}),
-%\]
-%and $\tilde q(\bw) = \prod_{j=1}^m \tilde q(\bw_j)$. Because of this induced factorisation, we can obtain mean-field densities for each $\bw_j$ separately. For convenience later in deriving the lower bound, we note that the second moment of $\tilde q(\bw_j)$ is equal to $\E[\bw_j\bw_j^\top] = \bA_j^{-1}(\bI_{n} + \ba_j\ba_j^\top\bA_j^{-1}) =: \btW_j$.
-
-\subsubsection{$\tilde q(\lambda)$}
-
-For $j = 1,\dots,m$,
+In the case of the I-probit model, where $\bPsi = \diag(\sigma_1^{-2},\dots,\sigma_m^{-2})$, then the covariance $\bV_w$ takes a simpler form.
+Specifically, it has the block diagonal structure:
 \begin{align*}
-  \log \tilde q(\lambda_j) 
-  &= \E_{\by^*, \bw, \alpha} \left[ 
-  - \half \sum_{j=1}^m \, \norm{\by_j^* - \alpha_j\bone_{n} - \lambda_j\bH\bw_j}^2  
-  \right] + \const \\
-  &= - \half \sum_{j=1}^m \E_{\by^*, \bw, \alpha} \left[ 
-  \lambda_j^2 \, \bw_j^\top \bH^2 \bw_j 
-  - 2\lambda_j (\by_j^* - \alpha_j\bone_{n})^\top \bH \bw_j \right] 
-  + \const \\  
-  &= - \half \sum_{j=1}^m \Big( \lambda_j^2 \tr \left(  \bH^2 \E[\bw_j \bw_j^\top] \right) - 2 \lambda_j (\E[\by_j^*] - \E[\alpha_j]\bone_{n})^\top \bH \E[\bw_j] \Big) + \const
+  \bV_w 
+  &= \big(\diag(\tilde\sigma_1^{-2},\dots,\tilde\sigma_m^{-2}) \otimes \tilde\bH_\eta^2 + (\diag(\tilde\sigma_1^{2},\dots,\tilde\sigma_m^{2}) \otimes \bI_n \big)^{-1} \\
+  &= \diag\Big(
+  \big(\tilde\sigma_1^{-2}\tilde\bH_\eta^2 + \tilde\sigma_1^2\bI_n\big)^{-1},
+  \cdots,
+  \big(\tilde\sigma_m^{-2}\tilde\bH_\eta^2 + \tilde\sigma_m^2\bI_n\big)^{-1}
+  \Big) \\
+  &=: \diag(\tilde\bV_{w_1},\dots,\tilde\bV_{w_m}).
+  \end{align*}
+The mean $\tilde\bw$ in matrix form is
+\begin{align*}
+  \tilde\bw 
+  &= \tilde\bV_w (\diag(\tilde\sigma_1^{-2},\dots,\tilde\sigma_m^{-2}) \otimes \tilde\bH_\eta) (\tilde\by^* - \bone_n\tilde\balpha^\top) \\
+  &= \diag(\tilde\bV_{w_1},\dots,\tilde\bV_{w_m})
+  \diag(\tilde\sigma_1^{-2}\tilde\bH_\eta,\dots,\tilde\sigma_m^{-2}\tilde\bH_\eta)  
+  (\tilde\by^* - \bone_n\tilde\balpha^\top) \\
+  &= \diag(\tilde\sigma_1^{-2}\tilde\bV_{w_1}\tilde\bH_\eta,\dots,\tilde\sigma_m^{-2}\tilde\bV_{w_m}\tilde\bH_\eta)  
+  (\tilde\by^* - \bone_n\tilde\balpha^\top) \\
+  &= 
+  \bordermatrix{
+  &\color{gray}\tilde\bw_{\bigcdot 1} 
+  &\color{gray}\cdots 
+  &\color{gray}\tilde\bw_{\bigcdot m} \cr
+  &\tilde\sigma_1^{-2}\tilde\bV_{w_{1}}\tilde\bH_\eta(\tilde\by^*_{\bigcdot 1} - \tilde\alpha_1\bone_n)      
+  &\cdots 
+  &\tilde\sigma_m^{-2}\tilde\bV_{w_{m}}\tilde\bH_\eta(\tilde\by^*_{\bigcdot m} - \tilde\alpha_m\bone_n) 
+  }.
 \end{align*}
-By completing the squares, we recognise this is as the kernel of the product of independent univariate normal densities. Thus, each $\lambda_j \sim \N(d_j/c_j, 1/c_j)$, where
-\begin{gather*}
-  c_j = \tr \left(  \bH^2 \E[\bw_j \bw_j^\top] \right) 
-  \ \text{ and } \
-  d_j = (\E[\by_j^*] - \E[\alpha_j]\bone_{n})^\top \bH \E[\bw_j].
-\end{gather*}
-
-Supposing we use the same covariance kernel (and therefore scale parameter) for each regression class, the distribution for $\lambda$ is easily seen as
+Therefore, we can consider the distribution of $\bw = (\bw_{\bigcdot 1},\dots,\bw_{\bigcdot m})$ columnwise, and each are normally distributed with mean and variance
 \[
-  \lambda \sim \N \left( \frac{\sum_{j=1}^m d_j}{\sum_{j=1}^m c_j}, \frac{1}{\sum_{j=1}^m c_j} \right).
+  \tilde\bw_{\bigcdot j} = \tilde\sigma_j^{-2}\tilde\bV_{w_{j}}\tilde\bH_\eta(\tilde\by^*_{\bigcdot j} - \tilde\alpha_j\bone_n) 
+  \hspace{0.5cm}\text{and}\hspace{0.5cm}
+  \tilde\bV_{w_{j}} = \big(\tilde\sigma_j^{-2}\tilde\bH_\eta^2 + \tilde\sigma_j^2\bI_n\big)^{-1}.
 \]
 
-\subsubsection{$\tilde q(\alpha)$}
+A quantity that we will be requiring time and again will be $\tr(\bC\E[\bw^\top\bD\bw ])$, where $\bC \in \bbR^{m \times m}$ and $\bD \in \bbR^{n \times n}$ are both square and symmetric matrices.
+Using the definition of the trace directly, we get
+\begin{align}
+  \tr(\bC\E[\bw^\top\bD\bw ])
+  &= \sum_{i,j=1}^m \bC_{ij} \E[\bw^\top\bD\bw ]_{ij} \nonumber \\
+  &= \sum_{i,j=1}^m \bC_{ij} \E[\bw_{\bigcdot i}^\top\bD\bw_{\bigcdot j} ]. \label{eq:trCEwDw}
+\end{align}
+The expectation of the univariate quantity $\bw_{\bigcdot i}^\top\bD\bw_{\bigcdot j}$ is inspected below:
+\begin{align*}
+  \E[\bw_{\bigcdot i}^\top\bD\bw_{\bigcdot j}]
+  &= \tr(\bD \E[\bw_{\bigcdot j}\bw_{\bigcdot i}^\top]) \\
+  &= \tr\big(\bD (\Cov(\bw_{\bigcdot j},\bw_{\bigcdot i}) + \E[\bw_{\bigcdot j}]\E[\bw_{\bigcdot i}]^\top) \big) \\
+  &= \tr\big(\bD (\bV_w[i,j]  + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot i}^\top)\big).
+\end{align*}
+where $\bV_w[i,j] \in \bbR^{n\times n}$ refers to the $(i,j)$'th submatrix block of $\bV_w$.
+Of course, in the independent the I-probit model, this is equal to 
+\[
+  \bV_w[i,j] = \delta_{ij}(\psi_j\bH_\eta^2 + \psi_j^{-1}\bI_n)^{-1}
+\]
+where $\delta$ is the Kronecker delta. 
+Continuing on \cref{eq:trCEwDw} leads us to
+\begin{align*}
+  \tr(\bC\E[\bw^\top\bD\bw ])
+  &= \sum_{i,j=1}^m \bC_{ij} \left( 
+  \tr\big(\bD (\delta_{ij}\bV_{w_j}  + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot i}^\top)\big).
+  \right).
+\end{align*}
+If $\bC = \diag(c_1,\dots,c_m)$, then
+\begin{align*}
+  \tr(\bC\E[\bw^\top\bD\bw ]) 
+  &= \sum_{j=1}^m c_j\left( 
+  \tr \big( \bD \tilde\bV_{w_j} \big)  +
+  \tilde\bw_{\bigcdot j}^\top \bD \tilde\bw_{\bigcdot j}
+  \right) \\
+  &= \sum_{j=1}^m c_j
+  \tr \big( \bD (\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j} \tilde\bw_{\bigcdot j}^\top) \big)
+\end{align*}
+
+\subsection[Derivation of q eta]{Derivation of $\tilde q(\eta)$}
+
+By looking at only the terms involving $\eta$ in \cref{eq:qtilde}, we deduce that $\tilde q$ for $\eta$ satisfies
+\begin{align*}
+  \log\tilde q(\eta) 
+  &=  -\half\tr\E_{\cZ\backslash\{\eta\}\sim q} \Big[ 
+  (\by^* - \bone_n\balpha^\top - \bH_\eta\bw) \bPsi (\by^* - \bone_n\balpha^\top - \bH_\eta\bw)^\top \Big] + \log p(\eta) \\
+  &\phantom{==} + \const \\
+  &=  -\half\tr \E_{\cZ\backslash\{\eta\}\sim q} \Big(
+  \bPsi\bw^\top\bH_\eta^2\bw - 2\bPsi\bw^\top\bH_\eta(\by^*-\balpha)
+  \Big) + \log p(\eta)  + \const \\
+  &= -\half \tr \Big( 
+   \tilde\bPsi \E[\bw^\top\bH_\eta^2\bw] - 2\tilde\bPsi\tilde\bw^\top\bH_\eta(\tilde\by^* - \tilde\balpha)
+   \Big) + \log p(\eta) + \const
+\end{align*}
+with some appropriate prior $p(\eta)$.
+In general, this does not have a recognisable form in $\eta$, especially when it is not linearly dependent on the kernel matrix.
+This happens when considering parameters other than the scales of the RKHSs.
+Our interest would be to obtain $\tilde\bH_\eta := \E_{\eta\sim q}\bH_\eta$ and $\tilde\bH_\eta^2 := \E_{\eta\sim q}\bH_\eta^2$.
+We use a Metropolis random-walk algorithm to obtain these quantities, as detailed in the algorithm below.
+
+\begin{algorithm}[hbt]
+\caption{Metropolis random-walk to sample $\eta$}
+\begin{algorithmic}[1]
+  \State \textbf{inputs} $\tilde\balpha$, $\tilde\bw$, $\tilde\bPsi$, and  $s$ Metropolis sampling s.d.
+  \State \textbf{initialise} $\eta^{(0)} \in \bbR^q$ and $t \gets 0$
+  \For{$t=1,\dots,T$}
+    \State Draw $\eta^* \sim \N_q(\eta^{(t)}, s^2)$
+    \State Accept/reject proposal state, i.e.
+    \[
+      \eta^{(t+1)} \gets 
+      \begin{cases}
+        \eta^* &\text{if } u\sim\Unif(0,1) < \pi_{\text{acc}} \\
+        \eta^{(t)} &\text{otherwise}       
+      \end{cases}
+    \]
+    \hspace{1.8em}where
+    \[
+      \pi_{\text{acc}} = \min\left(1, 
+%      \frac{\tilde q(\eta^*)}{\tilde q(\eta^{(t)})}
+      \exp\big(\log \tilde q(\eta^*) - \log \tilde q(\eta^{(t)})\big)
+      \right).
+    \]
+  \EndFor
+  \State $\tilde\bH_\eta \gets \frac{1}{T}\sum_{i=1}^T \bH_{\eta^{(t)}}$ and $\tilde\bH_\eta^2 \gets \frac{1}{T}\sum_{i=1}^T \bH_{\eta^{(t)}}^2$
+\end{algorithmic}
+\end{algorithm}
+
+%In calculating the acceptance probabilities, we need the matrix $\E[\bw^\top\bH_\eta^2\bw]$.
+%This is a bit awkward to compute---it requires sampling $\vecc \bw^{(t)}$ from the distribution $\tilde q(\vecc \bw)$, an $nm$-variate normal distribution, and the sample mean of $\bw^{(t)\top}\bH_\eta^2\bw^{(t)}$ calculated.
+%If the independent I-probit model is considered, then 
+%\[
+%  \tr(\tilde\bPsi \E[\bw^\top\bH_\eta^2\bw])
+%  = \sum_{i,j=1}^m \tilde\bPsi_{ij}\E[\bw_{\bigcdot i}^\top\bH_\eta^2\bw_{\bigcdot j}]
+%\]
+%where each $\bw_{\bigcdot j} \sim \N_n(\tilde\bw_{\bigcdot j},\bV_{w_j})$ and are independent of each other, so
+%$\E[\bw_{\bigcdot i}^\top\bH_\eta^2\bw_{\bigcdot j}] = \tilde\bw_{\bigcdot i} \bH_\eta^2 \tilde\bw_{\bigcdot j}$.
+
+
+%
+%\begin{align*}
+%  \vecc \bH_\eta\bw \sim \N_{nm}(\vecc \bH_\eta\wtilde, (\bI_m\otimes\bH_\eta)\bV_w(\bI_m\otimes\bH_\eta))
+%\end{align*}
+%
+%\begin{align*}
+%  \E[(\vecc \bH_\eta\bw)(\vecc \bH_\eta\bw)^\top] &=
+%  (\bI_m\otimes\bH_\eta)\bV_w(\bI_m\otimes\bH_\eta) + \vecc \bH_\eta\wtilde (\vecc \bH_\eta\wtilde)^\top \\
+%  \E[\bw^\top\bH_\eta^2\bw] &=
+%  (\bI_m\otimes\bH_\eta)\bV_w(\bI_m\otimes\bH_\eta) + \vecc \bH_\eta\wtilde (\vecc \bH_\eta\wtilde)^\top  
+%\end{align*}
+
+Now consider the case where $\eta = \{\lambda_1,\dots,\lambda_p \}$ (RKHS scale parameters only), and the scenario described in the exponential family EM algorithm of \hltodo{Section 4.3.3} applies.
+In particular, for $k=1,\dots,p$, we can decompose the kernel matrix as $\bH_\eta = \lambda_k \bR_k + \bS_k$ and its square as $\bH_\eta^2 = \lambda_k^2 \bR_k^2 + \lambda_k \bU_k + \bS_k^2$.
+Then, for $j = 1,\dots,m$, assuming each of the $q(\lambda_k)$ densities are independent of each other, we find that
+\begin{align*}
+  \log \tilde q(\lambda_k) 
+  &= \E_{\cZ\backslash\{\eta\}\sim q} \left[ 
+  - \half\tr \big((\by^* - \bmu) \bPsi (\by^* - \bmu)^\top  \big)
+  \right] 
+  - \frac{1}{2v_k^2} (\lambda_k - m_k)^2 + \const \\
+  &= - \half\tr \E_{\cZ\backslash\{\eta\}\sim q} \left[ \bPsi\bw^\top \bH_\eta^2 \bw - 2\bPsi(\by^* - \bone\balpha^\top)^\top\bH_\eta \bw \right] \\
+  &\phantom{==} - \frac{1}{2v_k^2} (\lambda_k - m_k)^2 + \const \\
+  &= - \half\tr \E_{\cZ\backslash\{\eta\}\sim q} \left[ \bPsi\bw^\top (\lambda_k^2\bR_k^2 + \lambda_k\bU_k) \bw - 2\bPsi(\by^* - \bone\balpha^\top)^\top(\lambda_k\bR_k) \bw \right] \\
+  &\phantom{==} - \frac{1}{2v_k^2} (\lambda_k^2 - 2m_k\lambda_k) + \const \\
+  &= - \half\tr \E_{\cZ\backslash\{\eta\}\sim q} \left[ 
+  \lambda_k^2\bPsi\bw^\top \bR_k^2 \bw 
+  -2 \lambda_k \Big(
+  \bPsi(\by^* - \bone\balpha^\top)^\top\bR_k \bw 
+  -\half\bPsi\bw^\top \bU_k \bw
+  \Big) \right] \\
+  &\phantom{==} - \half\left(\frac{1}{v_k^2}\lambda_k^2  - 2 \frac{m_k}{v_k^2} \lambda_k \right) + \const \\
+  &= -\half \Big[ 
+ \lambda_k^2 \big( 
+ \greyoverbrace{\tr(\tilde\bPsi\E[\bw^\top\bR_k^2\bw]) + v_k^{-2}}{c_k}
+ \big) \\ 
+  &\hspace{2cm} - 2\lambda_k \Big( 
+  \greyoverbrace{
+  \tr\Big( \tilde\bPsi(\tilde\by^* - \bone\tilde\balpha^\top)^\top\bR_k \tilde\bw 
+  - \half\tilde\bPsi\E[\bw^\top \bU_k \bw] \Big) 
+  + m_k v_k^{-2}}{d_k}
+  \Big) \Big]
+\end{align*}
+By completing the squares, we recognise this is as the kernel of a univariate normal density. 
+Specifically, $\lambda_k \sim \N(d_k/c_k,1/c_k)$.
+The quantity $\tilde\bH_\eta$ can be obtained by substituting $\lambda_k \mapsto \E_{\lambda_k\sim q}[\lambda_k]$ in the \hltodo{expression XXX}.
+However, in the calculation of $\tilde\bH_\eta^2$, we must replace $\lambda_k^2 \mapsto \E_{\lambda_k\sim q}[\lambda_k]^2 +  \Var_{\lambda_k\sim q}[\lambda_k]$ in all occurrences of square terms.
+This can be cumbersome, so if felt necessary, use the approximation $\lambda_k^2 \mapsto \E_{\lambda_k\sim q}[\lambda_k]^2$ instead.
+
+\begin{example}
+  Suppose $k=1$, and we only have $\lambda$ to estimate.
+  Then, $\bH_\eta = \lambda \bH$, $\bR_k = \bH$, $\bR_k^2 = \bH^2$, and $\bU_k = \bzero$.
+  Suppose also we use an improper prior $\lambda_k \propto \const$, which is the same as having $v_k^2 \to 0$ and $m_k v_k^{-2} \to 0$.
+  The mean field distribution for $\lambda$ is then
+  \[
+    \lambda \sim \N \left( 
+    \frac{\tr\big(\tilde\bPsi(\tilde\by^* - \bone\tilde\balpha^\top)^\top \bH \tilde\bw \big)}{\tr(\tilde\bPsi\E[\bw^\top\bH^2\bw])},
+    \frac{1}{\tr(\tilde\bPsi\E[\bw^\top\bH^2\bw])}
+    \right)
+  \]
+  Further, if $\tilde\bPsi = \tilde\psi\bI_m$, then
+  \[
+    \lambda \sim \N \left( 
+    \frac{\sum_{j=1}^m (\tilde\by^*_{\bigcdot j} - \tilde\alpha_j\bone)^\top \bH \tilde\bw_{\bigcdot j} }{\sum_{j=1}^m
+  \tr \big( \bH^2 \E [\bw_{\bigcdot j} \bw_{\bigcdot j}^\top] \big)},
+    \frac{1}{\sum_{j=1}^m
+  \tr \big( \bH^2 \E [\bw_{\bigcdot j} \bw_{\bigcdot j}^\top] \big)}
+    \right)
+  \]
+  which bears a resemblance to the exponential family EM algorithm solutions described in Chapter 4.
+  Now, $\tilde \bH_\eta = \E[\lambda \bH] = \tilde\lambda \bH$, and $\tilde \bH_\eta^2 = \E[\lambda^2 \bH^2] = (\Var\lambda + \tilde\lambda^2) \bH^2$.
+\end{example}
+
+\subsubsection[Derivation of q Psi]{Derivation of $\tilde q(\bPsi)$}
+
+Introduce the transformed random matrix $\bu = \bw\bPsi^{-1} \in \bbR^{n\times m}$.
+Since we have that  $\vecc \bu = (\vecc \bw)^\top (\bPsi^{-1} \otimes \bI_n)$, the optimal mean-field distribution for $\bu$ is normal with mean $\vecc \tilde\bu = \vecc (\tilde\bw\tilde\bPsi^{-1} )$ and variance
+\begin{align*}
+  \tilde \bV_u
+  &= (\tilde\bPsi^{-1} \otimes \bI_n) \tilde \bV_w (\tilde\bPsi^{-1} \otimes \bI_n). 
+%  &= (\tilde\bPsi \otimes \bI_n)^{-1}
+%  \big( (\tilde\bPsi \otimes \tilde\bH_\eta^2) + (\tilde\bPsi^{-1} \otimes \bI_n) \big)^{-1} 
+%  (\tilde\bPsi \otimes \bI_n)^{-1} \\
+%  &= \big( 
+%  (\tilde\bPsi^3 \otimes \tilde\bH_\eta^2) + (\tilde\bPsi \otimes \bI_n)
+%  \big)^{-1}
+\end{align*}
+In the case of the independent model, its mean is $\tilde\bu_{\bigcdot j} = \tilde\psi_j^{-1} \tilde\bu_{\bigcdot j}$ for $j=1,\dots,m$ and its variance is
+\begin{align*}
+  \tilde \bV_u 
+  &= \diag(\tilde\psi_1^{-2}\tilde\bV_{w_1},\dots,\tilde\psi_m^{-2}\tilde\bV_{w_m}).
+%  &= \diag((\psi_1^3\bH_\eta^2 + \psi_1\bI_n)^{-1},
+%  \dots, (\psi_m^3\bH_\eta^2 + \psi_m\bI_n)^{-1}).
+\end{align*}
+
+Now, to derive $\tilde q(\bPsi)$ for the full I-probit model, we inspect the equation
+\begin{align*}
+  \log \tilde q(\bPsi)
+  &= \E_{\cZ\backslash\{\bPsi\}\sim q} \Big[ 
+  \half[n]\log\abs{\bPsi} - \half\tr \big((\by^* - \bmu)^\top (\by^* - \bmu)\bPsi  \big)
+  + \half[n]\log\abs{\bPsi} - \half\tr \big( \bu^\top\bu\bPsi  \big)
+  \Big] \\
+  &\phantom{==} + \half[g-m-1]\log \abs{\bPsi} - \half\tr(\bG\bPsi) + \const \\
+  &= -\half \tr \Big(
+  \big(\bG + 
+  \greyoverbrace{\E[(\by^* - \bmu)^\top (\by^* - \bmu)]}{\bG_1} +
+  \greyoverbrace{\E[\bu^\top\bu]}{\bG_2}
+  \big)\bPsi
+  \Big) \\
+  &\phantom{==} + \half[2n+g-m-1]\log \abs{\bPsi} + \const
+\end{align*}
+which we recognise to be a Wishart distribution with scale matrix $(\bG + \bG_1 + \bG_2)^{-1}$ and $2n+g-m$ degrees of freedom.
+The mean of this distribution is $\tilde\bPsi = (2n+g-m)(\bG + \bG_1 + \bG_2)^{-1}$.
+
+\begin{align*}
+  \bG_1 
+  &= \E[(\by^* - \bmu)^\top (\by^* - \bmu)] \\
+  &= \E \big[\by^{*\top}\by^* + \balpha\bone_n^\top \bone_n\balpha^\top + \bw^\top\bH_\eta^2\bw -2\by^{*\top}\bone_n\balpha^\top -2\by^{*\top}\bH_\eta\bw -2 \balpha\bone_n^\top\bH_\eta\bw \big] \\
+  &= \E \big[\by^{*\top}\by^*] + n\E[\balpha\balpha^\top] + \E[\bw^\top\bH_\eta\bw] -2(\tilde\by^{*\top}\bone_n\tilde\balpha^\top + \tilde\by^{*\top}\tilde\bH_\eta\tilde\bw + \tilde\balpha\bone_n^\top\tilde\bH_\eta\tilde\bw)
+\end{align*}
+
+This involves second order moments of a conically truncated multivariate normal distribution, which needs to be obtained via simulation.
+Meanwhile,
+\begin{align*}
+  \bG_2
+  &= \E[\bu^\top\bu] \\
+  &= 
+\end{align*}
+
+\subsubsection[Derivation of q alpha]{Derivation $\tilde q(\balpha)$}
 
 For $j = 1,\dots,m$, denote $\bH_i$ as the row vector of the kernel matrix $\bH$. Then,
 \begin{align*}
