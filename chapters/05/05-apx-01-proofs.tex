@@ -2,75 +2,97 @@
 
 \subsection{Proof of Lemma}
 
-$X_i \sim \tN(\mu_i,\sigma_i^2,-\infty,x_j)$
-\begin{align*}
-  \int g(x_i) \ind[x_i < x_j] \phi(x_i) \dint x_i = \E g(X_i)
-\end{align*}
-
-\begin{align*}
+Recall that for $Y \sim \tN(\mu,\sigma^2,-\infty,b)$, for some function $g$ of $Y$, we have that
+\[
+  \E g(Y) = \Phi(\beta)^{-1} \int g(y) \ind[y < b] \phi(y|\mu,\sigma^2) \dint y,
+\]
+and in particular, we have
+\begin{align}
+  \E[Y - \mu] &= -\sigma \frac{\phi(\beta)}{\Phi(\beta)} \label{eq:tnXminMu} \\
+  \E[Y - \mu]^2 &= \sigma^2 \left[ 1 -  \frac{ \beta\phi(\beta)}{\Phi(\beta)}  \right] \label{eq:tnXminMusq}
+\end{align}
+where $\beta = (b - \mu)/\sigma$.
+For the conically truncated multivariate normal distribution $X \sim \tN_d(\mu,\Sigma,\cA_j)$, where $\Sigma = \diag(\sigma_1^2,\dots,\sigma_d^2)$.
+The independence structure of $\Sigma$ makes it possible to consider the expectations of each of the components separately by marginalising out the rest of the components. 
+For simplicity, denote $p(x_k) = \phi(x_k|\mu_k,\sigma_k) = \sigma^{-1}_k \phi(\frac{x_k - \mu_k}{\sigma_k})$.
+For $i \neq j$, we have
+\begin{align}
   \E g(X_i)
-  &= C^{-1} \idotsint  g(x_i) \ind[x_k < x_j, \forall k \neq j]  \prod_{k=1}^d p(x_k) \dint x_1 \cdots \dint x_d \\
-  &= C^{-1} \iint g(x_i) \ind[x_i < x_j] p(x_i) p(x_j) \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  \dint x_i \dint x_j \\
-  &= C^{-1} \int \E_{X_i\sim\tN(\mu_i,\sigma_i^2,-\infty,x_j)} g(X_i) p(x_j) \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  \dint x_j
-  \end{align*}
+  &= C^{-1} \idotsint  g(x_i) \ind[x_k < x_j, \forall k \neq j]  \prod_{k=1}^d p(x_k) \dint x_1 \cdots \dint x_d \nonumber \\
+  &= C^{-1} \frac{\Phi((x_j-\mu_j)/\sigma_j)}{\Phi((x_j-\mu_j)/\sigma_j)} \iint g(x_i) \ind[x_i < x_j] p(x_i) p(x_j) \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  \dint x_i \dint x_j \nonumber \\
+  &= C^{-1}  \int \E_{X_i\sim\tN(\mu_i,\sigma_i^2,-\infty,x_j)} g(X_i) \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j)\dint x_j \label{eq:tnproofi}
+  \end{align}
+where $C$ is the normalising constant for $X$, while for the $j$'the component we have
+\begin{align}
+  \E g(X_j)
+  &= C^{-1} \idotsint  g(x_j) \ind[x_k < x_j, \forall k \neq j]  \prod_{k=1}^d p(x_k) \dint x_1 \cdots \dint x_d \nonumber \\
+  &= C^{-1} \int  g(x_j)  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right) p(x_j) \dint x_d. \label{eq:tnproofj}  
+\end{align}
 
+Plugging in \cref{eq:tnXminMu} for $g(X_i)=X_i - \mu_i$ in \cref{eq:tnproofi} we get
 \begin{align*}
-  \E X_i 
-  &= C^{-1} \int  \left(\mu_i \Phi \left( \frac{x_j-\mu_i}{\sigma_i}\right) - \sigma_i  \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right) \right) p(x_j) \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)   \dint x_j \\
-  &= \mu_i C^{-1} \int p(x_j) \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)   \dint x_j \\
-  &\phantom{==} - \sigma_i C^{-1} \int p(x_j)  \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)   \dint x_j \\
-  &= \mu_i - \sigma_i C^{-1} \int \phi(z)  \phi \left( \frac{\sigma_j z + \mu_j -\mu_i}{\sigma_i} \right)  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{\sigma_j z + \mu_j - \mu_k}{\sigma_k} \right)   \dint z \\
-  &= \mu_i - \sigma_i C^{-1} \E_Z\bigg[ \phi \left( \frac{\sigma_j Z + \mu_j -\mu_i}{\sigma_i} \right)  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{\sigma_j Z + \mu_j - \mu_k}{\sigma_k} \right) \bigg]
+  \E X_i - \mu_i
+  &= -C^{-1} \int  \left(  \sigma_i  \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right) \Big/ \Phi \left( \frac{x_j-\mu_i}{\sigma_i}\right)  \right)  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j \\
+  &= - \sigma_i C^{-1} \int  \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)  \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j \\
+  &= - \sigma_i C^{-1} \int  \phi \left( \frac{\sigma_j z + \mu_j -\mu_i}{\sigma_i} \right)  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{\sigma_j z + \mu_j - \mu_k}{\sigma_k} \right)  \phi(z) \dint z \\
+  &= - \sigma_i C^{-1} \E_Z\bigg[ \phi \left( \frac{\sigma_j Z + \mu_j -\mu_i}{\sigma_i} \right)  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{\sigma_j Z + \mu_j - \mu_k}{\sigma_k} \right) \bigg]
+\end{align*}
+where $Z$ is the distribution of $\N(0,1)$, and we had used a change of variable $x_j = \sigma_j z + \mu_j$, so that $p(x_j) = \sigma_j^{-1} \phi(z)$ and $\d x_j = \sigma_j \d z$.
+For the $j$'th component, substitute $g(x_j) = x_j - \mu_j$ in \cref{eq:tnproofj} to get
+\begin{align*}
+  \E X_j - \mu_j
+  &= C^{-1} \int (x_j - \mu_j)  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right) p(x_j) \dint x_j \\
+  &= C^{-1} \sigma_j  \int z  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{\sigma_j z + \mu_j - \mu_k}{\sigma_k} \right) \phi(z) \dint z \\
+  &= \sigma_j  \mathop{\sum_{i=1}^d}_{i \neq j} \sigma_i C^{-1} \E \Bigg[ \phi \left( \frac{\sigma_j Z + \mu_j - \mu_i}{\sigma_i} \right) \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{\sigma_j Z + \mu_j - \mu_k}{\sigma_k} \right) \Bigg] \\
+  &= - \sigma_j \mathop{\sum_{i=1}^d}_{i \neq j} \big(\E X_i - \mu_i \big),
+\end{align*}
+where we have made use of Lemma \ref{lem:EZgZ} in the second last step.
+
+For the second moment, plug in \cref{eq:tnXminMusq} for $g(X_i)= (X_i - \mu_i)^2$ in \cref{eq:tnproofi} to get
+\begin{align*}
+  \E [X_i - \mu_i]^2
+  &= -C^{-1} \int  \sigma_i^2 \left[ 1 -  \frac{ \beta\phi(\beta)}{\Phi(\beta)}  \right]  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j \\
+  &= -\sigma_i^2 C^{-1} 
+  \greyoverbrace{\int \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j}{C} \\
+  &\phantom{==} + \sigma_i^{\cancel{2}} C^{-1} \int  
+  \frac{x_j-\mu_i-\mu_j +\mu_j}{\cancel{\sigma_i}}
+  \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)
+  \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j \\
+  &= -\sigma_i^2 + \sigma_i C^{-1} \int  
+  (x_j - \mu_j)
+  \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)
+  \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j \\
+  &\phantom{==} +  (\mu_i-\mu_j)  \cdot 
+  \greyoverbrace{-\sigma_i C^{-1} \int  
+  \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)
+  \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j}{\E X_i - \mu_i} \\
+  &= (\mu_i-\mu_j)(\E X_i - \mu_i) -\sigma_i^2 \\
+  &\phantom{==}
+  + \sigma_i C^{-1} \int  \sigma_j z 
+  \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)
+  \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{\sigma_j z + \mu_j - \mu_k}{\sigma_k} \right)  \phi(z) \dint z \\
+  &= (\mu_i-\mu_j)(\E X_i - \mu_i) -\sigma_i^2 \\
+  &\phantom{==} + \sigma_i\sigma_j C^{-1} 
+  \E \Bigg[
+  Z \phi \left( \frac{\sigma_j Z + \mu_j -\mu_i}{\sigma_i} \right) 
+  \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{\sigma_j Z + \mu_j - \mu_k}{\sigma_k} \right) 
+  \Bigg]
 \end{align*}
 
+%\begin{align*}
+%  \sigma_i C^{-1} \int  &\sigma_j z
+%  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{\sigma_j z + \mu_j - \mu_k}{\sigma_k} \right)  \phi(z) \dint z\\
+%  &= \sigma_i\sigma_j C^{-1} \E \Bigg[Z \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{\sigma_j Z + \mu_j - \mu_k}{\sigma_k} \right) \Bigg] \\
+%  &= \sigma_i(\E X_j - \mu_j)
+%\end{align*}
+
+
+
+\newpage
 \begin{proof}
 \begin{enumerate}[label=(\roman*)]
-  \item Due to the independence structure in the pdf of $\bX$, it is easy to consider the expectations of each of the components separately and marginalising out the rest of the components. For $i \neq j$, we have
-  \begin{align*}
-    \E[x_i] 
-    &= C^{-1} \idotsint \ind[x_k < x_j, \forall k \neq j] \cdot x_i  \prod_{k=1}^d \frac{1}{\sigma_k}\phi \left( \frac{x_k - \mu_k}{\sigma_k} \right) \d x_1 \cdots \d x_d \\
-    &= C^{-1} \iint \ind[x_i < x_j] \frac{x_i}{\sigma_i} \, \phi \left( \frac{x_i - \mu_i}{\sigma_i} \right)  \prod_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right) \frac{1}{\sigma_j}\phi \left( \frac{x_j - \mu_j}{\sigma_j} \right) \d x_i \d x_j \\
-    &= C^{-1} \iint \ind[\sigma_i z_i + \mu_i < \sigma_j z_j + \mu_j] (\sigma_i z_i + \mu_i) \phi (z_i)  \prod_{k \neq i,j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \phi (z_j) \d z_i \d z_j \\
-    &= \mu_i C^{-1} \iint \ind[ z_i < (\sigma_j z_j + \mu_j - \mu_i) / \sigma_i] \phi (z_i)  \prod_{k \neq i,j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \phi (z_j) \d z_i \d z_j \\*    
-    &\phantom{==} + \sigma_i C^{-1} \iint \ind[z_i < (\sigma_j z_j + \mu_j - \mu_i) / \sigma_i] z_i \phi (z_i)  \prod_{k \neq i,j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \phi (z_j) \d z_i \d z_j \\
-    &= \mu_i C^{-1} 
-    \overbrace{
-    \int  \prod_{k \neq j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \phi (z_j) \d z_j
-    }^{C} \\  
-    &\phantom{==} + \sigma_i C^{-1} \int \ind[ z_i < (\sigma_j z_j + \mu_j - \mu_i) / \sigma_i] z_i \phi (z_i) \prod_{k \neq i,j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \phi (z_j) \d z_i \d z_j \\
-  \end{align*}
-  The integral involving $z_i$ in the second part of the sum is recognised as the (unnormalised) expectation of the lower-tail of a univariate standard normal distribution truncated at $\tau_{ij} = (\sigma_j z_j + \mu_j - \mu_i) / \sigma_i$. That is,
-  \[
-    \E[Z_i | Z_i < \tau_{ij}] 
-    = \big[\Phi(\tau_{ij})\big]^{-1} \int \ind [z_i < \tau_{ij}] z_i \phi(z_i) \d z_i 
-    = - \frac{\phi(\tau_{ij})}{\Phi(\tau_{ij})}
-  \] Plugging this expression back into the derivation of this expectation, we get
-  \begin{align*}
-  \E[X_i] 
-  &= \mu_i -  \sigma_i C^{-1} \int 
-  \phi \left( \frac{\sigma_j z_j + \mu_j - \mu_i}{\sigma_i} \right)
-  \prod_{k \neq i,j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \phi (z_j) \d z_j \\
-  &= \mu_i - \sigma_i C^{-1} \E \left[ \phi \left( \frac{\sigma_j Z_j + \mu_j - \mu_i}{\sigma_i} \right)
-  \prod_{k \neq i,j} \Phi \left( \frac{\sigma_j Z_j + \mu_j - \mu_k}{\sigma_k} \right) \right].
-  \end{align*}
-  
-  The expectation for the $j$th component is
-  \begin{align*}
-    \E[X_j] 
-    &= C^{-1} \idotsint \ind[x_k < x_j, \forall k \neq j] \cdot x_j  \prod_{k=1}^d \frac{1}{\sigma_k}\phi \left( \frac{x_k - \mu_k}{\sigma_k} \right) \d x_1 \cdots \d x_d \\
-    &= C^{-1} \int x_j  \prod_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right) 
-    \cdot \frac{1}{\sigma_j} \phi \left( \frac{x_j - \mu_j}{\sigma_j} \right) \d x_j  \\    
-    &= C^{-1} \int (\sigma_j z_j + \mu_j)  \prod_{k \neq j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \cdot \phi (z_j) \d z_j  \\   
-    &= \mu_j C^{-1} 
-    \overbrace{
-    \int  \prod_{k \neq j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \cdot \phi (z_j) \d z_j
-    }^{C}  \\   
-    &\phantom{==} + \sigma_j C^{-1} \int  \prod_{k \neq j} \Phi \left( \frac{\sigma_j z_j + \mu_j - \mu_k}{\sigma_k} \right) \cdot z_j \phi (z_j) \d z_j \\
-    &= \mu_j + \sigma_j C^{-1} \E \left[ Z_j \prod_{k \neq j} \Phi \left( \frac{\sigma_j Z_j + \mu_j - \mu_k}{\sigma_k} \right) \right] \\
-    &= \mu_j + \sigma_j  \mathop{\sum_{i=1}^d}_{i \neq j} \sigma_i C^{-1} \E \Bigg[ \phi \left( \frac{\sigma_j Z_j + \mu_j - \mu_i}{\sigma_i} \right) \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{\sigma_j Z_j + \mu_j - \mu_k}{\sigma_k} \right) \Bigg] \\
-    &= \mu_j - \sigma_j \sum_{i \neq j} \big(\E[X_i] - \mu_i \big)
-  \end{align*}
-  where we have made use of Lemma \ref{lem:EZgZ} in the second last step of the above.
+    
+ 
 
   \item The differential entropy is given by
   \begin{align*}

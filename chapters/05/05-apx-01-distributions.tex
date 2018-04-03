@@ -192,6 +192,7 @@ Then,
     &= \half\log 2\pi e\sigma^2 + \log C + \frac{1}{2\sigma^2}\cdot \greyoverbrace{\sigma^2\frac{\alpha\phi(\alpha) + \beta\phi(\beta)}{C}}{\Var X -\sigma^2 + (\E X - \mu)^2} \\
     &= \half\log 2\pi \sigma^2 + \log C + \frac{1}{2\sigma^2}\E [X - \mu]^2 
   \end{align*}
+  because $\Var X + (\E X - \mu)^2 = \E X^2 - \cancel{(\E X)^2} + \cancel{(\E X)^2} + \mu^2 - 2\mu\E X.$
 \end{itemize}
 
 For binary probit models, the distributions that come up are one-sided truncations at zero, i.e. $\tN(\mu,\sigma^2,0,+\infty)$ (upper tail/positive part) and $\tN(\mu,\sigma^2,-\infty,0)$ (lower tail/negative part), for which their moments are of interest.
