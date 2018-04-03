@@ -1,3 +1,8 @@
+\subsection{A brief introduction to variational inference}
+
+\subsection{Similarity between EM algorithm and variational Bayes}
+
+
 \subsection{A note on computing the multivariate normal integral}
 \label{misc:mnint}
 
@@ -10,77 +15,7 @@ The latter yields the \emph{normalised I-probit model}, and a discussion of the 
 
 
 
-\subsection{Similarity of EM algorithm and variational Bayes}
 
 
 
-\subsection{Conically truncated multivariate normal distributions}
 
-Crucial to the probit model, the properties of conically truncated multivariate normal distributions are worth investigating.
-
-\begin{definition}[Conically-truncated multivariate normal distribution]\label{definition:conically-truncated-normal}
-  Let $\bX = (X_1, \dots, X_d)$ be a $d$-dimensional random variable with pdf defined as
-  \[
-    p(\bx) = 
-    \begin{cases}
-      \prod_{i=1}^d \N(\mu_i,\sigma_i) & \text{ if } X_j > X_i, \forall i \neq j \\
-      0 &\text{ otherwise } \\
-    \end{cases}
-  \]
-  for some $j \in \{ 1,\dots,d \}$. We denote the distribution of $\bX$ by $\N^{(j)}(\bmu, \bSigma)$, with $\bmu = (\mu_1, \dots,\mu_d)$ and $\bSigma = \diag(\sigma_1^2, \dots, \sigma_d^2)$. The pdf of $\bX$ has support on the set $\{\bbR^d \, | \, x_j > x_i, \forall i \neq j \}$ and the following functional form:
-  \[
-    p(\bx) = \frac{C^{-1}}{\sigma_1 \cdots \sigma_d (2\pi)^{d/2}}\exp\left[- \half \sum_{i=1}^d \left( \frac{x_i - \mu_i}{\sigma_i} \right)^2 \right]
-  \]
-  where $\phi$ is the pdf of a standard normal distribution and
-  \[
-    C = \E_Z \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j}{\sigma_i}Z + \frac{\mu_j - \mu_i}{\sigma_i} \right) \bigg]
-  \]
-  where $Z \sim \N(0,1)$. In the case where all variances are unity, the pdf of $\bX \sim \N^{(j)}(\bmu, \bI_d)$ is
-  \[
-    p(\bx) = \Bigg\{ (2\pi)^{d/2} 
-    \E_Z \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(Z + \mu_j - \mu_i \right) \bigg] 
-    \Bigg\}^{-1} \exp\left[- \half \sum_{i=1}^d (x_i - \mu_i)^2 \right].
-  \]
-\end{definition}
-
-\begin{proof}
-  A derivation of the functional form for the pdf of $X \sim \N^{(j)}(\bmu, \bSigma)$ is given. Using the fact that $\int p(x) \d x = 1$, and that
-  \begin{align*}
-    \int &\ind[x_i < x_j, \forall i \neq j] \prod_{i=1}^d \N(\mu_i, \sigma_i^2) \d x_1 \cdots \d x_d \\*
-    &=  \int \ind[x_i < x_j, \forall i \neq j] \prod_{i=1}^d \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma} \right) \right] \d x_1 \cdots \d x_d \\
-    &=  \int \ind[x_i < x_j, \forall i \neq j] \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right)\mathop{\prod_{i=1}^d}_{i \neq j} \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma_i} \right) \right] \d x_1 \cdots \d x_d \\    
-    &= \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{x_j - \mu_i}{\sigma_i} \right) \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right) \d x_j \\
-    &= \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j z_j + \mu_j - \mu_i}{\sigma_i} \right) \phi(z_j) \d z_j \\
-    &\phantom{==} {\color{gray} (\text{by using the standardisation } z_j = (x_j - \mu_j) / \sigma_j)} \\    
-    &= \E \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j}{\sigma_i}Z_j + \frac{\mu_j - \mu_i}{\sigma_i} \right) \bigg] \\
-%    &= \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{(\mu_j - \mu_i)/\sigma_i}{\sqrt{1 + \sigma_j^2/\sigma_i^2}} \right), \hspace{1cm} \rlap{\color{gray}\text{by} \hyperref[lem:expectation-of-prod-phi]{Lemma \ref{lem:expectation-of-prod-phi}} }
-  \end{align*}
-  the proof follows directly.
-\end{proof}
-
-\begin{lemma}\label{lem:expectation-entropy-truncated-mvn}
-  Let $X \sim \N^{(j)}(\bmu, \bSigma)$ with pdf $p(\bx)$ as defined in Definition \ref{definition:conically-truncated-normal}. Then
-  \begin{enumerate}[label=(\roman*)]
-    \item The expectation $\E[\bX] = \big(\E[X_1], \dots, \E[X_d] \big)$ is given by
-    \[
-      \E[X_i] =
-      \begin{cases}
-        \mu_i - \sigma_i C^{-1} \E_Z\left[\phi_i \prod_{k \neq i,j} \Phi_k \right] 
-        %\Big/ \E_Z \left[ \Phi_i \prod_{k \neq i,j} \Phi_k \right] 
-        &\text{ if } i \neq j \\
-        \mu_j - \sigma_j \sum_{i \neq j} \big(\E[X_i] - \mu_i \big) &\text{ if } i = j \\
-      \end{cases}
-    \]
-%    \item $\Var[\bX] = ???$
-    \item The differential entropy $\cH(p)$ is given by
-    \[
-    \cH(p) = \log C + \half[d] \log 2\pi + \half \sum_{i=1}^d \log \sigma_i^2 + \half \sum_{i=1}^d \frac{1}{\sigma_i^2} \E [ x_i - \mu_i ]^2
-    \]
-  \end{enumerate} 
-  where $C = \E \left[ \prod_{i \neq j} \Phi_i \right]$, and we had defined
-  \begin{align*}
-    \phi_i = \phi_i(Z) &= \phi \left( \frac{\sigma_j Z + \mu_j - \mu_i}{\sigma_i} \right) \\
-    \Phi_i = \Phi_i(Z) &= \Phi \left( \frac{\sigma_j Z + \mu_j - \mu_i}{\sigma_i} \right) \\    
-  \end{align*}
-  with $Z \sim \N(0,1)$, and $\phi(\cdot)$ and $\Phi(\cdot)$ the pdf and cdf of $Z$ respectively.
-\end{lemma}

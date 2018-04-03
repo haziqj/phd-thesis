@@ -1,6 +1,23 @@
 \section{Proofs related to conically truncated multivariate normal distribution}
+\label{apx:contrunproof}
 
-\subsection{Proof of Lemma}
+\subsection{Proof of \cref{thm:contruncn}: Pdf}
+
+A derivation of the functional form for the pdf of $X \sim \N^{(j)}(\bmu, \bSigma)$ is given. Using the fact that $\int p(x) \d x = 1$, and that
+  \begin{align*}
+    \int &\ind[x_i < x_j, \forall i \neq j] \prod_{i=1}^d \N(\mu_i, \sigma_i^2) \d x_1 \cdots \d x_d \\*
+    &=  \int \ind[x_i < x_j, \forall i \neq j] \prod_{i=1}^d \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma} \right) \right] \d x_1 \cdots \d x_d \\
+    &=  \int \ind[x_i < x_j, \forall i \neq j] \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right)\mathop{\prod_{i=1}^d}_{i \neq j} \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma_i} \right) \right] \d x_1 \cdots \d x_d \\    
+    &= \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{x_j - \mu_i}{\sigma_i} \right) \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right) \d x_j \\
+    &= \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j z_j + \mu_j - \mu_i}{\sigma_i} \right) \phi(z_j) \d z_j \\
+    &\phantom{==} {\color{gray} (\text{by using the standardisation } z_j = (x_j - \mu_j) / \sigma_j)} \\    
+    &= \E \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j}{\sigma_i}Z_j + \frac{\mu_j - \mu_i}{\sigma_i} \right) \bigg] \\
+%    &= \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{(\mu_j - \mu_i)/\sigma_i}{\sqrt{1 + \sigma_j^2/\sigma_i^2}} \right), \hspace{1cm} \rlap{\color{gray}\text{by} \hyperref[lem:expectation-of-prod-phi]{Lemma \ref{lem:expectation-of-prod-phi}} }
+  \end{align*}
+  the proof follows directly.
+
+
+\subsection{Proof of \cref{thm:contruncn}: Moments}
 
 Recall that for $Y \sim \tN(\mu,\sigma^2,-\infty,b)$, for some function $g$ of $Y$, we have that
 \[
@@ -9,11 +26,10 @@ Recall that for $Y \sim \tN(\mu,\sigma^2,-\infty,b)$, for some function $g$ of $
 and in particular, we have
 \begin{align}
   \E[Y - \mu] &= -\sigma \frac{\phi(\beta)}{\Phi(\beta)} \label{eq:tnXminMu} \\
-  \E[Y - \mu]^2 &= \sigma^2 \left[ 1 -  \frac{ \beta\phi(\beta)}{\Phi(\beta)}  \right] \label{eq:tnXminMusq}
+  \E[Y - \mu]^2 - \sigma^2 &= -\sigma^2   \frac{ \beta\phi(\beta)}{\Phi(\beta)} \label{eq:tnXminMusq}
 \end{align}
 where $\beta = (b - \mu)/\sigma$.
-For the conically truncated multivariate normal distribution $X \sim \tN_d(\mu,\Sigma,\cA_j)$, where $\Sigma = \diag(\sigma_1^2,\dots,\sigma_d^2)$.
-The independence structure of $\Sigma$ makes it possible to consider the expectations of each of the components separately by marginalising out the rest of the components. 
+For the conically truncated multivariate normal distribution $X \sim \tN_d(\mu,\Sigma,\cA_j)$, where $\Sigma = \diag(\sigma_1^2,\dots,\sigma_d^2)$, the independence structure of $\Sigma$ makes it possible to consider the expectations of each of the components separately by marginalising out the rest of the components. 
 For simplicity, denote $p(x_k) = \phi(x_k|\mu_k,\sigma_k) = \sigma^{-1}_k \phi(\frac{x_k - \mu_k}{\sigma_k})$.
 For $i \neq j$, we have
 \begin{align}
@@ -48,30 +64,27 @@ For the $j$'th component, substitute $g(x_j) = x_j - \mu_j$ in \cref{eq:tnproofj
 \end{align*}
 where we have made use of Lemma \ref{lem:EZgZ} in the second last step.
 
-For the second moment, plug in \cref{eq:tnXminMusq} for $g(X_i)= (X_i - \mu_i)^2$ in \cref{eq:tnproofi} to get
+For the second moments, plug in \cref{eq:tnXminMusq} for $g(X_i)= (X_i - \mu_i)^2 - \sigma_i^2$ in \cref{eq:tnproofi} to get
 \begin{align*}
-  \E [X_i - \mu_i]^2
-  &= -C^{-1} \int  \sigma_i^2 \left[ 1 -  \frac{ \beta\phi(\beta)}{\Phi(\beta)}  \right]  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j \\
-  &= -\sigma_i^2 C^{-1} 
-  \greyoverbrace{\int \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j}{C} \\
-  &\phantom{==} + \sigma_i^{\cancel{2}} C^{-1} \int  
-  \frac{x_j-\mu_i-\mu_j +\mu_j}{\cancel{\sigma_i}}
-  \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)
-  \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j \\
-  &= -\sigma_i^2 + \sigma_i C^{-1} \int  
+  \E [X_i - \mu_i]^2 - \sigma_i^2
+  &= - \sigma_i^{\cancel{2}} C^{-1} \int   
+  \greyoverbrace{\frac{x_j - \mu_i}{\cancel{\sigma_i}}}{\hidewidth x_j - \mu_i - \mu_j + \mu_j \hidewidth} \cdot
+  \frac{\phi\big( (x_j - \mu_i) / \sigma_i \big)}{\Phi\big( (x_j - \mu_i) / \sigma_i \big)}
+  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j \\
+  &= - \sigma_i C^{-1} \int  
   (x_j - \mu_j)
   \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)
   \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j \\
-  &\phantom{==} +  (\mu_i-\mu_j)  \cdot 
+  &\phantom{==} +  (\mu_j-\mu_i)  \cdot 
   \greyoverbrace{-\sigma_i C^{-1} \int  
   \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)
   \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j}{\E X_i - \mu_i} \\
-  &= (\mu_i-\mu_j)(\E X_i - \mu_i) -\sigma_i^2 \\
+  &= (\mu_j-\mu_i)(\E X_i - \mu_i)  \\
   &\phantom{==}
   + \sigma_i C^{-1} \int  \sigma_j z 
   \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)
   \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{\sigma_j z + \mu_j - \mu_k}{\sigma_k} \right)  \phi(z) \dint z \\
-  &= (\mu_i-\mu_j)(\E X_i - \mu_i) -\sigma_i^2 \\
+  &= (\mu_j-\mu_i)(\E X_i - \mu_i) \\
   &\phantom{==} + \sigma_i\sigma_j C^{-1} 
   \E \Bigg[
   Z \phi \left( \frac{\sigma_j Z + \mu_j -\mu_i}{\sigma_i} \right) 
@@ -79,30 +92,40 @@ For the second moment, plug in \cref{eq:tnXminMusq} for $g(X_i)= (X_i - \mu_i)^2
   \Bigg]
 \end{align*}
 
+And similarly, for the $j$'th component
+\begin{align*}
+  \E [X_j - \mu_j]^2
+  &= C^{-1} \int (x_j - \mu_j)^2  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right) p(x_j) \dint x_j \\
+   &= C^{-1} \sigma_j^2 \int z^2  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{z\sigma_j + \mu_j - \mu_k}{\sigma_k} \right) p(x_j) \dint z \\
+   &= C^{-1} \sigma_j^2 
+   \E_Z \Bigg[ Z^2  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{Z\sigma_j + \mu_j - \mu_k}{\sigma_k} \right) \Bigg].
+\end{align*}
+
+%Moment generating function?
+%
 %\begin{align*}
-%  \sigma_i C^{-1} \int  &\sigma_j z
-%  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{\sigma_j z + \mu_j - \mu_k}{\sigma_k} \right)  \phi(z) \dint z\\
-%  &= \sigma_i\sigma_j C^{-1} \E \Bigg[Z \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{\sigma_j Z + \mu_j - \mu_k}{\sigma_k} \right) \Bigg] \\
-%  &= \sigma_i(\E X_j - \mu_j)
+%  \E e^{tX_i}
+%  &= C^{-1}  \int e^{\mu_i t + \sigma_i^2 t^2 / 2} 
+%  \cdot \frac{\Phi(\beta - \sigma_i t)}{\Phi(\beta)} 
+%  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j)\dint x_j \\
+%  &= C^{-1} e^{\mu_i t + \sigma_i^2 t^2 / 2}  \int 
+%  \Phi\left(\frac{x_j-\mu_i}{\sigma_i} - \sigma_i t \right) 
+%  \bigg/ \Phi\left(\frac{x_j-\mu_i}{\sigma_i} \right) 
+%  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j)\dint x_j \\
+%  &= C^{-1} e^{\mu_i t + \sigma_i^2 t^2 / 2}  \int 
+%  \Phi\left(\frac{x_j-\mu_i}{\sigma_i} - \sigma_i t \right) 
+%  \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j)\dint x_j \\  
+%\end{align*}
+%
+%First moment 
+%\begin{align*}
+%  \frac{\partial M_X(t)}{\partial t} 
+%  &= C^{-1} (\mu_i + \sigma_i^2 t) \E [\cdots]
+%  -  C^{-1} e^o(t) \sigma_i \int \phi(\cdots - \sigma_i t) \prod \cdots p(x_j) \dint x_j \\
+%  &= \mu_i + C^{-1} \E [\phi(\cdots) \prod \cdots]
 %\end{align*}
 
-
-
-\newpage
-\begin{proof}
-\begin{enumerate}[label=(\roman*)]
-    
- 
-
-  \item The differential entropy is given by
-  \begin{align*}
-    \cH(p) &= -\int p(\bx) \log p(\bx) \d \bx = -\E \left[ \log p(\bx) \right] \\
-    &= -\E \left[-\log C - \half[d] \log 2\pi - \half \sum_{i=1}^d \log \sigma_i^2 - \half \sum_{i=1}^d \left( \frac{x_i - \mu_i}{\sigma_i} \right)^2 \right] \\
-    &= \log C + \half[d] \log 2\pi + \half \sum_{i=1}^d \log \sigma_i^2 + \half \sum_{i=1}^d \frac{1}{\sigma_i^2} \E [ x_i - \mu_i ]^2.
-  \end{align*}
-\end{enumerate}  
-\end{proof}
-
+Lastly, we use this result in the derivation above.
 \begin{lemma}\label{lem:EZgZ}
   Let $Z \sim \N(0,1)$. Then for all $m \in \{\bbN \, | \, m > 1\}$ and $(\mu, \sigma) \in \bbR \times \bbR^+$, 
   \[
@@ -114,8 +137,7 @@ For the second moment, plug in \cref{eq:tnXminMusq} for $g(X_i)= (X_i - \mu_i)^2
 
 \begin{proof}
   Use the fact that for any differentiable function $g$, $\E[Zg(Z)] = \E[g'(Z)]$, and apply the result with the function $g_m:z \mapsto \prod_{k \neq j} \Phi(\sigma_k z + \mu_k)$. All that is left is to derive the derivative of $g$, and we use an inductive proof to do this. 
-  
-  We adopt the following notation for convenience:
+  Introduce the following notation for convenience:
   \begin{align*}
     \phi_i = \phi(\sigma_i z + \mu_i) \\
     \Phi_i = \Phi(\sigma_i z + \mu_i) 
@@ -124,28 +146,39 @@ For the second moment, plug in \cref{eq:tnXminMusq} for $g(X_i)= (X_i - \mu_i)^2
   The simplest case is when $m=2$, which can be trivially shown to be true. Without loss of generality, let $j=1$. Then
   \begin{align*}
     g_2(z) &= \Phi_2 \\
-    \Rightarrow g_2'(z) &= \sigma_2 \phi_2 = \mathop{\sum_{i=1}^2}_{i \neq 1} \Bigg[ \sigma_i \phi_i \mathop{\sum_{k=1}^2}_{k \neq 1,2} \Phi_k \Bigg].
+    \Rightarrow \dot g_2(z) &= \sigma_2 \phi_2 = \mathop{\sum_{i=1}^2}_{i \neq 1} \Bigg[ \sigma_i \phi_i \mathop{\sum_{k=1}^2}_{k \neq 1,2} \Phi_k \Bigg].
   \end{align*}
   
-  Now assume that the inductive hypothesis holds for some $m \in \{\bbN \, | \, m > 1\}$. That is, the derivative of
+  Now assume that the inductive hypothesis holds for some $m \in \{\bbN \, | \, m > 1\}$. 
+  That is, the derivative of $g_m(z) = \prod_{k \neq j} \Phi_k$, 
   \[
-    g_m(z) = \mathop{\prod_{k=1}^m}_{k \neq j} \Phi_k
+    \dot{g}_m(z) = \mathop{\sum_{i=1}^m}_{i \neq j} \bigg[  \sigma_i \phi_i \mathop{\prod_{k=1}^m}_{k \neq i,j} \Phi_k \bigg],
   \]
-  which is
-  \[
-    g_m'(z) = \mathop{\sum_{i=1}^m}_{i \neq j} \bigg[  \sigma_i \phi_i \mathop{\prod_{k=1}^m}_{k \neq i,j} \Phi_k \bigg],
-  \]
-  is assumed to be true. Assume that without loss of generality, $j \neq m+1$. Then the derivative of
+  is assumed to be true. 
+  Also assume that, without loss of generality, $j \neq m+1$.
+  Then, the derivative of
   \[
     g_{m+1}(z) = \mathop{\prod_{k=1}^{m+1}}_{k \neq j} \Phi_k = g_m(z) \Phi_{m+1}
   \]
   is found to be
   \begin{align*}
-    g_{m+1}'(z) &= \sigma_{m+1} \phi_{m+1} g_m(z) + g_m'(z) \Phi_{m+1} \\
+    \dot g_{m+1}(z) &= \sigma_{m+1} \phi_{m+1} g_m(z) + \dot g_m(z) \Phi_{m+1} \\
     &= \sigma_{m+1} \phi_{m+1} \mathop{\prod_{k=1}^m}_{k \neq j} \Phi_k + \mathop{\sum_{i=1}^m}_{i \neq j} \bigg[  \sigma_i \phi_i \mathop{\prod_{k=1}^m}_{k \neq i,j} \Phi_k \bigg] \Phi_{m+1} \\
     &= \sigma_{m+1} \phi_{m+1} \mathop{\prod_{k=1}^{m+1}}_{k \neq j, m+1} \Phi_k + \mathop{\sum_{i=1}^m}_{i \neq j} \bigg[  \sigma_i \phi_i \mathop{\prod_{k=1}^{m+1}}_{k \neq i,j} \Phi_k \bigg] \\
-    &= \mathop{\sum_{i=1}^{m+1}}_{i \neq j} \bigg[  \sigma_i \phi_i \mathop{\prod_{k=1}^{m+1}}_{k \neq i,j} \Phi_k \bigg] \\
-    &= g_{m+1}'(z).
+    &= \mathop{\sum_{i=1}^{m+1}}_{i \neq j} \bigg[  \sigma_i \phi_i \mathop{\prod_{k=1}^{m+1}}_{k \neq i,j} \Phi_k \bigg],
   \end{align*}
-  Thus, by induction and linearity of expectations, the proof is complete.
+  as required for the inductive proof.
+  Using linearity of expectations, the proof is complete.
 \end{proof}
+
+
+\subsection{Proof of \cref{thm:contruncn}: Entropy}
+
+As a direct consequence of the definition of entropy,
+\begin{align*}
+    H(p) 
+    &= -\E \log p(X) \\
+    &= -\E \left[-\log C - \half[d] \log 2\pi - \half \sum_{i=1}^d \log \sigma_i^2 - \half \sum_{i=1}^d \left( \frac{x_i - \mu_i}{\sigma_i} \right)^2 \right] \\
+    &= \log C + \half[d] \log 2\pi + \half \sum_{i=1}^d \log \sigma_i^2 + \half \sum_{i=1}^d \frac{1}{\sigma_i^2} \E [ x_i - \mu_i ]^2.
+  \end{align*}
+
