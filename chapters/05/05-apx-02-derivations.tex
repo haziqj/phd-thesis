@@ -70,10 +70,10 @@ For reference, the relevant distributions are listed below.
   \[
     p(\bPsi) = \exp\left[\const + \half[g-m-1]\log \abs{\bPsi} - \half\tr(\bG\bPsi)  \right].
   \]
-  For the independent I-probit model, $\bPsi = \diag(\sigma_1^{-2},\dots,\sigma_m^{-2})$, and we choose independent Gamma distributions for each precision $\sigma_j^{-2} \sim \Gamma(r_j,s_j)$, where $r_j$ and $s_j$ are the shape and scale parameters.
+  For the independent I-probit model, $\bPsi = \diag(\\psi_1,\dots,\psi_m)$, and we choose independent Gamma distributions for each precision $\sigma_j^{-2} \sim \Gamma(s_j,r_j)$, where $s_j$ and $r_j$ are the shape and rate parameters.
   Then,
   \[
-    p(\bPsi) = \prod_{j=1}^m \exp\left[\const + (r_j - 1)\log \sigma_j^{-2} - \frac{\sigma_j^{-2}}{s_j}\right].
+    p(\bPsi) = \prod_{j=1}^m \exp\left[\const + (s_j - 1)\log \psi_j - r_j\psi_j \right].
   \] 
   
   \item {\boldmath$p(\balpha)$}. Choose independent normal priors for the intercept, $\alpha_j \sim \N(a_j,A_j)$ for $j=1,\dots,m$. The pdf is
@@ -455,144 +455,67 @@ Now, to derive $\tilde q(\bPsi)$ for the full I-probit model, we inspect the equ
   &\phantom{==} + \half[2n+g-m-1]\log \abs{\bPsi} + \const
 \end{align*}
 which we recognise to be a Wishart distribution with scale matrix $(\bG + \bG_1 + \bG_2)^{-1}$ and $2n+g-m$ degrees of freedom.
+Note that using an improper prior, i.e. $\bG=\bzero$ and $g=m$, will still yield a proper posterior distribution.
 The mean of this distribution is $\tilde\bPsi = (2n+g-m)(\bG + \bG_1 + \bG_2)^{-1}$.
-
+The matrix $\bG_1$ is given as
 \begin{align*}
   \bG_1 
   &= \E[(\by^* - \bmu)^\top (\by^* - \bmu)] \\
   &= \E \big[\by^{*\top}\by^* + \balpha\bone_n^\top \bone_n\balpha^\top + \bw^\top\bH_\eta^2\bw -2\by^{*\top}\bone_n\balpha^\top -2\by^{*\top}\bH_\eta\bw -2 \balpha\bone_n^\top\bH_\eta\bw \big] \\
   &= \E \big[\by^{*\top}\by^*] + n\E[\balpha\balpha^\top] + \E[\bw^\top\bH_\eta\bw] -2(\tilde\by^{*\top}\bone_n\tilde\balpha^\top + \tilde\by^{*\top}\tilde\bH_\eta\tilde\bw + \tilde\balpha\bone_n^\top\tilde\bH_\eta\tilde\bw)
 \end{align*}
-
 This involves second order moments of a conically truncated multivariate normal distribution, which needs to be obtained via simulation.
 Meanwhile,
 \begin{align*}
-  \bG_2
-  &= \E[\bu^\top\bu] \\
-  &= 
+  \bG_{2,ij}
+  &= \E[\bu^\top\bu]_{ij} \\
+  &= \E[\bu_{\bigcdot i}^\top \bu_{\bigcdot j}] \\
+  &= \tilde\bV_u[i,j] + \tilde\bu_{\bigcdot i}^\top  \tilde\bu_{\bigcdot j}.
+%  \begin{cases}
+%    \tilde\bV_u[i,j] + \wtilde_{\bigcdot i}^\top  \wtilde_{\bigcdot j} &\text{(full I-probit)} \\
+%        \delta_{ij}\tilde\bV_{u_j} + \wtilde_{\bigcdot i}^\top  \wtilde_{\bigcdot j} &\text{(independent I-probit)}
+%  \end{cases}
+%  &=: \diag(\tilde\bV_{u_1},\dots,\tilde\bV_{u_m}).
 \end{align*}
+
+In the case of the I-probit model, we use a gamma prior on each of the precisions in the diagonal entries of $\bPsi=\diag(\psi_1,\dots,psi_m)$.
+Then, the variational density for each $\psi_j$ is found to be
+\begin{align*}
+  \log \tilde q(\psi_j)
+  &= \E_{\cZ\backslash\{\bPsi\}\sim q} \Big[ 
+  \cancel{\half[n]\log (\psi_1\cdots\psi_m)} - \half\sum_{j=1}^m \sum_{i=1}^n \psi_j(\by^*_{ij} - \bmu_{ij})^2 
+  \Big] \\
+  &\phantom{==} +\E_{\cZ\backslash\{\bPsi\}\sim q} \Big[ 
+  \cancel{- \half[n]\log (\psi_1\cdots\psi_m)} - \half\sum_{j=1}^m \sum_{i=1}^n \psi_j \bu_{ij}^2 
+  \Big] \\
+  &\phantom{==} + \sum_{j=1}^m \big( (s_j - 1)\log \psi_j - r_j\psi_j \big) + \const \\
+  &= (s_j - 1)\log \psi_j - \psi_j \big( \half \E\norm{\by_{\bigcdot j} -  \bmu_{\bigcdot j}}^2 + \half\E\norm{\bu_{\bigcdot j}}^2  + r_j \big) + \const
+\end{align*}
+which is again a gamma distribution, and the shape and rate parameters can be read directly.
+The mean is given by $\tilde\psi_j = s_j(\half \E\norm{\by_{\bigcdot j} - \bmu_{\bigcdot j}}^2 + \half \E\norm{\bu_{\bigcdot j}}^2  + r_j)^{-1}$.
+Recall that each of the $n$ components of $\by_{\bigcdot j} -  \bmu_{\bigcdot j}$ are independent, and can be calculated using the methods described above.
+Also, we have $\bu_{\bigcdot j} \sim \N_n(\tilde\bu_{\bigcdot j}, \tilde\bV_{u_j})$, and so $  \E\norm{\bu_{\bigcdot j}}^2 = \tr(\tilde\bV_{u_j} + \tilde\bu_{\bigcdot j}\tilde\bu_{\bigcdot j}^\top)$.
 
 \subsubsection[Derivation of q alpha]{Derivation $\tilde q(\balpha)$}
 
-For $j = 1,\dots,m$, denote $\bH_i$ as the row vector of the kernel matrix $\bH$. Then,
+The terms involving $\alpha_j$ in \cref{eq:qtilde} are
 \begin{align*}
-  \log \tilde q(\alpha) 
-  &= \E_{\by^*, \bw, \lambda} \left[ 
-  - \half \sum_{j=1}^m \sum_{i=1}^n \left( y_{ij}^* - \alpha_j 
-  - \lambda_j \textstyle\sum_{k=1}^n h(x_i, x_k)w_{kj} \right)^2  
-  \right] + \const \\  
-  &= - \half \sum_{j=1}^m \E_{\by^*, \bw, \lambda} \left[ 
-  n \alpha_j^2 - 2\alpha_j \sum_{i=1}^n(y_{ij}^* - \lambda_j \bH_i \bw_j) 
-  \right] + \const \\  
-  &= - \half[n] \sum_{j=1}^m \left[ \left( \alpha_j - \frac{1}{n} \sum_{i=1}^n(\E[y_{ij}^*] - \E[\lambda_j] \bH_i \bw_j) \right)^2 \right] + \const \\  
+  \log \tilde q(\alpha_j)
+  &= \E_{\cZ\backslash\{\balpha\}\sim q} \Big[ 
+  -\half\sum_{k=1}^m \sum_{i=1}^n \psi_{ik}(y^*_{ik} - \alpha_j - f_{ik})^2 
+  \Big] 
+  - \frac{A_j^{-1}}{2} (\alpha_j - a_j)^2 + \const \\
+  &= -\half\E \left[\alpha_j^2 \sum_{i=1}^n \psi_{ij}  - 2\alpha_j\sum_{i=1}^n \psi_{ij}(y^*_{ij} -  f_{ij}) \right]
+  -\half\Big(A_j^{-1}\alpha_j^2 - 2A_j^{-1}a_j\alpha_j  \Big) + \const \\
+  &=-\half[\sum_{i=1}^n \tilde\psi_{ij} + A_j^{-1}] \left( 
+  \alpha_j - 
+  \frac{\sum_{i=1}^n \tilde\psi_{ij}(\tilde y^*_{ij} -  \tilde f_{ij}) + A_j^{-1}a_j}{\sum_{i=1}^n \tilde\psi_{ij} + A_j^{-1}}  \right)^2 + \const
 \end{align*}
-which is of course the kernel of the product of $m$ univariate normal densities, each with mean and variance 
-\[
-   \tilde \alpha_j = \frac{1}{n} \sum_{i=1}^n \big(\E [y_{ij}^*] - \E[\lambda_j]\bH_i \E[\bw_j]  \big)
-   \ \text{ and } \ 
-   v_{\alpha_j} = \frac{1}{n}.
-\]
+which implies a normal distribution for $\alpha_j$ whose mean and variance can be read directly.
+Here, we used the notation $\tilde f_{ij}$ to mean the $(i,j)$'th element of 
+$\E[\bH_\eta\bw] = \tilde\bH_\eta \tilde \bw \in \bbR^{n\times m}$.
 
-Suppose that we use a single intercept parameter $\alpha$. In this case, $\alpha$ is is also normally distributed with mean and variance
-\[
-   \tilde \alpha = \frac{1}{nm} \sum_{j=1}^m \sum_{i=1}^n \big(\E [y_{ij}^*] - \E[\lambda_j]\bH_i \E[\bw_j]  \big)
-   \ \text{ and } \ 
-   v_{\alpha} = \frac{1}{nm}.
-\]
+As a remark, due to identifiability, only $m-1$ of these intercept are estimable.
+We can either put a constraint that one of the intercepts is fixed at zero, or the sum of the intercepts equals zero.
+The latter constraint is implemented in this thesis, and this is realised by estimating all the intercepts and then centring them.
 
-\subsection{Monitoring the lower bound}
-
-A convergence criterion would be when there is no more significant increase in the lower bound $\cL$, as defined by
-\begin{align*}
-  \cL &= \int q(\by^*,\bw,\lambda,\alpha) \log \left[ \frac{p(\by,\by^*,\bw,\lambda,\alpha)}{q(\by^*,\bw,\lambda,\alpha)} \right] \d\by^* \d\bw \d\lambda \d\alpha \\
-  &= \E[\log p(\by,\by^*,\bw,\lambda,\alpha)] - \E[\log q(\by^*,\bw,\lambda,\alpha)] \\[8pt]
-  &= \cancel{\E\left[\log \prod_{i=1}^n \prod_{j=1}^m p(y_{i}|y_{ij}^*)\right]}
-  + \E\left[ \log p(\by^* | \bff) \right]
-  + \E\left[ \log p(\bw) \right] 
-  + \cancel{\E\left[ \log p(\lambda) \right]}
-  + \cancel{\E\left[ \log p(\alpha) \right]}  \\
-  &\phantom{==} - \E\left[ \log q(\by^*) \right]
-  - \E\left[ \log q(\bw) \right]
-  - \E\left[ \log q(\lambda) \right]
-  - \E\left[ \log q(\alpha) \right]
-\end{align*}
-
-Note that the categorical pmf $p(y_i|y_{ij}^*)$ becomes degenerate once the latent variables are known, so this term is cancelled out. With the exception of $q(\by^*)$, all of the distributions are Gaussian. The following results will be helpful. 
-
-\begin{definition}[Differential entropy]
-  The differential entropy $\cH$ of a pdf $p(x)$ is given by
-  \[
-    \cH(p) = -\int p(x) \log p(x) \d x = -\E_p[\log p(x)].
-  \]
-\end{definition}
-
-\begin{lemma}\label{thm:normentropy}
-  Let $p(x)$ be the pdf of a random variable $x$. Then if
-  \begin{enumerate}[label=(\roman*)]
-    \item $p$ is a univariate normal distribution with mean $\mu$ and variance $\sigma^2$,
-    \[
-      \cH(p) = \half (1 + \log 2\pi) + \half \log \sigma^2
-    \]
-    \item $p$ is a $d$-dimensional normal distribution with mean $\mu$ and variance $\Sigma$,
-    \[
-      \cH(p) = \half[d] (1 + \log 2\pi) + \half \log \vert \Sigma \vert 
-    \]
-  \end{enumerate}
-\end{lemma}
-
-\subsubsection{Terms involving distributions of $\by^*$}
-
-\begin{align*}
-  \E\left[ \log p(\by^* | \bff) \right] - \E\left[ \log q(\by^*) \right]
-  &= \sum_{i=1}^n \sum_{j=1}^m \E \left[ \log p(y_{ij}^* | f_{ij}) \right] + \sum_{i=1}^n \cH\big(q(y_i^*)\big) \\
-  &= \cancel{\sum_{i=1}^n \sum_{j=1}^m \left( -\half\log 2\pi -\half \E[y_{ij}^* - f_{ij}]^2 \right)} \\
-  &\phantom{==} \cancel{+ \sum_{i=1}^n \sum_{j=1}^m \left( \half\log 2\pi + \half \E[y_{ij}^* - f_{ij}]^2 \right)} + \sum_{i=1}^n \log C_i \\
-\end{align*}
-
-\subsubsection{Terms involving distributions of $\bw$}
-
-\begin{align*}
-  \E\left[ \log p(\bw) \right] - \E\left[ \log q(\bw) \right]
-  &= \sum_{j=1}^m \Big( \E\left[ \log p(\bw_j) \right] - \E\left[ \log q(\bw_j) \right] \Big)  \\
-  &= \sum_{j=1}^m \left( -\half[n] \log 2\pi - \half \E[\bw_j^\top\bw_j] + \cH\big(q(\bw_j)\big) \right) \\
-  &= \sum_{j=1}^m \left( \cancel{-\half[n] \log 2\pi} - \half\tr\left( \E[\bw_j\bw_j^\top]\right) + \half[n] (1 + \cancel{\log 2\pi}) - \half \log \abs{\bA_j} \right) \\
-  &= \half[nm] - \half \sum_{j=1}^m \left( \tr \btW_j + \log \abs{\bA_j} \right)
-\end{align*}
-
-\subsubsection{Terms involving distribution of $q(\lambda)$}
-
-\begin{align*}
-  -\E\left[ \log q(\lambda) \right] 
-  &= \sum_{j=1}^m \cH\big(q(\lambda_j)\big)  \\
-  &= \sum_{j=1}^m \left( \half (1 + \log 2\pi) - \half \log c_j \right) \\
-  &= \half[m](1 + \log 2\pi) - \half \sum_{j=1}^m \log c_j
-\end{align*}
-or if using single $\lambda$
-\begin{align*}
-  -\E\left[ \log q(\lambda) \right] 
-  &= \half(1 + \log 2\pi) - \half  \log  \sum_{j=1}^m c_j .
-\end{align*}
-
-\subsubsection{Terms involving distribution of $q(\alpha)$}
-
-\begin{align*}
-  -\E\left[ \log q(\alpha) \right] 
-  &= \sum_{j=1}^m \cH\big(q(\alpha_j)\big) \\
-  &= \half[m] (1 + \log 2\pi - \log n)
-\end{align*}
-or if using single $\alpha$
-\begin{align*}
-  -\E\left[ \log q(\alpha) \right] 
-  &= \half (1 + \log 2\pi - \log nm).
-\end{align*}
-
-\subsubsection{The lower bound}
-
-\begin{align*}
-  \cL 
-  &= \sum_{i=1}^n \log C_i + \half[nm] - \half \sum_{j=1}^m \left( \tr \btW_j + \log \abs{\bA_j} \right) \\
-  &\phantom{==} + \half[m](1 + \log 2\pi) - \half \sum_{j=1}^m \log c_j + \half[m] (1 + \log 2\pi - \log n) \\
-  &= \half[m]\big(n + 2(1 + \log 2\pi) - \log n \big)
-  - \half \sum_{j=1}^m \left( \tr \btW_j + \log \abs{\bA_j} + \log c_j \right) + \sum_{i=1}^n \log C_i
-\end{align*}
-Of course, if using either single $\alpha$ or single $\lambda$, then the formula needs to be adjusted accordingly.

@@ -1,0 +1,76 @@
+\section{Deriving the ELBO expression}
+
+A convergence criterion would be when there is no more significant increase in the lower bound $\cL$, as defined by
+\begin{align*}
+  \cL &= \int q(\by^*,\bw,\lambda,\alpha) \log \left[ \frac{p(\by,\by^*,\bw,\lambda,\alpha)}{q(\by^*,\bw,\lambda,\alpha)} \right] \d\by^* \d\bw \d\lambda \d\alpha \\
+  &= \E[\log p(\by,\by^*,\bw,\lambda,\alpha)] - \E[\log q(\by^*,\bw,\lambda,\alpha)] \\[8pt]
+  &= \cancel{\E\left[\log \prod_{i=1}^n \prod_{j=1}^m p(y_{i}|y_{ij}^*)\right]}
+  + \E\left[ \log p(\by^* | \bff) \right]
+  + \E\left[ \log p(\bw) \right] 
+  + \cancel{\E\left[ \log p(\lambda) \right]}
+  + \cancel{\E\left[ \log p(\alpha) \right]}  \\
+  &\phantom{==} - \E\left[ \log q(\by^*) \right]
+  - \E\left[ \log q(\bw) \right]
+  - \E\left[ \log q(\lambda) \right]
+  - \E\left[ \log q(\alpha) \right]
+\end{align*}
+
+Note that the categorical pmf $p(y_i|y_{ij}^*)$ becomes degenerate once the latent variables are known, so this term is cancelled out. With the exception of $q(\by^*)$, all of the distributions are Gaussian. The following results will be helpful. 
+
+
+\subsubsection{Terms involving distributions of $\by^*$}
+
+\begin{align*}
+  \E\left[ \log p(\by^* | \bff) \right] - \E\left[ \log q(\by^*) \right]
+  &= \sum_{i=1}^n \sum_{j=1}^m \E \left[ \log p(y_{ij}^* | f_{ij}) \right] + \sum_{i=1}^n \cH\big(q(y_i^*)\big) \\
+  &= \cancel{\sum_{i=1}^n \sum_{j=1}^m \left( -\half\log 2\pi -\half \E[y_{ij}^* - f_{ij}]^2 \right)} \\
+  &\phantom{==} \cancel{+ \sum_{i=1}^n \sum_{j=1}^m \left( \half\log 2\pi + \half \E[y_{ij}^* - f_{ij}]^2 \right)} + \sum_{i=1}^n \log C_i \\
+\end{align*}
+
+\subsubsection{Terms involving distributions of $\bw$}
+
+\begin{align*}
+  \E\left[ \log p(\bw) \right] - \E\left[ \log q(\bw) \right]
+  &= \sum_{j=1}^m \Big( \E\left[ \log p(\bw_j) \right] - \E\left[ \log q(\bw_j) \right] \Big)  \\
+  &= \sum_{j=1}^m \left( -\half[n] \log 2\pi - \half \E[\bw_j^\top\bw_j] + \cH\big(q(\bw_j)\big) \right) \\
+  &= \sum_{j=1}^m \left( \cancel{-\half[n] \log 2\pi} - \half\tr\left( \E[\bw_j\bw_j^\top]\right) + \half[n] (1 + \cancel{\log 2\pi}) - \half \log \abs{\bA_j} \right) \\
+  &= \half[nm] - \half \sum_{j=1}^m \left( \tr \btW_j + \log \abs{\bA_j} \right)
+\end{align*}
+
+\subsubsection{Terms involving distribution of $q(\lambda)$}
+
+\begin{align*}
+  -\E\left[ \log q(\lambda) \right] 
+  &= \sum_{j=1}^m \cH\big(q(\lambda_j)\big)  \\
+  &= \sum_{j=1}^m \left( \half (1 + \log 2\pi) - \half \log c_j \right) \\
+  &= \half[m](1 + \log 2\pi) - \half \sum_{j=1}^m \log c_j
+\end{align*}
+or if using single $\lambda$
+\begin{align*}
+  -\E\left[ \log q(\lambda) \right] 
+  &= \half(1 + \log 2\pi) - \half  \log  \sum_{j=1}^m c_j .
+\end{align*}
+
+\subsubsection{Terms involving distribution of $q(\alpha)$}
+
+\begin{align*}
+  -\E\left[ \log q(\alpha) \right] 
+  &= \sum_{j=1}^m \cH\big(q(\alpha_j)\big) \\
+  &= \half[m] (1 + \log 2\pi - \log n)
+\end{align*}
+or if using single $\alpha$
+\begin{align*}
+  -\E\left[ \log q(\alpha) \right] 
+  &= \half (1 + \log 2\pi - \log nm).
+\end{align*}
+
+\subsubsection{The lower bound}
+
+\begin{align*}
+  \cL 
+  &= \sum_{i=1}^n \log C_i + \half[nm] - \half \sum_{j=1}^m \left( \tr \btW_j + \log \abs{\bA_j} \right) \\
+  &\phantom{==} + \half[m](1 + \log 2\pi) - \half \sum_{j=1}^m \log c_j + \half[m] (1 + \log 2\pi - \log n) \\
+  &= \half[m]\big(n + 2(1 + \log 2\pi) - \log n \big)
+  - \half \sum_{j=1}^m \left( \tr \btW_j + \log \abs{\bA_j} + \log c_j \right) + \sum_{i=1}^n \log C_i
+\end{align*}
+Of course, if using either single $\alpha$ or single $\lambda$, then the formula needs to be adjusted accordingly.

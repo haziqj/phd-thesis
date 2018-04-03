@@ -1,10 +1,27 @@
-Fact: $X \sim \N(a,A)$ and $Y \sim \N(b,B)$, then 
-\[
-  p(x)p(y) \propto \N(c,C)
-\]
-where $C = (A^{-1} + B^{-1})^{-1}$ and $c = C(A^{-1}a + B^{-1}b)$.
+\section{Proofs related to conically truncated multivariate normal distribution}
 
 \subsection{Proof of Lemma}
+
+$X_i \sim \tN(\mu_i,\sigma_i^2,-\infty,x_j)$
+\begin{align*}
+  \int g(x_i) \ind[x_i < x_j] \phi(x_i) \dint x_i = \E g(X_i)
+\end{align*}
+
+\begin{align*}
+  \E g(X_i)
+  &= C^{-1} \idotsint  g(x_i) \ind[x_k < x_j, \forall k \neq j]  \prod_{k=1}^d p(x_k) \dint x_1 \cdots \dint x_d \\
+  &= C^{-1} \iint g(x_i) \ind[x_i < x_j] p(x_i) p(x_j) \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  \dint x_i \dint x_j \\
+  &= C^{-1} \int \E_{X_i\sim\tN(\mu_i,\sigma_i^2,-\infty,x_j)} g(X_i) p(x_j) \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  \dint x_j
+  \end{align*}
+
+\begin{align*}
+  \E X_i 
+  &= C^{-1} \int  \left(\mu_i \Phi \left( \frac{x_j-\mu_i}{\sigma_i}\right) - \sigma_i  \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right) \right) p(x_j) \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)   \dint x_j \\
+  &= \mu_i C^{-1} \int p(x_j) \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)   \dint x_j \\
+  &\phantom{==} - \sigma_i C^{-1} \int p(x_j)  \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)   \dint x_j \\
+  &= \mu_i - \sigma_i C^{-1} \int \phi(z)  \phi \left( \frac{\sigma_j z + \mu_j -\mu_i}{\sigma_i} \right)  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{\sigma_j z + \mu_j - \mu_k}{\sigma_k} \right)   \dint z \\
+  &= \mu_i - \sigma_i C^{-1} \E_Z\bigg[ \phi \left( \frac{\sigma_j Z + \mu_j -\mu_i}{\sigma_i} \right)  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{\sigma_j Z + \mu_j - \mu_k}{\sigma_k} \right) \bigg]
+\end{align*}
 
 \begin{proof}
 \begin{enumerate}[label=(\roman*)]
