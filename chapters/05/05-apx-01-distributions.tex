@@ -320,21 +320,37 @@ We present some results that we have not previously seen before elsewhere.
   See \cref{apx:contrunproof} for the proof.
 \end{proof}
 
-
-
 \subsection{Wishart distribution}
+
+Let $X\in\bbR^{m\times m}$ be a symmetric, positive-definite matrix.
+The Wishart distribution with scale matrix $\Psi$ and $s >  m-1$ degrees of freedom is denoted $X \sim \Wis_m(\Psi,s)$, and its pdf, moments and entropy are
+\begin{itemize}
+  \item \textbf{Pdf}. 
+  \[
+    p(X) = \frac{\abs{X}^{(m-s-1)/2}e^{-\tr(\Psi^{-1}X)/2}}{2^{sm/2}\abs{\Psi}^{s/2}\Gamma_m(s/2)}.
+  \]
+  \item \textbf{Moments}. $\E X=s\Psi$, $\Var X_{ij} = s(\Psi_{ij}^2 + \Psi_{ii}\Psi_{jj})$.
+  \item \textbf{Entropy}. 
+  \[
+    H(p) = \frac{m+1}{2}\log\abs{\Psi} + \half m(m+1)\log 2 + \log \Gamma_p \left(\half[s] \right) - \half[s-m-1] \psi_m \left(\half[s] \right) + \half[sm].
+  \]
+\end{itemize}
+In the above, $\Gamma_m(\cdot)$ and $\psi_m(\cdot)$ are the multivariate gamma and digamma functions, respectively, given by
+\[
+  \Gamma_m(a) = \int_{U>0} \exp(-\tr U) \abs{U}^{a-(m+1)/2} \dint U
+\]
+for positive-definite, real, $m \times m$ matrices $U$, and
+\[
+  \psi_m(a) = \frac{\partial}{\partial a}\log \Gamma_p(a).
+\]
 
 \subsection{Gamma distribution}
 
-
-
-
-
-
-
-
-
-
-
-
-
+For $X\in\bbR^+$, let $X$ be distributed according to the gamma distribution with shape $s$ and rate $r$, denoted $X\sim\Gamma(s,r)$. 
+Then,
+\begin{itemize}
+  \item \textbf{Pdf}. $p(X) = \Gamma(s)^{-1} r^s X^{s-1} e^{-rX}$.
+  \item \textbf{Moments}. $\E X=s/r$, $\Var X_{ij} = s/r^2$.
+  \item \textbf{Entropy}. $H(p)=s - \log r + \log \gamma(s) + (1-s)\psi(s)$.
+\end{itemize}
+In the above, $\Gamma(\cdot) = \Gamma_1(\cdot)$ and $\psi(\cdot) = \psi_1(\cdot)$ are the gamma and digamma functions.

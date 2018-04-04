@@ -88,7 +88,8 @@ For reference, the relevant distributions are listed below.
   For the precision matrix $\bPsi$, it is best to stick with the Wishart prior to avoid positive-definite issues, unless the independent I-probit model is used, in which case Jeffreys' prior for the precisions $p(\sigma_j^{-2})\propto \sigma_j^2$ is a convenient choice.
 \end{remark}
 
-\subsection[Derivation of q ystar]{Derivation of $\tilde q(\by^*)$}
+\subsection{Derivation of \texorpdfstring{$\tilde q(\by^*)$}{$\tilde q(y^*)$}}
+% [Derivation of q ystar]
 
 The rows of $\by^*$ are independent, and thus we can consider the variational density for each $\by_i^*$ separately.
 Consider the case where $y_i$ takes one particular value $j \in \{1,\dots,m\}$. The mean-field density $q(\by_{i}^*)$ for each $i=1,\dots,n$ is found to be
@@ -126,7 +127,7 @@ If, however, the independent I-probit model is used and $\tilde\bPsi$ is diagona
 \end{remark}
 
 
-\subsection[Derivation of q w]{Derivation of $\tilde q(\bw)$}
+\subsection{Derivation of \texorpdfstring{$\tilde q(\bw)$}{$\tilde q(w)$}}
 
 The terms involving $\bw$ in \cref{eq:qtilde} are the $p(\by^*|\balpha,\bw,\eta,\bPsi)$ and $p(\bw|\bPsi)$ terms, and the rest are absorbed into the constant.
 The easiest way to derive $\tilde q(\bw)$ is to vectorise $\by^*$ and $\bw$.
@@ -284,7 +285,8 @@ If $\bC = \diag(c_1,\dots,c_m)$, then
   \tr \big( \bD (\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j} \tilde\bw_{\bigcdot j}^\top) \big)
 \end{align*}
 
-\subsection[Derivation of q eta]{Derivation of $\tilde q(\eta)$}
+\subsection{Derivation of $\tilde q(\eta)$}
+% [Derivation of q eta]
 
 By looking at only the terms involving $\eta$ in \cref{eq:qtilde}, we deduce that $\tilde q$ for $\eta$ satisfies
 \begin{align*}
@@ -416,7 +418,7 @@ This can be cumbersome, so if felt necessary, use the approximation $\lambda_k^2
   Now, $\tilde \bH_\eta = \E[\lambda \bH] = \tilde\lambda \bH$, and $\tilde \bH_\eta^2 = \E[\lambda^2 \bH^2] = (\Var\lambda + \tilde\lambda^2) \bH^2$.
 \end{example}
 
-\subsubsection[Derivation of q Psi]{Derivation of $\tilde q(\bPsi)$}
+\subsection{Derivation of \texorpdfstring{$\tilde q(\bPsi)$}{$\tilde q(\Psi)$}}
 
 Introduce the transformed random matrix $\bu = \bw\bPsi^{-1} \in \bbR^{n\times m}$.
 Since we have that  $\vecc \bu = (\vecc \bw)^\top (\bPsi^{-1} \otimes \bI_n)$, the optimal mean-field distribution for $\bu$ is normal with mean $\vecc \tilde\bu = \vecc (\tilde\bw\tilde\bPsi^{-1} )$ and variance
@@ -478,7 +480,7 @@ Meanwhile,
 %  &=: \diag(\tilde\bV_{u_1},\dots,\tilde\bV_{u_m}).
 \end{align*}
 
-In the case of the I-probit model, we use a gamma prior on each of the precisions in the diagonal entries of $\bPsi=\diag(\psi_1,\dots,psi_m)$.
+In the case of the I-probit model, we use a gamma prior on each of the precisions in the diagonal entries of $\bPsi=\diag(\psi_1,\dots,\psi_m)$.
 Then, the variational density for each $\psi_j$ is found to be
 \begin{align*}
   \log \tilde q(\psi_j)
@@ -496,7 +498,7 @@ The mean is given by $\tilde\psi_j = s_j(\half \E\norm{\by_{\bigcdot j} - \bmu_{
 Recall that each of the $n$ components of $\by_{\bigcdot j} -  \bmu_{\bigcdot j}$ are independent, and can be calculated using the methods described above.
 Also, we have $\bu_{\bigcdot j} \sim \N_n(\tilde\bu_{\bigcdot j}, \tilde\bV_{u_j})$, and so $  \E\norm{\bu_{\bigcdot j}}^2 = \tr(\tilde\bV_{u_j} + \tilde\bu_{\bigcdot j}\tilde\bu_{\bigcdot j}^\top)$.
 
-\subsubsection[Derivation of q alpha]{Derivation $\tilde q(\balpha)$}
+\subsection{Derivation of \texorpdfstring{$\tilde q(\balpha)$}{$\tilde q(\alpha)$}}
 
 The terms involving $\alpha_j$ in \cref{eq:qtilde} are
 \begin{align*}
