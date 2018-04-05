@@ -11,30 +11,6 @@ The required posterior distribution is then $
   p(\by^*,\bw,\theta|\by) \propto p(\by|\by^*)p(\by^*|\bw,\theta)p(\bw|\theta)p(\theta)
 $.
 This is approximated by a mean-field distribution of the form $q(\by^*,\bw,\theta) \equiv q(\by^*)q(\bw)q(\theta)$, and also $q(\theta) = q(\balpha)q(\eta)q(\bPsi)$.
-Denote by $\tilde q$ the distributions which minimise the Kullbeck-Leibler divergence (maximise the variational lower bound).
-By appealing to \citet[equation 10.9, p. 466]{bishop2006pattern}, we find that for each $\xi \in \{ \by^*,\bw,\theta \} =: \cZ$, $\tilde q$ satisfies
-\begin{align}\label{eq:qtilde}
-  \log \tilde q(\xi) = \E_{-\xi} [\log p(\by, \by^*, \bw, \theta)] + \const
-\end{align}
-where expectation of the log joint density of $(\by, \by^*, \bw, \theta)$ is taken with respect to all of the unknowns $\cZ$ except the one currently in consideration, under their respective $q$ densities. 
-Estimates of the latent variables and parameters are then obtained by taking the mean of their respective approximate posterior distribution.
-
-In practice, rather than an explicit calculation of the normalising constant, one simply needs to inspect \cref{eq:qtilde} to recognise it as a known log-density function, which is the case when exponential family distributions are considered.
-That is, suppose that each complete conditional $p(\xi|\cZ_{-\xi}, \by)$ follows an exponential family distribution,
-\[
-  p(\xi|\cZ_{-\xi}, \by) = B(\xi)\exp \big(\ip{\zeta_\xi(\cZ_{-\xi}, \by) , \xi} - A(\zeta_\xi) \big).
-\]
-Then, from \cref{eq:qtilde},
-\begin{align*}
-  \tilde q(\xi)
-  &\propto \exp\big(\E_{-\xi}[\log p(\xi|\cZ_{-\xi}, \by)] \big) \\
-  &= \exp \Big(\log B(\xi) + \E \ip{\zeta_\xi(\cZ_{-\xi}, \by) , \xi} - \E [ A(\zeta_\xi) ] \Big) \\
-  &\propto B(\xi)\exp \E\ip{\zeta_\xi(\cZ_{-\xi}, \by) , \xi}
-\end{align*}
-is also in the same exponential family.
-In situations where there is no closed form expression for $\tilde q$, then one resorts to sampling methods such as a Metropolis random walk to estimate quantities of interest.
-This stochastic step within a deterministic algorithm has been explored before in the context of a Monte Carlo EM algorithm---see \citet[§4, pp. 537--538]{meng1997algorithm} and references therein.
-
 \begin{figure}[t]
   \centering
   \begin{tikzpicture}[scale=1, transform shape]

@@ -57,6 +57,53 @@ This is a slow and difficult undertaking, especially for large sample sizes $n$,
 Furthermore, standard errors for the parameters are cumbersome to calculate as well.
 Lastly, as a comment, Laplace's method only approximates the true marginal likelihood well if the true function is small far away from the mode.
 
+% IT TURNS OUT THE EM IS DIFFICULT! BECAUSE THERE IS NO INHERENT ASSUMPTION OF INDEPENDENCE BETWEEN YSTAR AND W, SO THE DISTRIBUTIONS ARE DIFFICULT TO ASCERTAIN. 
+% IN THE VARIATIONAL ALGORITHM, THIS IS ASSUMED IN A MEAN-FIELD APPROXIMATION
+%\subsection{Expectation-maximisation algorithm}
+%
+%An EM algorithm similar to the one seen in the previous Chapter can be employed, with a slight modification.
+%This time, treat both the latent propensities $\by^*$ and the I-prior random effects $\bw$ as `missing', so the complete data is $\{\by,\by^*,\bw\}$.
+%Now, due to the independence of the observations $i=1,\dots,n$, the complete data log-likelihood is
+%\begin{align*}
+%  \log p&(\by,\by^*,\bw) \\
+%  &= \sum_{i=1}^n \Big\{ 
+%  \log p(y_i|\by^*_{i \bigcdot}) + \log p(\by^*_{i \bigcdot}|\bw_{i \bigcdot}) + \log p(\bw_{i \bigcdot}) 
+%  \Big\} \\
+%  &= - \half \sum_{i=1}^n \ind[y_{ij}^* = \max_k y_{ik}^*] \Bigg[
+%%   \cancel{\half\log\abs{\bPsi}} 
+%    (\by^*_{i \bigcdot} - \balpha - \bw_{i \bigcdot}^\top\bH_\eta)^\top \bPsi (\by^*_{i \bigcdot} - \balpha - \bw_{i \bigcdot}^\top\bH_\eta)
+%   +  \bw_{i \bigcdot}^\top \bPsi^{-1} \bw_{i \bigcdot} \Bigg] \\
+%  &\phantom{==} 
+%%  \cancel{- \half\log\abs{\bPsi}} 
+%   + \const
+%\end{align*}
+%which looks like the complete data log-likelihood seen previously in \cref{eq:QfnEstep}, except that here, together with the $\bw_{i \bigcdot}$'s, the $\by^*_{i \bigcdot}$'s are never observed.
+%
+%For the E-step, it is of interest to determine the posterior density $p(\by^*,\bw|\by) = p(\by^*|\bw,\by)p(\bw|\by) = p(\bw|\by^*,\by)p(\by^*|\by)$.
+%For the latent propensities, the conditional posterior mean of a normally distributed subject to a conical truncation $\cC_j = \{y_{ij}* > y_{ik}^* \,|\, \forall k \neq j \}$, i.e. $\by^*_{i \bigcdot}|\bw_{i \bigcdot},\{y_i=j\} \iid \tN_m(\balpha + \hat\bw_{i \bigcdot}^\top\bH_\eta, \bPsi^{-1},\cC_j)$, for each $i=1,\dots,n$, and $\hat\bw$ is the posterior mean of $\bw$.
+%The distribution for $\bw|\by^*$ is found to be similar to the posterior distribution of $\bw$ in the normal case as in \cref{eq:posteriorw}, except with $\by$ replaced with $\by^*$.
+%To be specific, $\vecc \bw | \by^* \sim \N_{nm}(\vecc \tilde\bw, \tilde \bV_w)$, where
+%\begin{align*}
+%  \vecc \tilde\bw = \tilde\bV_w (\bPsi \otimes \bH_\eta) \vecc(\by^* - \bone_n\balpha^\top)
+%  \hspace{0.5cm}\text{and}\hspace{0.5cm}
+%  \tilde \bV_w^{-1} = (\bPsi \otimes \bH_\eta^2) + (\bPsi^{-1} \otimes \bI_n).
+%\end{align*}
+%To obtain the first and second posterior moments for the I-prior random effects, use the law of total expectations:
+%\begin{gather*}
+%  \E[\vecc \bw|\by]
+%  = \E \big[ \E[\vecc \bw | \by^*] \big| \by \big] =: \hat\bw \\
+%  \text{and}\\
+%  \E[\vecc \bw (\vecc \bw)^\top|\by]
+%  = \E \big[ \E[\vecc \bw (\vecc \bw)^\top| \by^*] \big| \by \big] =: \hat\bW .
+%\end{gather*}
+%The $Q$ function, whose argument is $\theta = \{\balpha,\eta,\bPsi\}$, is then 
+%\begin{align*}
+%  Q(\theta) 
+%  &= \E_{\by^*,\bw}\big[ \log p&(\by,\by^*,\bw) | \by,\theta^{(t)}\big] \\
+%  &= \const - \half 
+%\end{align*}
+%
+
 \subsection{Markov chain Monte Carlo methods}
 
 \citet{albert1993bayesian} showed that the latent variable approach to probit models can be analysed using exact Bayesian methods, due to the underlying normality structure.
@@ -72,63 +119,12 @@ In summary, the computational challenge here stems from two sources: 1) integrat
 Point 1) is addressed using a Gibbs sampling data augmentation scheme (latent variable approach), but this is not feasible with large $n$.
 Point 2) remains regardless whether Gibbs sampling or HMC is used.
 
+
+
 \subsection{Variational inference}
 
 We turn to variational inference as a method of estimation. Variational methods are widely discussed in the machine learning literature, and there have been efforts to popularise it in statistics \citep{blei2017variational}.
-Suppose that, in a fully Bayesian setting, we append the unknown model parameters to the latent variables to form $\bz = \{\by^*, \bw, \theta\}$.
-The crux of variational inference is this: find a suitably close distribution function $q(\bz)$ that approximates the true posterior $p(\bz|\by)$, where closeness here is defined in the Kullback-Leibler divergence sense,
-\[
-  \KL(q\Vert p) = \int \log \frac{q(\bz)}{p(\bz|\by)} q(\bz) \dint \bz.
-\]
-One may then show that log marginal density (the log of the intractable integral) holds the following bound:
-    \begin{align}
-      \log p(\by) &= \log p(\by,\bz) - \log p(\bz|\by) \nonumber \\
-      &= \int \left\{ \log \frac{p(\by,\bz)}{q(\bz)} - \log \frac{p(\bz|\by)}{q(\bz)} \right\} q(\bz) \dint \bz \nonumber \\    
-      &=  \cL(q) +  \KL(q \Vert p) \nonumber \\
-      &\geq \cL(q) \label{eq:varbound}
-    \end{align}
-since the KL divergence is a non-negative quantity.
-The functional $\cL(q)$ given by 
-\begin{align}
-  \cL(q) 
-  &= \int \log \frac{p(\by,\bz)}{q(\bz)} q(\bz) \dint \bz \nonumber \\
-%  &= \E_{\bz\sim q}[\log p(\by,\bz) - \log q(\bz)] \nonumber \\
-  &= \E_{\bz\sim q}[\log p(\by,\bz)] + H(q), \label{eq:elbo1}
-\end{align}
-where $H$ is the entropy functional, is known as the \emph{evidence lower bound} (ELBO), which serves as the proxy objective function in the likelihood maximisation problem.
-Evidently, the closer $q$ is to the true $p$, the better, and this is achieved by maximising $\cL$, or equivalently, minimising the KL divergence\footnote{The astute reader will realise that $\KL(q||p)$ is impossible to compute, since one does not know the true distribution $p(\bz|\by)$. Efforts are concentrated on maximising the ELBO instead.} from $p$ to $q$.
-Note that the bound \cref{eq:varbound} achieves equality if and only if $q \equiv p$, but of course the true form of the posterior is unknown to us.
-Maximising $\cL(q)$ or minimising $\KL(q\Vert p)$ with respect to the density $q$ is a problem of calculus of variations, which incidentally, is where variational inference takes its name.
 
-Maximising $\cL$ over all possible density functions $q$ is not possible without considering certain constraints.
-Two such constraints are described. 
-The first, is to make a distributional assumption regarding $q$, for which it is parameterised by $\nu$.
-For instance, we might choose the closest normal distribution to the posterior $p(\bz|\by)$ in terms of KL divergence.
-In this case, the task is to find optimal mean and variance parameters of a normal distribution.
-
-\begin{figure}[htb]
-  \centering
-  \begin{tikzpicture}
-    \fill (4.05,2.1) circle (0pt) node[right,yshift=1] {$p(\bz|\by)$};
-    \draw[ultra thick] (0,0) ellipse (4cm and 2.2cm);
-    \node at (-2.8,0.7) {$q(\bz;\nu)$};
-    \draw[thick,colred] (-0.8,-0.5) to [curve through={(-2,0) .. (-2,-0.8) .. (1,-0.8) .. (-1,1.5) .. (0,1.5) ..(0.3,0.1) .. (0.5,1.5) .. (2,0) .. (2.1,-0.1) .. (2.2,1.1) .. (3,0.9)}] (3.317,1.225);  % curve using hobby tikz
-    \draw[dashed, very thick,black!50] (3.317,1.225) -- (4.05,2.1);
-    \fill (-0.8,-0.5) circle (2.2pt) node[below] {$\nu^{\text{init}}$};
-    \fill (3.317,1.225) circle (2.2pt) node[left,yshift=-1] {$\nu^*$};
-    \fill (4.05,2.1) circle (2.2pt) node[right,yshift=1] {$p(\bz|\by)$};
-    \node[gray] at (4.5,1.4) {$\KL(q\Vert p)$};
-  \end{tikzpicture}
-  \caption{Schematic view of variational inference. The aim is to find the closest distribution $q$ (parameterised by a variational parameter $\nu$) to $p$ in terms of KL divergence within the set of variational distributions, represented by the ellipse.}
-\end{figure}
-
-The second type of constraint, and the one considered in this thesis, is simply an assumption that the approximate posterior $q$ factorises into $M$ disjoint factors.
-Supposing that the elements of $\bz$ may indeed be partitioned into $M$ disjoint groups $\bz = (z^{(1)},\dots,z^{(M)})$, then the structure
-\[
-  q(\bz) = \prod_{k=1}^M q_k(z^{(k)})
-\]
-for $q$ is considered.
-This factorised form of variational inference is known in the statistical physics literature as the \emph{mean-field theory} \citep{itzykson1991statistical}.
 By factorising appropriately, we can obtain approximated posteriors for the regression function and the parameters of the I-prior model.
 The algorithm itself typically condenses to that of a simple, sequential updating scheme, akin to the expectation-maximisation (EM) algorithm for exponential families we saw in Chapter 4, which is very fast to implement compared to the other methods described in the previous subsections.
 A full derivation of the variational algorithm used by us will be described in \cref{sec:iprobitvar}.

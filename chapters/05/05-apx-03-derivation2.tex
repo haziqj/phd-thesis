@@ -1,76 +1,166 @@
 \section{Deriving the ELBO expression}
 
-A convergence criterion would be when there is no more significant increase in the lower bound $\cL$, as defined by
+The evidence lower bound (ELBO) expression involves the following calculation:
 \begin{align*}
-  \cL &= \int q(\by^*,\bw,\lambda,\alpha) \log \left[ \frac{p(\by,\by^*,\bw,\lambda,\alpha)}{q(\by^*,\bw,\lambda,\alpha)} \right] \d\by^* \d\bw \d\lambda \d\alpha \\
-  &= \E[\log p(\by,\by^*,\bw,\lambda,\alpha)] - \E[\log q(\by^*,\bw,\lambda,\alpha)] \\[8pt]
-  &= \cancel{\E\left[\log \prod_{i=1}^n \prod_{j=1}^m p(y_{i}|y_{ij}^*)\right]}
-  + \E\left[ \log p(\by^* | \bff) \right]
-  + \E\left[ \log p(\bw) \right] 
-  + \cancel{\E\left[ \log p(\lambda) \right]}
-  + \cancel{\E\left[ \log p(\alpha) \right]}  \\
-  &\phantom{==} - \E\left[ \log q(\by^*) \right]
-  - \E\left[ \log q(\bw) \right]
-  - \E\left[ \log q(\lambda) \right]
-  - \E\left[ \log q(\alpha) \right]
+  \cL &= \idotsint q(\by^*,\bw,\theta) 
+  \log \frac{p(\by,\by^*,\bw,\theta)}{q(\by^*,\bw,\theta)}
+  \dint\by^* \dint\bw \dint\theta \\
+  &= \E \log \greyoverbrace{p(\by,\by^*,\bw,\theta)}{\text{joint likelihood}}
+  +
+  (\greyoverbrace{-\E \log q(\by^*,\bw,\theta)}{\text{entropy}}) \\
+  &= \E\bigg[
+  \cancel{\sum_{i=1}^n \sum_{j=1}^m \log  p(y_{i}|y_{ij}^*)} + 
+  \sum_{i=1}^n \log  p(\by_{i \bigcdot}^*|\balpha,\bw,\bPsi,\eta) +
+  \log p(\bw|\bPsi) +
+  \log p(\bPsi) \\ 
+  &\hspace{2cm} +
+  \log p(\eta) +
+  \log p(\balpha)
+  \bigg] \\
+  &\phantom{==} 
+  + \sum_{i=1}^n H\big[q(\by^*_{i \bigcdot}) \big]
+  + H\big[q(\bw) \big]
+  + H\big[q(\bPsi) \big]
+  + H\big[q(\eta) \big]
+  + H\big[q(\balpha) \big].
 \end{align*}
 
-Note that the categorical pmf $p(y_i|y_{ij}^*)$ becomes degenerate once the latent variables are known, so this term is cancelled out. With the exception of $q(\by^*)$, all of the distributions are Gaussian. The following results will be helpful. 
+\begin{remark}
+  As discussed, given the latent propensities $\by^*$, the pdf of $\by$ is degenerate and hence can be disregarded.  
+\end{remark}
 
+\begin{remark}
+  When using improper priors for the hyperparameters, i.e. $p(\bPsi,\eta,\balpha) \propto \const$, then these terms can be disregarded.  
+\end{remark}
 
-\subsubsection{Terms involving distributions of $\by^*$}
-
-\begin{align*}
-  \E\left[ \log p(\by^* | \bff) \right] - \E\left[ \log q(\by^*) \right]
-  &= \sum_{i=1}^n \sum_{j=1}^m \E \left[ \log p(y_{ij}^* | f_{ij}) \right] + \sum_{i=1}^n \cH\big(q(y_i^*)\big) \\
-  &= \cancel{\sum_{i=1}^n \sum_{j=1}^m \left( -\half\log 2\pi -\half \E[y_{ij}^* - f_{ij}]^2 \right)} \\
-  &\phantom{==} \cancel{+ \sum_{i=1}^n \sum_{j=1}^m \left( \half\log 2\pi + \half \E[y_{ij}^* - f_{ij}]^2 \right)} + \sum_{i=1}^n \log C_i \\
-\end{align*}
-
-\subsubsection{Terms involving distributions of $\bw$}
+\subsection{Terms involving distributions of \texorpdfstring{$\by^*$}{$y^*$}}
 
 \begin{align*}
-  \E\left[ \log p(\bw) \right] - \E\left[ \log q(\bw) \right]
-  &= \sum_{j=1}^m \Big( \E\left[ \log p(\bw_j) \right] - \E\left[ \log q(\bw_j) \right] \Big)  \\
-  &= \sum_{j=1}^m \left( -\half[n] \log 2\pi - \half \E[\bw_j^\top\bw_j] + \cH\big(q(\bw_j)\big) \right) \\
-  &= \sum_{j=1}^m \left( \cancel{-\half[n] \log 2\pi} - \half\tr\left( \E[\bw_j\bw_j^\top]\right) + \half[n] (1 + \cancel{\log 2\pi}) - \half \log \abs{\bA_j} \right) \\
-  &= \half[nm] - \half \sum_{j=1}^m \left( \tr \btW_j + \log \abs{\bA_j} \right)
+  \sum_{i=1}^n  \bigg( &
+  \E  \log p(\by_{i \bigcdot}^*|\balpha,\bw,\bPsi,\eta) 
+  + H \big[q(\by^*_{i \bigcdot}) \big] 
+  \bigg) \\
+  &=  -\half[nm]\log 2\pi + \half[n]\E \log \abs{\bPsi} - \half \E \sum_{i=1}^n (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \bmu_{i \bigcdot}) \\
+  &\phantom{==} +\half[nm]\log 2\pi - \half[n] \log \abs{\tilde\bPsi} + \half \E \sum_{i=1}^n (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot})^\top \tilde\bPsi (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot}) + \log C_i  \\
+%  &= \const + n \sum_{j=1}^m \tilde\bPsi_{jj} \tilde v_{\alpha_j} + 
+%  \sum_{i=1}^n \left\{ \log C_i 
+%  +  \tr\big(\tilde\bPsi\bOmega_i \big) 
+%  \right\}.
+   &=\const + \sum_{i=1}^n \log C_i 
 \end{align*}
+where $\bOmega_i = \Var \bw^\top\bh_\eta(x_i)$, and $C_i$ is the normalising constant for the distribution of multivariate truncated normal $\by_{i \bigcdot}$.
 
-\subsubsection{Terms involving distribution of $q(\lambda)$}
+Notes:
+\begin{enumerate}
+  \item $p(\by_{i \bigcdot}^*)$ is the pdf of $\N(\bmu_{i \bigcdot}, \bPsi^{-1})$, and $q(\by_{i \bigcdot}^*)$ is the pdf of $\tN(\tilde\bmu_{i \bigcdot}, \tilde\bPsi^{-1}, \cC_{y_i})$, where $\bmu_{i \bigcdot} = \balpha + \bw^\top\bh_\eta(x_i) \in \bbR^m$.
+  \item For $\bPsi\sim \Wis(\cdot,\cdot)$ with mean $\tilde\bPsi$, $\E \log \abs{\bPsi} = \log \tilde\bPsi + \const$ \citep[§10.2]{bishop2006pattern}.
+  \item It is simpler to use the approximation
+  \begin{align}\label{eq:elboyaprx}
+    \E (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})
+    \approx \E (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot})^\top \tilde\bPsi (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot}).   
+  \end{align}
+  rather than work out the actual quantity, which is
+  \begin{align}\label{eq:elboyact}
+    \E (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})
+    &= \E (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot})^\top \tilde\bPsi (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot}) + \tr(\tilde\bPsi\Var \bmu_{i \bigcdot})
+  \end{align}
+  where $\Var \bmu_{i \bigcdot} = \Var \balpha + \Var \bw^\top\bh_\eta(x_i)$, obtained by taking expectations with respect to everything except $\by^*_{i \bigcdot}$.
+  The first term is a diagonal matrix of the posterior variances of the intercepts.
+  The second term is where things get complicated 
+  Let $\bOmega_i = \Var \bw^\top\bh_\eta(x_i)$. 
+  Then $\bOmega_{i,kj} \approx \Cov(\bw^\top_{\bigcdot k}\bh_\eta(x_i), \bw^\top_{\bigcdot j}\bh_\eta(x_i)) = \bh_\eta(x_i)^\top \tilde\bV_w[k,j]\bh_\eta(x_i)$. 
+  So
+  \[
+    \tr(\tilde\bPsi \bOmega_i) \approx \sum_{k,j=1}^m \tilde\bPsi_{kj} \bh_\eta(x_i)^\top \tilde\bV_w[k,j]\bh_\eta(x_i)
+  \]
+  However, we know that $\Var XY = \E X^2Y^2 - (\E XY)^2 = \Var X \Var Y + \Var X (\E Y)^2 + \Var Y (\E X)^2$, so there is actually some covariance terms which need to be considered, and these are not so easily computed.
+  In practice, we find that using \cref{eq:elboyaprx} gives satisfactory results as far as determining convergence for the variational algorithm goes. 
+\end{enumerate}
+
+\subsection{Terms involving distributions of $\bw$}
 
 \begin{align*}
-  -\E\left[ \log q(\lambda) \right] 
-  &= \sum_{j=1}^m \cH\big(q(\lambda_j)\big)  \\
-  &= \sum_{j=1}^m \left( \half (1 + \log 2\pi) - \half \log c_j \right) \\
-  &= \half[m](1 + \log 2\pi) - \half \sum_{j=1}^m \log c_j
+  \E \log p(\bw|\bPsi) + H \big[q(\bw) \big] 
+  &= \cancel{-\half[nm]\log 2\pi} - \half[n]\E\log\abs{\bPsi} - \half\E\tr \big( \bw \bPsi^{-1} \bw^\top \big) \\
+  &\phantom{==} + \half[nm](1 + \cancel{\log 2\pi}) + \half\log\abs{\tilde\bV_w} \\
+  &= \const - \half[n]\log\tilde\bPsi 
+  - \half \sum_{j=1}^m \tr \big(\tilde\bPsi^{-1} (\tilde\bV_w[j,j]  + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot j}^\top)\big)
 \end{align*}
-or if using single $\lambda$
+
+Notes:
+\begin{enumerate}
+  \item $p(\bw)$ is the pdf of $\MN(\bzero,\bI_n,\bPsi)$, and $q(\bw)$ is the pdf of $\N(\vecc \tilde\bw,\tilde\bV_w)$.
+  \item We used the first order approximation $\E \bPsi^{-1} \approx (\E \bPsi)^{-1} = \tilde\bPsi^{-1}$.
+  \item $\tilde\bV_w[j,j]$ are the $n \times n$ sub matrices along the diagonal of $\tilde\bV_w$.
+\end{enumerate}
+
+\subsection{Terms involving distributions of $\eta$}
+
+If no closed-form expression for $q(\eta)$ is found, then the expression $\E [\log p(\eta) - q(\eta)]$ must be obtained by sampling methods.
+Otherwise, consider the case where $\eta =\{\lambda_1,\dots,\lambda_p\}$.
+Then, the contribution to the ELBO is
 \begin{align*}
-  -\E\left[ \log q(\lambda) \right] 
-  &= \half(1 + \log 2\pi) - \half  \log  \sum_{j=1}^m c_j .
+  \E \log p(\lambda_1 & ,\dots,\lambda_p) + H\big[q(\lambda_1,\dots,\lambda_p) \big] \\
+  &=  -\half[p]\log 2\pi - \half\log v_1\cdots v_k - \half \sum_{k=1}^p  \frac{\E(\lambda_k - m_k)^2}{v_k} \\
+  &\phantom{==} + \half[p](1 + \log 2\pi) + \half\log \tilde v_1\cdots \tilde v_p \\
+  &= \const + \half \sum_{k=1}^p \log \tilde v_k - \half \sum_{k=1}^p  \frac{\tilde v_k + \tilde\lambda_k^2 - 2\tilde\lambda_k m_k}{v_k}
 \end{align*}
 
-\subsubsection{Terms involving distribution of $q(\alpha)$}
+Notes:
+\begin{enumerate}
+  \item The priors on the $\lambda_k$'s are $\N(m_k,v_k)$, and  $q(\lambda_k)$ is the density of $\N(\tilde\lambda_k, v_{\lambda_k})$.
+  \item When using improper priors $\lambda_k \propto \const$, then we need only consider the middle term involving the sums of $\log \tilde v_{\lambda_k}$.
+\end{enumerate}
 
+\subsection{Terms involving distributions of \texorpdfstring{$\bPsi$}{$\Psi$}}
+
+The terms involving $\bPsi$ are $\E \log p(\bPsi) + H\big[q(\bPsi)\big]$.
+In the case of the full I-probit model, this becomes
 \begin{align*}
-  -\E\left[ \log q(\alpha) \right] 
-  &= \sum_{j=1}^m \cH\big(q(\alpha_j)\big) \\
-  &= \half[m] (1 + \log 2\pi - \log n)
+  \const & + \half[g-m-1]\E \log \abs{\bPsi} - \half \E \tr(\bG\bPsi) 
+  + \log B - \half[\tilde g-m-1]\E \log \abs{\bPsi} + \half[\tilde g m] \\
+  &= \const  + \log B + \half[\tilde g m] + \half[g-\tilde g] \log \abs{\tilde\bPsi} - \half \tr(\bG\tilde\bPsi)
+%  + \frac{m+1}{2}\log\abs{\bG + \bG_1 + \bG_2} + \half m(m+1)\log 2 + \log \Gamma_p \left(\half[s] \right) - \half[s-m-1] \psi_m \left(\half[s] \right) + \half[sm]
 \end{align*}
-or if using single $\alpha$
+where $B = \half[\tilde g] \log \abs{\tilde G} + \half[\tilde g m]\log 2 + \log \Gamma_m(\tilde g / 2)$.
+In the case of the independent I-probit model, we have
 \begin{align*}
-  -\E\left[ \log q(\alpha) \right] 
-  &= \half (1 + \log 2\pi - \log nm).
+  \const & + \sum_{j=1}^m \Big\{ (s_j - 1)\E \log \psi_j -  r_j \E\psi_j \Big\}
+  - \sum_{j=1}^m \log \tilde r_j \\
+  &= \const + \sum_{j=1}^m \Big\{ (s_j - 1)\log \tilde \psi_j   -  r_j \tilde\psi_j \Big\}
+  - \sum_{j=1}^m \log \tilde r_j 
 \end{align*}
 
-\subsubsection{The lower bound}
+Notes:
+\begin{enumerate}
+  \item The priors on the $\bPsi$ is $\Wis(\bG,g)$, or if $\bPsi = \diag(\psi_1,\dots,\psi_m)$, then each $\psi_j\sim \Gamma(s_j,r_j)$. $q(\bPsi)$ is the density of $\Wis(\tilde\bG,\tilde g)$ or in the case of the independent model, each $q(\psi_j)$ is the density of $\Gamma(s_j,\tilde r_j)$.
+  \item Use the first order Taylor expansion about $\E\psi_j$ to approximate $\E \log \psi_j \approx \log \E \psi_j = \log \tilde \psi_j$, as per \citet{teh2007collapsed}.
+\end{enumerate}
 
+\subsection{Terms involving distribution of \texorpdfstring{$\balpha$}{$\alpha$}}
+
+For the intercepts, consider only
+\begin{align*}
+  \E \log p(\balpha) + H \big[q(\balpha) \big] 
+  &=  \const  - \half \E \sum_{j=1}^m \frac{(\alpha_j - a_j)^2}{A_j}    + \half \log \tilde v_{\alpha_1}\cdots\tilde v_{\alpha_m} \\ 
+  &= \const + \half \sum_{j=1}^m \log \tilde v_{\alpha_j} - \half \sum_{j=1}^m \frac{v_{\alpha_j} + \tilde\alpha_j^2  -2a_j \tilde\alpha_j}{A_j} 
+\end{align*}
+
+Notes:
+\begin{enumerate}
+  \item $p(\balpha)$ is $\prod_{j=1}^m \phi(\alpha_j|a_j,A_j)$, and $q(\balpha)$ $\prod_{j=1}^m \phi(\alpha_j|\tilde \alpha_j,\tilde v_{\alpha_j})$.
+\end{enumerate}
+
+\subsection{ELBO summarised}
+
+In the example section of Chapter 5, we considered  only 1) the independent I-probit model; 2) fixed $\bSigma = \bI_m$; 3) only RKHS scale parameters to estimate; and 4) and improper priors on the hyperparameters.
+In such situations, the ELBO expression is simply
 \begin{align*}
   \cL 
-  &= \sum_{i=1}^n \log C_i + \half[nm] - \half \sum_{j=1}^m \left( \tr \btW_j + \log \abs{\bA_j} \right) \\
-  &\phantom{==} + \half[m](1 + \log 2\pi) - \half \sum_{j=1}^m \log c_j + \half[m] (1 + \log 2\pi - \log n) \\
-  &= \half[m]\big(n + 2(1 + \log 2\pi) - \log n \big)
-  - \half \sum_{j=1}^m \left( \tr \btW_j + \log \abs{\bA_j} + \log c_j \right) + \sum_{i=1}^n \log C_i
+  &= \const + \sum_{i=1}^n  \log C_i 
+  - \half \sum_{j=1}^m \tr \big(\tilde\bV_{w_j}  + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot j}^\top \big) + \half \sum_{k=1}^p \log \tilde v_k.
 \end{align*}
-Of course, if using either single $\alpha$ or single $\lambda$, then the formula needs to be adjusted accordingly.
+
+As a final remark, often times the ELBO is treated as a proxy for the (penalised) marginal likelihood of the model, in which case it must be noted that the ELBO as we had derived is correct up to a constant.
+We find that keeping track of the constants is slightly tedious, and hence decided not to do so.
+When comparing ELBOs of two or more models, the comparison is still valid as only differences between the ELBOs matter, in which case the constants would cancel out.

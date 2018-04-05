@@ -25,7 +25,8 @@ For reference, the relevant distributions are listed below.
 \begin{itemize}
   \item {\boldmath$p(\by|\by^*)$}. For each observation $i\in\{1,\dots,n\}$, given the corresponding latent propensities $\by^*_i = (y_{i1}^*,\dots,y_{im}^*)$, the distribution for $y_i$ is a degenerate distribution which depends on the $j$'th component of $\by^*_i$ being largest, where the value observed for $y_i$ was $j$. Since each of the $y_i$'s are independent, everything is multiplicative.
   \begin{align*}
-    p(\by|\by^*) &= \prod_{i=1}^n \prod_{j=1}^m p_{ij} 
+    p(\by|\by^*) 
+    &= \prod_{i=1}^n \prod_{j=1}^m p_{ij}^{[y_i = j]} 
     = \prod_{i=1}^n \prod_{j=1}^m \ind[y_{ij}^* 
     = \max_k y_{ik}^*]^{\ind[y_i = j]}.
   \end{align*}
@@ -45,21 +46,21 @@ For reference, the relevant distributions are listed below.
     p(\by^*|\balpha,\bw,\eta,\bPsi)
 %    &= \prod_{i=1}^n \phi(\by_i^*|\balpha + \bff(x_i), \bPsi^{-1}) \\
     &= \exp \left[-\half[nm]\log 2\pi + \half[n]\log\abs{\bPsi} - \half\tr \big((\by^* - \bmu) \bPsi (\by^* - \bmu)^\top  \big)  \right] \\
-    &= \exp \left[-\half[nm]\log 2\pi + \half[n]\log\abs{\bPsi} - \half\sum_{i=1}^n (\by^*_i - \bmu_i)^\top \bPsi (\by^*_i - \bmu_i)   \right],
+    &= \exp \left[-\half[nm]\log 2\pi + \half[n]\log\abs{\bPsi} - \half\sum_{i=1}^n (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})   \right],
   \end{align*}
   where $\by^*_i \in\bbR^m$ and $\bmu_i \in\bbR^m$ are the rows of $\by^*$ and $\bmu$ respectively.
   The second line follows directly from the definition of the trace, but  also emanates from the fact that $\by_i^*$ are independent multivariate normal with mean $\bmu_i$ and variance $\bPsi^{-1}$.
   
-  \item {\boldmath$p(\bw|\bPsi)$}. The $\bw$'s are normal random matrices $\bw \sim \N_{n,m}(\bzero, \bI_n,\bPsi)$ with pdf
+  \item {\boldmath$p(\bw|\bPsi)$}. The $\bw$'s are normal random matrices $\bw \sim \MN_{n,m}(\bzero, \bI_n,\bPsi)$ with pdf
   \begin{align*}
     p(\bw|\bPsi) 
     &= \exp \left[-\half[nm]\log 2\pi - \half[n]\log\abs{\bPsi} - \half\tr \big( \bw \bPsi^{-1} \bw^\top \big)  \right] \\
-    &= \exp \left[-\half[nm]\log 2\pi - \half[n]\log\abs{\bPsi} - \half\sum_{i=1}^n  \bw_i^\top \bPsi^{-1} \bw_i   \right].
+    &= \exp \left[-\half[nm]\log 2\pi - \half[n]\log\abs{\bPsi} - \half\sum_{i=1}^n  \bw_{i \bigcdot}^\top \bPsi^{-1} \bw_{i \bigcdot}   \right].
   \end{align*}
   
   \item {\boldmath$p(\eta)$}. The most common scenario would be $\eta = \{\lambda_1,\dots,\lambda_p\}$ only. In this case, choose independent normal priors for each $\lambda_k \sim \N(m_k,v_k)$, $k=1,\dots,p$, whose pdf is
   \begin{align*}
-    p(\eta) = \prod_{k=1}^p \exp\left[-\half\log 2\pi - \half\log v_k - \frac{1}{2v_k^2} (\lambda_k - m_k)^2 \right].
+    p(\eta) = \prod_{k=1}^p \exp\left[-\half\log 2\pi - \half\log v_k - \frac{1}{2v_k} (\lambda_k - m_k)^2 \right].
   \end{align*} 
   An improper prior $p(\eta) \propto \const$ can be used as well, and this is the same as letting $m_k \to 0$ and $v_k\to 0$.
   The resulting posterior will be proper.
@@ -70,7 +71,7 @@ For reference, the relevant distributions are listed below.
   \[
     p(\bPsi) = \exp\left[\const + \half[g-m-1]\log \abs{\bPsi} - \half\tr(\bG\bPsi)  \right].
   \]
-  For the independent I-probit model, $\bPsi = \diag(\\psi_1,\dots,\psi_m)$, and we choose independent Gamma distributions for each precision $\sigma_j^{-2} \sim \Gamma(s_j,r_j)$, where $s_j$ and $r_j$ are the shape and rate parameters.
+  For the independent I-probit model, $\bPsi = \diag(\psi_1,\dots,\psi_m)$, and we choose independent Gamma distributions for each precision $\sigma_j^{-2} \sim \Gamma(s_j,r_j)$, where $s_j$ and $r_j$ are the shape and rate parameters.
   Then,
   \[
     p(\bPsi) = \prod_{j=1}^m \exp\left[\const + (s_j - 1)\log \psi_j - r_j\psi_j \right].
@@ -78,7 +79,9 @@ For reference, the relevant distributions are listed below.
   
   \item {\boldmath$p(\balpha)$}. Choose independent normal priors for the intercept, $\alpha_j \sim \N(a_j,A_j)$ for $j=1,\dots,m$. The pdf is
   \[
-    p(\balpha) = \prod_{j=1}^m \exp\left[\log 2\pi - \log A_j - \frac{1}{2A_j} (\alpha_j - a_j)^2  \right].
+    p(\balpha) = \prod_{j=1}^m \exp\left[
+    -\half\log 2\pi - \half\log A_j - \frac{1}{2A_j} (\alpha_j - a_j)^2  
+    \right].
   \]
 \end{itemize}
 
@@ -286,7 +289,7 @@ If $\bC = \diag(c_1,\dots,c_m)$, then
 \end{align*}
 
 \subsection{Derivation of $\tilde q(\eta)$}
-% [Derivation of q eta]
+
 
 By looking at only the terms involving $\eta$ in \cref{eq:qtilde}, we deduce that $\tilde q$ for $\eta$ satisfies
 \begin{align*}
