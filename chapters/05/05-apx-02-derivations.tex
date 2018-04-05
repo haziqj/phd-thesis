@@ -386,7 +386,7 @@ Then, for $j = 1,\dots,m$, assuming each of the $q(\lambda_k)$ densities are ind
  \big) \\ 
   &\hspace{2cm} - 2\lambda_k \Big( 
   \greyoverbrace{
-  \tr\Big( \tilde\bPsi(\tilde\by^* - \bone\tilde\balpha^\top)^\top\bR_k \tilde\bw 
+  \tr\Big( \tilde\bPsi(\tilde\by^* - \bone_n\tilde\balpha^\top)^\top\bR_k \tilde\bw 
   - \half\tilde\bPsi\E[\bw^\top \bU_k \bw] \Big) 
   + m_k v_k^{-2}}{d_k}
   \Big) \Big]
@@ -459,7 +459,7 @@ Now, to derive $\tilde q(\bPsi)$ for the full I-probit model, we inspect the equ
   \Big) \\
   &\phantom{==} + \half[2n+g-m-1]\log \abs{\bPsi} + \const
 \end{align*}
-which we recognise to be a Wishart distribution with scale matrix $(\bG + \bG_1 + \bG_2)^{-1}$ and $2n+g-m$ degrees of freedom.
+which we recognise to be a Wishart distribution with scale matrix $(\bG + \bG_1 + \bG_2)^{-1}$ and $\tilde g 2n+g$ degrees of freedom.
 Note that using an improper prior, i.e. $\bG=\bzero$ and $g=m$, will still yield a proper posterior distribution.
 The mean of this distribution is $\tilde\bPsi = (2n+g-m)(\bG + \bG_1 + \bG_2)^{-1}$.
 The matrix $\bG_1$ is given as
@@ -488,16 +488,16 @@ Then, the variational density for each $\psi_j$ is found to be
 \begin{align*}
   \log \tilde q(\psi_j)
   &= \E_{\cZ\backslash\{\bPsi\}\sim q} \Big[ 
-  \cancel{\half[n]\log (\psi_1\cdots\psi_m)} - \half\sum_{j=1}^m \sum_{i=1}^n \psi_j(\by^*_{ij} - \bmu_{ij})^2 
+  \half[n]\log (\psi_1\cdots\psi_m) - \half\sum_{j=1}^m \sum_{i=1}^n \psi_j(\by^*_{ij} - \bmu_{ij})^2 
   \Big] \\
   &\phantom{==} +\E_{\cZ\backslash\{\bPsi\}\sim q} \Big[ 
-  \cancel{- \half[n]\log (\psi_1\cdots\psi_m)} - \half\sum_{j=1}^m \sum_{i=1}^n \psi_j \bu_{ij}^2 
+  \half[n]\log (\psi_1\cdots\psi_m) - \half\sum_{j=1}^m \sum_{i=1}^n \psi_j \bu_{ij}^2 
   \Big] \\
   &\phantom{==} + \sum_{j=1}^m \big( (s_j - 1)\log \psi_j - r_j\psi_j \big) + \const \\
-  &= (s_j - 1)\log \psi_j - \psi_j \big( \half \E\norm{\by_{\bigcdot j} -  \bmu_{\bigcdot j}}^2 + \half\E\norm{\bu_{\bigcdot j}}^2  + r_j \big) + \const
+  &= (s_j + n - 1)\log \psi_j - \psi_j \big( \half \E\norm{\by_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 + \half\E\norm{\bu_{\bigcdot j}}^2  + r_j \big) + \const
 \end{align*}
 which is again a gamma distribution, and the shape and rate parameters can be read directly.
-The mean is given by $\tilde\psi_j = s_j(\half \E\norm{\by_{\bigcdot j} - \bmu_{\bigcdot j}}^2 + \half \E\norm{\bu_{\bigcdot j}}^2  + r_j)^{-1}$.
+The mean is given by $\tilde\psi_j = (s_j + n)(\half \E\norm{\by_{\bigcdot j}^* - \bmu_{\bigcdot j}}^2 + \half \E\norm{\bu_{\bigcdot j}}^2  + r_j)^{-1}$.
 Recall that each of the $n$ components of $\by_{\bigcdot j} -  \bmu_{\bigcdot j}$ are independent, and can be calculated using the methods described above.
 Also, we have $\bu_{\bigcdot j} \sim \N_n(\tilde\bu_{\bigcdot j}, \tilde\bV_{u_j})$, and so $  \E\norm{\bu_{\bigcdot j}}^2 = \tr(\tilde\bV_{u_j} + \tilde\bu_{\bigcdot j}\tilde\bu_{\bigcdot j}^\top)$.
 

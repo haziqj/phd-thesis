@@ -7,11 +7,13 @@ The log likelihood function $L(\cdot)$ for $\theta$ using all $n$ observations $
   L(\theta) 
   &= \log \int p(\by | \bw, \theta) \, p(\bw|\theta) \dint \bw \nonumber \\
   &= \log \int \prod_{i=1}^n \prod_{j=1}^m \Big( g^{-1}\big(\alpha_k + 
-  \greyoverbrace{f_k(x_i)}{\hidewidth\sum_{i'=1}^n h_\eta(x_i,x_{i'})w_{i'}\hidewidth}
+  \greyoverbrace{f_k(x_i)}{\hidewidth\sum_{i'=1}^n h_\eta(x_i,x_{i'})w_{i'j}\hidewidth}
   \,\big)_{k=1}^m \Big)^{[y_i=j]} \cdot \phi(\bw|\bzero,  \bPsi \otimes \bI_n ) \dint \bw \label{eq:intractablelikelihood}
 \end{align}
 where we have denoted the probit relationship from \eqref{eq:pij} using the function $g^{-1}:\bbR^m \to [0,1]$.
-Unlike in the continuous response models, the integral does not present itself in closed form due to the conditional categorical PMF of the $y_i$'s, which they themselves involve integrals of normal densities.
+Unlike in the continuous response models, the integral does not present itself in closed form due to the conditional categorical PMF of the $y_i$'s, which they themselves involve integrals of multivariate normal densities.
+For binary response models, $g^{-1}$ is simply the probit function, but for multinomial responses, this can be quite challenging to evaluate---more on this in \hltodo{Section X}.
+
 Furthermore, the posterior distribution of the regression function, which requires the density of $\bw|\by$, depends on the marginalisation provided by \cref{eq:intractablelikelihood}.
 The challenge of estimation is then to first overcome this intractability by means of a suitable approximation of the integral.
 We present three possible avenues to achieve this aim, namely the Laplace approximation, Markov chain Monte Carlo (MCMC) methods, and  variational Bayes.
@@ -21,19 +23,19 @@ We present three possible avenues to achieve this aim, namely the Laplace approx
 
 \subsection{Laplace approximation}
 
-One is interested in the posterior density $p(\bw|\by) \propto p(\by|\bw)p(\bw) =: e^{Q(\bw)}$, with normalising constant equal to the marginal density of $\by$, $p(\by) = \int e^{Q(\bw)} \dint \bw$, and we have established that the calculation of this marginal density is intractable.
-Laplace's method \citep[§4.1.1, pp. 777--778]{kass1995bayes} entails expanding a Taylor series for $Q$ about its posterior mode $\hat\bw = \argmax_\bw p(\by|\bw)p(\bw)$, and this gives the relationship
+To compute the posterior density $p(\bw|\by) \propto p(\by|\bw)p(\bw) =: e^{Q(\bw)}$ with normalising constant equal to the marginal density of $\by$, $p(\by) = \int e^{Q(\bw)} \dint \bw$, we have established that this is intractable.
+Laplace's method \citep[§4.1.1, pp. 777--778]{kass1995bayes} entails expanding a Taylor series for $Q$ about its posterior mode $\hat\bw = \argmax_\bw p(\by|\bw)p(\bw)$, which gives the relationship
 \begin{align*}
   Q(\bw) 
   &= Q(\hat\bw) + 
   \cancelto{0}{(\bw - \hat\bw)^\top \nabla Q(\hat\bw)} 
   - \half (\bw - \hat\bw)^\top \bOmega (\bw - \hat\bw) + \cdots \\
   &\approx Q(\hat\bw) + 
-  - \half (\bw - \hat\bw)^\top \bOmega (\bw - \hat\bw)
+  - \half (\bw - \hat\bw)^\top \bOmega (\bw - \hat\bw),
 \end{align*}
 because, assuming that $Q$ has a unique maxima, $\nabla Q$ evaluated at its mode is zero.
 This is recognised as the logarithm of an unnormalised Gaussian density, implying $\bw|\by \sim \N_n(\hat\bw,\bOmega^{-1})$.
-Here, $\bOmega = -\nabla^2 Q(\bw)|_{\bw=\hat\bw}$ is the negative Hessian of $Q$ evaluated at the posterior mode.
+Here, $\bOmega = -\nabla^2 Q(\bw)|_{\bw=\hat\bw}$ is the negative Hessian of $Q$ evaluated at the posterior mode, and is typically obtained as a byproduct of the maximisation routine of $Q$ using gradient or quasi-gradient based methods.
 
 The marginal distribution is then approximated by
 \begin{align*}
@@ -49,12 +51,9 @@ The marginal distribution is then approximated by
 The log marginal density of course depends on the parameters $\theta$, which becomes the objective function to maximise in a likelihood maximising approach.
 Note that, should a fully Bayesian approach be undertaken, i.e. priors prescribed on the model parameters using $\theta \sim p(\theta)$, then this approach is viewed as a maximum a posteriori approach.
 
-In fact, under an EM algorithm approach, using the approximate posterior density which is normally distributed is simply using the posterior mode in lieu of the actual posterior means.
-\hltodo[Expand on this further.]{}
-
 In any case, each evaluation of the objective function $L(\theta) = \log p(\by|\btheta)$ involves finding the posterior modes $\hat\bw$.
-This is a slow and difficult undertaking, especially for large sample sizes $n$, because the dimension of this integral is exactly the sample size.
-Furthermore, standard errors for the parameters are cumbersome to calculate as well.
+This is a slow and difficult undertaking, especially for large sample sizes $n$---even assuming computation of the class probabilities $g^{-1}$ is efficient---because the dimension of this integral is exactly the sample size.
+Furthermore, obtaining standard errors for the parameters are cumbersome, and it is likely that a computationally burdensome bootstrapping approach is needed.
 Lastly, as a comment, Laplace's method only approximates the true marginal likelihood well if the true function is small far away from the mode.
 
 % IT TURNS OUT THE EM IS DIFFICULT! BECAUSE THERE IS NO INHERENT ASSUMPTION OF INDEPENDENCE BETWEEN YSTAR AND W, SO THE DISTRIBUTIONS ARE DIFFICULT TO ASCERTAIN. 
@@ -104,31 +103,61 @@ Lastly, as a comment, Laplace's method only approximates the true marginal likel
 %\end{align*}
 %
 
-\subsection{Markov chain Monte Carlo methods}
-
-\citet{albert1993bayesian} showed that the latent variable approach to probit models can be analysed using exact Bayesian methods, due to the underlying normality structure.
-Paired with corresponding conjugate prior choices, sampling from the posterior is very simple using a Gibbs sampling approach.
-On the other hand, this data augmentation scheme enlarges the variable space to $n+q$ dimensions, where $q$ is the number of parameters to estimate, which is inefficient and computationally challenging especially when $n$ is large.
-It is no longer possible to marginalise the normal latent variables from the model, as this is intractable, just as we discussed previously.
-
-Hamiltonian Monte Carlo is another possibility, since it does not require conjugacy.
-For binary models, this is a feasible approach because the class probabilities are a function of the normal CDF, which means that it is doable in off-the-shelf software such as \proglang{Stan}.
-Things get out of hand with multinomial responses, because the intractability of computing class probabilities is not addressed.
-
-In summary, the computational challenge here stems from two sources: 1) integrating out the random effects $\bw$; and 2) evaluating class probabilities.
-Point 1) is addressed using a Gibbs sampling data augmentation scheme (latent variable approach), but this is not feasible with large $n$.
-Point 2) remains regardless whether Gibbs sampling or HMC is used.
-
 
 
 \subsection{Variational inference}
 
-We turn to variational inference as a method of estimation. Variational methods are widely discussed in the machine learning literature, and there have been efforts to popularise it in statistics \citep{blei2017variational}.
+We turn to variational inference as a method of estimation. 
+Variational methods are widely discussed in the machine learning literature, but there have been efforts to popularise it in statistics \citep{blei2017variational}.
+In a fully Bayesian setting, one obtains an approximation to the intractable posterior distribution of interest, which is then used for inferential purposes in lieu of the actual posterior distribution.
 
-By factorising appropriately, we can obtain approximated posteriors for the regression function and the parameters of the I-prior model.
+In addition to the I-probit model, suppose that prior distributions are assigned on the hyperparameters of the model, $\theta \sim p(\theta)$.
+By appending the latent variables $\{\by^*,\bw\}$ to the hyperparameters $\theta$, we seek an approximation
+\[
+  p(\by^*,\bw,\theta | \by) \approx \tilde q(\by^*,\bw,\theta),
+\]
+where $\tilde q$ satisfies $\tilde q = \argmin_q \KL(q\Vert p)$, subject to certain constraints.
+The constraint considered by us in this thesis is that $q$ satisfies a \emph{mean-field} factorisation
+\[
+  q(\by^*,\bw,\theta) = q(\by^*)q(\bw)q(\theta).
+\]
+Under this scheme, the posterior for $\by^*$ is found to be a \emph{conically truncated multivariate normal} distribution, and for $\bw$, a multivariate normal distribution.
+The posterior density $q(\theta)$ is often of a recognisable form, and usually one of the exponential family densities (normal, Wishart or gamma).
+This is useful, because point estimates of the hyperparameters can be taken to be either the mean or mode of these well-known distributions.
+In cases where $q(\theta)$ does not conform to an exponential family type density, then inference can still be done by sampling methods.
+
+It can be shown that, for some variational density $q$, the marginal log-likelihood is an upper-bound for the quantity $\cL$
+\[
+  \log p(\by) \geq 
+    \E_{ q} \log p(\by,\by^*,\bw,\theta)
+    - \E_{ q} \log \tilde q(\by^*,\bw,\theta) =: \cL,
+%  }{\cL},
+\]
+a quantity often referred to as the \emph{evidence lower bound} (ELBO).
+It turns out that minimising $\KL(q\Vert p)$ is equivalent to maximising the ELBO, a quantity that is more practical to work with than the KL divergence.
+That is, if $\tilde q$ approximates the true posterior well, then the ELBO is a suitable proxy for the maximised marginal log-likelihood.
+
+The algorithm to obtain $\tilde q$ which maximises the ELBO is known as the \emph{coordinate ascent variational inference} (CAVI) algorithm.
 The algorithm itself typically condenses to that of a simple, sequential updating scheme, akin to the expectation-maximisation (EM) algorithm for exponential families we saw in Chapter 4, which is very fast to implement compared to the other methods described in the previous subsections.
 A full derivation of the variational algorithm used by us will be described in \cref{sec:iprobitvar}.
 %\citep{mclachlan2007algorithm}
+
+\subsection{Markov chain Monte Carlo methods}
+
+As an alternative to the deterministic Bayesian approach of variational inference, it is possible to use Markov chain Monte Carlo sampling methods as an approach to stochastically approximate the intractable posterior distribution.
+
+\citet{albert1993bayesian} showed that the latent variable approach to probit models can be analysed using exact Bayesian methods, due to the underlying normality structure.
+Paired with corresponding conjugate prior choices, sampling from the posterior is very simple using a Gibbs sampling approach.
+On the other hand, this data augmentation scheme enlarges the variable space to $n+q$ dimensions, where $q$ is the number of parameters to estimate, which is inefficient and computationally challenging especially when $n$ is large.
+It is no longer possible to marginalise the normal latent variables from the model, as this is intractable, as discussed previously.
+
+Hamiltonian Monte Carlo is another possibility, since it does not require conjugacy.
+For binary models, this is a feasible approach because the class probabilities are a function of the normal CDF, which means that it is doable using off-the-shelf software such as \proglang{Stan}.
+However, with multinomial responses, the problem of computing class probabilities, which involve integration of an at most $m$-dimensional normal density, must be addressed separately.
+
+%In summary, the computational challenge here stems from two sources: 1) integrating out the random effects $\bw$; and 2) evaluating class probabilities.
+%Point 1) is addressed using a Gibbs sampling data augmentation scheme (latent variable approach), but this is not feasible with large $n$.
+%Point 2) remains regardless whether Gibbs sampling or HMC is used.
 
 \subsection{Comparison of estimation methods}
 

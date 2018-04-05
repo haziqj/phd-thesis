@@ -1,16 +1,46 @@
-We present a variational inference algorithm to estimate the I-probit latent variables $\by^*$ and $\bw$, together with the parameters $\theta = \{\balpha:=(\alpha_1,\dots,\alpha_m),\eta,\bPsi \}$.
+We present a variational inference algorithm to estimate the I-probit latent variables $\by^*$ and $\bw$, together with the parameters $\theta = \{\balpha = (\alpha_1,\dots,\alpha_m)^\top,\eta,\bPsi \}$.
 Begin by assuming some prior distribution on the parameters $p(\theta) = p(\balpha)p(\eta)p(\bPsi)$. 
-Although one may devote more attention to the prior specification of these parameters, for our purposes it suffices that they are independent component-wise, and the PDFs belong to the exponential family of distributions with known hyperparameters.
-The exponential family requirement greatly eases the complexity of deriving the variational algorithm later on\footnote{
-Of interest, one may even opt to assign improper priors on $\theta$ and the algorithm would still work.
-This is akin to obtaining empirical Bayes estimate of the $\theta$ if seen from an EM algorithm standpoint.
-}.
+The following flat, uninformative priors are suggested:
+\begin{itemize}
+  \item \textbf{Kernel parameters $\eta$}. This may include parameters such as the Hurst index, lengthscale and offset parameters, in addition to the RKHS scale parameters $\lambda_1,\dots,\lambda_p$, and each with their own support.
+  For the scale parameters, assign each $\lambda_k$ the vague prior
+  \[
+    \lambda_k \iid \N(0,v_\lambda = 0.001^{-1}), \ k=1,\dots,p.
+  \]
+  As $v_k^{-1}\to 0$, the prior becomes $p(\lambda_k)\propto \const$, an improper prior.
+  The default choice for the rest of the kernel parameters is an improper prior $p(\eta) \propto \const$
+  \item \textbf{Error precision $\bPsi$}. For the full I-probit model,
+  \[
+    \bPsi \sim \Wis(\bG,g)
+  \]
+  with known scale matrix $\bG = \diag(0.001,\dots,0.001)$ and degrees of freedom $g=m+1.001$. 
+  This implies a vague gamma prior for the precisions, and a near uniform prior for the off-diagonal elements \citep{alvarez2014bayesian}.
+  For the independent I-probit model such that $\bPsi = \diag(\psi_1,\dots,\psi_m)$,
+  \[
+    \psi_j \iid \Gamma(s,r), \ j=1,\dots,m,
+  \]
+  with vague shape $s = 0.001$ and rate $r = 0.001$ parameters. Note that as $s,r \to 0$ then $p(\psi_j) \propto \psi_j^{-1}$, an improper Jeffreys' prior for scale parameters.
+  \item \textbf{Intercepts $\alpha_1,\dots,\alpha_m$}. Also assign a vague normal prior for each intercept
+  \[
+    \alpha_j \iid \N(0,v_\alpha=0.001^{-1}).
+  \]
+\end{itemize}
+Although one may devote more attention to the prior specification of these parameters, for our purposes it suffices that they are independent component-wise, and that they are conjugate priors for the complete conditional density $p(\theta|\by,\by^*,\bw)$.
+%The exponential family requirement greatly eases the complexity of deriving the variational algorithm later on\footnote{
+%Of interest, one may even opt to assign improper priors on $\theta$ and the algorithm would still work.
+%This is akin to obtaining empirical Bayes estimate of the $\theta$ if seen from an EM algorithm standpoint.
+%}.
 
-Recall that $\by^*|\bw \sim \MN_{n,m}(\bone_n\balpha^\top  + \bH_\eta \bw, \bI_n,\bPsi^{-1} )$ and $\bw \sim \MN_{n,m}(\bzero, \bI_n,\bPsi)$.
-The required posterior distribution is then $
-  p(\by^*,\bw,\theta|\by) \propto p(\by|\by^*)p(\by^*|\bw,\theta)p(\bw|\theta)p(\theta)
-$.
-This is approximated by a mean-field distribution of the form $q(\by^*,\bw,\theta) \equiv q(\by^*)q(\bw)q(\theta)$, and also $q(\theta) = q(\balpha)q(\eta)q(\bPsi)$.
+The posterior density of $\cZ = \{\by^*,\bw,\theta \}$ is approximated by a mean-field variational density $q$, i.e.
+\[
+  p(\by^*,\bw,\theta|\by) = \tilde q(\by^*)q(\bw)q(\theta).
+\]
+Additionally, we assume independence among the components of $\theta$ so that $q(\theta) = \prod_k q(\theta_k)$.
+We now present the mean-field variational distributions for each of unknowns in $\cZ$.
+On notation: we will typically refer to posterior means of the parameters $\by^*$, $\bw$, $\theta$ and so on by the use of a tilde.
+For instance, we write $\tilde\bw$ to mean $\E_{\bw \sim \tilde q}[\bw]$, the expected value of $\bw$ under the pdf $\tilde q(\bw)$.
+The distributions are simply stated, but a full derivation is given in the appendix.
+
 \begin{figure}[t]
   \centering
   \begin{tikzpicture}[scale=1, transform shape]
@@ -44,48 +74,48 @@ This is approximated by a mean-field distribution of the form $q(\by^*,\bw,\thet
     \caption{A DAG of the I-probit model. Observed nodes are shaded, while double-lined nodes represents calculable quantities.}
 \end{figure}
 
-We now present the mean-field variational distributions $\tilde q$.
-On notation: we will typically refer to posterior means of the parameters $\by^*$, $\bw$, $\theta$ and so on by the use of a tilde.
-For instance, we write $\tilde\bw$ to mean $\E_{\bw \sim \tilde q}[\bw]$, the expected value of $\bw$ under the pdf $\tilde q(\bw)$.
-The distributions are simply stated, but a full derivation is given in the appendix.
+\subsection{Latent propensities \texorpdfstring{$\by^*$}{$y^*$}}
 
-\subsection[Latent propensities ystar]{Latent propensities $\by^*$}
-
-The fact that the rows of $\by^*$ are independent can be exploited.
-Write $\by_i^* = (y_{i1}^*,\dots,y_{im}^*)^\top$.
-Then $\by_{i}^*|\theta,x_i \sim \N_m(\balpha + \bff(x_i),\bPsi^{-1})$, and we have the induced factorisation of the distribution $q(\by^*) = \prod_{i=1}^n q(\by_i^*)$, where each $q(\by_i^*)$ is the density of a \emph{conically truncated multivariate normal disribution}.
-That is, for each $i=1,\dots,n$ and noting the observed values $y_i = j \in \{1,\dots,m\}$, the $\by_i^*$'s are distributed according to
+The fact that the rows $\by_{i \bigcdot}^* \in \bbR^m$, $i=1,\dots,n$ of $\by^* \in \bbR^{n \times m}$ are independent can be exploited, which yields an induced factorisation $q(\by^*) = \prod_{i=1}^n q(\by_i^*)$.
+Define the set $\cC_j = \{y_{ij}^* > y_{ik}^* \,|\, \forall k\neq j \}$.
+Then $q(\by_{i \bigcdot}^*)$ is the density of a multivariate normal distribution with mean $\tilde\bmu_{i \bigcdot} = \tilde\balpha + \tilde\bw^\top \tilde \bh_\eta(x_i)$, and variance $\tilde \bPsi^{-1}$ subject to the truncation of its components to the set $\cC_{y_i}$.
+That is, for each $i=1,\dots,n$ and noting the observed value $y_i \in \{1,\dots,m\}$, the $\by_i^*$'s are distributed according to
 \begin{align}\label{eq:ystardist}
-  \by_i^* \iid
+  \by_{i \bigcdot}^* \iid
   \begin{cases}
-    \N_m(\tilde \balpha + \tilde \bff(x_i), \tilde\bSigma) & \text{ if } y_{ij}^* > y_{ik}^*, \forall k \neq j \\
+    \N_m(\tilde\bmu_{i \bigcdot}, \tilde \bPsi^{-1}) & \text{ if } y_{iy_i}^* > y_{ik}^*, \forall k \neq y_i \\
     0 & \text{ otherwise}. \\
   \end{cases}
 \end{align}
-The required expectations $\E\by_i^* = \E (y_{i1}^*,\dots,y_{im}^*)^\top$ are tricky to compute.
-One strategy might be Monte Carlo integration: using samples from $\N_m(\tilde \alpha + \tilde \bff(x_i), \tilde\bPsi^{-1})$, zero out those that do not satisfy the condition $y_{ij}^* > y_{ik}^*, \forall k \neq j$, then take the sample average.
-If the independent I-probit model is considered, where $\bPsi = \diag(\sigma_1^{-2},\dots,\sigma_m^{-2})$, the expected value can be considered component-wise, and each component of this expectation is given by
+We denote this by $\by_{i \bigcdot}^* \iid \tN(\tilde\bmu_{i \bigcdot},\tilde \bPsi^{-1},\cC_{y_i})$, and the important properties of this distribution are explored in the appendix.
+
+The required expectations $\E\by_{i \bigcdot}^* = \E (y_{i1}^*,\dots,y_{im}^*)^\top$ are tricky to compute.
+One strategy might be Monte Carlo integration: using samples from $\N_m(\tilde\bmu_{i \bigcdot}, \tilde \bPsi^{-1})$, disregard those that do not satisfy the condition $y_{iy_i}^* > y_{ik}^*, \forall k \neq j$, and then take the sample average.
+This works reasonably well so long as the truncation region does not fall into the extreme tails of the multivariate normal.
+Alternatively, a fast, Gibbs based approach to estimating the mean or any other quantity $\E r(\by_{i \bigcdot}^*)$ can be implemented, and this is detailed in the appendix.
+
+If the independent I-probit model is considered, where the covariance matrix has the independent structure $\tilde\bPsi = \diag(\tilde\sigma_1^{-2},\dots,\tilde\sigma_m^{-2})$, then the expected value can be considered component-wise, and each component of this expectation is given by
 \begin{align}\label{eq:ystarupdate}
   \tilde y_{ik}^* =
   \begin{cases}
-    \tilde\alpha_k + \tilde f_{ik} - \tilde\sigma_k C_i^{-1} \displaystyle{  \int \phi_{ik}(z) \prod_{l \neq k,j} \Phi_{il}(z) \phi(z) \dint z }
+    \tilde\mu_{ik} - \tilde\sigma_k C_i^{-1} \displaystyle{  \int \phi_{ik}(z) \prod_{l \neq k,j} \Phi_{il}(z) \phi(z) \dint z }
     &\text{ if } k \neq y_i \\[1.5em]
-    \tilde\alpha_{y_i} + \tilde f_{iy_i} - \tilde\sigma_{y_i} \sum_{k \neq y_i} \big(\tilde y_{ik}^* - \tilde f_{ik} \big) 
+    \tilde\mu_{iy_i} - \tilde\sigma_{y_i} \sum_{k \neq y_i} \big(\tilde y_{ik}^* - \tilde f_{ik} \big) 
     &\text{ if } k = y_i \\
   \end{cases}
 \end{align}
 with 
 \begin{align*}
-  \phi_{ik}(Z) &= \phi \left(\frac{\tilde\sigma_{y_i}}{\tilde\sigma_k} Z + \frac{\tilde\alpha_{y_i} + \tilde f_{iy_i} - \tilde\alpha_k - \tilde f_{ik}}{\tilde\sigma_k} \right) \\
-  \Phi_{ik}(Z) &= \Phi \left(\frac{\tilde\sigma_{y_i}}{\tilde\sigma_k} Z + \frac{\tilde\alpha_{y_i} + \tilde f_{iy_i} - \tilde\alpha_k - \tilde f_{ik}}{\tilde\sigma_k} \right) \\
+  \phi_{ik}(Z) &= \phi \left(\frac{\tilde\sigma_{y_i}}{\tilde\sigma_k} Z + \frac{\tilde\mu_{iy_i} - \tilde\alpha_k - \tilde f_{ik}}{\tilde\sigma_k} \right) \\
+  \Phi_{ik}(Z) &= \Phi \left(\frac{\tilde\sigma_{y_i}}{\tilde\sigma_k} Z + \frac{\tilde\mu_{iy_i} - \tilde\alpha_k - \tilde f_{ik}}{\tilde\sigma_k} \right) \\
   C_i &= \int \prod_{l \neq j} \Phi_{il}(z) \phi(z) \dint z
 \end{align*}
 and $Z \sim \N(0,1)$ with pdf and cdf $\phi(\cdot)$ and $\Phi(\cdot)$ respectively. 
 The integrals that appear above are functions of a unidimensional Gaussian pdf, and these can be computed rather efficiently using quadrature methods.
 
-\subsection[I-prior random effects w]{I-prior random effects $\bw$}
+\subsection{I-prior random effects \texorpdfstring{$\bw$}{$w$}}
 
-Given that both $\vecc \by^* | \vecc \bw$ and $\vecc\bw$ are normally distributed, we find that the conditional posterior distribution $p(\bw|\cZ_{-\bw},\by)$ is also normal, and therefore the approximate posterior density $\tilde q$ for $\vecc \bw \in \bbR^{nm}$ is also normal with mean and precision given by
+Given that both $\vecc \by^* | \vecc \bw$ and $\vecc\bw$ are normally distributed, we find that the conditional posterior distribution $p(\bw|\cZ_{-\bw},\by)$ is also normal, and therefore the approximate posterior density $q$ for $\vecc \bw \in \bbR^{nm}$ is also normal with mean and precision given by
 \begin{gather}\label{eq:varipostw}
    \vecc \tilde\bw = \tilde\bV_w 
     (\tilde\bPsi \otimes \tilde\bH_\eta) \vecc (\tilde\by^* - \bone_n\tilde\balpha^\top)
@@ -94,93 +124,92 @@ Given that both $\vecc \by^* | \vecc \bw$ and $\vecc\bw$ are normally distribute
 \end{gather}
 We note the similarity between \cref{eq:varipostw} above and the posterior distribution for the I-prior random effects in a normal model \cref{eq:posteriorw} seen in the previous chapter.
 Naïvely computing the inverse $\tilde\bV_w^{-1}$ presents a computational challenge, as this takes $O(n^3m^3)$ time. 
-By exploiting the Kronecker product structure in $\tilde\bV_w^{-1}$, we are able to efficiently compute the required inverse in roughly $O(n^3m)$ time---see the appendix for details.
-Equivalently, we can express the distribution for $\bw \sim \tilde q$ as a matrix normal distribution
-\begin{align}\label{eq:varipostw2}
-  \MN_{nm}\Big(\,
-  \greyoverbrace{\tilde\bH_\eta^{-1}(\tilde\by^* - \bone_n\tilde\balpha^\top)\tilde\bPsi^2}{\tilde\bw} ,\, 
-  \tilde\bH_\eta^{-2},\,
-  \tilde\bPsi  
-  \Big).
-\end{align}
+By exploiting the Kronecker product structure in $\tilde\bV_w$, we are able to efficiently compute the required inverse in roughly $O(n^3m)$ time---see the appendix for details.
+%Equivalently, we can express the distribution for $\bw \sim \tilde q$ as a matrix normal distribution
+%\begin{align}\label{eq:varipostw2}
+%  \MN_{nm}\Big(\,
+%  \greyoverbrace{\tilde\bH_\eta^{-1}(\tilde\by^* - \bone_n\tilde\balpha^\top)\tilde\bPsi^2}{\tilde\bw} ,\, 
+%  \tilde\bH_\eta^{-2},\,
+%  \tilde\bPsi  
+%  \Big).
+%\end{align}
 
-If the independent I-probit model is assumed, i.e. $\tilde\bPsi = \diag(\tilde\sigma_1^{-2},\dots,\tilde\sigma_m^{-2})$, then the posterior covariance matrix $\tilde\bV_w$ has a simpler structure.
-This means that the random matrix $\bw$ will have columns which are independent of each other.
-By writing $\bw_j = (w_{1j},\dots,w_{nj})^\top \in \bbR^n$, $j=1,\dots,m$, to denote the column vectors of $\bw$ and with a slight abuse of notation, we have that
+If the independent I-probit model is assumed, i.e. $\tilde\bPsi = \diag(\tilde\psi_1,\dots,\tilde\psi_m)$, then the posterior covariance matrix $\tilde\bV_w$ has a simpler structure:  random matrix $\bw$ will have columns which are independent of each other.
+By writing $\bw_{\bigcdot j} = (w_{1j},\dots,w_{nj})^\top \in \bbR^n$, $j=1,\dots,m$, to denote the column vectors of $\bw$ and with a slight abuse of notation, we have that
 \begin{align*}
   \N_{nm}(\vecc \bw|\vecc\wtilde, \tilde\bV_w) 
-  = \prod_{j=1}^m \N_{n}(\bw_j|\tilde\bw_j, \tilde\bV_{w_j}),
+  = \prod_{j=1}^m \N_{n}(\bw_{\bigcdot j}|\tilde\bw_{\bigcdot j}, \tilde\bV_{w_j}),
 \end{align*}
 where 
 \[
-  \tilde \bw_j = \sigma_j^{-2}\tilde \bV_{w_j}\tilde\bH_\eta (\tilde\by^*_j - \tilde\alpha_j\bone_n) \ \text{ and } \ \tilde \bV_{w_j} = \big(\sigma_j^{-2}\tilde\bH_{\eta}^2 + \sigma_j^{2}\bI_n \big)^{-1}.
+  \tilde \bw_{\bigcdot j} = \tilde\psi_j\tilde \bV_{w_j}\tilde\bH_\eta (\tilde\by^*_j - \tilde\alpha_j\bone_n) \ \text{ and } \ \tilde \bV_{w_j} = \big(\tilde\psi_j\tilde\bH_{\eta}^2 + \tilde\psi_j^{-1}\bI_n \big)^{-1}.
 \]
+The consequence of this is that the posterior regression functions are class independent, the exact intended effect by specifying a diagonal precision matrix $\bPsi$.
+%Computationally and algebraically, this simplifies matters as estimation for each class can be conducted separately.
 
-\subsection[RKHS parameters eta]{RKHS parameters $\eta$}
+\subsection{Kernel parameters $\eta$}
 
-The posterior density $\tilde q$ involving the RKHS parameters is of the form
-\[
-  \log\tilde q(\eta) =  -\half\tr\E_{-\eta} \Big[ 
-  (\by^* - \bone_n\balpha^\top - \bH_\eta\bw) \bPsi (\by^* - \bone_n\balpha^\top - \bH_\eta\bw)^\top \Big] + \log p(\eta) + \const,
-\]
-where $p(\eta)$ is an appropriate prior distribution for $\eta$.
-Generally, samples $\eta^{(1)},\dots,\eta^{(T)}$ from $\tilde q(\eta)$ may be obtained using a Metropolis algorithm, and quantities such as $\tilde\bH_{\eta} = \E_q[\bH_{\eta}]$ may be approximated using $\frac{1}{T}\sum_{t=1}^T \bH_{\eta^{(t)}}$.
+The posterior density $q$ involving the kernel parameters is of the form
+\begin{align*}
+  \log q(\eta) 
+  &=  -\half\tr\E_{\cZ\backslash\{\eta\}\sim q} \Big[ 
+  (\by^* - \bone_n\balpha^\top - \bH_\eta\bw) \bPsi (\by^* - \bone_n\balpha^\top - \bH_\eta\bw)^\top \Big] + \log p(\eta) \\
+  &\phantom{==} + \const
+\end{align*}
+where $p(\eta)$ is an appropriate prior density for $\eta$.
+Generally, samples $\eta^{(1)},\dots,\eta^{(T)}$ from $\tilde q(\eta)$ may be obtained using a Metropolis algorithm, so that quantities such as $\tilde\bH_{\eta} = \E_{\eta \sim q} \bH_{\eta}$ and the like may be approximated using $\frac{1}{T}\sum_{t=1}^T \bH_{\eta^{(t)}}$.
+Details of the Metropolis sampler is available in the appendix.
 
-However, when only RKHS scale parameters are involved, then the distribution $\tilde q$ can be found in closed-form, much like in the exponential family EM algorithm described in \hltodo{Section 4.3.3}.
+When only RKHS scale parameters are involved, then the distribution $q$ can be found in closed-form, much like in the exponential family EM algorithm described in \hltodo{Section 4.3.3}.
 Under the same setting as in that subsection, assume that only $\eta = \{\lambda_1,\dots,\lambda_p\}$ need be estimated, and for each $k=1,\dots,p$, we can decompose the kernel matrix as $\bH_\eta = \lambda_k \bR_k + \bS_k$ and its square as $\bH_\eta^2 = \lambda_k^2 \bR_k^2 + \lambda_k \bU_k + \bS_k^2$.
-Additionally, we impose a further mean-field restriction on $q(\eta)$, and that is $q(\eta) = \prod_{k=1}^p p(\lambda_k)$.
-Then, by using independent and identical normal priors for $\lambda_k$, say $\lambda_k \sim \N(0,v_\lambda)$, each $\tilde q(\lambda_k)$ density is normal with mean and variance
+Additionally, we impose a further mean-field restriction on $q(\eta)$, i.e., $q(\eta) = \prod_{k=1}^p p(\lambda_k)$.
+Then, by using independent and identical normal priors on the $\lambda_k$'s, such as the one listed at the beginning of this section, we find that $q(\lambda_k)$ is the density of a normal distribution with mean $d_kc_k^{-1}$ and variance $c_k^{-1}$, where
+\begin{gather*}
+  c_k = \tr\big(\tilde\bPsi\E[\bw^\top\bR_k^2\bw]\big) + v_\lambda^{-2} \\
+  \hspace{0.5cm}\text{and}\hspace{0.5cm} \\
+  d_k = \tr\Big( \tilde\bPsi(\tilde\by^* - \bone_n\tilde\balpha^\top)^\top\bR_k \tilde\bw 
+  - \half\tilde\bPsi\E[\bw^\top \bU_k \bw] \Big). 
+\end{gather*}
+For a method of evaluating quantities such as $\tr(\bC\E[\bw^\top\bD\bw ])$ for suitably sized matrices $\bC$ and $\bD$, refer to the appendix.
 
-\hltodo{Write down the mean and variance for lambda}
+\subsection{Error precision \texorpdfstring{$\bPsi$}{$\Psi$}}
 
-\subsection[Error precision Psi]{Error precision $\bPsi$}
-
-A small reparameterisation of the I-prior random effects is necessary to achieve conjugacy for the $\bPsi$ parameter. 
+A small reparameterisation of the I-prior random effects is necessary to achieve conjugacy for the $\bPsi$ parameter.
 Let $\bu\in\bbR^{n\times m}$ be a matrix defined by $\bPsi^{-1}\bw$.
 Then $\bu \sim \MN_{n,m}(\bzero, \bI_n, \bPsi^{-1})$ a priori.
-From \cref{eq:varipostw2}, the optimal variational distribution for $\bu$ would be $\MN_{n,m}(\tilde\bw\tilde\bPsi^{-1}, \tilde\bH_\eta^2, \tilde\bPsi^{-1})$.
-With a Wishart prior on the precision matrix $\bPsi\sim\Wis_m(\bG,g)$, where $g\geq m$, the optimal variational density for $\bPsi$ is found to satisfy
+From \cref{eq:varipostw}, the posterior for $\vecc \bu$ is normal with mean $\vecc \tilde\bu = \vecc (\tilde\bw\tilde\bPsi^{-1} )$ and variance
+\begin{align*}
+  \tilde \bV_u
+  &= (\tilde\bPsi^{-1} \otimes \bI_n) \tilde \bV_w (\tilde\bPsi^{-1} \otimes \bI_n). 
+\end{align*}
+%Note that the dependence of $q(\bu)$ on the parameter of interest $\bPsi$ is not an issue.
+In essence, this reparameterisation simply introduces an additional step in the CAVI algorithm.
+
+With a Wishart prior on the precision matrix $\bPsi\sim\Wis_m(\bG,g)$, the mean-field variational density for $\bPsi$ is found to satisfy
 \begin{align*}
   \log \tilde q(\bPsi)
   &= \const - \half \sum_{i=1}^n \tr \left( 
   \big(\bG_1 + \bG_2 + \bG \big)\bPsi 
-  \right) + \frac{g-m-1}{2} \log \abs{\bPsi}
+  \right) + \frac{2n + g - (m+1)}{2} \log \abs{\bPsi}
 \end{align*}
-which is recognised as the log density of a Wishart distribution with scale matrix $\bG_1 + \bG_2 + \bG$ and $g$ degrees of freedom, where
+which is recognised as the log density of a Wishart distribution with scale matrix $\tilde\bG := \bG_1 + \bG_2 + \bG$ and $\tilde g = 2n + g$ degrees of freedom, where
 \begin{align}
   \begin{gathered}
-  \bG_1 = \E_{\cZ\backslash\{\bPsi\}\sim q} \left[ 
-  \sum_{i=1}^n 
-  (\by^*_i - \balpha - \bff(x_i))
-  (\by^*_i - \balpha - \bff(x_i))^\top 
+  \bG_1 = \E \left[ 
+  (\by^* - \bone_n\balpha^\top - \bH_\eta\bw)
+  (\by^* - \bone_n\balpha^\top - \bH_\eta\bw)^\top 
   \right]   \\
-  \bG_2 = \sum_{i=1}^n \E_{\bu\sim q}\left[\bu_i\bu_i^\top \right].
+  \bG_2 = \E [\bu^\top \bu ].
   \end{gathered}
 \end{align}
-The challenge here is that it involves the second posterior moment of the conically truncated multivariate normal distribution for $\by^*$, which may be obtained by sampling or numerical integration as described earlier.
+The challenge here is that this distribution involves the second posterior moment of the conically truncated multivariate normal distribution for $\by^*$, among other things. 
+This is slightly awkward to calculate analytically, although sampling methods provide a reasonable way out.
 
-%As a remark on identifiability, we might require that one of the components of $\bSigma$ be fixed, e.g. $\bSigma_{11} = 1$.
-%\cite{mcculloch2000bayesian} gives a Gibbs sampling algorithm which we find useful for our variational algorithm as well.
-%Partition $\bSigma$ as follows:
-%\[
-%  \bSigma = \begin{pmatrix}
-%    1       &\bzeta^\top \\
-%    \bzeta  &\bZ + \bzeta\bzeta^\top
-%  \end{pmatrix}.
-%\]
-%We can choose the priors $\bzeta \sim \N_{m-1}(\bzero,\bB)$ and $\bZ \sim \invWis(\bA,a)$, independent of each other with appropriately chosen hyperparameters.
-%Define $\tilde\bepsilon_i = \by^*_i - \tilde\balpha - \tilde\bff(x_i) = (\tilde\epsilon_{i1},\dots,\tilde\epsilon_{im})^\top$, and let $\upsilon_i = \surd 2 \tilde\epsilon_{i1}$ and $\bnu_i = \surd 2(\tilde\epsilon_{i2},\dots,\tilde\epsilon_{im})^\top$ such that $\surd 2\tilde\epsilon_i^\top = (\upsilon_i, \bnu_i^\top)^\top$.
-%The posterior distribution $\tilde q$ for $\bZ$ is inverse Wishart with scale equal to $\bA_3 + \bA$, where\hltodo[These equations can be simplified further.]{}
-%\begin{align*}
-%  \begin{gathered}
-%    \bA_3 = \E_{\bnu,\upsilon_i,\zeta} \left[ \sum_{i=1}^n (\bnu_i - \upsilon_i \bzeta)(\bnu_i - \upsilon_i \bzeta)^\top \right]   \\
-%    \end{gathered}
-%\end{align*}
-%and $2n(m-1)+a$ degrees of freedom.
-%The posterior distribution $\tilde q$ for $\bzeta$ is normal with mean and variance $\tilde\bzeta = \frac{1}{n}\sum_{i=1}^n \tilde\upsilon_i \tilde\bV_\zeta \tilde\bZ\tilde\bnu_i$ and $\tilde\bV_\zeta = (\tilde\bupsilon\tilde\bupsilon^\top\tilde\bZ^{-1} +\bB)^{-1}$.
+Consider now the independent I-probit model for which $\bPsi = \diag(\psi_1,\dots,\psi_m)$ with independent gamma priors on the $\psi_j$'s.
+The posterior for $\bPsi$ is of a similar factorised form, namely $ q(\bPsi) = \prod_{j=1}^m  q(\psi_j)$, where each $ q(\psi_j)$ is the pdf of a gamma distribution with shape and rate parameters $\tilde s = 2n+s-1$ and $\tilde r = \half \E\norm{\by_{\bigcdot j}^* - \alpha_j\bone_n - \bH_\eta\bw_{\bigcdot j}}^2 + \half \E\norm{\bu_{\bigcdot j}}^2  + r$ respectively.
 
-If the independent I-probit model is considered, then $\bSigma = \diag(\sigma_1^2,\dots,\sigma_m^2)$, class independence holds so we can use independent inverse gamma distributions as a prior for $\bSigma$, i.e. $ p(\bSigma) = \prod_{j=1}^m  p(\sigma_j^2)$, where each $p(\sigma_j) \equiv \Gamma^{-1}(r,s)$.
-The posterior for $\bSigma$ will also be of a similar factorised form , namely $\tilde q(\bSigma) = \prod_{j=1}^m \tilde q(\sigma_j^2)$, where $\tilde q(\sigma_j^2)$ is the PDF of an inverse gamma distribution with shape and scale parameters $\tilde r = 2n+r-1$ and $\tilde s = \half\Vert \tilde\by^*_j - \tilde\alpha_j - \tilde\bff_j \Vert^2 + \half \Vert \tilde\bu_j \Vert^2 + s$ respectively.
+As a remark, the fact that both parameterisations of the I-prior random effects $\bw$ and $\bu$ are used seems suspect. 
+Because of the way $\bu$ was defined, there is a linear dependence between the two sets of parameters.
 
 Finally, the posterior distribution for the intercepts follow a normal distribution should the prior specified on the intercepts also be a normal distribution, e.g. $\balpha \sim \N_m(\bzero,\bA)$.
 The posterior mean and variance for the intercepts are given by
