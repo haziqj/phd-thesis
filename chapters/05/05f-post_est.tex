@@ -1,12 +1,11 @@
 Working within a variational Bayesian framework means that we are able to perform inferences on any quantity of interest using the (approximate) posterior distributions obtained.
-%First and foremost, posterior standard deviations explain the uncertainty surrounding parameters of the I-probit model are easy to come by in comparison to pure likelihood based methods.
 Any of the post estimation procedures explained in the previous chapter when dealing with normal I-prior models can be extended here.
 
 Prediction of a new data point $x_{\text{new}}$ is described.
 Step one is to determine the distribution of the posterior regression functions in each class, $\bff(x_{\text{new}}) = \bw^\top\bh_\eta(x_{\text{new}})$, given values for the parameters $\theta$ of the I-probit model.
 To this end, we use the posterior mean estimate for $\theta$, and denote them with tildes, as we have done so far in this chapter.
 As we know, $\vecc\bw$ is normally distributed with mean and variance according to \cref{eq:varipostw}.
-By writing $\vecc \tilde\bw = (\tilde \bw_{\bigcdot 1}, \dots, \tilde \bw_{\bigcdot m})^\top$ to separate out the I-prior random effects per class, we have that $\bw_{\bigcdot j} \sim \N_n(\tilde \bw_{\bigcdot 1}, \tilde\bV_w[j,j])$, and $\Cov(\bw_{\bigcdot j},\bw_{\bigcdot k}) = \tilde\bV_w[j,k]$, where the `$[\cdot,\cdot]$' indexes the $n\times n$ sub-block of the block matrix structured matrix $\bV_w$.
+By writing $\vecc \tilde\bw = (\tilde \bw_{\bigcdot 1}, \dots, \tilde \bw_{\bigcdot m})^\top$ to separate out the I-prior random effects per class, we have that $\bw_{\bigcdot j}|\tilde\theta \sim \N_n(\tilde \bw_{\bigcdot 1}, \tilde\bV_w[j,j])$, and $\Cov(\bw_{\bigcdot j},\bw_{\bigcdot k}) = \tilde\bV_w[j,k]$, where the `$[\cdot,\cdot]$' indexes the $n\times n$ sub-block of the block matrix structured matrix $\bV_w$.
 Thus, for each class $j=1,\dots,m$ and any $x \in \cX$,
 \[
   f_j(x)|\by,\tilde\theta \sim \N\big(\,
@@ -42,7 +41,6 @@ From here, step three would be to extract class information of data point $x_\te
     \hat\sigma_{jk}(x_\text{new}) & \text{if } i \neq j. \\
   \end{cases}
 \end{equation*}
-%, subject to the truncation $\cA_j := \{ y_{\text{new},j}^* > y_{\text{new},k}^* | \forall k \neq j\}$ if the new observation belongs to class $j \in \{1,\dots, m\}$.
 The predicted class is inferred from the latent variables via
 \[
   \hat y_{\text{new}} = \argmax_k \hat\mu_k(x_\new), 
@@ -60,19 +58,31 @@ For the independent I-probit model, class probabilities are obtained in a more c
 \]
 as per \cref{eq:pij2}, since the $m$ components of $\bff(x_\new)$, and hence the $\by^*_{\new,j}$'s, are independent of each other ($\bPsi$ and $\hat\bV_\new$ are diagonal).
 
+In this Bayesian setting, the analogue of standard errors for the parameters are their posterior standard deviations, which  explain the uncertainty surrounding parameters.
+For the most part, these are easy to come by, and their posterior densities are easy to sample from.
+This allows us to conduct inference on transformed parameters, such as log odds ratios, quite easily.
+The procedure would be like this: first obtain samples of $\theta^{(1)},\dots,\theta^{(T)}$ from their respective distributions, then sample $\bw^{(i)} \sim p(\bw|\theta^{(i)})$ for $i=1,\dots,T$, and finally obtain samples of class probabilities $\hat p_{xj}^{(1)},\dots,\hat p_{xj}^{(T)}$, $j=1,\dots,m$, for a given data point $x\in\cX$.
+To obtain a statistic of interest, say, a 95\% credibility interval of a function $r(p_{xj})$ of the probabilities, simply take the empirical lower 2.5th and upper 97.5th percentile of this transformed sample.
+In this manner, all aspects of uncertainty, from the parameters to the latent variables of the generative model, are accounted for.
 
+It is possible to perform model comparison by comparing the maximised ELBO quantity of several candidate models \citep{beal2003}, and the justification for this is that it supposedly gives a tight lower bound to the marginal likelihood (model evidence), especially if the variational density is close in the KL divergence sense to the true posterior density.
+This would allow model selection using Bayes factor as a model selection criterion.
+\citet{kass1995bayes} suggest the following interpretation of observed Bayes factor values for comparing model $M_1$ against model $M_0$.
 
-
-
-
-
-
-
-
-In the I-probit model, we use the approximate mean-field densities in lieu of the true posterior densities, and these are, for the most part, easy to sample from.
-Take for example the class probabilities. 
-We can obtain posterior samples for the $p_{ij}$'s by firstly sampling from the underlying normal latent variables, and then passing it through the probit link function.
-Taking the empirical lower 2.5th and upper 97.5th percentile of this sample would give the upper and lower values for a 95\% credibility interval.
-
-Model comparison...
+\begin{table}[H]
+  \centering
+  \caption{Guidelines for interpreting Bayes factors.}
+  \label{tab:bf}
+  \begin{tabular}{lll}
+    \toprule
+    $2\log \BF(M_1,M_0)$ &$\BF(M_1,M_0)$ & Evidence against $M_0$ \\
+    \midrule
+    0--2  &1--3    &Not worth more than a bare mention \\ 
+    2--6  &3--20   &Positive \\ 
+    6--10 &20--150 &Strong \\ 
+    >10   &>150    &Very strong \\ 
+  \end{tabular}
+\end{table}
+\vspace{-1.4em}
+\noindent It should be noted that while this works in practice, there is no theoretical basis for model comparison using the ELBO \citep{blei2017variational}.
 

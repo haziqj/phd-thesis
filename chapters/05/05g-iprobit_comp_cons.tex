@@ -1,4 +1,146 @@
-\hltodo{Computational considerations? I think go through the entire chapter without discussing computational issues, and discuss them here. Less cluttered this way.}
+Computational challenges for the I-probit model stems from two sources: 1) calculation of the class probabilities \cref{eq:pij}; and 2) storage and time requirements for the CAVI.
+We also discuss issues faced with the estimation of the error precision $\bPsi$, and suggest ways to overcome this for future work.
+
+\subsection{Efficient computation of class probabilities}
+\label{misc:mnint}
+
+%\hltodo{computationally burdensome using quadrature methods for m > 4. Realise that the dimension of the integral is m-1. describe two methods: 1) frequency sampler 2) efficient frequency sampler. NOTE THIS PART IS DIFFERENT FROM SIMULATING FROM TRUNCATED NORMAL---THIS ONLY APPEARS IN BAYESIAN METHODS SUCH AS GIBBS, VI, etc.}
+
+As an opening remark, note that the dimension of the integral \cref{eq:pij} is $m-1$, since the $j$'th coordinates is fixed relative to the others.
+An alternative specification of the I-probit model can be made in terms of \emph{relative differences} of the latent propensities.
+Choosing the first category as the reference category, define new random variables $z_{ij} = y_{ij}^* - y_{i1}^*$, for $j = 2,\dots,m$. 
+The model \cref{eq:latentmodel} is equivalently represented by
+\begin{equation}
+  y_i = 
+  \begin{cases}
+    1 & \text{if } \max (z_{i2},\dots,z_{im}) < 0 \\
+    j & \text{if } \max (z_{i2},\dots,z_{im}) = z_{ij} \geq 0.
+  \end{cases}
+\end{equation} 
+Write $\bz_{i\bigcdot} = (z_{i2},\dots,z_{im})^\top \in \bbR^{m-1}$.
+Then $\bz_{i\bigcdot} = \bQ\by^*_{i\bigcdot}$, where $\bQ \in \bbR^{(m-1)\times m}$  is the $(m-1)$ identity matrix pre-augmented with a column vector of minus ones.
+We have that $\bz_{i\bigcdot} \iid \N_{m-1}(\bnu, \bOmega)$, where $\bnu_{i\bigcdot} = \bQ\bmu_{i\bigcdot}$ and $\bOmega = \bQ\bPsi^{-1}\bQ^\top$.
+Note that if $\bPsi$ is diagonal, then the transformation to $\bOmega$ will not retain diagonality---indeed, each component will undoubtedly be correlated with one another as they are all anchored on the same latent variable.
+
+Now, the class probabilities for $j=2,\dots,m$ are
+\begin{align}
+  p_{ij} = 
+  \int\displaylimits_{\{z_{ik} < 0 \,|\, \forall k \neq 1,j \}} \ind[z_{ij} \geq 0] \,\phi(\bz_{i\bigcdot} |\bnu_{i\bigcdot}, \bOmega) \dint\bz_{i\bigcdot} \ . \label{eq:pij3}
+\end{align}
+The class probability $p_{i1}$ is simply $p_{i1} = 1- \sum_{k\neq 1} p_{ik}$.
+From this representation of the model, with $m=2$ (binary outcomes) we see that
+\[
+  p_{i1} = 
+%  \int \ind(z_{i2} < 0) \phi(z_{i2}) \dint z_{i2} = 
+  \Phi \left( \frac{z_{i2} - \nu}{\omega^{1/2}} \right)
+  \hspace{0.5cm}\text{and}\hspace{0.5cm}
+  p_{i2} = 
+%  \int \ind(z_{i2} \geq 0) \phi(z_{i2}) \dint z_{i2} = 
+  1 - \Phi \left( \frac{z_{i2} - \nu}{\omega^{1/2}} \right),
+\]
+where $\Phi(\cdot)$ is the CDF of the standard normal univariate distribution, and $\nu$ and $\omega$ are the mean and variance of the univariate random variable $\bz_{i\bigcdot} = z_{i2}$.
+The probit link function involving the cdf of a standard normal is clearly seen here, especially if the error precision is treated as fixed such that $\omega = 1$. 
+
+The issue at hand here is that for $m>4$, the evaluation of the class probabilities in \cref{eq:pij} is computationally burdensome using classical methods such as quadrature methods \citet{geweke1994alternative}.
+
+The simplest strategy to overcome this is a frequency simulator (otherwise known as Monte Carlo integration): obtain random samples from $\N_{m-1}(\bnu_{i\bigcdot}, \bOmega)$, and calculate how many of these samples fall within the required  region.
+This method is fast and yields unbiased estimates of the class probabilities.
+However, accuracy of this method is questionable when the mean $\bnu_{i\bigcdot}$ of the multivariate normal is many standard deviations away from zero (the cutoff region as per \cref{eq:pij3}).
+
+A more reliable method is the probability simulator of Geweke-Hajivassiliou-Keane (GHK)  \citep{geweke1991efficient,hajivassiliou1996simulation,keane1994computationally}, which we describe now.
+For clarity, we drop the subscript $i$ denoting individuals, and write $\bz = (z_1,\dots,z_m)$, remembering that $z_1=0$.
+Suppose that an observation $y=j$ has been made.
+Rewrite the model by anchoring on the $j$'th latent variable $z_{j}$ as follows:
+\[
+  \tilde\bz := (
+  \greyoverbrace{z_1 - z_j}{\tilde z_1},
+  \dots,
+  \greyoverbrace{z_{j-1} - z_j}{\tilde z_{j-1}},
+  \greyoverbrace{z_{j+1} - z_j}{\tilde z_{j+1}},
+  \dots, 
+  \greyoverbrace{z_m - z_j}{\tilde z_m},
+  )^\top \in \bbR^{m-1}.
+\]
+Let $\bnu_{(j)}$ and $\bOmega_{(j)}$ be the appropriately transformed mean vector and covariance matrix for $\tilde \bz$.
+These are indexed by `$(j)$' because the transformation is dependent on which latent variable the $\bz$'s are anchored on.
+Since this transformation is linear, $\tilde\bz \sim \N_{m-1}(\bnu_{(j)},\bOmega_{(j)})$.
+For the symmetric and positive definite matrix $\bPsi^{-1}$, obtain its Cholesky decomposition as $\bOmega_{(j)} = \bL\bL^\top$, where $\bL$ is a lower triangular matrix.
+Then, $\tilde\bz = \bnu_{(j)} + \bL\bzeta$, where $\bzeta \sim\N_{m-1}(\bzero,\bI_{m-1})$.
+That is,
+\begin{equation*}
+  \begin{pmatrix}
+    \tilde z_1 \\
+    \tilde z_2 \\
+    \vdots \\
+    \tilde z_m
+  \end{pmatrix}  
+  =
+  \begin{pmatrix}
+    \nu_{(j)1} \\
+    \nu_{(j)2} \\    
+    \vdots \\
+    \nu_{(j)m}
+  \end{pmatrix}  
+  +
+  \begin{pmatrix}
+    L_{11} &       &       & \\
+    L_{21} &L_{22} &       & \\
+    \vdots &\vdots &\ddots & \\
+    L_{m1} &L_{m2} &\cdots &L_{mm} \\
+  \end{pmatrix} 
+  \begin{pmatrix}
+    \zeta_1 \\
+    \zeta_2 \\    
+    \vdots \\
+    \zeta_m
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    \nu_{(j)1} + L_{11}\zeta_1 \\
+    \nu_{(j)2} + \sum_{k=1}^2 L_{k2} \zeta_k \\    
+    \vdots \\
+    \nu_{(j)m} + \sum_{k=1}^m L_{km} \zeta_k
+  \end{pmatrix}.  
+\end{equation*}
+
+With this setup, we can calculate $p_{j}$, the probability of class $j$, which is equivalent to the probability that each $\tilde z_k = z_k - z_j < 0$, as follows
+\begin{align*}
+  p_j 
+  &= \Prob(\tilde z_1 < 0,\dots,\tilde z_{j-1} < 0, \tilde z_{j+1} < 0,\dots, \tilde z_m < 0) \\
+  &= 
+  \Prob(\zeta_1 < u_1,\dots,\zeta_{j-1}<u_{j-1},\zeta_{j+1}<u_{j+1},\dots,\zeta_{m}<u_{m}) \\
+  &= 
+  \Prob(\zeta_1 < u_1)
+  \Prob(\zeta_2 < u_2|\zeta_1 < u_1)
+  \cdots \\
+  &\phantom{==}\cdots
+  \Prob(\zeta_{m}<u_{m}|\zeta_1 < u_1,\dots,\zeta_{j-1}<u_{j-1},\zeta_{j+1}<u_{j+1},\dots,\zeta_{m-1}<u_{m-1}),
+\end{align*}
+where $u_i = u_i(\zeta_1,\dots,\zeta_{i-1}) = - (\nu_{(j)i} + \sum_{k=1}^{i-1} L_{ki}\zeta_k) / L_{ii}$.
+Thus, the integral involving a $(m-1)$-variate normal density \cref{eq:pij3} is turned into a product of $m-1$ univariate normal cdfs, which can be computed fairly efficiently in modern computer systems.
+
+As an aside, the GHK probability simulator, can be used to sample from a truncated multivariate normal distribution:
+\begin{itemize}
+  \item Draw $\tilde\zeta_1 \sim \tN(0,1,-\infty,u_1)$.
+  \item Draw $\tilde\zeta_2 \sim \tN(0,1,-\infty,\tilde u_2)$, where $\tilde u_2 = u_2(\tilde\zeta_1)$.
+  \item $\cdots$
+  \item  Draw $\tilde\zeta_{j-1} \sim \tN(0,1,-\infty,\tilde u_{j-1})$, where $\tilde u_{j-1} = u_{j-1}(\tilde\zeta_1,\dots,\tilde\zeta_{j-2})$.
+  \item Draw $\tilde\zeta_{j+1} \sim \tN(0,1,-\infty,\tilde u_{j+1})$, where $\tilde u_{j+1} = u_{j+1}(\tilde\zeta_1,\dots,\tilde\zeta_{j-1})$.
+  \item $\cdots$
+  \item Draw $\tilde\zeta_m \sim \tN(0,1,-\infty,\tilde u_m)$, where $\tilde u_m = u_m(\tilde\zeta_1,\dots,\tilde\zeta_{j-1},\tilde\zeta_{j+1},\dots,\tilde\zeta_{m-1})$.
+\end{itemize}
+Then, $\tilde z = \bnu_{(j)} \bL\tilde\zeta$ will be distributed according to $\N_{m-1}(\bnu_{(j)},\bOmega_{(j)})$.
+Any quantity of interest, e.g. $\E r(\tilde z)$, can then be estimated by the sample mean.
+In the variational algorithm, we require quantities such as first and second moments and also the entropy of a truncated multivariate normal distribution.
+Alternative methods are also discussed in the appendix.
+
+Finally, a point on independent probit models.
+As we alluded to earlier in the chapter, the class probabilities condense to a unidimensional integral involving products of normal cdfs (see \cref{eq:pij2}) if $\bPsi$ is diagonal.
+While this represents a massive simplification, care should be taken when dealing with the formula in \cref{eq:pij2}.
+When at least one of the normal cdfs in the product is extremely small, this can cause loss of significance due to floating-point errors.
+In the \pkg{iprobit} package, the product of normal cdfs is handled as a sum on the log scale to avoid this issue.
+
+\subsection{Computational complexity of the CAVI algorithm}
 
 This is where talk about computational complexity.
 Of course, $O(n^3)$ (at least) for binary, otherwise $O(mn^3)$ in general, although can be $O((m-1)n^3)$.
@@ -6,8 +148,6 @@ Worst case is $O(m^3n^3)$, but manage to reduce this.
 Storage is $O(n^2)$. 
 Prediction is $O(mn^2)$.
 
-Next, issue with probit link function (so to speak) and that is to compute the truncated normal probabilities.
-Accuracy?
-But in the variational algorithm, also require moments involving this truncated normal distribution. 
-For independent probit, this is easier.
-Otherwise, concerned about accuracy as well.
+\subsection{Difficulties faced with estimating $\Psi$}
+
+also require moments involving this truncated normal distribution. 
