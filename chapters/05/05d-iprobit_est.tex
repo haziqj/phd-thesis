@@ -6,11 +6,11 @@ The log likelihood function $L(\cdot)$ for $\theta$ using all $n$ observations $
 \begin{align}
   L(\theta) 
   &= \log \int p(\by | \bw, \theta) \, p(\bw|\theta) \dint \bw \nonumber \\
-  &= \log \int \prod_{i=1}^n \prod_{j=1}^m \Big( g^{-1}\big(\alpha_k + 
+  &= \log \int \prod_{i=1}^n \prod_{j=1}^m \Big( g_j^{-1}\big(\alpha_k + 
   \greyoverbrace{f_k(x_i)}{\hidewidth\sum_{i'=1}^n h_\eta(x_i,x_{i'})w_{i'j}\hidewidth}
-  \,\big)_{k=1}^m \Big)^{[y_i=j]} \cdot \phi(\bw|\bzero,  \bPsi \otimes \bI_n ) \dint \bw \label{eq:intractablelikelihood}
+  \,\big)_{k=1}^m \Big)^{[y_i=j]} \cdot \MN_{n,m}(\bw|\bzero,\bI_n, \bPsi) \dint \bw \label{eq:intractablelikelihood}
 \end{align}
-where we have denoted the probit relationship from \eqref{eq:pij} using the function $g^{-1}:\bbR^m \to [0,1]$.
+where we have denoted the probit relationship from \cref{eq:pij} using the function $g_j^{-1}:\bbR^m \to [0,1]$.
 Unlike in the continuous response models, the integral does not present itself in closed form due to the conditional categorical PMF of the $y_i$'s, which they themselves involve integrals of multivariate normal densities.
 For binary response models, $g^{-1}$ is simply the probit function, but for multinomial responses, this can be quite challenging to evaluate---more on this in \hltodo{Section X}.
 
@@ -153,7 +153,7 @@ It is no longer possible to marginalise the normal latent variables from the mod
 
 Hamiltonian Monte Carlo is another possibility, since it does not require conjugacy.
 For binary models, this is a feasible approach because the class probabilities are a function of the normal CDF, which means that it is doable using off-the-shelf software such as \proglang{Stan}.
-However, with multinomial responses, the problem of computing class probabilities, which involve integration of an at most $m$-dimensional normal density, must be addressed separately.
+However, with multinomial responses, the arduous task of computing class probabilities, which involve integration of an at most $m$-dimensional normal density, must be addressed separately.
 
 %In summary, the computational challenge here stems from two sources: 1) integrating out the random effects $\bw$; and 2) evaluating class probabilities.
 %Point 1) is addressed using a Gibbs sampling data augmentation scheme (latent variable approach), but this is not feasible with large $n$.

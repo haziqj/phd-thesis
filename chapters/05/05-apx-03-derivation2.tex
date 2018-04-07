@@ -24,13 +24,16 @@ The evidence lower bound (ELBO) expression involves the following calculation:
   + H\big[q(\eta) \big]
   + H\big[q(\balpha) \big].
 \end{align*}
+As we saw earlier, the distribution of $q(\bPsi)$ is not of recognisable form. 
+This makes computation of $\E \log \abs\bPsi$, $\E \log p(\bPsi)$, and $H\big[q(\bPsi)\big]$, which are required in the expression of the ELBO, problematic.
+For simplicity, we present the ELBO calculations for when $\bPsi$ is treated to be fixed.
 
 \begin{remark}
   As discussed, given the latent propensities $\by^*$, the pdf of $\by$ is degenerate and hence can be disregarded.  
 \end{remark}
 
 \begin{remark}
-  When using improper priors for the hyperparameters, i.e. $p(\bPsi,\eta,\balpha) \propto \const$, then these terms can be disregarded.  
+  When using improper priors for the hyperparameters, i.e. $p(\eta,\balpha) \propto \const$, then these terms can be disregarded.  
 \end{remark}
 
 \subsection{Terms involving distributions of \texorpdfstring{$\by^*$}{$y^*$}}
@@ -40,38 +43,34 @@ The evidence lower bound (ELBO) expression involves the following calculation:
   \E  \log p(\by_{i \bigcdot}^*|\balpha,\bw,\bPsi,\eta) 
   + H \big[q(\by^*_{i \bigcdot}) \big] 
   \bigg) \\
-  &=  -\half[nm]\log 2\pi + \half[n]\E \log \abs{\bPsi} - \half \E \sum_{i=1}^n (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \bmu_{i \bigcdot}) \\
-  &\phantom{==} +\half[nm]\log 2\pi - \half[n] \log \abs{\tilde\bPsi} + \half \E \sum_{i=1}^n (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot})^\top \tilde\bPsi (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot}) + \log C_i  \\
-%  &= \const + n \sum_{j=1}^m \tilde\bPsi_{jj} \tilde v_{\alpha_j} + 
-%  \sum_{i=1}^n \left\{ \log C_i 
-%  +  \tr\big(\tilde\bPsi\bOmega_i \big) 
-%  \right\}.
+  &=  -\half[nm]\log 2\pi + \half[n] \log \abs{\bPsi} - \half \E \sum_{i=1}^n (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \bmu_{i \bigcdot}) \\
+  &\phantom{==} +\half[nm]\log 2\pi - \half[n] \log \abs{\tilde\bPsi} + \half \E \sum_{i=1}^n (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot}) + \log C_i  \\
    &=\const + \sum_{i=1}^n \log C_i 
 \end{align*}
-where $\bOmega_i = \Var \bw^\top\bh_\eta(x_i)$, and $C_i$ is the normalising constant for the distribution of multivariate truncated normal $\by_{i \bigcdot}$.
+where $C_i$ is the normalising constant for the distribution of multivariate truncated normal $\by_{i \bigcdot}$.
 
 Notes:
 \begin{enumerate}
-  \item $p(\by_{i \bigcdot}^*)$ is the pdf of $\N(\bmu_{i \bigcdot}, \bPsi^{-1})$, and $q(\by_{i \bigcdot}^*)$ is the pdf of $\tN(\tilde\bmu_{i \bigcdot}, \tilde\bPsi^{-1}, \cC_{y_i})$, where $\bmu_{i \bigcdot} = \balpha + \bw^\top\bh_\eta(x_i) \in \bbR^m$.
-  \item For $\bPsi\sim \Wis(\cdot,\cdot)$ with mean $\tilde\bPsi$, $\E \log \abs{\bPsi} = \log \tilde\bPsi + \const$ \citep[§10.2]{bishop2006pattern}.
+  \item $p(\by_{i \bigcdot}^*)$ is the pdf of $\N(\bmu_{i \bigcdot}, \bPsi^{-1})$, and $q(\by_{i \bigcdot}^*)$ is the pdf of $\tN(\tilde\bmu_{i \bigcdot}, \bPsi^{-1}, \cC_{y_i})$, where $\bmu_{i \bigcdot} = \balpha + \bw^\top\bh_\eta(x_i) \in \bbR^m$.
+%  \item For $\bPsi\sim \Wis(\cdot,\cdot)$ with mean $\tilde\bPsi$, $\E \log \abs{\bPsi} = \log \tilde\bPsi + \const$ \citep[§10.2]{bishop2006pattern}.
   \item It is simpler to use the approximation
   \begin{align}\label{eq:elboyaprx}
     \E (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})
-    \approx \E (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot})^\top \tilde\bPsi (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot}).   
+    \approx \E (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot}).   
   \end{align}
   rather than work out the actual quantity, which is
   \begin{align}\label{eq:elboyact}
     \E (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})
-    &= \E (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot})^\top \tilde\bPsi (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot}) + \tr(\tilde\bPsi\Var \bmu_{i \bigcdot})
+    &= \E (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot}) + \tr(\bPsi\Var \bmu_{i \bigcdot})
   \end{align}
   where $\Var \bmu_{i \bigcdot} = \Var \balpha + \Var \bw^\top\bh_\eta(x_i)$, obtained by taking expectations with respect to everything except $\by^*_{i \bigcdot}$.
   The first term is a diagonal matrix of the posterior variances of the intercepts.
-  The second term is where things get complicated 
+  The second term is where things get complicated.
   Let $\bOmega_i = \Var \bw^\top\bh_\eta(x_i)$. 
   Then $\bOmega_{i,kj} \approx \Cov(\bw^\top_{\bigcdot k}\bh_\eta(x_i), \bw^\top_{\bigcdot j}\bh_\eta(x_i)) = \bh_\eta(x_i)^\top \tilde\bV_w[k,j]\bh_\eta(x_i)$. 
   So
   \[
-    \tr(\tilde\bPsi \bOmega_i) \approx \sum_{k,j=1}^m \tilde\bPsi_{kj} \bh_\eta(x_i)^\top \tilde\bV_w[k,j]\bh_\eta(x_i)
+    \tr(\bPsi \bOmega_i) \approx \sum_{k,j=1}^m \bPsi_{kj} \bh_\eta(x_i)^\top \tilde\bV_w[k,j]\bh_\eta(x_i)
   \]
   However, we know that $\Var XY = \E X^2Y^2 - (\E XY)^2 = \Var X \Var Y + \Var X (\E Y)^2 + \Var Y (\E X)^2$, so there is actually some covariance terms which need to be considered, and these are not so easily computed.
   In practice, we find that using \cref{eq:elboyaprx} gives satisfactory results as far as determining convergence for the variational algorithm goes. 
@@ -81,16 +80,16 @@ Notes:
 
 \begin{align*}
   \E \log p(\bw|\bPsi) + H \big[q(\bw) \big] 
-  &= \cancel{-\half[nm]\log 2\pi} - \half[n]\E\log\abs{\bPsi} - \half\E\tr \big( \bw \bPsi^{-1} \bw^\top \big) \\
+  &= \cancel{-\half[nm]\log 2\pi} - \half[n]\log\abs{\bPsi} - \half\E\tr \big( \bw \bPsi^{-1} \bw^\top \big) \\
   &\phantom{==} + \half[nm](1 + \cancel{\log 2\pi}) + \half\log\abs{\tilde\bV_w} \\
-  &= \const - \half[n]\log\tilde\bPsi 
-  - \half \sum_{j=1}^m \tr \big(\tilde\bPsi^{-1} (\tilde\bV_w[j,j]  + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot j}^\top)\big)
+  &= \const 
+  - \half \sum_{j=1}^m \tr \big(\bPsi^{-1} (\tilde\bV_w[j,j]  + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot j}^\top)\big)
 \end{align*}
 
 Notes:
 \begin{enumerate}
   \item $p(\bw)$ is the pdf of $\MN(\bzero,\bI_n,\bPsi)$, and $q(\bw)$ is the pdf of $\N(\vecc \tilde\bw,\tilde\bV_w)$.
-  \item We used the first order approximation $\E \bPsi^{-1} \approx (\E \bPsi)^{-1} = \tilde\bPsi^{-1}$.
+%  \item We used the first order approximation $\E \bPsi^{-1} \approx (\E \bPsi)^{-1} = \tilde\bPsi^{-1}$.
   \item $\tilde\bV_w[j,j]$ are the $n \times n$ sub matrices along the diagonal of $\tilde\bV_w$.
 \end{enumerate}
 
@@ -112,30 +111,30 @@ Notes:
   \item When using improper priors $\lambda_k \propto \const$, then we need only consider the middle term involving the sums of $\log \tilde v_{\lambda_k}$.
 \end{enumerate}
 
-\subsection{Terms involving distributions of \texorpdfstring{$\bPsi$}{$\Psi$}}
-
-The terms involving $\bPsi$ are $\E \log p(\bPsi) + H\big[q(\bPsi)\big]$.
-In the case of the full I-probit model, this becomes
-\begin{align*}
-  \const & + \half[g-m-1]\E \log \abs{\bPsi} - \half \E \tr(\bG\bPsi) 
-  + \log B - \half[\tilde g-m-1]\E \log \abs{\bPsi} + \half[\tilde g m] \\
-  &= \const  + \log B + \half[\tilde g m] + \half[g-\tilde g] \log \abs{\tilde\bPsi} - \half \tr(\bG\tilde\bPsi)
-%  + \frac{m+1}{2}\log\abs{\bG + \bG_1 + \bG_2} + \half m(m+1)\log 2 + \log \Gamma_p \left(\half[s] \right) - \half[s-m-1] \psi_m \left(\half[s] \right) + \half[sm]
-\end{align*}
-where $B = \half[\tilde g] \log \abs{\tilde G} + \half[\tilde g m]\log 2 + \log \Gamma_m(\tilde g / 2)$.
-In the case of the independent I-probit model, we have
-\begin{align*}
-  \const & + \sum_{j=1}^m \Big\{ (s_j - 1)\E \log \psi_j -  r_j \E\psi_j \Big\}
-  - \sum_{j=1}^m \log \tilde r_j \\
-  &= \const + \sum_{j=1}^m \Big\{ (s_j - 1)\log \tilde \psi_j   -  r_j \tilde\psi_j \Big\}
-  - \sum_{j=1}^m \log \tilde r_j 
-\end{align*}
-
-Notes:
-\begin{enumerate}
-  \item The priors on the $\bPsi$ is $\Wis(\bG,g)$, or if $\bPsi = \diag(\psi_1,\dots,\psi_m)$, then each $\psi_j\sim \Gamma(s_j,r_j)$. $q(\bPsi)$ is the density of $\Wis(\tilde\bG,\tilde g)$ or in the case of the independent model, each $q(\psi_j)$ is the density of $\Gamma(s_j,\tilde r_j)$.
-  \item Use the first order Taylor expansion about $\E\psi_j$ to approximate $\E \log \psi_j \approx \log \E \psi_j = \log \tilde \psi_j$, as per \citet{teh2007collapsed}.
-\end{enumerate}
+%\subsection{Terms involving distributions of \texorpdfstring{$\bPsi$}{$\Psi$}}
+%
+%The terms involving $\bPsi$ are $\E \log p(\bPsi) + H\big[q(\bPsi)\big]$.
+%In the case of the full I-probit model, this becomes
+%\begin{align*}
+%  \const & + \half[g-m-1]\E \log \abs{\bPsi} - \half \E \tr(\bG\bPsi) 
+%  + \log B - \half[\tilde g-m-1]\E \log \abs{\bPsi} + \half[\tilde g m] \\
+%  &= \const  + \log B + \half[\tilde g m] + \half[g-\tilde g] \log \abs{\tilde\bPsi} - \half \tr(\bG\tilde\bPsi)
+%%  + \frac{m+1}{2}\log\abs{\bG + \bG_1 + \bG_2} + \half m(m+1)\log 2 + \log \Gamma_p \left(\half[s] \right) - \half[s-m-1] \psi_m \left(\half[s] \right) + \half[sm]
+%\end{align*}
+%where $B = \half[\tilde g] \log \abs{\tilde G} + \half[\tilde g m]\log 2 + \log \Gamma_m(\tilde g / 2)$.
+%In the case of the independent I-probit model, we have
+%\begin{align*}
+%  \const & + \sum_{j=1}^m \Big\{ (s_j - 1)\E \log \psi_j -  r_j \E\psi_j \Big\}
+%  - \sum_{j=1}^m \log \tilde r_j \\
+%  &= \const + \sum_{j=1}^m \Big\{ (s_j - 1)\log \tilde \psi_j   -  r_j \tilde\psi_j \Big\}
+%  - \sum_{j=1}^m \log \tilde r_j 
+%\end{align*}
+%
+%Notes:
+%\begin{enumerate}
+%  \item The priors on the $\bPsi$ is $\Wis(\bG,g)$, or if $\bPsi = \diag(\psi_1,\dots,\psi_m)$, then each $\psi_j\sim \Gamma(s_j,r_j)$. $q(\bPsi)$ is the density of $\Wis(\tilde\bG,\tilde g)$ or in the case of the independent model, each $q(\psi_j)$ is the density of $\Gamma(s_j,\tilde r_j)$.
+%  \item Use the first order Taylor expansion about $\E\psi_j$ to approximate $\E \log \psi_j \approx \log \E \psi_j = \log \tilde \psi_j$, as per \citet{teh2007collapsed}.
+%\end{enumerate}
 
 \subsection{Terms involving distribution of \texorpdfstring{$\balpha$}{$\alpha$}}
 

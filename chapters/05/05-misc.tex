@@ -93,7 +93,41 @@ The latter yields the \emph{normalised I-probit model}, and a discussion of the 
 
 
 
-
+Note that the dimension of the integral \eqref{eq:pij} is $m-1$, since the $j$'th coordinates is fixed relative to the others.
+Alternatively, we could have specified the model in terms of \emph{relative differences} of the latent variables.
+Choosing the first category as the reference category, define new random variables $z_{ij} = y_{ij}^* - y_{i1}^*$, for $j = 2,\dots,m-1$. 
+The model \cref{eq:latentmodel} is equivalently represented by
+\begin{equation}
+  y_i = 
+  \begin{cases}
+    1 & \text{if } \max (z_{i2},\dots,z_{im}) < 0 \\
+    j & \text{if } \max (z_{i2},\dots,z_{im}) = z_{ij} \geq 0.
+  \end{cases}
+\end{equation} 
+Write $\bz_i = (z_{i2},\dots,z_{im})^\top \in \bbR^{m-1}$.
+Then $\bz_i = \bQ\by^*_i$, where $\bQ \in \bbR^{(m-1)\times m}$  is the $(m-1)$ identity matrix pre-augmented with a column vector of minus ones.
+We have that $\bz_i \iid \N_{m-1}\big(\bQ(\balpha + \bff(x_i)), \bQ\bPsi^{-1}\bQ^\top)\big)$.
+Thus, the class probabilities for $j=2,\dots,m$ are
+\begin{align}
+  p_{ij} = 
+  \int\displaylimits_{\{z_{ik} < 0 \,|\, \forall k \neq j \}} \ind(z_{ij} \geq 0) \,\phi(\bz_i) \dint\bz_i \label{eq:pij2},
+\end{align}
+with $\phi(\bz_i)$ representing the $(m-1)$-variate normal density for $\bz_i$.
+The class probability $p_{i1}$ is simply
+\[
+  p_{i1} = \int\displaylimits_{\{ z_{ik} <0 \}}  \phi(\bz_i) \dint\bz_i = 1 - \sum_{k\neq 1} p_{ik}.
+\]
+From this representation of the model, with $m=2$ (binary outcomes) we see that
+\[
+  p_{i1} = 
+%  \int \ind(z_{i2} < 0) \phi(z_{i2}) \dint z_{i2} = 
+  \Phi \left( \frac{z_{i2} - \mu}{\sigma} \right)
+  \hspace{0.5cm}\text{and}\hspace{0.5cm}
+  p_{i2} = 
+%  \int \ind(z_{i2} \geq 0) \phi(z_{i2}) \dint z_{i2} = 
+  1 - \Phi \left( \frac{z_{i2} - \mu}{\sigma} \right),
+\]
+where $\Phi(\cdot)$ is the CDF of the standard normal univariate distribution, and $\mu$ and $\sigma$ are the mean and standard deviation of the random variable $z_{i2}$.
 
 
 

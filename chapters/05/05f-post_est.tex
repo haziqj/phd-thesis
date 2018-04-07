@@ -1,39 +1,78 @@
-For a new data point $x_{\text{new}}$, we calculate the predicted latent values $\tilde f_{\text{new}} = (\tilde f_{\text{new},1}, \dots, \tilde f_{\text{new},m})$ for each of the classes, using the variational estimates of the posterior means for the unknown quantities (denoted with tildes), as follows:
+Working within a variational Bayesian framework means that we are able to perform inferences on any quantity of interest using the (approximate) posterior distributions obtained.
+%First and foremost, posterior standard deviations explain the uncertainty surrounding parameters of the I-probit model are easy to come by in comparison to pure likelihood based methods.
+Any of the post estimation procedures explained in the previous chapter when dealing with normal I-prior models can be extended here.
+
+Prediction of a new data point $x_{\text{new}}$ is described.
+Step one is to determine the distribution of the posterior regression functions in each class, $\bff(x_{\text{new}}) = \bw^\top\bh_\eta(x_{\text{new}})$, given values for the parameters $\theta$ of the I-probit model.
+To this end, we use the posterior mean estimate for $\theta$, and denote them with tildes, as we have done so far in this chapter.
+As we know, $\vecc\bw$ is normally distributed with mean and variance according to \cref{eq:varipostw}.
+By writing $\vecc \tilde\bw = (\tilde \bw_{\bigcdot 1}, \dots, \tilde \bw_{\bigcdot m})^\top$ to separate out the I-prior random effects per class, we have that $\bw_{\bigcdot j} \sim \N_n(\tilde \bw_{\bigcdot 1}, \tilde\bV_w[j,j])$, and $\Cov(\bw_{\bigcdot j},\bw_{\bigcdot k}) = \tilde\bV_w[j,k]$, where the `$[\cdot,\cdot]$' indexes the $n\times n$ sub-block of the block matrix structured matrix $\bV_w$.
+Thus, for each class $j=1,\dots,m$ and any $x \in \cX$,
 \[
-  \tilde f_{\text{new},j} = \sum_{k=1}^n \tilde h_{\eta_j}(x_{\text{new}},x_k) \tilde w_{kj}, \hspace{0.5cm} j = 1,\dots,m.
+  f_j(x)|\by,\tilde\theta \sim \N\big(\,
+  \tilde\bh_\eta(x)^\top\bw_{\bigcdot j}, \,
+  \tilde\bh_\eta(x)^\top\tilde\bV_w[j,j]\tilde\bh_\eta(x)
+  \big),
 \]
-This is in fact the posterior mean for the regression functions evaluated at the new point $x_{\text{new}}$, which stems from a posterior normal distribution.
-Denote $\bg(x_{\text{new}}) = \diag\big(\bh_{\eta_j}^\top(x_{\text{new}})\big)_{j=1}^m$, an $m \times nm$ matrix containing the kernel entries relating to this new data point.
-From Gaussian process regression theory, we know that the prediction at $x_{\text{new}}$ for the latent variable $\by^*(x_{\text{new}})$ has $m$ components equal to $\tilde y_{\text{new},j}^* = \tilde\alpha_j + \tilde f_{\text{new},j}$ for $j=1,\dots,m$, and variance 
+and the covariance between the regression functions in two different classes is
 \[
-  \bV_y(x_{\text{new}}) = \bg^\top(x_{\text{new}}) \tilde\bV_w \bg(x_{\text{new}}) + \tilde\bSigma.
+  \Cov\big[f_j(x),f_k(x)|\by,\tilde\theta \big] = 
+  \tilde\bh_\eta(x)^\top \tilde\bV_w[j,k] \tilde\bh_\eta(x).
 \]
-Thus, information relating to the class and its corresponding probabilities are contained within the normal distribution $\N_{m}\big(\by^*(x_{\text{new}}), \bV_y(x_{\text{new}}) \big)$, subject to the truncation $\cA_j := \{ y_{\text{new},j}^* > y_{\text{new},k}^* | \forall k \neq j\}$ if the new observation belongs to class $j \in \{1,\dots, m\}$.
+Then, in step two, using the results obtained in the previous chapter in \hltodo{Section 4.4}, we have that the latent propensities $y_{\new,j}^*$ for each class are normally distributed with mean, variance, and covariances
+\begin{alignat*}{3}
+  \E[y_{\new,j}^*|\by,\tilde\theta]  
+  &= \tilde\alpha_j + \E \big[ f_j(x_\new) |\by,\tilde\theta \big] 
+  &&=: \hat\mu_j(x_\text{new}) \\
+  \Var[y_{\new,j}^*|\by,\tilde\theta] 
+  &= \Var\big[f(x_\new)|\by,\tilde\theta \big] + \bPsi^{-1}_{jj}
+  &&=: \hat\sigma_j^2(x_\text{new}) \\
+  \Cov[y_{\new,j}^*,y_{\new,k}^*|\by,\tilde\theta] 
+  &= \Cov\big[f_j(x),f_k(x)|\by,\tilde\theta \big] + \bPsi^{-1}_{jk}
+  &&=: \hat\sigma_{jk}(x_\text{new}).
+\end{alignat*}
+
+From here, step three would be to extract class information of data point $x_\text{new}$, which are contained in the normal distribution $\N_{m}\big(\hat\bmu_\new, \hat\bV_\new \big)$, where
+\begin{equation*}
+  \hat\bmu_\new = \big(\mu_1(x_\text{new}),\dots, \mu_m(x_\text{new}) \big)^\top 
+  \hspace{0.5cm}\text{and}\hspace{0.5cm}
+  \hat\bV_{\new,jk} = 
+  \begin{cases}
+    \hat\sigma_j^2(x_\text{new}) & \text{if } i = j \\
+    \hat\sigma_{jk}(x_\text{new}) & \text{if } i \neq j. \\
+  \end{cases}
+\end{equation*}
+%, subject to the truncation $\cA_j := \{ y_{\text{new},j}^* > y_{\text{new},k}^* | \forall k \neq j\}$ if the new observation belongs to class $j \in \{1,\dots, m\}$.
 The predicted class is inferred from the latent variables via
 \[
-  \hat y_{\text{new}} = \argmax_j \tilde y_{\text{new},j}^*, 
+  \hat y_{\text{new}} = \argmax_k \hat\mu_k(x_\new), 
 \]
-while the probabilities for each class are once again obtained using the integral stated in \eqref{eq:pij}, stated here for convenience:
+while the probabilities for each class are obtained via integration of a multivariate normal density, as per \cref{eq:pij}, and restated here for convenience:
 \begin{align*}
-  \tilde p_{\text{new},j} 
-  &= \int_{\cA_j} \N(\by^*(x_{\text{new}}), \bV_y(x_{\text{new}})) \d\by^*_{\text{new}}.
+  \hat p_{\text{new},j} 
+  &=  \idotsint\displaylimits_{\intset} \phi(y_{i1}^*, \dots, y_{im}^*|\hat\bmu_\new, \hat\bV_{\new}) \dint y_{i1}^* \cdots \dint y_{im}^*.
 \end{align*}
-
-For the independent I-probit model, each component of the latent variables $\by^*(x_{\text{new}})$ are calculated in a similar manner, with the difference being that the components would be independent of each other.
-This is expressed in the form for the predictive covariance matrix $\bV_y(x_{\text{new}}) = \diag \big( v_1^2(x_{\text{new}}),\dots, v_m^2(x_{\text{new}})\big)$, where each variance component is given by
+For the independent I-probit model, class probabilities are obtained in a more compact manner via
 \[
-  v_j^2(x_{\text{new}}) = \bh_{\eta_j}^\top(x_{\text{new}}) \tilde\bV_w \bh_{\eta_j}(x_{\text{new}}) + \tilde\sigma_{j}^2.
-\]
-Class prediction is the same as before, but class probabilities are obtained in a more compact manner via
-\[
-  \tilde p_{\text{new},j} 
+  \hat p_{\text{new},j} 
   = \E_Z \Bigg[ \mathop{\prod_{k=1}^m}_{k\neq j} 
-  \Phi \left(\frac{v_j}{v_k} Z + \frac{\tilde y_{\text{new},j}^* - \tilde y_{\text{new},k}^*}{v_k} \right) \Bigg],
+  \Phi \left(\frac{\hat\sigma_j(x_\text{new})}{\hat\sigma_k(x_\text{new})} Z + \frac{\hat\mu_j(x_\new) - \hat\mu_k(x_\new)}{\hat\sigma_k^2(x_\text{new})} \right) \Bigg],
 \]
-where $Z\sim\N(0,1)$ and $\Phi(\cdot)$ its CDF.
+as per \cref{eq:pij2}, since the $m$ components of $\bff(x_\new)$, and hence the $\by^*_{\new,j}$'s, are independent of each other ($\bPsi$ and $\hat\bV_\new$ are diagonal).
 
-Working in a Bayesian framework means that we are able to perform inferences on any quantity of interest through posterior sampling.
+
+
+
+
+
+
+
+
+
 In the I-probit model, we use the approximate mean-field densities in lieu of the true posterior densities, and these are, for the most part, easy to sample from.
 Take for example the class probabilities. 
 We can obtain posterior samples for the $p_{ij}$'s by firstly sampling from the underlying normal latent variables, and then passing it through the probit link function.
 Taking the empirical lower 2.5th and upper 97.5th percentile of this sample would give the upper and lower values for a 95\% credibility interval.
+
+Model comparison...
+

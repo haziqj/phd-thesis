@@ -1,8 +1,8 @@
 The I-prior methodology can be used naïvely to fit a categorical regression model.
 Suppose, as before, we observe data $\{(y_1,x_1),\dots,(y_n,x_n) \}$ where each $x_i \in \cX$, for $i=1,\dots,n$.
-Here, the responses are categorical $y_i \in \{ 1,\dots,m \}$, and additionally, write $y_i = (y_{i1},\dots,y_{im}) =: 
-\cM$ where the class responses $y_{ij} = 1$ if individual $i$'s response category is $y_i = j$, and 0 otherwise.
-In other words, there is exactly one `1' at the $j$'th position in the vector $y_i = (y_{i1},\dots,y_{im})$, zeroes everywhere else.
+Here, the responses are categorical $y_i \in \{ 1,\dots,m \} =: 
+\cM $, and additionally, write $y_i = (y_{i1},\dots,y_{im}) $ where the class responses $y_{ij}$ equal one if individual $i$'s response category is $y_i = j$, and zero otherwise.
+In other words, there is exactly a single `1' at the $j$'th position in the vector $y_i = (y_{i1},\dots,y_{im})$, and zeroes everywhere else.
 For $j=1,\dots,m$, we model 
 \begin{equation}\label{eq:naiveclassmod}
   \begin{gathered}

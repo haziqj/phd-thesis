@@ -1,14 +1,14 @@
-The linear multinomial probit model is well known to be unidentified, and the reason for this is two-fold.
+The parameters in a linear multinomial probit model is well known to be unidentified \citep{Keane1992,train2009discrete}, and the reason for this is two-fold.
 Firstly, an addition of a constant to the latent variables $y_{ij}^*$'s in \cref{eq:latentmodel} will not change which latent variable is maximal, and therefore leaves the model unchanged.
 Secondly, all latent variables can be scaled by some positive constant without changing which latent variable is largest.
 Therefore, a \emph{linear parameterisation} for the multinomial probit model is not identified as there can be more than one set of parameters for which the class probabilities are the same.
 To fix this issue, constraints are imposed on location and scale of the latent variables.
 
-However, for the I-probit model, this is not the case, because the model is not related to the parameters $\theta$ linearly.
+However, for the I-probit model, this is not the case, because the model is not related to the parameters $\theta = \{\alpha_1,\dots,\alpha_m,\eta, \bPsi \}$ linearly.
 One cannot simply add to or multiply $\theta$ by a constant and expect the model to be left unchanged.
-Thus, the I-probit model is identified in the parameter set $\theta$ without having to impose any restrictions, particularly on the precision matrix $\bPsi$.
+Thus, the I-probit model is identified in the parameter set $\theta$ without having to impose any restrictions, particularly on the precision matrix $\bPsi$ (if this is to be estimated).
 
-To see how the I-probit model is location identified, suppose a constant $a$ is added to the latent variables.
+To see how the I-probit model is location identified, suppose assumptions \ref{ass:A4} and \ref{ass:A5} hold, and consider a constant $a$ added to the latent propensities.
 This would then imply the relationship
 \[
   a + y_{ij}^* = 
@@ -16,69 +16,134 @@ This would then imply the relationship
 \]
 which is similar to adding the constant $a$ to all of the intercept parameters $\alpha_j$---denote these new intercepts by $\alpha_j^*$.
 As a requirement of the functional ANOVA decomposition, the $\alpha_j^*$'s need to sum to zero, but we already have that $\sum_{j=1}^m \alpha_j=0$, so it must be that $a =0$.
-This also highlights the reason why the grand intercept $\alpha$ is not included in the model.
+This also highlights the reason behind assumption \ref{ass:A4} and \ref{ass:A5} for fixing the grand intercept $\alpha$ to zero.
 
 As for identification in scale, consider multiplying the latent variables by $c>0$.
-The argument usually goes like this: the scaled latent variables $cy^*_{ij}$ must have been generated from the model $c\theta$.
+Denote by $\bV_y^*(\omega) \in \bbR^{nm \times nm}$ the marginal covariance matrix of the latent propensities, which depends on the scale parameters $\omega = \{\eta, \bPsi\}$.
+The scaled latent variables $\{c^{1/2}y^*_{ij} \,|\, \forall i,j = 1,\dots \}$, which collectively has (marginal) variance and covariances given by the matrix $c \bV_y^*(\omega)$, is expected to have been generated from the model with parameters $c\omega$.
 However, we have that 
 \begin{align*}
-  c\bV_y^*(\theta)
+  c\bV_y^*(\omega)
   &= c (\bPsi \otimes \bH_\eta^2) + c (\bPsi^{-1} \otimes \bI_n) \\
   &= (c \bPsi \otimes \bH_\eta^2) + (c \bPsi^{-1} \otimes \bI_n) \\
-  &\neq \bV_y^*(c\theta).
+  &\neq \bV_y^*(c\omega).
 \end{align*}
 
+Now, we turn to a discussion of the role of $\bPsi$ in the model.
+In decision theory, the independence axiom states that an agent's choice between a set of alternatives should not be affected by the introduction or elimination of a choice option.
+The probit model is suitable for modelling multinomial data where the independence axiom, which is also known as the \emph{independence of irrelevant alternatives} (IIA) assumption, is not desired. 
+Such cases arise frequently in economics and social science, and the famous Red-Bus-Blue-Bus example is often used to illustrate IIA:
+suppose commuters face the decision between taking cars and red busses. 
+The addition of blue busses to commuters' choices should, in theory, be more likely chosen by those who prefer taking the bus over cars.
+That is, assuming commuters are indifferent about the colour of the bus, commuters who are predisposed to taking the red bus would see the blue bus as an identical alternative.
+ Yet, if IIA is imposed, then the three choices are distinct, and the fact that red and blue busses are substitutable is ignored.
+
+To put it simply, the model is IIA if choice probabilities depend only on the choice in consideration, and not on any other alternatives.
+In the I-probit model, or rather, in probit models in general, choice dependency is controlled by the error precision matrix $\bPsi$.
+Specifically, the off-diagonal elements $\bPsi_{jk}$ capture the correlation between alternatives $j$ and $k$.
+Allowing all $m(m+1)/2$ covariance elements of $\bPsi$ to be non-zero leads to the \emph{full I-probit model}, and would not assume an IIA position.
 
 
 
 
-\newpage
-%\hltodo{Here also describe the three models: full, independent, normalised}
-%\hltodo[On identifiability]{On identifiability. Is it a problem? It depends. But more importantly, do we care about it? If we don't do anything about it, and the model is not identified, what's the worst that could happen? For one thing, many sets of theta give the same likelihood, so inference about these parameters cannot be done (although we show that this is not true actually! for I-priors at least.) Any problems with estimation? Nope. At least not in the variational bayesian method. This issue manifests itself in multiple local optima, but given some starting values there shouldn't be any label switching issue. But do we care about inference about the parameters in the first place? Most likely no. We care about probabilities, log odds, LRT, Bayes factors... but the question is, is the model identified? That kind of depends on what it meant by identifiability in a Bayesian context. If, treating the parameters as parameters instead of random values, depending on how you parameterise the model it is identified in those parameters or not. The I-prior model is identified in its parameters, but not in, say the latent variables themselves. so, given a fixed value for theta, you get the ystars. a unique value of theta will give you that ystar. but you can change ystar but shifting and scaling it to give you the same probabilities.}
 
-
-%The above two reasons are apparent from \eqref{eq:latentmodel}, but can be argued formally as follows.
-%Let $\Upsilon:\bbR^m \to \{1,\dots,m\}$ be a function which maps $\by_i^* \mapsto y_i$ defined by
-%\[
-%  \Upsilon(y^*_{i1},\dots,y^*_{im}) = \sum_{k=1}^m k \cdot [y_{ik}^* = \max_{k'} y_{ik'}^* ].
-%\]
-%Clearly, $\Upsilon(y^*_{i1},\dots,y^*_{im}) = \Upsilon(a + cy^*_{i1},\dots,a + cy^*_{im})$, for any real value of $a$ and $c > 0$.
-%From equation \eqref{eq:multinomial-latent}, we see that $a + cy_{ij}^* = a + c\alpha_j + cf_j(x_i) + c\epsilon_{ij}$, and so $(a + cy^*_{i1},\dots,a + cy^*_{im})^\top$ follows an $m$-variate normal distribution with mean $(a + c\alpha_j)\bone_m + c\bff(x_i)$ and covariance matrix $c^2\bSigma$.
-%It follows, due to \eqref{eq:pij}, that the categorical distribution for $y_i$ using the latent normal distribution $\N_m(\alpha_j\bone_m + \bff(x_i), \bSigma)$ is the same as the one using the latent normal distribution $\N_m((a + c\alpha_j)\bone_m + c\bff(x_i), c^2\bSigma)$.
-%Therefore, the likelihood given an observation $(y_i, x_i)$ for the set of parameters $(\alpha_j\bone_m + \bff(x_i), \bSigma)$ and $((a + c\alpha_j)\bone_m + c\bff(x_i), c^2\bSigma)$ would be equivalent, and thus the model is not fully identified\footnotemark.
-%\footnotetext{If we only require probabilities (as a function of the parameters) to be estimated, then identifiability is not a concern. This is the approach taken by \cite{girolami2006variational}.}
-
-%\subsubsection{Full I-probit model}
-%
-%To solve the\hltodo[Is this correct terminology?]{location identification\!\!}, we must anchor on one of the latent variables.
-%%, since only differences are identified.
-%In our case, set the last latent variable $y_{im}^* = 0, \forall i = 1,\dots,n$. 
-%This means that we only have $m-1$ sets of intercepts and RKHS parameters to estimate.
-%\hltodo[Is it?]{Although it is sufficient to just fix one of the intercepts to for location identification}, setting the last latent variable to zero also implies some restrictions on the covariance matrix $\bSigma$, which also fixes scale identification as we will see.
-
-%Let $\epsilon_i = (\epsilon_{i1},\dots,\epsilon_{im})^\top \iid \N_m(\bzero, \bSigma)$.
-%\[
-%  \bSigma =
-%  \begin{pmatrix}
-%    \sigma_{1}^2 &\sigma_{12}  &\cdots &\sigma_{1m} \\
-%    \cdot        &\sigma_{2}^2 &\cdots &\sigma_{2m} \\
-%    \vdots       &\vdots       &\ddots &\vdots \\
-%    \cdot        &\cdot        &\cdots &\sigma_m^2 \\
-%  \end{pmatrix}
-%\]
-
-%To solve scale identification, some restrictions on the covariance matrix $\bSigma$ needs to be made.
-%In the unrestricted case, there are $m(m+1)/2$ covariance parameters to estimate (upper triangular covariances and diagonal variances) in total. 
-%However, only $m(m-1)/2 - 1$ are identified, therefore requiring $m + 1$ restrictions \citep{Keane1992,train2009discrete}. 
-%Getting rid of one latent variable to fix the location identification shrinks $\bSigma$ to $(m-1) \times (m-1)$ in size, and now only $m(m-1)/2$ parameters need to be estimated. 
-%Therefore, one more restriction needs to be made, and the convention is for the first element in $\bSigma$---the variance of $\epsilon_{i1}$---to be set to one. 
-
-
-
-
+\begin{figure}[hbt]
+\centering\hspace{-13pt}
+\begin{blockmatrixtabular}
+\valignbox{
+\begin{blockmatrixtabular}
+&
+\mblockmatrix{0.55in}{0in}{\footnotesize $j=1$}&
+\mblockmatrix{0.55in}{0in}{\footnotesize $j=2$}&
+\mblockmatrix{0.55in}{0in}{$\cdots$}&
+\mblockmatrix{0.55in}{0in}{\footnotesize $j=m$}& \\
+\mblockmatrix{0in}{0.55in}{\footnotesize $j=1$}&
+\fblockmatrix[colblu!39]{0.55in}{0.55in}{\footnotesize $\bV[1,1]$}& 
+\fblockmatrix[colblu!22]{0.55in}{0.55in}{\footnotesize $\bV[1,2]$}&
+\fblockmatrix[colblu!24]{0.55in}{0.55in}{\footnotesize $\cdots$}& 
+\fblockmatrix[colblu!46]{0.55in}{0.55in}{\footnotesize $\bV[1,m]$}\\
+\mblockmatrix{0in}{0.55in}{\footnotesize $j=2$}&
+\fblockmatrix[colblu!22]{0.55in}{0.55in}{\footnotesize $\bV[2,1]$}& 
+\fblockmatrix[colblu!33]{0.55in}{0.55in}{\footnotesize $\bV[2,2]$}&
+\fblockmatrix[colblu!42]{0.55in}{0.55in}{\footnotesize $\cdots$}& 
+\fblockmatrix[colblu!40]{0.55in}{0.55in}{\footnotesize $\bV[2,m]$}\\
+\mblockmatrix{0in}{0.55in}{\hspace{10pt}$\vdots$}&
+\fblockmatrix[colblu!24]{0.55in}{0.55in}{\footnotesize $\vdots$}& 
+\fblockmatrix[colblu!42]{0.55in}{0.55in}{\footnotesize $\vdots$}&
+\fblockmatrix[colblu!20]{0.55in}{0.55in}{\footnotesize $\ddots$}& 
+\fblockmatrix[colblu!30]{0.55in}{0.55in}{\footnotesize $\vdots$}\\
+\mblockmatrix{0in}{0.55in}{\footnotesize $j=m$}&
+\fblockmatrix[colblu!46]{0.55in}{0.55in}{\footnotesize $\bV[m,1]$}& 
+\fblockmatrix[colblu!40]{0.55in}{0.55in}{\footnotesize $\bV[m,2]$}&
+\fblockmatrix[colblu!30]{0.55in}{0.55in}{\footnotesize $\cdots$}& 
+\fblockmatrix[colblu!20]{0.55in}{0.55in}{\footnotesize $\bV[m,m]$}\\
+\end{blockmatrixtabular}
+}&
+\valignbox{\mblockmatrix{0.31in}{2.8in}{}}&
+\valignbox{
+\begin{blockmatrixtabular}
+%&
+\mblockmatrix{0.55in}{0in}{\footnotesize $j=1$}&
+\mblockmatrix{0.55in}{0in}{\footnotesize $j=2$}&
+\mblockmatrix{0.55in}{0in}{$\cdots$}&
+\mblockmatrix{0.55in}{0in}{\footnotesize $j=m$}& \\
+%\mblockmatrix{0in}{0.55in}{\footnotesize $j=1$}&
+\fblockmatrix[colblu!39]{0.55in}{0.55in}{\footnotesize $\bV[1,1]$}& 
+\fblockmatrix[none]{0.55in}{0.55in}{}&
+\fblockmatrix[none]{0.55in}{0.55in}{}& 
+\fblockmatrix[none]{0.55in}{0.55in}{}\\
+%\mblockmatrix{0in}{0.55in}{\footnotesize $j=2$}&
+\fblockmatrix[none]{0.55in}{0.55in}{}& 
+\fblockmatrix[colblu!33]{0.55in}{0.55in}{\footnotesize $\bV[2,2]$}&
+\fblockmatrix[none]{0.55in}{0.55in}{}& 
+\fblockmatrix[none]{0.55in}{0.55in}{}\\
+%\mblockmatrix{0in}{0.55in}{\hspace{10pt}$\vdots$}&
+\fblockmatrix[none]{0.55in}{0.55in}{}& 
+\fblockmatrix[none]{0.55in}{0.55in}{}&
+\fblockmatrix[colblu!20]{0.55in}{0.55in}{\footnotesize $\ddots$}& 
+\fblockmatrix[none]{0.55in}{0.55in}{}\\
+%\mblockmatrix{0in}{0.55in}{\footnotesize $j=m$}&
+\fblockmatrix[none]{0.55in}{0.55in}{}& 
+\fblockmatrix[none]{0.55in}{0.55in}{}&
+\fblockmatrix[none]{0.55in}{0.55in}{}& 
+\fblockmatrix[colblu!20]{0.55in}{0.55in}{\footnotesize $\bV[m,m]$}\\
+\end{blockmatrixtabular}
+}&
+\end{blockmatrixtabular}\\ 
+\caption{Covariance structure of the full I-probit model (left) and the independent I-probit model (right). The full model has  $m^2$ blocks of $n \times n$ symmetric matrices, and the blocks themselves are arranged symmetrically about the diagonal. The independent model, on the other hand, has a block diagonal structure.}
+\label{fig:iprobcovstr}
+\end{figure}
 
 %most economics articles prefer to estimate scaled probit models. in fact, it is an advantage of it! but do we care about the scale? maybe care more about IIA, which can't do without scales i suppose.
 %We can see that if $\bPsi = \bI_m$, $\bV_f = \diag(\bH_{\eta_1},\dots,\bH_{\eta_m})$ as is the case in the normalised I-probit model. While this previously allowed for calculation of the inverse $\bV_f^{-1}$ in $O(mn^3)$ time, unfortunately the fully scaled I-probit model takes $O(m^3n^3)$ time as $\bV_f$ is dense.
 %Dive in with the restriction that scales are set to 1, for no other reason than to make life simpler... cite previous work in machine learning where this is done. 
 %In the name of simplicity, we restrict all of the error variances $\sigma_j=1$, and independence of errors within each class, i.e. $\Cov[\epsilon_{ij},\epsilon_{ik}] = 0$ for each $j,k \in \{1,\dots,m\}$ and $j\neq k$.
 %The main reason for doing this is to obtain a more tractable result with the normal distribution, i.e., the probablity distribution function (PDF) of the joint distribution of $\epsilon_i = (\epsilon_{i1},\dots,\epsilon_{im})^\top$ is now a product of $m$ univariate standard normal PDFs.
+
+While it is an advantage to be able to model the correlations across choices (unlike in logistic models), there are applications where the IIA assumption would not adversely affect the analysis, such as when all the choices are mutually exclusive and exhaustive.
+Some analyses might also be indifferent as to whether or not choice dependency exists.
+In these situations, it would be beneficial, algorithmically speaking, to reduce the I-probit model to a simpler version by assuming $\bPsi = \diag(\psi_1,\dots,\psi_m)$, which would trigger the IIA assumption in the I-probit model.
+We refer to this model as the \emph{independent I-probit model}.
+
+The independence assumption causes the distribution of the latent variables to be $y_{ij}^* \sim \N(\mu_k(x_i), \sigma_j^2)$ for $j=1,\dots,m$, where $\sigma_j^2 = \psi_j^{-1}$.
+As a continuation of line \cref{eq:pij}, we can show the class probability $p_{ij}$ to be
+\begin{align}
+  p_{ij} 
+  &= \idotsint\displaylimits_{\{y_{ij}^* > y_{ik}^* | \forall k \neq j\}} 
+  \prod_{k=1}^m \Big\{ \phi(y_{ik}^*|\mu_k(x_i), \sigma_k^2) \dint y_{ik}^* \Big\} \nonumber \\
+  &= \int \mathop{\prod_{k=1}^m}_{k\neq j} 
+  \Phi \left( \frac{y_{ij}^* - \mu_k(x_i)}{\sigma_k} \right) \cdot
+   \phi(y_{ij}^*|\mu_j(x_i), \sigma_j^2)  \dint y_{ij}^* \nonumber \\
+  &= \E_Z \Bigg[ \mathop{\prod_{k=1}^m}_{k\neq j} 
+  \Phi \left(\frac{\sigma_j}{\sigma_k} Z + \frac{\mu_j(x_i) - \mu_k(x_i)}{\sigma_k} \right) \Bigg] \label{eq:pij2}
+\end{align}
+where $Z\sim\N(0,1)$, $\Phi(\cdot)$ its cdf, and $\phi(\cdot|\mu,\sigma^2)$ is the pdf of $X\sim\N(\mu,\sigma^2)$.
+The equation \cref{eq:pij} is thus simplified to a unidimensional integral involving the Gaussian pdf and cdf, which can be computed fairly efficiently using quadrature methods.
+The probit link function is evidently seen in the above equation.
+%Moreover, in the binary case where $m=2$ and fixed error precision $\psi_1 = \psi_2 = 1/2$, we get
+%\[
+%  p_{i1} = 1 - \Phi\big(\mu_1(x_i) - \mu_2(x_i)\big) \ \text{ and } \ p_{i2} =  \Phi\big(\mu_1(x_i) - \mu_2(x_i)\big),
+%\]
+%which clearly shows the probit relationship between the class probabilities and the latent regression.
+%The proof of this fact is included in the Appendix.
+%With the exception of the binary case, these probabilities still do not have a closed-form expression (per se) and numerical methods are required to calculate them.

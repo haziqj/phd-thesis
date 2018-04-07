@@ -67,15 +67,16 @@ For reference, the relevant distributions are listed below.
   If $\eta$ contains other parameters as well, such as the Hurst coefficient $\gamma \in (0,1)$, SE lengthscale $l >0$ or polynomial offset $c>0$, then appropriate priors should be used to match the support of the parameter.
   Choices include $p(\gamma) = \ind\big(\gamma \in (0,1)\big)$ and $l,c \sim \Gamma(a,b)$.
   
-  \item {\boldmath$p(\bPsi)$}. For the precision matrix, a Wishart prior with scale matrix $\bG^{-1}$ and $g$ degrees of freedom, denoted $\bPsi \sim \Wis_m(\bG^{-1},g)$, is convenient. It has pdf
-  \[
-    p(\bPsi) = \exp\left[\const + \half[g-m-1]\log \abs{\bPsi} - \half\tr(\bG\bPsi)  \right].
-  \]
-  For the independent I-probit model, $\bPsi = \diag(\psi_1,\dots,\psi_m)$, and we choose independent Gamma distributions for each precision $\sigma_j^{-2} \sim \Gamma(s_j,r_j)$, where $s_j$ and $r_j$ are the shape and rate parameters.
-  Then,
-  \[
-    p(\bPsi) = \prod_{j=1}^m \exp\left[\const + (s_j - 1)\log \psi_j - r_j\psi_j \right].
-  \] 
+  \item {\boldmath$p(\bPsi)$}. Our analysis shows that regardless of prior choice of $\bPsi$, be it in the full or independent I-probit model, the posterior for $\bPsi$ will not be of a recognisable form. Without giving too much thought, assume an improper prior on $\bPsi$, i.e. $p(\bPsi) \propto \const$
+%  For the precision matrix, a Wishart prior with scale matrix $\bG^{-1}$ and $g$ degrees of freedom, denoted $\bPsi \sim \Wis_m(\bG^{-1},g)$, is convenient. It has pdf
+%  \[
+%    p(\bPsi) = \exp\left[\const + \half[g-m-1]\log \abs{\bPsi} - \half\tr(\bG\bPsi)  \right].
+%  \]
+%  For the independent I-probit model, $\bPsi = \diag(\psi_1,\dots,\psi_m)$, and we choose independent Gamma distributions for each precision $\sigma_j^{-2} \sim \Gamma(s_j,r_j)$, where $s_j$ and $r_j$ are the shape and rate parameters.
+%  Then,
+%  \[
+%    p(\bPsi) = \prod_{j=1}^m \exp\left[\const + (s_j - 1)\log \psi_j - r_j\psi_j \right].
+%  \] 
   
   \item {\boldmath$p(\balpha)$}. Choose independent normal priors for the intercept, $\alpha_j \sim \N(a_j,A_j)$ for $j=1,\dots,m$. The pdf is
   \[
@@ -423,102 +424,135 @@ This can be cumbersome, so if felt necessary, use the approximation $\lambda_k^2
 
 \subsection{Derivation of \texorpdfstring{$\tilde q(\bPsi)$}{$\tilde q(\Psi)$}}
 
-Introduce the transformed random matrix $\bu = \bw\bPsi^{-1} \in \bbR^{n\times m}$.
-Since we have that  $\vecc \bu = (\vecc \bw)^\top (\bPsi^{-1} \otimes \bI_n)$, the optimal mean-field distribution for $\bu$ is normal with mean $\vecc \tilde\bu = \vecc (\tilde\bw\tilde\bPsi^{-1} )$ and variance
-\begin{align*}
-  \tilde \bV_u
-  &= (\tilde\bPsi^{-1} \otimes \bI_n) \tilde \bV_w (\tilde\bPsi^{-1} \otimes \bI_n). 
-%  &= (\tilde\bPsi \otimes \bI_n)^{-1}
-%  \big( (\tilde\bPsi \otimes \tilde\bH_\eta^2) + (\tilde\bPsi^{-1} \otimes \bI_n) \big)^{-1} 
-%  (\tilde\bPsi \otimes \bI_n)^{-1} \\
-%  &= \big( 
-%  (\tilde\bPsi^3 \otimes \tilde\bH_\eta^2) + (\tilde\bPsi \otimes \bI_n)
-%  \big)^{-1}
-\end{align*}
-In the case of the independent model, its mean is $\tilde\bu_{\bigcdot j} = \tilde\psi_j^{-1} \tilde\bu_{\bigcdot j}$ for $j=1,\dots,m$ and its variance is
-\begin{align*}
-  \tilde \bV_u 
-  &= \diag(\tilde\psi_1^{-2}\tilde\bV_{w_1},\dots,\tilde\psi_m^{-2}\tilde\bV_{w_m}).
-%  &= \diag((\psi_1^3\bH_\eta^2 + \psi_1\bI_n)^{-1},
-%  \dots, (\psi_m^3\bH_\eta^2 + \psi_m\bI_n)^{-1}).
-\end{align*}
+%Introduce the transformed random matrix $\bu = \bw\bPsi^{-1} \in \bbR^{n\times m}$.
+%Since we have that  $\vecc \bu = (\vecc \bw)^\top (\bPsi^{-1} \otimes \bI_n)$, the optimal mean-field distribution for $\bu$ is normal with mean $\vecc \tilde\bu = \vecc (\tilde\bw\tilde\bPsi^{-1} )$ and variance
+%\begin{align*}
+%  \tilde \bV_u
+%  &= (\tilde\bPsi^{-1} \otimes \bI_n) \tilde \bV_w (\tilde\bPsi^{-1} \otimes \bI_n). 
+%\end{align*}
+%In the case of the independent model, its mean is $\tilde\bu_{\bigcdot j} = \tilde\psi_j^{-1} \tilde\bu_{\bigcdot j}$ for $j=1,\dots,m$ and its variance is
+%\begin{align*}
+%  \tilde \bV_u 
+%  &= \diag(\tilde\psi_1^{-2}\tilde\bV_{w_1},\dots,\tilde\psi_m^{-2}\tilde\bV_{w_m}).
+%\end{align*}
 
-Now, to derive $\tilde q(\bPsi)$ for the full I-probit model, we inspect the equation
+We find that $q(\bPsi)$ satisfies
 \begin{align*}
-  \log \tilde q(\bPsi)
+  \log q(\bPsi)
   &= \E_{\cZ\backslash\{\bPsi\}\sim q} \Big[ 
-  \half[n]\log\abs{\bPsi} - \half\tr \big((\by^* - \bmu)^\top (\by^* - \bmu)\bPsi  \big)
-  + \half[n]\log\abs{\bPsi} - \half\tr \big( \bu^\top\bu\bPsi  \big)
+%  \half[n]\log\abs{\bPsi} 
+  - \half\tr \big((\by^* - \bmu)^\top (\by^* - \bmu)\bPsi  \big)
+%  - \half[n]\log\abs{\bPsi} 
+  - \half\tr \big( \bw^\top\bw\bPsi^{-1} \big)
   \Big] \\
-  &\phantom{==} + \half[g-m-1]\log \abs{\bPsi} - \half\tr(\bG\bPsi) + \const \\
+  &\phantom{==} 
+  + \log p(\bPsi)
+%  + \half[g-m-1]\log \abs{\bPsi} - \half\tr(\bG\bPsi) 
+  + \const \\
   &= -\half \tr \Big(
-  \big(\bG + 
-  \greyoverbrace{\E[(\by^* - \bmu)^\top (\by^* - \bmu)]}{\bG_1} +
-  \greyoverbrace{\E[\bu^\top\bu]}{\bG_2}
-  \big)\bPsi
+  \big( %\bG + 
+  \greyoverbrace{\E[(\by^* - \bmu)^\top (\by^* - \bmu)]}{\bG_1}
+  \big)\bPsi +
+  \greyoverbrace{\E[\bw^\top\bw]}{\bG_2} \bPsi^{-1}
   \Big) \\
-  &\phantom{==} + \half[2n+g-m-1]\log \abs{\bPsi} + \const
+  &\phantom{==} 
+  + \log p(\bPsi)
+%  + \half[g-m-1]\log \abs{\bPsi} - \half\tr(\bG\bPsi) 
+  + \const 
 \end{align*}
-which we recognise to be a Wishart distribution with scale matrix $(\bG + \bG_1 + \bG_2)^{-1}$ and $\tilde g 2n+g$ degrees of freedom.
-Note that using an improper prior, i.e. $\bG=\bzero$ and $g=m$, will still yield a proper posterior distribution.
-The mean of this distribution is $\tilde\bPsi = (2n+g-m)(\bG + \bG_1 + \bG_2)^{-1}$.
-The matrix $\bG_1$ is given as
+This seems to be the pdf of $\Wis(\bG+\bG_1,g)$ plus the pdf of a distribution which almost resembles an inverse Wishart pdf.
+Unfortunately, the properties such as its moments and entropy are unknown.
+%However, we can compute the posterior mode:
+%\begin{align*}
+%  \frac{\partial}{\partial\bPsi} \log q(\bPsi)
+%  &= -\half \tr \left(\frac{\partial}{\partial\bPsi} (\bG_1\bPsi) + \frac{\partial}{\partial\bPsi}(\bG_2\bPsi^{-1}) \right) \\
+%  &= -\half \tr \left( \bG_1 - \bG_2\bPsi^{-2} \right)
+%\end{align*}
+%equated to zero means solving $m$ quadratic equations 
+
+The matrix $\bG_1$ is 
 \begin{align*}
   \bG_1 
   &= \E[(\by^* - \bmu)^\top (\by^* - \bmu)] \\
   &= \E \big[\by^{*\top}\by^* + \balpha\bone_n^\top \bone_n\balpha^\top + \bw^\top\bH_\eta^2\bw -2\by^{*\top}\bone_n\balpha^\top -2\by^{*\top}\bH_\eta\bw -2 \balpha\bone_n^\top\bH_\eta\bw \big] \\
-  &= \E \big[\by^{*\top}\by^*] + n\E[\balpha\balpha^\top] + \E[\bw^\top\bH_\eta\bw] -2(\tilde\by^{*\top}\bone_n\tilde\balpha^\top + \tilde\by^{*\top}\tilde\bH_\eta\tilde\bw + \tilde\balpha\bone_n^\top\tilde\bH_\eta\tilde\bw)
+  &= \E \big[\by^{*\top}\by^*] + n\E[\balpha\balpha^\top] + \E[\bw^\top\bH_\eta\bw] -2(\tilde\by^{*\top}\bone_n\tilde\balpha^\top + \tilde\by^{*\top}\tilde\bH_\eta\tilde\bw + \tilde\balpha\bone_n^\top\tilde\bH_\eta\tilde\bw),
 \end{align*}
-This involves second order moments of a conically truncated multivariate normal distribution, which needs to be obtained via simulation.
+and this involves second order moments of a conically truncated multivariate normal distribution, which needs to be obtained via simulation.
 Meanwhile,
 \begin{align*}
   \bG_{2,ij}
-  &= \E[\bu^\top\bu]_{ij} \\
-  &= \E[\bu_{\bigcdot i}^\top \bu_{\bigcdot j}] \\
-  &= \tilde\bV_u[i,j] + \tilde\bu_{\bigcdot i}^\top  \tilde\bu_{\bigcdot j}.
-%  \begin{cases}
-%    \tilde\bV_u[i,j] + \wtilde_{\bigcdot i}^\top  \wtilde_{\bigcdot j} &\text{(full I-probit)} \\
-%        \delta_{ij}\tilde\bV_{u_j} + \wtilde_{\bigcdot i}^\top  \wtilde_{\bigcdot j} &\text{(independent I-probit)}
-%  \end{cases}
-%  &=: \diag(\tilde\bV_{u_1},\dots,\tilde\bV_{u_m}).
+  &= \E[\bw^\top\bw]_{ij} \\
+  &= \E[\bw_{\bigcdot i}^\top \bw_{\bigcdot j}] \\
+  &= \tilde\bV_w[i,j] + \tilde\bw_{\bigcdot i}^\top  \tilde\bw_{\bigcdot j}.
 \end{align*}
 
-In the case of the I-probit model, we use a gamma prior on each of the precisions in the diagonal entries of $\bPsi=\diag(\psi_1,\dots,\psi_m)$.
+In the case of the independent I-probit model, we use a gamma prior on each of the precisions in the diagonal entries of $\bPsi=\diag(\psi_1,\dots,\psi_m)$.
 Then, the variational density for each $\psi_j$ is found to be
 \begin{align*}
-  \log \tilde q(\psi_j)
+  \log  q(\psi_j)
   &= \E_{\cZ\backslash\{\bPsi\}\sim q} \Big[ 
   \half[n]\log (\psi_1\cdots\psi_m) - \half\sum_{j=1}^m \sum_{i=1}^n \psi_j(\by^*_{ij} - \bmu_{ij})^2 
   \Big] \\
   &\phantom{==} +\E_{\cZ\backslash\{\bPsi\}\sim q} \Big[ 
-  \half[n]\log (\psi_1\cdots\psi_m) - \half\sum_{j=1}^m \sum_{i=1}^n \psi_j \bu_{ij}^2 
+  -\half[n]\log (\psi_1\cdots\psi_m) - \half\sum_{j=1}^m \sum_{i=1}^n \psi_j^{-1} \bw_{ij}^2 
   \Big] \\
   &\phantom{==} + \sum_{j=1}^m \big( (s_j - 1)\log \psi_j - r_j\psi_j \big) + \const \\
-  &= (s_j + n - 1)\log \psi_j - \psi_j \big( \half \E\norm{\by_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 + \half\E\norm{\bu_{\bigcdot j}}^2  + r_j \big) + \const
+  &= (s_j - 1)\log \psi_j 
+  - \psi_j \left( \half \E\norm{\by_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 +  r_j \right) \\
+  &\phantom{==}
+  - \psi_j^{-1} \left( \half\E\norm{\bw_{\bigcdot j}}^2  \right) + \const
 \end{align*}
-which is again a gamma distribution, and the shape and rate parameters can be read directly.
-The mean is given by $\tilde\psi_j = (s_j + n)(\half \E\norm{\by_{\bigcdot j}^* - \bmu_{\bigcdot j}}^2 + \half \E\norm{\bu_{\bigcdot j}}^2  + r_j)^{-1}$.
-Recall that each of the $n$ components of $\by_{\bigcdot j} -  \bmu_{\bigcdot j}$ are independent, and can be calculated using the methods described above.
-Also, we have $\bu_{\bigcdot j} \sim \N_n(\tilde\bu_{\bigcdot j}, \tilde\bV_{u_j})$, and so $  \E\norm{\bu_{\bigcdot j}}^2 = \tr(\tilde\bV_{u_j} + \tilde\bu_{\bigcdot j}\tilde\bu_{\bigcdot j}^\top)$.
+which again, is a pdf of an unknown distribution.
+However, its posterior mode can be computed.
+Write $a = -\left( \half \E\norm{\by_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 + r_j \right)$,
+$b = s_j - 1$, and $c=\left( \half\E\norm{\bw_{\bigcdot j}}^2  \right)$.
+Then,
+\begin{align*}
+  \frac{\partial}{\partial\psi_j} \log q(\psi_j)
+  = \frac{\partial}{\partial\psi_j} \left( a\psi_j + b\log \psi_j - c\psi_j^{-1} \right) 
+  = a +b\psi_j^{-1} + c\psi_j^{-2} 
+\end{align*}
+equated to zero means solving a quadratic equation in $\psi_j$.
+Suppose that $p(\psi_j) \propto \const$, then $s_j=1$ and $r_j = 0$ so $\tilde\psi_j$ can be solved directly to be
+\[
+  \hat\psi_j = \sqrt{\frac{ \E\norm{\by_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 }{\E\norm{\bw_{\bigcdot j}}^2}}.
+\]
+%The mean is given by $\tilde\psi_j = (s_j + n)(\half \E\norm{\by_{\bigcdot j}^* - \bmu_{\bigcdot j}}^2 + \half \E\norm{\bu_{\bigcdot j}}^2  + r_j)^{-1}$.
+If the posterior mean is close to its mode, then $\hat\psi_j$ is a good approximation for $\tilde\psi_j$.
+
+To calculate $\E\norm{y_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 = \E \sum_{i=1}^n (\by_{ij}^* - \mu_{ij})^2$, one first needs $\E (y_{ij}^* - \alpha_j - \bw_{\bigcdot j}^\top\bh_\eta(x_i))^2$.
+This, in itself, presents a challenge to compute analytically, because it requires, among other things, the second moments $\E y_{ij}^{*2}$ and $\E [\bw_{\bigcdot j}^\top\bh_\eta(x_i)\bh_\eta(x_i)^\top \bw_{\bigcdot j}]$.
+Although not entirely accurate, it is simpler to use the approximation
+\[
+  \E\norm{y_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 \approx 
+  \norm{\tilde y_{\bigcdot j}^* -  \tilde \bmu_{\bigcdot j}}^2.
+\]
+% from the distribution of $\by_{i \bigcdot} \sim \tN(\bmu_{i \cdot}, \tilde\bPsi^{-1}, \cC_{y_i})$.
+%Because of the independence structure, these can be computed componentwise.
+(see note on \hltodo{page}).
+Also, we have $\bw_{\bigcdot j} \sim \N_n(\tilde\bw_{\bigcdot j}, \tilde\bV_{w_j})$, and so $  \E\norm{\bw_{\bigcdot j}}^2 = \tr(\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot j}^\top)$.
 
 \subsection{Derivation of \texorpdfstring{$\tilde q(\balpha)$}{$\tilde q(\alpha)$}}
 
+Let $\bA = \diag(A_1,\dots,A_m)$ and $\ba = (a_1,\dots,a_m)^\top$.
 The terms involving $\alpha_j$ in \cref{eq:qtilde} are
 \begin{align*}
-  \log \tilde q(\alpha_j)
-  &= \E_{\cZ\backslash\{\balpha\}\sim q} \Big[ 
-  -\half\sum_{k=1}^m \sum_{i=1}^n \psi_{ik}(y^*_{ik} - \alpha_j - f_{ik})^2 
-  \Big] 
-  - \frac{A_j^{-1}}{2} (\alpha_j - a_j)^2 + \const \\
-  &= -\half\E \left[\alpha_j^2 \sum_{i=1}^n \psi_{ij}  - 2\alpha_j\sum_{i=1}^n \psi_{ij}(y^*_{ij} -  f_{ij}) \right]
-  -\half\Big(A_j^{-1}\alpha_j^2 - 2A_j^{-1}a_j\alpha_j  \Big) + \const \\
-  &=-\half[\sum_{i=1}^n \tilde\psi_{ij} + A_j^{-1}] \left( 
-  \alpha_j - 
-  \frac{\sum_{i=1}^n \tilde\psi_{ij}(\tilde y^*_{ij} -  \tilde f_{ij}) + A_j^{-1}a_j}{\sum_{i=1}^n \tilde\psi_{ij} + A_j^{-1}}  \right)^2 + \const
+  \log q(\balpha)
+  &= \E_{\cZ\backslash\{\balpha\}\sim q} \left[ 
+  -\half\sum_{i=1}^n 
+  \big(\by^*_{i \bigcdot} - \balpha - \bw^\top\bh_\eta(x_i)\big)^\top 
+  \bPsi \big(\by^*_{i \bigcdot} - \balpha - \bw^\top\bh_\eta(x_i)\big)
+  \right] \\
+  &\phantom{==}
+  - \half (\balpha - \ba)^\top \bA^{-1} (\balpha - \ba) + \const \\
+  &= -\half \Bigg[ \balpha^\top(
+  \greyoverbrace{n\bPsi + \bA^{-1}}{\tilde \bA}
+  )\balpha -2\Bigg( \, 
+   \greyoverbrace{\sum_{i=1}^n \bPsi\big( \tilde\by^*_{i \bigcdot} - \tilde\bw^\top\tilde\bh_\eta(x_i) \big) + \bA^{-1} \ba}{\tilde \ba} 
+  \, \Bigg)^\top \balpha \Bigg]
 \end{align*}
-which implies a normal distribution for $\alpha_j$ whose mean and variance can be read directly.
-Here, we used the notation $\tilde f_{ij}$ to mean the $(i,j)$'th element of 
-$\E[\bH_\eta\bw] = \tilde\bH_\eta \tilde \bw \in \bbR^{n\times m}$.
+which implies a normal mean-field distribution for $\balpha$ whose mean and variance are $\tilde\balpha = \tilde \bA^{-1}\tilde \ba$ and $\tilde \bA^{-1}$ respectively.
+If $\bPsi$ is diagonal, the components of $\balpha$ would be independent.
 
 As a remark, due to identifiability, only $m-1$ of these intercept are estimable.
 We can either put a constraint that one of the intercepts is fixed at zero, or the sum of the intercepts equals zero.

@@ -1,0 +1,123 @@
+% master block matrix, should use wrappers instead of calling this
+% directly
+% This should be called within the tikzpicture environment
+% \blockmatrix
+%  {width}
+%  {height}
+%  {text}
+%  {block_line_color} (can be none --> no line)
+%  {block_fill_color} (can be none --> empty fill)
+%  {is_diagonal} (true --> true, otherwise --> false)
+%  {diagonal_line_color} (ignored if not diagonal) (can be none --> no line)
+%  {diagonal_fill_color} (ignored if not diagonal) (can be noneo --> empty fill)
+%  {diagonal_offset} (half diagonal width in tikz units)
+% Note: colors here are not rgb, they are defined colors
+\newcommand{\blockmatrix}[9]{
+  \draw[draw=#4,fill=#5] (0,0) rectangle( #1,#2);
+  \ifthenelse{\equal{#6}{true}}
+  {
+    \draw[draw=#7,fill=#8] (0,#2) -- (#9,#2) -- ( #1,#9) -- ( #1,0) -- ( #1 - #9,0) -- (0,#2 -#9) -- cycle;
+  }
+  {}
+  \draw ( #1/2, #2/2) node { #3};
+}
+
+% Quick implementation of a tikz right parenthesis
+% \rightparen{width}
+\newcommand{\rightparen}[1]{
+  \begin{tikzpicture} 
+    \draw (0,#1/2) arc (0:30:#1);
+    \draw (0,#1/2) arc (0:-30:#1);
+  \end{tikzpicture}%this comment is necessary
+}
+
+% Quick implementation of a tikz left parenthesis
+% \leftparen{width}
+\newcommand{\leftparen}[1]{
+  \begin{tikzpicture} 
+    \draw (0,#1/2) arc (180:150:#1);
+    \draw (0,#1/2) arc (180:210:#1);
+  \end{tikzpicture}%this comment is necessary
+}
+
+% Unframed block matrix, "m" prefix to match fbox, mbox
+% \blockmatrix[r,g,b]{width}{height}{text}
+\newcommand{\mblockmatrix}[4][none]{
+  \begin{tikzpicture} 
+  \ifthenelse{\equal{#1}{none}}
+  {
+    \blockmatrix{#2}{#3}{#4}{none}{none}{false}{none}{none}{0.0}
+  }
+  {
+%    \definecolor{fillcolor}{rgb}{#1}
+    \blockmatrix{#2}{#3}{#4}{none}{#1}{false}{none}{none}{0.0}
+  }
+  \end{tikzpicture}%this comment is necessary
+}
+
+% Framed block matrix
+% \fblockmatrix[r,g,b]{width}{height}{text}
+\newcommand{\fblockmatrix}[4][none]{
+  \begin{tikzpicture} 
+  \ifthenelse{\equal{#1}{none}}
+  {
+    \blockmatrix{#2}{#3}{#4}{black}{none}{false}{none}{none}{0.0}
+  }
+  {
+%    \definecolor{fillcolor}{rgb}{#1}
+    \blockmatrix{#2}{#3}{#4}{black}{#1}{false}{none}{none}{0.0}
+  }
+  \end{tikzpicture}%this comment is necessary
+}
+
+% Diagonal block matrix
+% \dblockmatrix[r,g,b]{width}{height}{text}
+\newcommand{\dblockmatrix}[4][none]{
+  \begin{tikzpicture} 
+  \ifthenelse{\equal{#1}{none}}
+  {
+    \blockmatrix{#2}{#3}{#4}{black}{none}{true}{black}{none}{0.35cm}
+  }
+  {
+%    \definecolor{fillcolor}{rgb}{#1}
+    \blockmatrix{#2}{#3}{#4}{black}{none}{true}{black}{#1}{0.35cm}
+  }
+  \end{tikzpicture}%this comment is necessary
+}
+
+
+% Diagonal block matrix, but exposes diagonal offset
+% \diagonalblockmatrix[r,g,b]{width}{height}{text}
+\newcommand{\diagonalblockmatrix}[5][none]{
+  \begin{tikzpicture} 
+
+  \ifthenelse{\equal{#1}{none}}
+  {
+    \blockmatrix{#2}{#3}{#4}{black}{none}{true}{black}{none}{#5}
+  }
+  {
+%    \definecolor{fillcolor}{rgb}{#1}
+    \blockmatrix{#2}{#3}{#4}{black}{none}{true}{black}{#1}{#5}
+  }
+
+  \end{tikzpicture}%necessary comment
+}
+
+\newcommand{\valignbox}[1]{
+  \vtop{\null\hbox{#1}}% necessary comment
+}
+
+% a hack so that I don't have to worry about the number of columns or
+% spaces between columns in the tabular environment
+\newenvironment{blockmatrixtabular}
+{% necessary comment
+  \begin{tabular}{
+  @{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l
+  @{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l
+  @{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l@{}l
+  @{}
+  }
+}
+{
+  \end{tabular}%necessary comment
+}
