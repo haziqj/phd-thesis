@@ -56,55 +56,6 @@ This is a slow and difficult undertaking, especially for large sample sizes $n$-
 Furthermore, obtaining standard errors for the parameters are cumbersome, and it is likely that a computationally burdensome bootstrapping approach is needed.
 Lastly, as a comment, Laplace's method only approximates the true marginal likelihood well if the true function is small far away from the mode.
 
-% IT TURNS OUT THE EM IS DIFFICULT! BECAUSE THERE IS NO INHERENT ASSUMPTION OF INDEPENDENCE BETWEEN YSTAR AND W, SO THE DISTRIBUTIONS ARE DIFFICULT TO ASCERTAIN. 
-% IN THE VARIATIONAL ALGORITHM, THIS IS ASSUMED IN A MEAN-FIELD APPROXIMATION
-%\subsection{Expectation-maximisation algorithm}
-%
-%An EM algorithm similar to the one seen in the previous Chapter can be employed, with a slight modification.
-%This time, treat both the latent propensities $\by^*$ and the I-prior random effects $\bw$ as `missing', so the complete data is $\{\by,\by^*,\bw\}$.
-%Now, due to the independence of the observations $i=1,\dots,n$, the complete data log-likelihood is
-%\begin{align*}
-%  \log p&(\by,\by^*,\bw) \\
-%  &= \sum_{i=1}^n \Big\{ 
-%  \log p(y_i|\by^*_{i \bigcdot}) + \log p(\by^*_{i \bigcdot}|\bw_{i \bigcdot}) + \log p(\bw_{i \bigcdot}) 
-%  \Big\} \\
-%  &= - \half \sum_{i=1}^n \ind[y_{ij}^* = \max_k y_{ik}^*] \Bigg[
-%%   \cancel{\half\log\abs{\bPsi}} 
-%    (\by^*_{i \bigcdot} - \balpha - \bw_{i \bigcdot}^\top\bH_\eta)^\top \bPsi (\by^*_{i \bigcdot} - \balpha - \bw_{i \bigcdot}^\top\bH_\eta)
-%   +  \bw_{i \bigcdot}^\top \bPsi^{-1} \bw_{i \bigcdot} \Bigg] \\
-%  &\phantom{==} 
-%%  \cancel{- \half\log\abs{\bPsi}} 
-%   + \const
-%\end{align*}
-%which looks like the complete data log-likelihood seen previously in \cref{eq:QfnEstep}, except that here, together with the $\bw_{i \bigcdot}$'s, the $\by^*_{i \bigcdot}$'s are never observed.
-%
-%For the E-step, it is of interest to determine the posterior density $p(\by^*,\bw|\by) = p(\by^*|\bw,\by)p(\bw|\by) = p(\bw|\by^*,\by)p(\by^*|\by)$.
-%For the latent propensities, the conditional posterior mean of a normally distributed subject to a conical truncation $\cC_j = \{y_{ij}* > y_{ik}^* \,|\, \forall k \neq j \}$, i.e. $\by^*_{i \bigcdot}|\bw_{i \bigcdot},\{y_i=j\} \iid \tN_m(\balpha + \hat\bw_{i \bigcdot}^\top\bH_\eta, \bPsi^{-1},\cC_j)$, for each $i=1,\dots,n$, and $\hat\bw$ is the posterior mean of $\bw$.
-%The distribution for $\bw|\by^*$ is found to be similar to the posterior distribution of $\bw$ in the normal case as in \cref{eq:posteriorw}, except with $\by$ replaced with $\by^*$.
-%To be specific, $\vecc \bw | \by^* \sim \N_{nm}(\vecc \tilde\bw, \tilde \bV_w)$, where
-%\begin{align*}
-%  \vecc \tilde\bw = \tilde\bV_w (\bPsi \otimes \bH_\eta) \vecc(\by^* - \bone_n\balpha^\top)
-%  \hspace{0.5cm}\text{and}\hspace{0.5cm}
-%  \tilde \bV_w^{-1} = (\bPsi \otimes \bH_\eta^2) + (\bPsi^{-1} \otimes \bI_n).
-%\end{align*}
-%To obtain the first and second posterior moments for the I-prior random effects, use the law of total expectations:
-%\begin{gather*}
-%  \E[\vecc \bw|\by]
-%  = \E \big[ \E[\vecc \bw | \by^*] \big| \by \big] =: \hat\bw \\
-%  \text{and}\\
-%  \E[\vecc \bw (\vecc \bw)^\top|\by]
-%  = \E \big[ \E[\vecc \bw (\vecc \bw)^\top| \by^*] \big| \by \big] =: \hat\bW .
-%\end{gather*}
-%The $Q$ function, whose argument is $\theta = \{\balpha,\eta,\bPsi\}$, is then 
-%\begin{align*}
-%  Q(\theta) 
-%  &= \E_{\by^*,\bw}\big[ \log p&(\by,\by^*,\bw) | \by,\theta^{(t)}\big] \\
-%  &= \const - \half 
-%\end{align*}
-%
-
-
-
 \subsection{Variational inference}
 
 We turn to variational inference as a method of estimation. 

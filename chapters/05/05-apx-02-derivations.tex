@@ -181,68 +181,48 @@ and making a first-order approximation $(\E \bA )^{-1} \approx \E [\bA^{-1}]$\fo
   &= \tilde\bV_w \E_{\cZ\backslash\{\bw \}\sim q} \big[(\bPsi \otimes \bH_\eta) \vecc(\by^* - \bone_n\balpha^\top)  \big] \\
   &= \tilde\bV_w (\tilde\bPsi \otimes \tilde\bH_\eta) \vecc(\tilde\by^* - \bone_n\tilde\balpha^\top).
 \end{align*}
+Ideally, we do not want to work with the $nm \times nm$ matrix $\bV_w$, since its inverse is expensive to compute.
+Refer to \cref{sec:complxiprobit} for details.
 
 \footnotetext{
-  \citet{groves1969note} show that $\E [\bA^{-1}] = (\E \bA )^{-1} + \bB$, where $\bB$ is a positive-definite matrix.
+  \citet{groves1969note} show that $\E [\bA^{-1}] = (\E \bA )^{-1} + \bB$, where $\bB$ is a positive-definite matrix. This approximation has been used also by \citet{girolami2006variational} in their work.
 }
 
-Ideally, we do not want to work with the $nm \times nm$ matrix $\bV_w$, since its inverse is expensive to compute.
-We can exploit the Kronekcer product structure to compute the inverse efficiently.
-Perform an orthogonal eigendecomposition of $\bH_\eta$ to obtain $\bH_\eta = \bV\bU\bV^\top$ and of $\bPsi$ to obtain $\bPsi = \bQ\bP\bQ^\top$.
-This process takes $O(n^3 + m^3) \approx O(n^3)$ time if $m\ll n$.
-Then, manipulate $\bV_w^{-1}$ as follows (for clarity, we drop the tildes from the notations):
-\begin{align*}
-  \bV_w^{-1} 
-  &= (\bPsi \otimes \bH_\eta^2) + (\bPsi^{-1} \otimes \bI_n) \\
-  &= (\bQ\bP\bQ^\top \otimes \bV\bU^2\bV^\top) + (\bQ\bP^{-1}\bQ^\top \otimes \bV\bV^\top) \\
-  &= (\bQ \otimes \bV)(\bP \otimes \bU^2)(\bQ^\top \otimes \bV^\top) + 
-  (\bQ \otimes \bV)(\bP^{-1} \otimes \bI_n)(\bQ^\top \otimes \bV^\top) \\
-  &= (\bQ \otimes \bV)(\bP \otimes \bU^2 + \bP^{-1} \otimes \bI_n)(\bQ^\top \otimes \bV^\top) 
-\end{align*}
-Its inverse is 
-\begin{align*}
-  \bV_w 
-  &=  (\bQ^\top \otimes \bV^\top)^{-1}(\bP \otimes \bU^2 + \bP^{-1} \otimes \bI_n)^{-1} (\bQ \otimes \bV)^{-1} \\
-  &= (\bQ \otimes \bV)(\bP \otimes \bU^2 + \bP^{-1} \otimes \bI_n)^{-1}(\bQ^\top \otimes \bV^\top)
-\end{align*}
-which is easy to compute since the middle term is an inverse of diagonal matrices.
-%We can coerce $\tilde q(\bw)$ into a matrix normal distribution.
-%Consider the middle term:
-%\begin{align*}
-%  (\bP \otimes \bU^2 + \bP^{-1} \otimes \bI_n)^{-1}
-%  &= 
-%\end{align*}
-
-In the case of the I-probit model, where $\bPsi = \diag(\sigma_1^{-2},\dots,\sigma_m^{-2})$, then the covariance $\bV_w$ takes a simpler form.
+In the case of the I-probit model, where $\bPsi = \diag(\psi_1,\dots,\psi_m)$, then the covariance matrix takes a simpler form.
 Specifically, it has the block diagonal structure:
 \begin{align*}
-  \bV_w 
-  &= \big(\diag(\tilde\sigma_1^{-2},\dots,\tilde\sigma_m^{-2}) \otimes \tilde\bH_\eta^2 + (\diag(\tilde\sigma_1^{2},\dots,\tilde\sigma_m^{2}) \otimes \bI_n \big)^{-1} \\
+  \tilde\bV_w
+  &= \E \big[\diag(\psi_1,\dots,\psi_m) \otimes \bH_\eta^2 + \diag(\psi_1,\dots,\psi_m) \otimes \bI_n \big]^{-1} \\
   &= \diag\Big(
-  \big(\tilde\sigma_1^{-2}\tilde\bH_\eta^2 + \tilde\sigma_1^2\bI_n\big)^{-1},
+  \E\big( \psi_1\bH_\eta^2 + \psi_1^{-1}\bI_n\big)^{-1},
   \cdots,
-  \big(\tilde\sigma_m^{-2}\tilde\bH_\eta^2 + \tilde\sigma_m^2\bI_n\big)^{-1}
+  \E\big(\psi_m\bH_\eta^2 + \psi_m^{-1}\bI_n\big)^{-1}
+  \Big) \\
+  &\approx \diag\Big(
+  \big( \tilde\psi_1\tilde\bH_\eta^2 + \tilde\psi_1^{-1}\bI_n\big)^{-1},
+  \cdots,
+  \big(\tilde\psi_m\tilde\bH_\eta^2 + \tilde\psi_m^{-1}\bI_n\big)^{-1}
   \Big) \\
   &=: \diag(\tilde\bV_{w_1},\dots,\tilde\bV_{w_m}).
   \end{align*}
-The mean $\tilde\bw$ in matrix form is
+The mean $\vecc \tilde\bw$ is
 \begin{align*}
-  \tilde\bw 
-  &= \tilde\bV_w (\diag(\tilde\sigma_1^{-2},\dots,\tilde\sigma_m^{-2}) \otimes \tilde\bH_\eta) (\tilde\by^* - \bone_n\tilde\balpha^\top) \\
+  \vecc \tilde\bw 
+  &= \tilde\bV_w (\diag(\tilde\psi_1,\dots,\tilde\psi_m) \otimes \tilde\bH_\eta) \vecc(\tilde\by^* - \bone_n\tilde\balpha^\top) \\
   &= \diag(\tilde\bV_{w_1},\dots,\tilde\bV_{w_m})
-  \diag(\tilde\sigma_1^{-2}\tilde\bH_\eta,\dots,\tilde\sigma_m^{-2}\tilde\bH_\eta)  
-  (\tilde\by^* - \bone_n\tilde\balpha^\top) \\
-  &= \diag(\tilde\sigma_1^{-2}\tilde\bV_{w_1}\tilde\bH_\eta,\dots,\tilde\sigma_m^{-2}\tilde\bV_{w_m}\tilde\bH_\eta)  
+  \diag(\tilde\psi_1\tilde\bH_\eta,\dots,\tilde\psi_m\tilde\bH_\eta)  
+  \vecc(\tilde\by^* - \bone_n\tilde\balpha^\top) \\
+  &= \diag(\tilde\psi_1\tilde\bV_{w_1}\tilde\bH_\eta,\dots,\tilde\psi_m\tilde\bV_{w_m}\tilde\bH_\eta)  
   (\tilde\by^* - \bone_n\tilde\balpha^\top) \\
   &= 
   \bordermatrix{
   &\color{gray}\tilde\bw_{\bigcdot 1} 
   &\color{gray}\cdots 
   &\color{gray}\tilde\bw_{\bigcdot m} \cr
-  &\tilde\sigma_1^{-2}\tilde\bV_{w_{1}}\tilde\bH_\eta(\tilde\by^*_{\bigcdot 1} - \tilde\alpha_1\bone_n)      
+  &\tilde\psi_1\tilde\bV_{w_{1}}\tilde\bH_\eta(\tilde\by^*_{\bigcdot 1} - \tilde\alpha_1\bone_n)      
   &\cdots 
-  &\tilde\sigma_m^{-2}\tilde\bV_{w_{m}}\tilde\bH_\eta(\tilde\by^*_{\bigcdot m} - \tilde\alpha_m\bone_n) 
-  }.
+  &\tilde\psi_m\tilde\bV_{w_{m}}\tilde\bH_\eta(\tilde\by^*_{\bigcdot m} - \tilde\alpha_m\bone_n) 
+  }{}^\top.
 \end{align*}
 Therefore, we can consider the distribution of $\bw = (\bw_{\bigcdot 1},\dots,\bw_{\bigcdot m})$ columnwise, and each are normally distributed with mean and variance
 \[
