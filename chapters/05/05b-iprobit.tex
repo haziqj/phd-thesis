@@ -1,4 +1,5 @@
-It is convenient, as we did in the previous subsection, to again think of the responses $y_i \in \{1,\dots,m\} = \cM$ as comprising of a binary vector $(y_{i1},\dots,y_{im})$, with a single `1' at the position corresponding to the value that $y_i$ takes. 
+Let $y_i$, $\by_{i \bigcdot} = (y_{i1},\dots,y_{im})^\top$ and $x_i \in \cX$ be as described in \cref{sec:iprobitnaive}, and additionally, for $i=1,\dots,n$, let $y_i\sim\Cat(p_{i1},\dots,p_{im})$.
+%It is convenient, as we did in the previous section, to again think of the responses $y_i \in \{1,\dots,m\} = \cM$ as comprising of a binary vector $(y_{i1},\dots,y_{im})^\top$, with a single `1' at the position corresponding to the value that $y_i$ takes. 
 %That is, $y_i = (y_{i1}, \dots, y_{im})$ with
 %\[
 %  y_{ik} =
@@ -7,7 +8,8 @@ It is convenient, as we did in the previous subsection, to again think of the re
 %    0 &\text{ if } y_i \neq k.
 %  \end{cases}
 %\]
-In this formulation, each $y_{ij}$ is distributed as Bernoulli with probability $p_{ij}$. Now, assume that, for each $y_i = (y_{i1}, \dots, y_{im})$, there exists corresponding \emph{continuous, underlying, latent variables} $y_{i1}^*, \dots, y_{im}^*$ such that
+In this formulation, each $y_{ij}$ is distributed as Bernoulli with probability $p_{ij}$. 
+Now, assume that, for each $y_{i1}, \dots, y_{im}$, there exists corresponding \emph{continuous, underlying, latent variables} $y_{i1}^*, \dots, y_{im}^*$ such that
 \begin{align}\label{eq:latentmodel}
   y_i =
   \begin{cases}
@@ -32,11 +34,11 @@ Instead of modelling the observed $y_{ij}$'s directly, we model instead the $n$ 
 \end{equation}
 %with $\alpha_j$ being an intercept, and $f_j:\cX \to \bbR$ a regression function belonging to some RKHS/RKKS of functions $\cF$.
 %having the reproducing kernel $h_{\eta_j}: \cX \times \cX \to \bbR$. 
-We can see some semblance of this model with the one in \cref{eq:naiveclassiprior}, and ultimately the aim is to assign I-priors to the regression function of these latent variables, and we will describe this shortly.
-For now, write $\bmu(x_i) \in \bbR^m$ whose $j$'th component is $\alpha + \alpha_j + f_j(x_i)$, and realise that each $(y_{i1}^*, \dots, y_{im}^*)^\top$ has the distribution $\N_m(\bmu(x_i), \bPsi^{-1})$, conditional on the data $x_i$,  the intercepts $\alpha,\alpha_1,\dots,\alpha_m$, the evaluations of the functions at $x_i$ for each class $f_1(x_i), \dots, f_m(x_i)$, and the error covariance matrix $\bPsi^{-1}$.
+We can see some semblance of this model with the one in \cref{eq:naiveclassiprior}, and ultimately the aim is to assign I-priors to the regression function of these latent variables, which we shall describe shortly.
+For now, write $\bmu(x_i) \in \bbR^m$ whose $j$'th component is $\alpha + \alpha_j + f_j(x_i)$, and realise that each $\by_{i \bigcdot} = (y_{i1}^*, \dots, y_{im}^*)^\top$ has the distribution $\N_m(\bmu(x_i), \bPsi^{-1})$, conditional on the data $x_i$,  the intercepts $\alpha,\alpha_1,\dots,\alpha_m$, the evaluations of the functions at $x_i$ for each class $f_1(x_i), \dots, f_m(x_i)$, and the error covariance matrix $\bPsi^{-1}$.
 
 \newcommand{\intset}{\{y_{ij}^* > y_{ik}^* \,|\, \forall k \neq j\}}
-The probability of belonging to class $j$ for observation $i$, i.e. $p_{ij}$ is calculated as
+The probability $p_{ij}$ of observation $i$ belonging to class $j$ is calculated as 
 \begin{align}
   p_{ij} 
   &= \Prob(y_i = j) \nonumber \\
@@ -45,14 +47,14 @@ The probability of belonging to class $j$ for observation $i$, i.e. $p_{ij}$ is 
 %  =: g_{j}^{-1} ( \bmu(x_i) | \bPsi ),
 \end{align}
 where $\phi(\cdot|\mu,\Sigma)$ is the density of the multivariate normal with mean $\mu$ and variance $\Sigma$.
-This is the probability that the normal random variable $\by_i^*$ belongs to the set $\intset$, which are cones in $\bbR^m$.
-Since the union of these cones is the entire $m$-dimensional space of reals, the probabilities add up to one and hence they represent a proper probability mass function of the classes.
+This is the probability that the normal random variable $\by_{i \bigcdot}^*$ belongs to the set $\intset$, which are cones in $\bbR^m$.
+Since the union of these cones is the entire $m$-dimensional space of reals, the probabilities add up to one and hence they represent a proper probability mass function for the classes.
 %Upon knowing all values for $\alpha_j$, $f_j(x_i)$, and $\bSigma$, one is able to calculate $p_{ij}$ through the relationship \eqref{eq:pij}, which we denote as $g^{-1}$.
-While this does not have a closed-form expression and highlights one of the difficulties of working with probit models, the integral is by no means impossible to compute---see \cref{misc:mnint} for a note regarding this matter.
+While this does not have a closed-form expression and highlights one of the difficulties of working with probit models, the integral is by no means impossible to compute---see \cref{sec:mnint} for a note regarding this matter.
 
 
-Now we'll see how to specify an I-prior on the regression problem \cref{eq:multinomial-latent}.
-In the naïve I-prior model, we wrote $f(x_i,j) = \alpha_j + f_j(x_i)$, and specified for $f$ to belong to an ANOVA RKKS with kernel defined in \cref{eq:anovaclass}.
+Now, we'll see how to specify an I-prior on the regression problem \cref{eq:multinomial-latent}.
+In the naïve I-prior model, we wrote $f(x_i,j) = \alpha_j + f_j(x_i)$, and called for $f$ to belong to an ANOVA RKKS with kernel defined in \cref{eq:anovaclass}.
 Instead of doing the same, we take a different approach.
 Treat the $\alpha_j$'s in \cref{eq:multinomial-latent} as intercept parameters to estimate with the additional requirement that $\sum_{j=1}^m \alpha_j = 0$.
 Further, let $\cF$ be a (centred) RKHS/RKKS of functions over $\cX$ with reproducing kernel $h_\eta$.
@@ -60,10 +62,10 @@ Now, consider putting an I-prior on the regression functions $f_j \in \cF$, $j=1
 \[
   f_j(x_i) = f_0(x_i) + \sum_{k=1}^n h_\eta(x_i,x_k)w_{ik}
 \]
-with $\bw_i := (w_{i1},\dots,w_{im})^\top \iid \N(0,\bPsi)$.
+with $\bw_{i \bigcdot} := (w_{i1},\dots,w_{im})^\top \iid \N(0,\bPsi)$.
 This is similar to the naïve I-prior specification \cref{eq:naiveclassiprior}, except that the intercept  have been treated as parameters rather than accounting for them using an RKHS of constant functions.
-In particular, the overall regression relationship still satisfies the ANOVA functional decomposition.
-We find that this method bodes well down the line computationally.
+Importantly, the overall regression relationship still satisfies the ANOVA functional decomposition.
+We find that this approach bodes well down the line computationally.
 
 We call the multinomial probit regression model of \cref{eq:latentmodel} subject to \cref{eq:multinomial-latent} and I-priors on $f_j \in \cF$, the \emph{I-probit model}.
 For completeness, this is stated again: for $i=1,\dots,n$, $y_i = \argmax_{k=1}^m y_{ik}^* \in \{1,\dots,m\}$, where, for $j=1,\dots,m$,
@@ -72,8 +74,8 @@ For completeness, this is stated again: for $i=1,\dots,n$, $y_i = \argmax_{k=1}^
     y_{ij}^* = \alpha + \alpha_j + 
     \greyoverbrace{f_0(x_i) + \sum_{k=1}^n h_\eta(x_i,x_k)w_{ik}}{f_j(x_i)}
     + \epsilon_{ij} \\
-    (\epsilon_{i1}, \dots, \epsilon_{im})^\top  \iid \N_m(\bzero, \bPsi^{-1}) \\
-    (w_{i1},\dots,w_{im})^\top \iid \N_m(\bzero,\bPsi).
+    \bepsilon_{i \bigcdot} := (\epsilon_{i1}, \dots, \epsilon_{im})^\top  \iid \N_m(\bzero, \bPsi^{-1}) \\
+    \bw_{i \bigcdot} := (w_{i1},\dots,w_{im})^\top \iid \N_m(\bzero,\bPsi).
   \end{gathered}
 \end{align}
 The parameters of the I-probit model are denoted by $\theta = \{\alpha_1,\dots,\alpha_m,\eta,\bPsi \}$.
@@ -84,7 +86,7 @@ To establish notation, let
   \item $\bff \in \bbR^{n \times m}$ denote the matrix containing $(i,j)$ entries $f_j(x_i)$, and $\bff_0$ a vector equal to $\big(f_0(x_1),\dots,f_0(x_n) \big)^\top$.  We then have $\bff = \bone_n\bff_0^\top + \bH_\eta\bw \sim \MN_{n,m}(\bone_n\bff_0^\top, \bH_\eta^2, \bPsi)$;
   \item $\balpha = (\alpha + \alpha_1,\dots,\alpha + \alpha_m)^\top\in\bbR^{m}$ be the vector of intercepts;
   \item $\bmu = \bone_n\balpha^\top + \bff$, whose $(i,j)$ entries are $\mu_{j}(x_i) = \alpha + \alpha_j + f_j(x_i)$; and
-  \item $\by^* \in \bbR^{n \times m}$ denote the matrix containing $(i,j)$ entries $y_{ij}^*$. That is, $\by^* = \bmu + \bepsilon$, so $\by^*|\bw \sim \MN_{n,m}(\bmu = \bone_n\balpha^\top + \bH_\eta\bw, \bI_n, \bPsi^{-1})$ and $\vecc \by^* \sim \N_{nm}\big(\vecc (\bone_n\balpha^\top), (\bPsi \otimes \bH_\eta^2) + (\bPsi^{-1} \otimes \bI_n)\big)$. The marginal distribution of $\by^*$ cannot be written as a matrix normal, except when $\bPsi=\bI_m$. 
+  \item $\by^* \in \bbR^{n \times m}$ denote the matrix containing $(i,j)$ entries $y_{ij}^*$. That is, $\by^* = \bmu + \bepsilon$, so $\by^*|\bw \sim \MN_{n,m}(\bmu = \bone_n\balpha^\top + \bH_\eta\bw, \bI_n, \bPsi^{-1})$ and $\vecc \by^* \sim \N_{nm}\big(\vecc (\bone_n\balpha^\top), \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n\big)$. The marginal distribution of $\by^*$ cannot be written as a matrix normal, except when $\bPsi=\bI_m$. 
 \end{itemize}
 
 Before proceeding with estimating the I-probit model \cref{eq:iprobitmod}, we lay out several standing assumptions:
@@ -97,5 +99,5 @@ Before proceeding with estimating the I-probit model \cref{eq:iprobitmod}, we la
 Assumption \ref{ass:A4} is a requirement for identifiability.
 Assumption \ref{ass:A5} is motivated by a similar argument to assumption \ref{ass:A2} in the normal I-prior model.
 As for assumption \ref{ass:A6}, we do not consider estimation of the error precision in this thesis mainly due to time limitations. 
-More on this in \hltodo{Section X}.
+More on this in \cref{sec:difficultPsi}.
 

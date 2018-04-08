@@ -115,7 +115,7 @@ Consider the case where $y_i$ takes one particular value $j \in \{1,\dots,m\}$. 
 where $\tilde\bmu_i = \E\balpha + (\E\bH_\eta \E\bw)_i$, and expectations are taken under the optimal mean-field distribution $\tilde q$. 
 The distribution $q(\by_i^*)$ is a truncated $m$-variate normal distribution such that the $j$'th component is always largest. 
 Unfortunately, the expectation of this distribution cannot be found in closed-form, and must be approximated by techniques such as Monte Carlo integration.
-If, however, the independent I-probit model is used and $\tilde\bPsi$ is diagonal, then \hltodo{Lemma X} provides a simplification.
+If, however, the independent I-probit model is used and $\tilde\bPsi$ is diagonal, then \cref{thm:contruncn} provides a simplification.
 
 \begin{remark}
   In ($\star$)  above,  we needn't consider the second order terms in the expectations because they do not involve $\by^*$ and can be absorbed into the constant.
@@ -341,7 +341,7 @@ We use a Metropolis random-walk algorithm to obtain these quantities, as detaile
 %  (\bI_m\otimes\bH_\eta)\bV_w(\bI_m\otimes\bH_\eta) + \vecc \bH_\eta\wtilde (\vecc \bH_\eta\wtilde)^\top  
 %\end{align*}
 
-Now consider the case where $\eta = \{\lambda_1,\dots,\lambda_p \}$ (RKHS scale parameters only), and the scenario described in the exponential family EM algorithm of \hltodo{Section 4.3.3} applies.
+Now consider the case where $\eta = \{\lambda_1,\dots,\lambda_p \}$ (RKHS scale parameters only), and the scenario described in the exponential family EM algorithm of \cref{sec:expfamEM} applies.
 In particular, for $k=1,\dots,p$, we can decompose the kernel matrix as $\bH_\eta = \lambda_k \bR_k + \bS_k$ and its square as $\bH_\eta^2 = \lambda_k^2 \bR_k^2 + \lambda_k \bU_k + \bS_k^2$.
 Then, for $j = 1,\dots,m$, assuming each of the $q(\lambda_k)$ densities are independent of each other, we find that
 \begin{align*}
@@ -374,8 +374,8 @@ Then, for $j = 1,\dots,m$, assuming each of the $q(\lambda_k)$ densities are ind
 \end{align*}
 By completing the squares, we recognise this is as the kernel of a univariate normal density. 
 Specifically, $\lambda_k \sim \N(d_k/c_k,1/c_k)$.
-The quantity $\tilde\bH_\eta$ can be obtained by substituting $\lambda_k \mapsto \E_{\lambda_k\sim q}[\lambda_k]$ in the \hltodo{expression XXX}.
-However, in the calculation of $\tilde\bH_\eta^2$, we must replace $\lambda_k^2 \mapsto \E_{\lambda_k\sim q}[\lambda_k]^2 +  \Var_{\lambda_k\sim q}[\lambda_k]$ in all occurrences of square terms.
+The quantity $\tilde\bH_\eta$ can be obtained by substituting $\lambda_k \mapsto \E_{\lambda_k\sim q}[\lambda_k]$ in the expression $\bH_\eta = \lambda_k \bR_k + \bS_k$.
+However, in the calculation of $\tilde\bH_\eta^2$ using $\lambda_k^2 \bR_k^2 + \lambda_k \bU_k + \bS_k^2$, we must replace occurrences of  $\lambda_k^2$ with $\E_{\lambda_k\sim q}[\lambda_k]^2 +  \Var_{\lambda_k\sim q}[\lambda_k]$.
 This can be cumbersome, so if felt necessary, use the approximation $\lambda_k^2 \mapsto \E_{\lambda_k\sim q}[\lambda_k]^2$ instead.
 
 \begin{example}
@@ -504,12 +504,12 @@ To calculate $\E\norm{y_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 = \E \sum_{i=1}^n
 This, in itself, presents a challenge to compute analytically, because it requires, among other things, the second moments $\E y_{ij}^{*2}$ and $\E [\bw_{\bigcdot j}^\top\bh_\eta(x_i)\bh_\eta(x_i)^\top \bw_{\bigcdot j}]$.
 Although not entirely accurate, it is simpler to use the approximation
 \[
-  \E\norm{y_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 \approx 
-  \norm{\tilde y_{\bigcdot j}^* -  \tilde \bmu_{\bigcdot j}}^2.
+  \E\norm{\by_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 \approx 
+  \norm{\tilde \by_{\bigcdot j}^* -  \tilde \bmu_{\bigcdot j}}^2.
 \]
 % from the distribution of $\by_{i \bigcdot} \sim \tN(\bmu_{i \cdot}, \tilde\bPsi^{-1}, \cC_{y_i})$.
 %Because of the independence structure, these can be computed componentwise.
-(see note on \hltodo{page}).
+(see note \labelcref{note2} on page \pageref{note2}).
 Also, we have $\bw_{\bigcdot j} \sim \N_n(\tilde\bw_{\bigcdot j}, \tilde\bV_{w_j})$, and so $  \E\norm{\bw_{\bigcdot j}}^2 = \tr(\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot j}^\top)$.
 
 \subsection{Derivation of \texorpdfstring{$\tilde q(\balpha)$}{$\tilde q(\alpha)$}}

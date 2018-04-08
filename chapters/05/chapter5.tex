@@ -17,116 +17,132 @@
 \begin{document}
 \hChapterStandalone[5]{I-priors for categorical responses}
 
-In a regression setting, consider polytomous response variables $y_1,\dots,y_n$, where each $y_i$ takes on exactly one of the values $\{1,\dots,m\}$ from a set of $m$ possible choices.
+In a regression setting such as \cref{eq:model1}, consider polytomous response variables $y_1,\dots,y_n$, where each $y_i$ takes on exactly one of the values from the set of $m$ possible choices $\cM = \{1,\dots,m\}$.
 Modelling categorical response variables is of profound interest in statistics, econometrics and machine learning, with applications aplenty. 
 In the social sciences, categorical variables often arise from survey responses, and one may be interested in studying correlations between  explanatory variables and the categorical response of interest.
 Economists are often interested in discrete choice models to explain and predict choices between several alternatives, such as consumer choice of goods or modes of transport.
 In this age of big data, machine learning algorithms are used for classification of observations based on what is usually a large set of variables or features.
 
+The normality assumption \cref{eq:model1ass} is not entirely appropriate anymore.
 As an extension to the I-prior methodology, we propose a flexible modelling framework suitable for regression of categorical response variables.
+In the spirit of generalised linear models \citep{mccullagh1989}, we relate class probabilities of the observations to a normal I-prior regression model via a link function.
+Perhaps though, it is more intuitive to view it as machine learners do: since the regression function is ranged on the entire real line, it is necessary to ``squash'' it through some sigmoid function to conform it to the interval $[0,1]$ suitable for probability ranges.
 
-In the spirit of generalised linear models \citep{mccullagh1989}, we relate the class probabilities of the observations to the I-prior regression model via a link function.
-Perhaps though, it is more intuitive to view it as machine learners do: Since the regression function is ranged on the entire real line, it is necessary to ``squash'' it through some sigmoid function to conform it to the interval $[0,1]$ suitable for probability measures.
-As in GLMs, the $y_i$'s are assumed to follow an\hltodo[Exponential family for $y$ not really necessary, it just follows nicely from the latent variable motivation.]{exponential family distribution}, and in this case, the categorical distribution.
-We denote this by
+Expanding on this idea further, assume that the $y_i$'s follow a categorical distribution, denoted by
 \[
   y_i \sim \Cat(p_{i1},\dots,p_{im}),
 \]
 with the class probabilities satisfying $p_{ij} \geq 0, \forall j=1,\dots,m$ and $\sum_{j=1}^m p_{ij} = 1$. 
-The probability mass function (PMF) of $y_i$ is given by
-\begin{align}\label{eq:catdist}
+The probability mass function (pmf) of $y_i$ is given by
+\begin{align*}%\label{eq:catdist}
   p(y_i) = p_{i1}^{[y_i = 1]} \cdots p_{im}^{[y_i = m]}
-\end{align}
+\end{align*}
 where the notation $[\cdot]$ refers to the Iverson bracket\footnote{$[A]$ returns 1 if the proposition $A$ is true, and 0 otherwise. The Iverson bracket is a generalisation of the Kronecker delta.}. 
 The dependence of the class probabilities on the covariates is specified through the relationship
 \[
-  g(p_{ij}) = \big(\alpha_j + f_j(x_i)\big)_{j=1}^m
+  g(p_{i1},\dots,p_{im}) = \big(\alpha_1 + f_1(x_i), \dots, \alpha_m + f_m(x_i)\big)
 \]
-where $g:[0,1]\to\bbR^m$ is some specified link function.
-As we will see later, the normality assumption of the errors naturally implies a \emph{probit} link function, i.e., $g$ is the inverse cumulative distribution function (CDF) of a standard normal distribution (or more precisely, a function that \emph{involves} the standard normal CDF).
-Normality is also a required assumption for I-priors to be specified on the regression functions.
-We call this method of probit regression using I-priors the \emph{I-probit} regression model.
+where $g:[0,1]^m\to\bbR^m$ is some specified link function.
+As we will see later, a normal regression model as in \cref{eq:model1} subject to \cref{eq:model1ass} naturally implies a \emph{probit} link function.
+%, that is, $g$ is the inverse cumulative distribution function (cdf) of a standard normal distribution (or more precisely, a function that \emph{involves} the standard normal cdf).
+With an I-prior assumed on the $f_j$'s, we call this method of probit regression using I-priors the \emph{I-probit} regression model.
 
-Note that the probabilities are modelled per class $j\in\{1,\dots,m\}$ by individual regression curves $f_j$, and in the most general setting, $m$ sets of intercepts $\alpha_j$ and kernel hyperparameters $\eta_j$ must be estimated.
-The dependence of these $m$ curves are specified through covariances $\sigma_{jk} := \Cov[\epsilon_{ij}, \epsilon_{ik}]$, 
-%\[
-%  \Corr(\epsilon_{ij},\epsilon_{ik}) = \frac{\sigma_{jk}}{\sigma_j\sigma_k},
-%\]
-%where $\sigma_{jk} = \Cov[\epsilon_{ij}, \epsilon_{ik}]$, 
-for each $j,k\in\{1,\dots,m\}$ and $j\neq k$.
-While it may be of interest to estimate these covariances, this paper considers cases where the regression functions are class independent, i.e. $\sigma_{jk} = 0,\forall j \neq k$.
-This violates the independence of irrelevant alternatives (IIA) assumption (see Section \ref{sec:iia} for details) crucial in choice models, but not so much necessary for classification when the alternatives are distinctively different.
+%Implicitly in the above, there are $m$ regression curves which model the $m$ class probabilities.
+%Often times, it is of interest that the model captures the correlations between choices, which are vital in choice models.
+%Disregarding the correlations violates the independence of irrelevant alternatives (IIA) assumption, but this is usually fine for classification tasks where the alternatives are assumed not to be correlated.
 
+Due to the nature of the model, unfortunately, the posterior distribution of the regression functions cannot be found in closed form.
+In particular, marginalising the I-prior from the joint likelihood involves a high-dimensional intractable integral.
+We explore a fully Bayesian approach to estimate I-probit models using \emph{variational inference}.
+The main idea is to replace the difficult posterior distribution with an approximation that is tractable.
+Working in a Bayesian setting together with variational inference allows us to estimate the model much faster than traditional MCMC sampling methods, yet provides us with the conveniences that come with Bayesian machinery.
+For example, inferences around log-odds is usually cumbersome for probit models, but a credibility interval can easily be obtained by resampling methods from the relevant posteriors, which are typically made up of densities which are familiar and readily available in software.
 
+By choosing appropriate RKHSs/RKKSs for the regression functions, we are able to fit a multitude of binary and multinomial models, including multilevel or random-effects models, linear and non-linear classification models, and even spatio-temporal models.
+Examples of these models applied to real-world data is shown in  \cref{sec:iprobiteg}.
+We find that the many advantages of the normal I-prior methodology  transfer over quite well to the I-probit model for binary and multinomial regression.
 
-The many advantages of the I-prior methodology of \cite{jamil2017} transfer over quite well to the I-probit model for classification and inference.
-In particular, by choosing appropriate RKHSs for the regression functions, we are able to fit a multitude of binary and multinomial models, including multilevel or random-effects models, linear and non-linear classification models, and even spatio-temporal models.
-Examples of these models applied to real-world data is shown in Section \ref{sec:examples}.
-Working in a Bayesian setting together with variational inference allows us to estimate the model much faster than traditional MCMC sampling methods, yet provides us with the conveniences that come with posterior estimates.
-For example, inferences around log-odds is usually cumbersome for probit models, but a credibility interval can easily be obtained by resampling methods from the relevant posteriors, which are normally exponential family distributions in the I-probit model.
+\section{A naïve model}\label{sec:iprobitnaive}
+\input{05a-naive}
 
+\section{A latent variable motivation: the I-probit model}
+\input{05b-iprobit}
 
-\newpage
-%\section{A naïve model}
-%\input{05a-naive}
-%
-%\section{A latent variable motivation: the I-probit model}
-%\input{05b-iprobit}
-%
-%\section{Identifiability and IIA}\label{sec:iia}
-%\input{05c-iia}
-%
-%\section{Estimation}
-%\input{05d-iprobit_est}
-%
-%\section{A variational algorithm}\label{sec:iprobitvar}
-%\input{05e-variational}
-%
-%\section{Post-estimation}
-%\input{05f-post_est}
-%
-%\section{Computational consideration}
-%\input{05g-iprobit_comp_cons}
-%
-%\section{Examples}
-%
-%\section{Discussion}
-%
-%I-prior extended to non-normal data. 
-%Naive works good, but can be better.
-%Simply transform the normal model through a squashing function.
-%All the nice things about I-prior can be applied here too.
-%Probit model variety of binary and multinomial regression models.
-%
-%Laplace slow, unreliable modes. MCMC also slow. Variational has similarity to EM, but advantageous: easier to calculate posterior s.d., ability to do inference on transformed parameters.
-%
-%As with the normal model, storage and time requirements slow.
-%again, look to machine learning.
-%improvements in variational algorithm.
-%
-%Extend to include class-specific covariates.
-%
-%improvement in calculating the normal integral?
-%Need to see timing where takes longest
-%
-%In terms of similarity to other works, the generalised additive models (GAMs) of \cite{hastie1986} comes close.
-%The setup of GAMs is near identical to the I-probit model, although estimation is done differently. 
-%GAMs do not assume smooth functions from any RKHS, but instead estimates the $f$'s using a local scoring method or a local likelihood method.
-%Kernel methods for classification are extremely popular in computer science and machine learning; examples include support vector machines \citep{scholkopf2002learning} and Gaussian process classification \citep{rasmussen2006gaussian}, with the latter being more closely related to the I-probit method.
-%I-priors differ from Gaussian process priors in the specification of the covariance kernel.
-%Gaussian process classification typically uses the logistic link function (or squashing function, to use machine learning nomenclature), and estimation is done most commonly using the Laplace approximation, but other methods such as expectation propagation \citep{minka2001expectation} and MCMC \citep{neal1999} have been explored as well.
-%Variational inference for Gaussian process probit models have been studied by \cite{girolami2006variational}, with their work providing a close reference to the variational algorithm employed by us.
+\section{Identifiability and IIA}\label{sec:iia}
+\input{05c-iia}
+
+\section{Estimation}
+\input{05d-iprobit_est}
+
+\section{A variational algorithm}\label{sec:iprobitvar}
+\input{05e-variational}
+
+\section{Post-estimation}
+\input{05f-post_est}
+
+\section{Computational consideration}
+\input{05g-iprobit_comp_cons}
+
+\section{Examples}
+\label{sec:iprobiteg}
+
+\section{Conclusion}
+
+This work presents an extension of the normal I-prior methodology to fit categorical response models using probit link functions---a methodology we call the I-probit.
+The main motivation behind this work is to overcome the drawbacks of modelling probabilities using the normal I-prior model.
+We assumed latent variables that represent `class propensities' exist, modelled these using a normal I-prior, and simply transformed them via a probit link function.
+In this way, all of the advantages of the I-prior methodology seen for the normal model are preserved for binary and multinomial regression as well.
+
+The core of this work explores ways in which to overcome the intractable integral presented by the I-probit model in \cref{eq:intractablelikelihood}.
+Techniques such as quadrature methods, Laplace approximation and MCMC tend to fail, or are unsatisfactorily slow to accomplish.
+The main reason for this is the dimension of this integral, which is $nm$, and thus for large sample sizes and/or number of classes, is unfeasible with such methods.
+We turned to variational inference in the face of an intractable posterior density that hampers an EM algorithm, and the result is a sequential updating scheme, similar in time and storage requirements to the EM algorithm.
+
+In terms of similarity to other works, the generalised additive models (GAMs) of \citet{hastie1986} comes close.
+The setup of GAMs is near identical to the I-probit model, although estimation is done differently. 
+GAMs do not assume smooth functions from any RKHS, but instead estimates the $f$'s using a local scoring method or a local likelihood method.
+Kernel methods for classification are extremely popular in computer science and machine learning; examples include support vector machines \citep{scholkopf2002learning} and Gaussian process classification \citep{rasmussen2006gaussian}, with the latter being more closely related to the I-probit method.
+However, Gaussian process classification typically uses the logistic sigmoid function, and estimation most commonly performed using Laplace approximation, but other methods such as expectation propagation \citep{minka2001expectation} and MCMC \citep{neal1999} have been explored as well.
+Variational inference for Gaussian process probit models have been studied by \citet{girolami2006variational}, with their work providing a close reference to the variational algorithm employed by us.
+
+Suggestions for future work include:
+\begin{enumerate}
+  \item \textbf{Estimation of $\bPsi$}. 
+  A limitation we had to face in this work was to treat $\bPsi$ as fixed.
+  This limitation was in part due to the non-conjugate nature of the variational density for $\bPsi$.
+  We believe the variational Bayes EM algorithm, which estimates maximum a posteriori values for the parameters, could alleviate this issue.
+  This would bring the estimation procedure on par with the frequentist objective of maximum likelihood via the EM algorithm, albeit with the use of approximate posterior densities (see \cref{sec:varEM,sec:vbemiprobit} for further discussions).
+  
+  \item \textbf{Inclusion of class-specific covariates}. 
+  Throughout the chapter, we assumed that covariates were unit-specific, rather than class-specific. 
+  One such example is modelling the choice of travel mode between two destinations (car, coach, train or aeroplane) as a function of travel time. 
+  Clearly, travel time depends on the mode of transport. 
+  This would require a careful rethink of the appropriate RKHS/RKKS to which the regression function belongs: the regression on the latent propensities could be extended as such:
+  \[
+    y_{ij}^* = \alpha_j + f_j(x_i) + e(z_{ij})
+  \]
+  and $f_j\in \cF_\cX$, the RKHS with kernel $h:(\cX \times \cM)^2\to\bbR$ defined by $\delta_{jj'}h(x,x')$, and $e \in \cF_\cZ$, the RKHS of functions of the form $e:\{z_{ij}|i=1,\dots,n, \ j=1,\dots,m \}\to\bbR$.
+  An I-prior would then be applied as usual, but the implications on the estimation would need to be considered as well.
+  
+  \item \textbf{Improving computational efficiency}. 
+  The $O(n^3m)$ time requirement for estimating I-probit models hinder its use towards large-data applications.
+  In a limited study, we did not obtain reliable improvements using low-rank approximations of the kernel matrix such as the Nyström method.
+  The key to improving computational efficiency could lie in sparse variational methods, a suggestion that was made to improve normal I-prior models as well.
+  \hltodo[Perhaps plot time vs $n$, for varying $m$, using simulated data in \pkg{iprobit}.]{}
+  
+%  \item \textbf{Efficient calculation of normal integrals}.
+\end{enumerate}
 
 
 \section{Miscellanea}
 \input{05-misc}
 
 \ifstandalone
-%  \section*{Appendix}
-%  \input{05-apx-01-distributions}
-%  \input{05-apx-01-proofs}
-%  \input{05-apx-02-derivations}
-%  \input{05-apx-03-derivation2}
+  \section*{Appendix}
+  \input{05-apx-01-distributions}
+  \input{05-apx-01-proofs}
+  \input{05-apx-02-derivations}
+  \input{05-apx-03-derivation2}
 \fi
 
 \hClosingStuffStandalone

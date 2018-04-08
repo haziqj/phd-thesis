@@ -197,6 +197,7 @@ On the bright side, once the kernel matrices are stored in memory, the \pkg{ipri
 A practical situation where this might be useful is when we would like to repeat the EM at various initial values.
 
 \subsection{The exponential family EM algorithm}
+\label{sec:expfamEM}
 
 In the original EM paper by \citet{dempster1977maximum}, the EM algorithm was demonstrated to be easily administered to complete data likelihoods belonging to the exponential family for which the maximum likelihood estimates are easily computed.
 If this is the case, then the M-step simply involves replacing the unknown sufficient statistics in the ML estimates with their \emph{conditional expectations} (see \cref{apx:expem} for details).

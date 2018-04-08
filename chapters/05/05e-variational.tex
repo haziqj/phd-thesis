@@ -161,7 +161,7 @@ where $p(\eta)$ is an appropriate prior density for $\eta$.
 Generally, samples $\eta^{(1)},\dots,\eta^{(T)}$ from $\tilde q(\eta)$ may be obtained using a Metropolis algorithm, so that quantities such as $\tilde\bH_{\eta} = \E_{\eta \sim q} \bH_{\eta}$ and the like may be approximated using $\frac{1}{T}\sum_{t=1}^T \bH_{\eta^{(t)}}$.
 Details of the Metropolis sampler is available in the appendix.
 
-When only RKHS scale parameters are involved, then the distribution $q$ can be found in closed-form, much like in the exponential family EM algorithm described in \hltodo{Section 4.3.3}.
+When only RKHS scale parameters are involved, then the distribution $q$ can be found in closed-form, much like in the exponential family EM algorithm described in \cref{sec:expfamEM}.
 Under the same setting as in that subsection, assume that only $\eta = \{\lambda_1,\dots,\lambda_p\}$ need be estimated, and for each $k=1,\dots,p$, we can decompose the kernel matrix as $\bH_\eta = \lambda_k \bR_k + \bS_k$ and its square as $\bH_\eta^2 = \lambda_k^2 \bR_k^2 + \lambda_k \bU_k + \bS_k^2$.
 Additionally, we impose a further mean-field restriction on $q(\eta)$, i.e., $q(\eta) = \prod_{k=1}^p p(\lambda_k)$.
 Then, by using independent and identical normal priors on the $\lambda_k$'s, such as the one listed at the beginning of this section, we find that $q(\lambda_k)$ is the density of a normal distribution with mean $d_kc_k^{-1}$ and variance $c_k^{-1}$, where

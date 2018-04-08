@@ -202,6 +202,7 @@ The VB-EM can also be seen as obtaining (approximate) maximum a posteriori estim
 
 
 \subsection{The EM algorithm for I-probit models is intractable---variational Bayes EM?}
+\label{sec:vbemiprobit}
 
 % IT TURNS OUT THE EM IS DIFFICULT! BECAUSE THERE IS NO INHERENT ASSUMPTION OF INDEPENDENCE BETWEEN YSTAR AND W, SO THE DISTRIBUTIONS ARE DIFFICULT TO ASCERTAIN. 
 % IN THE VARIATIONAL ALGORITHM, THIS IS ASSUMED IN A MEAN-FIELD APPROXIMATION
@@ -244,7 +245,7 @@ A similar problem has been faced by \citet{chan1997maximum}, who analysed binary
 The authors ultimately resort to Monte Carlo sampling within an EM framework to overcome the difficult distributions of interest.
 
 Suppose that, instead of the true posterior distribution $p(\by^*,\bw|\by)$ being used, a mean-field variational approximation $q(\by^*,\bw) = q(\by^*)q(\bw)$ is used instead.
-As we know from \hltodo{Section X}, $q(\by^*)$ is a truncated multivariate normal distribution, and $q(\bw)$ is multivariate normal, whose means and second moments can be computed with some  effort.
+As we know from \cref{sec:iprobitvar}, $q(\by^*)$ is a truncated multivariate normal distribution, and $q(\bw)$ is multivariate normal, whose means and second moments can be computed with some  effort.
 Let $\bar\by^* = \by^* - \bone_n\balpha^\top$.
 The (approximate) E-step then entails computing
 \begin{align*}
@@ -257,5 +258,5 @@ The (approximate) E-step then entails computing
 \end{align*}
 In the M-step, this is maximised with respect to $\theta$.
 This is the VB-EM algorithm described in \cref{sec:varEM}.
-As per the discussion in \hltodo{Section X}, this alleviates the problem of non-conjugacy of the complete conditional for $\bPsi$.
+As per the discussion in \cref{sec:difficultPsi}, this alleviates the problem of non-conjugacy of the complete conditional for $\bPsi$.
 One downside to VB-EM is that it is not entirely certain how one could obtain standard errors for the parameters, other than by bootstrapping, which for the I-probit model, is likely to be computationally intensive.

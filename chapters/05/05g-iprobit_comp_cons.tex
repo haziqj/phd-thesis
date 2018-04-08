@@ -2,7 +2,7 @@ Computational challenges for the I-probit model stems from two sources: 1) calcu
 We also discuss issues faced with the estimation of the error precision $\bPsi$, and suggest ways to overcome this for future work.
 
 \subsection{Efficient computation of class probabilities}
-\label{misc:mnint}
+\label{sec:mnint}
 
 %\hltodo{computationally burdensome using quadrature methods for m > 4. Realise that the dimension of the integral is m-1. describe two methods: 1) frequency sampler 2) efficient frequency sampler. NOTE THIS PART IS DIFFERENT FROM SIMULATING FROM TRUNCATED NORMAL---THIS ONLY APPEARS IN BAYESIAN METHODS SUCH AS GIBBS, VI, etc.}
 
@@ -173,6 +173,7 @@ Storage requirements are still $O(n^2)$, and methods described in the previous c
 Prediction of a new data point is $O(n^2m)$, because there are essentially $m$ `separate' normal I-prior regressions, and each take $O(n^2)$ to evaluate.
 
 \subsection{Difficulties faced with estimating \texorpdfstring{$\bPsi$}{$\Psi$}}
+\label{sec:difficultPsi}
 
 Suppose that, alongside the $\by^*$, $\bw$, $\eta$ and $\balpha$ in the CAVI algorithm described in \cref{sec:iprobitvar}, $\bPsi$ is a free parameter to be estimated.
 If so, we find that the variational density $q$ for $\bPsi$ satisfies
@@ -202,8 +203,8 @@ is maximised, for $j=1,\dots,m$, at
   \hat\psi_j = \sqrt{\frac{ \E\norm{\by_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 }{\E\norm{\bw_{\bigcdot j}}^2}}.
 \]
 Perhaps, if the posterior mean is close to the mode, and not withstanding the involved calculations of the require second moments, then this quantity can be used instead in the CAVI algorithm.
-This ties in well with a \emph{variational Bayes EM algorithm}, which is an alternative to a fully Bayesian treatment of variational inference.
-This is discussed in \hltodo{Section X}.
+This ties with the idea of \emph{variational Bayes EM algorithm}, which is an alternative to a fully Bayesian treatment of variational inference.
+This is discussed in \cref{sec:varEM,sec:vbemiprobit}, but unfortunately, time constraints had made it impossible for us to examine this within the scope of this thesis.
 
 
 

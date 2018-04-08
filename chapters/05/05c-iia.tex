@@ -43,10 +43,6 @@ In the I-probit model, or rather, in probit models in general, choice dependency
 Specifically, the off-diagonal elements $\bPsi_{jk}$ capture the correlation between alternatives $j$ and $k$.
 Allowing all $m(m+1)/2$ covariance elements of $\bPsi$ to be non-zero leads to the \emph{full I-probit model}, and would not assume an IIA position.
 
-
-
-
-
 \begin{figure}[hbt]
 \centering\hspace{-13pt}
 \begin{blockmatrixtabular}
@@ -64,13 +60,13 @@ Allowing all $m(m+1)/2$ covariance elements of $\bPsi$ to be non-zero leads to t
 \fblockmatrix[colblu!46]{0.55in}{0.55in}{\footnotesize $\bV[1,m]$}\\
 \mblockmatrix{0in}{0.55in}{\footnotesize $j=2$}&
 \fblockmatrix[colblu!22]{0.55in}{0.55in}{\footnotesize $\bV[2,1]$}& 
-\fblockmatrix[colblu!33]{0.55in}{0.55in}{\footnotesize $\bV[2,2]$}&
+\fblockmatrix[colblu!20]{0.55in}{0.55in}{\footnotesize $\bV[2,2]$}&
 \fblockmatrix[colblu!42]{0.55in}{0.55in}{\footnotesize $\cdots$}& 
 \fblockmatrix[colblu!40]{0.55in}{0.55in}{\footnotesize $\bV[2,m]$}\\
 \mblockmatrix{0in}{0.55in}{\hspace{10pt}$\vdots$}&
 \fblockmatrix[colblu!24]{0.55in}{0.55in}{\footnotesize $\vdots$}& 
 \fblockmatrix[colblu!42]{0.55in}{0.55in}{\footnotesize $\vdots$}&
-\fblockmatrix[colblu!20]{0.55in}{0.55in}{\footnotesize $\ddots$}& 
+\fblockmatrix[colblu!33]{0.55in}{0.55in}{\footnotesize $\ddots$}& 
 \fblockmatrix[colblu!30]{0.55in}{0.55in}{\footnotesize $\vdots$}\\
 \mblockmatrix{0in}{0.55in}{\footnotesize $j=m$}&
 \fblockmatrix[colblu!46]{0.55in}{0.55in}{\footnotesize $\bV[m,1]$}& 
@@ -94,13 +90,13 @@ Allowing all $m(m+1)/2$ covariance elements of $\bPsi$ to be non-zero leads to t
 \fblockmatrix[none]{0.55in}{0.55in}{}\\
 %\mblockmatrix{0in}{0.55in}{\footnotesize $j=2$}&
 \fblockmatrix[none]{0.55in}{0.55in}{}& 
-\fblockmatrix[colblu!33]{0.55in}{0.55in}{\footnotesize $\bV[2,2]$}&
+\fblockmatrix[colblu!20]{0.55in}{0.55in}{\footnotesize $\bV[2,2]$}&
 \fblockmatrix[none]{0.55in}{0.55in}{}& 
 \fblockmatrix[none]{0.55in}{0.55in}{}\\
 %\mblockmatrix{0in}{0.55in}{\hspace{10pt}$\vdots$}&
 \fblockmatrix[none]{0.55in}{0.55in}{}& 
 \fblockmatrix[none]{0.55in}{0.55in}{}&
-\fblockmatrix[colblu!20]{0.55in}{0.55in}{\footnotesize $\ddots$}& 
+\fblockmatrix[colblu!33]{0.55in}{0.55in}{\footnotesize $\ddots$}& 
 \fblockmatrix[none]{0.55in}{0.55in}{}\\
 %\mblockmatrix{0in}{0.55in}{\footnotesize $j=m$}&
 \fblockmatrix[none]{0.55in}{0.55in}{}& 
@@ -110,17 +106,13 @@ Allowing all $m(m+1)/2$ covariance elements of $\bPsi$ to be non-zero leads to t
 \end{blockmatrixtabular}
 }&
 \end{blockmatrixtabular}\\ 
-\caption{Covariance structure of the full I-probit model (left) and the independent I-probit model (right). The full model has  $m^2$ blocks of $n \times n$ symmetric matrices, and the blocks themselves are arranged symmetrically about the diagonal. The independent model, on the other hand, has a block diagonal structure.}
+\caption[Illustration of the covariance structure of the full I-probit model and the independent I-probit model.]{Illustration of the covariance structure of the full I-probit model (left) and the independent I-probit model (right). The full model has  $m^2$ blocks of $n \times n$ symmetric matrices, and the blocks themselves are arranged symmetrically about the diagonal. The independent model, on the other hand, has a block diagonal structure, and its sparsity induces simpler computational methods for estimation.}
 \label{fig:iprobcovstr}
 \end{figure}
 
 %most economics articles prefer to estimate scaled probit models. in fact, it is an advantage of it! but do we care about the scale? maybe care more about IIA, which can't do without scales i suppose.
-%We can see that if $\bPsi = \bI_m$, $\bV_f = \diag(\bH_{\eta_1},\dots,\bH_{\eta_m})$ as is the case in the normalised I-probit model. While this previously allowed for calculation of the inverse $\bV_f^{-1}$ in $O(mn^3)$ time, unfortunately the fully scaled I-probit model takes $O(m^3n^3)$ time as $\bV_f$ is dense.
-%Dive in with the restriction that scales are set to 1, for no other reason than to make life simpler... cite previous work in machine learning where this is done. 
-%In the name of simplicity, we restrict all of the error variances $\sigma_j=1$, and independence of errors within each class, i.e. $\Cov[\epsilon_{ij},\epsilon_{ik}] = 0$ for each $j,k \in \{1,\dots,m\}$ and $j\neq k$.
-%The main reason for doing this is to obtain a more tractable result with the normal distribution, i.e., the probablity distribution function (PDF) of the joint distribution of $\epsilon_i = (\epsilon_{i1},\dots,\epsilon_{im})^\top$ is now a product of $m$ univariate standard normal PDFs.
 
-While it is an advantage to be able to model the correlations across choices (unlike in logistic models), there are applications where the IIA assumption would not adversely affect the analysis, such as when all the choices are mutually exclusive and exhaustive.
+While it is an advantage to be able to model the correlations across choices (unlike in logistic models), there are applications where the IIA assumption would not adversely affect the analysis, such as classification tasks.
 Some analyses might also be indifferent as to whether or not choice dependency exists.
 In these situations, it would be beneficial, algorithmically speaking, to reduce the I-probit model to a simpler version by assuming $\bPsi = \diag(\psi_1,\dots,\psi_m)$, which would trigger the IIA assumption in the I-probit model.
 We refer to this model as the \emph{independent I-probit model}.

@@ -7,19 +7,16 @@ The log likelihood function $L(\cdot)$ for $\theta$ using all $n$ observations $
   L(\theta) 
   &= \log \int p(\by | \bw, \theta) \, p(\bw|\theta) \dint \bw \nonumber \\
   &= \log \int \prod_{i=1}^n \prod_{j=1}^m \Big( g_j^{-1}\big(\alpha_k + 
-  \greyoverbrace{f_k(x_i)}{\hidewidth\sum_{i'=1}^n h_\eta(x_i,x_{i'})w_{i'j}\hidewidth}
+  \greyoverbrace{f_k(x_i)}{\hidewidth\sum_{i'=1}^n h_\eta(x_i,x_{i'})w_{i'k}\hidewidth}
   \,\big)_{k=1}^m \Big)^{[y_i=j]} \cdot \MN_{n,m}(\bw|\bzero,\bI_n, \bPsi) \dint \bw \label{eq:intractablelikelihood}
 \end{align}
 where we have denoted the probit relationship from \cref{eq:pij} using the function $g_j^{-1}:\bbR^m \to [0,1]$.
 Unlike in the continuous response models, the integral does not present itself in closed form due to the conditional categorical PMF of the $y_i$'s, which they themselves involve integrals of multivariate normal densities.
-For binary response models, $g^{-1}$ is simply the probit function, but for multinomial responses, this can be quite challenging to evaluate---more on this in \hltodo{Section X}.
+For binary response models, $g^{-1}$ is simply the probit function, but for multinomial responses, this can be quite challenging to evaluate---more on this in \cref{sec:mnint}.
 
 Furthermore, the posterior distribution of the regression function, which requires the density of $\bw|\by$, depends on the marginalisation provided by \cref{eq:intractablelikelihood}.
 The challenge of estimation is then to first overcome this intractability by means of a suitable approximation of the integral.
-We present three possible avenues to achieve this aim, namely the Laplace approximation, Markov chain Monte Carlo (MCMC) methods, and  variational Bayes.
-
-%Methods of approximating the integral in \eqref{eq:intractablelikelihood} such as quadrature methods, Laplace approximation and MCMC tend to fail or are unsatisfactorily slow to accomplish.
-%The main reason for this is the dimension of this integral, which is $nm$, and in particular, for large sample sizes and/or number of classes, is unfeasible for such methods.
+We present three possible avenues to achieve this aim, namely the Laplace approximation, variational Bayes, and Markov chain Monte Carlo (MCMC) methods.
 
 \subsection{Laplace approximation}
 

@@ -1,8 +1,8 @@
-The I-prior methodology can be used naïvely to fit a categorical regression model.
+A naïve application of the normal I-prior methodology to fit  categorical data is insightful for the upcoming sections.
 Suppose, as before, we observe data $\{(y_1,x_1),\dots,(y_n,x_n) \}$ where each $x_i \in \cX$, for $i=1,\dots,n$.
-Here, the responses are categorical $y_i \in \{ 1,\dots,m \} =: 
-\cM $, and additionally, write $y_i = (y_{i1},\dots,y_{im}) $ where the class responses $y_{ij}$ equal one if individual $i$'s response category is $y_i = j$, and zero otherwise.
-In other words, there is exactly a single `1' at the $j$'th position in the vector $y_i = (y_{i1},\dots,y_{im})$, and zeroes everywhere else.
+Here, the responses are categorical $\by_i \in \{ 1,\dots,m \} =: 
+\cM $, and additionally, write $y_{i \bigcdot} = (y_{i1},\dots,y_{im})^\top$ where the class responses $y_{ij}$ equal one if individual $i$'s response category is $y_i = j$, and zero otherwise.
+In other words, there is exactly a single `1' at the $j$'th position in the vector $\by_{i \bigcdot}$, and zeroes everywhere else.
 For $j=1,\dots,m$, we model 
 \begin{equation}\label{eq:naiveclassmod}
   \begin{gathered}
@@ -43,60 +43,33 @@ In particular,
 \begin{align*}
   \sum_{j=1}^m y_{ij} 
   &= \sum_{j=1}^m \left(\alpha + \alpha_j + f_j(x_i) \right) \\
-  &= m\alpha + \cancelto{0}{\sum_{j=1}^m \alpha_j} + \cancelto{0}{\sum_{j=1}^m f_j(x_i)}
+  &= m\alpha + \cancelto{0}{\sum_{j=1}^m \alpha_j \hphantom{aaa}} 
+  \hspace{-2em} + \hspace{0.3em} \cancelto{0}{\sum_{j=1}^m f_j(x_i)}
 \end{align*}
 and since $\sum_{j=1}^m y_{ij} = 1$, we have that $\alpha = 1/m$ and can thus be fixed to resolve identification.
 The Pearson RKHS will contain zero mean functions, but the RKHS of constant functions induced by the identity kernel may not.
-If this is the case, then it should be ensured that $\sum_{j=1}^m \alpha_j =0$ in other ways; perhaps during the estimation process.
+If this is the case, then it should be ensured that $\sum_{j=1}^m \alpha_j =0$ in other ways; perhaps, as a requirement during estimation.
 
 With $f \in \cF$ the RKKS with kernel $h_\eta$, it is straightforward to assign an I-prior on $f$. 
 It is in fact
 \begin{align}\label{eq:naiveclassiprior}
   \begin{gathered}
     f(x_i,j) = \sum_{j'=1}^m\sum_{i'=1}^n a(j,j')\big(1 + h_\eta(x_i,x_{i'})\big) w_{i'j'} \\
-    (w_{i'1},\dots,w_{i'm})^\top \sim \N_m(\bzero,\bPsi)
+    (w_{i'1},\dots,w_{i'm})^\top \iid \N_m(\bzero,\bPsi)
   \end{gathered}
 \end{align}
 assuming a zero prior mean $f_0(x,j) = 0$.
-It is much convenient to work in vector and matrix form, so let us introduce some notation.
-%Consider the naïve I-prior classification model, this time written in vector form
-%\begin{gather*}
-%  \overbrace{
-%  \begin{pmatrix}
-%    y_{i1} \\ \vdots \\ y_{im}
-%  \end{pmatrix} 
-%  }^{\by_i}
-%  = 
-%  \overbrace{  
-%  \begin{pmatrix}
-%    \alpha_{1} \\ \vdots \\ \alpha_{m}
-%  \end{pmatrix} 
-%  }^\balpha
-%  +
-%  \overbrace{    
-%  \begin{pmatrix}
-%    f(x_i,1) \\ \vdots \\ f(x_i,m)
-%  \end{pmatrix} 
-%  }^{\bff(x_i)}
-%  +
-%  \overbrace{      
-%  \begin{pmatrix}
-%    \epsilon_{i1} \\ \vdots \\ \epsilon_{im}
-%  \end{pmatrix} 
-%  }^{\bepsilon_i}
-%  \\
-%  \bepsilon_i \iid \N_m(\bzero,\bPsi^{-1}).
-%\end{gather*}
+It is much more  convenient to work in vector and matrix form, so let us introduce some notation.
 Let $\bw$ (c.f. $\by$, $\bff$ and $\bepsilon$) be an $n \times m$ matrix whose $(i,j)$  entries contain $w_{ij}$ (c.f. $y_{ij}$, $f(x_i,j)$, and $\epsilon_{ij}$).
 The row-wise entries of $\bw$ are independent of each other (independence assumption of the $n$ observations), while any two of their columns have covariance as specified in $\bPsi$.
-This means that $\bw \sim \MN_{n,m}(\bzero, \bI_n,\bPsi)$ which implies $\vecc \bw \sim \N_{nm}(\bzero, \bPsi \otimes \bI_n)$, and similarly, $\bepsilon \sim \N_{nm}(\bzero, \bPsi^{-1} \otimes \bI_n)$.
+This means that $\bw$ follows a matrix normal distribution $ \MN_{n,m}(\bzero, \bI_n,\bPsi)$, which implies $\vecc \bw \sim \N_{nm}(\bzero, \bPsi \otimes \bI_n)$, and similarly, $\bepsilon \sim \N_{nm}(\bzero, \bPsi^{-1} \otimes \bI_n)$.
 Denote by $\bH_\eta$ the $n\times n$ kernel matrix with entries supplied by $1 + h_\eta$, and $\bA$ the $m\times m$ matrix with entries supplied by $a$.
 From \cref{eq:naiveclassiprior}, we have that 
 \[
   \bff = \bH_\eta \bw \bA \in \bbR^{n \times m},
 \]
 and thus $\vecc \bff \sim \N_{nm}(\bzero, \bA\bPsi\bA \otimes \bH_\eta^2)$.
-As $\by = \balpha + \bff + \bepsilon$, where $\balpha \in \bbR^{n\times m}$ with $(i,j)$ entries given by $\alpha + \alpha_j = \alpha_j + 1/m$, by linearity we have that 
+As $\by = \bone_n\balpha^\top + \bff + \bepsilon$, where $\balpha \in \bbR^{m}$ with $j$'th component $\alpha + \alpha_j = 1/m + \alpha_j$, by linearity we have that 
 \begin{equation}
   \vecc \by \sim \N_{nm}\big(\vecc \balpha, (\bA\bPsi\bA \otimes \bH_\eta^2) + (\bPsi^{-1} \otimes \bI_n) \big)
 \end{equation}
@@ -116,7 +89,14 @@ Specifically, the variance in the marginal distribution becomes
 \end{align*}
 which implies independence and identical variances $\bV_y$ for the vectors $(y_{1j},\dots,y_{nj})^\top$ for each class $j=1,\dots,m$.
 %, i.e. a block diagonal matrix structure $\Var(\vecc \by)  = \diag(\bV_y,\dots,\bV_y)$.
-Evidently, this stems from the implied independence structure of the prior on $f$ too, since now $\Var (\vecc \bff) = \diag(\psi\bH_\eta^2,\dots, \psi\bH_\eta^2)$, which could be interpreted as having independent and identical I-priors on the regression functions for each class $\bff_j = \big(f(x_1,j),\dots,f(x_n,j)\big)^\top$.
+Evidently, this stems from the implied independence structure of the prior on $f$ too, since now $\Var (\vecc \bff) = \diag(\psi\bH_\eta^2,\dots, \psi\bH_\eta^2)$, which could be interpreted as having independent and identical I-priors on the regression functions for each class $\bff_{\bigcdot j} = \big(f(x_1,j),\dots,f(x_n,j)\big)^\top$.
+
+There are several downfalls to using the model described above.
+Unlike in the case of continuous response variables, the normal I-prior model is highly inappropriate for categorical responses.
+For one, it violates the normality and homoscedasticity assumptions of the errors.
+For another, predicted values may be out of the range $[0,m]$ and thus poorly calibrated.
+Furthermore, it would be more suitable if the class probabilities---the probability of an observation belonging to a particular class---were also part of the model.
+In the next section, we propose an improvement to this naïve I-prior classification model by considering a probit-like transformation of the regression functions.
 
 %\begin{proof}
 %  \[
@@ -158,39 +138,3 @@ Evidently, this stems from the implied independence structure of the prior on $f
 %  &= \bA_{jj}\bA_{kk} \cdot \bH \Cov(\bw_j,\bw_k) \bH \\
 %  &= \bA_{jj}\bA_{kk}\bPsi_{jk} \bH^2.
 %\end{align*}
-
-There are several downfalls to using the model described above.
-Unlike in the case of continuous response variables, the normal I-prior model is highly inappropriate for categorical responses.
-For one, it violates the normality and homoscedasticity assumptions of the errors.
-For another, predicted values may be out of the range $[0,m]$ and thus poorly calibrated.
-Furthermore, it would be more suitable if the class probabilities---the probability of an observation belonging to a particular class---were also part of the model.
-In the next section, we propose an improvement to this naïve I-prior classification model by considering a probit-like transformation of the regression functions.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
