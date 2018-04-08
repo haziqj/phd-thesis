@@ -3,6 +3,7 @@
 \usepackage{haziq_maths}
 \usepackage{haziq_glossary}
 \usepackage{knitr}
+\usepackage{matrix_fig}
 %\graphicspath{{figure/}{../figure/}}
 \addbibresource{bib/haziq.bib}
 \begin{document}
@@ -60,17 +61,11 @@
 \chapter{Modelling with I-priors}
 \subimport{chapters/04/}{chapter4}
 
-%\chapter{I-priors for categorical responses}
-%\subimport{chapters/05/}{iprobit}
-%
-%\chapter{Estimation of I-probit models using variational inference}
-%\subimport{chapters/06/}{iprobit-variational}
-%
-%\chapter{Examples of I-probit models}
-%\subimport{chapters/07/}{iprobit-examples}
-%
+\chapter{I-priors for categorical responses}
+\subimport{chapters/05/}{chapter5}
+
 %\chapter{Variable selection using I-priors}
-%\subimport{chapters/08/}{iprior-varsel}
+%\subimport{chapters/08/}{chapter6}
 %
 %\chapter{Conclusion}
 %\input{chapters/09/conclusion}
@@ -87,9 +82,16 @@
 \appendix
 \chapter{Regression modelling using I-priors}
 \subimport{chapters/04/}{04-apx-01-posterior}
-%\subimport{chapters/04/}{04-apx-02-expem}
+\subimport{chapters/04/}{04-apx-02-expem}
 \subimport{chapters/04/}{04-apx-03-postestimation}
 \subimport{chapters/04/}{04-apx-04-fishermultinormal}
+
+\chapter{I-priors for categorical responses}
+\subimport{chapters/05/}{05-apx-01-distributions}
+\subimport{chapters/05/}{05-apx-02-proofs}
+\subimport{chapters/05/}{05-apx-03-derivations1}
+\subimport{chapters/05/}{05-apx-04-derivations2}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \printindex

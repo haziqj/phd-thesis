@@ -201,7 +201,7 @@ The point-evaluation posterior variance for $f$ is given by
 Prediction for a new data point $x_\new \in \cX$ then concerns obtaining the \emph{posterior predictive distribution}
 %
 \[
-  p(y_\new|\by) = \int p(y_\new|f_\new,\by)p(f_\new|\by) \d f_\new,
+  p(y_\new|\by) = \int p(y_\new|f_\new,\by)p(f_\new|\by) \dint f_\new,
 \]
 %
 where we had defined $f_\new := f(x_\new)$.
@@ -216,7 +216,7 @@ It happens to be that the mean of the predictive distribution $\E[y_\new|\by]$ f
 
 There is also the matter of optimising model parameters $\theta$, which in our case, collectively refers to the kernel parameters $\eta$ and the precision matrix of the errors $\bPsi$.
 $\theta$ may be estimated in several ways, either by likelihood-based methods or fully Bayesian methods.
-The former includes methods such as direct maximisation of the (marginal) likelihood, $L(\theta) = \int p(\by|\theta,\bff)p(\bff)\d\bff$, and the expectation-maximisation (EM) algorithm.
+The former includes methods such as direct maximisation of the (marginal) likelihood, $L(\theta) = \int p(\by|\theta,\bff)p(\bff)\dint \bff$, and the expectation-maximisation (EM) algorithm.
 Both are seen as a form of \emph{empirical Bayes} estimation.
 In a fully Bayesian setting on the other hand, Markov chain Monte Carlo methods may be employed, assuming prior distributions on the model parameters.
 
@@ -282,7 +282,7 @@ This thesis is structured as follows:
   \item The aforementioned computational methods relating to the estimation of I-prior models are explored in \textbf{Chapter 4}, namely the direct optimisation of the log-likelihood, the EM algorithm, and MCMC methods.
   The goal is to describe a stable and efficient algorithm for estimating I-prior models.
   The \proglang{R} package \pkg{iprior} is the culmination of the effort put in towards completing this chapter, which has been made publicly available on the Comprehensive \proglang{R} Archive Network (CRAN).
-  \hltodo{This chapter has also been submitted for publication to Computational Statistics and Data Analysis.}
+%  \hltodo{This chapter has also been submitted for publication to Computational Statistics and Data Analysis.}
 
   \item Many models of interest involve response variables of a categorical nature.
   A naïve implementation of the I-prior model is certainly possible, but there is  a more proper way to account for non-normality of errors.
