@@ -1,0 +1,185 @@
+% https://tex.stackexchange.com/questions/124269/energy-level-diagrams-with-tex
+\tikzset{
+    level/.style = {
+        ultra thick,
+    },
+    connect/.style = {
+        dashed,
+        red
+    },
+    notice/.style = {
+        draw,
+        rectangle callout,
+        callout relative pointer={#1}
+    },
+    label/.style = {
+        text width=2cm
+    }
+}
+
+\newcommand{\energyem}[1][1.5]{
+\begin{tikzpicture}
+  % Draw all levels
+%  \draw[draw=none] (0, 8/#1) -- node[above] {EM Algorithm} (5, 8/#1);  % new top
+  \draw[level,colred] (0, 6.5/#1) -- node[above] {} node[below] {} (5, 6.5/#1);  % top
+  \draw[level,colblu] (0, 3.25/#1) -- node[above] {} node[below] {} (2.5, 3.25/#1);  % mid
+  \draw[level] (0,0) -- node[above] {} (5, 0);  % bottom
+  
+  % Draw arrows
+  \draw[<->,very thick] (0.75, 3.25/#1) -- node[left] {$\KL(q\Vert p)$} (0.75, 6.5/#1);
+  \draw[<->,very thick] (1.75,0) -- node[left] {$\cL_\theta(q)$} (1.75,3.25/#1);
+  \draw[<->,very thick] (3.5,0) -- node[right] {$\log p(\by|\theta)$} (3.5,6.5/#1);
+\end{tikzpicture}
+}
+
+\newcommand{\energyemEstep}[1][2.15]{
+\begin{tikzpicture}
+  % Draw all levels
+  \draw[draw=none] (0,8/#1) -- node[above] {EM (E-step)} (5,8/#1);  % new top
+  \draw[level,colred] (0,6.5/#1) -- node[above] {} node[below] {} (5,6.5/#1);  % top
+  \draw[level,colblu,dashed] (0,3.25/#1) -- node[above] {} node[below] {} (2.5,3.25/#1);  % mid
+  \draw[level] (0,0) -- node[above] {} (5,0);  % bottom
+  
+  % Draw arrows
+  \draw[<->,very thick,opacity=0] (0.75,3.25/#1) -- node[left] {\footnotesize $\KL(q\Vert p)$} (0.75,6.5/#1);
+  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^{\text{old}})$} (3.5,6.5/#1);
+  
+  % E-step
+  \draw[level,colblu] (0,6.5/#1) -- node[above] {\color{black!99}\footnotesize $ \KL(\tilde q\Vert p) = 0$} (2.5,6.5/#1);  % top      
+  \draw[->,very thick,colblu] (2,3.25/#1) -- node[left] {} (2,6.5/#1);  
+  \draw[<->,very thick] (1.25,0) -- node[left,yshift=-33/#1] {\footnotesize $\cL_{\theta^{\text{old}}}(\tilde q)$} (1.25,6.5/#1);      
+  
+  \draw[white] (0,0) -- (0,-0.5);
+\end{tikzpicture}
+}
+
+\newcommand{\energyemMstepfade}[1][2.15]{
+\begin{tikzpicture}[opacity=0.25]
+  % Draw all levels
+  \draw[level,colred] (0,8/#1) -- node[above] {\color{black!99} EM (M-step)} (5,8/#1);  % new top
+  \draw[level,colblu,dashed] (0,6.5/#1) -- node[above] {} node[below] {} (2.5,6.5/#1);  % mid
+  \draw[level,colred,dashed] (2.5,6.5/#1) -- node[above] {} node[below] {} (5,6.5/#1);  % mid
+  \draw[level] (0,0) -- node[above] {} (5,0);  % bottom
+  \draw[level,colblu] (0,7.1/#1) -- node[above] {} node[below] {} (2.5,7.1/#1);  % mid
+  
+  % Draw arrows
+  \draw[<->,very thick] (0.75,7.1/#1) -- node[left] {\footnotesize $\KL(\tilde q\Vert p)$} (0.75,8/#1);
+  \draw[<->,very thick] (1.25,0) -- node[left] {\footnotesize $\cL_{\theta^*}(\tilde q)$} (1.25,7.1/#1);         
+  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^*)$} (3.5,8/#1);
+  \draw[->,very thick,colblu] (2,6.5/#1) -- node[left] {} (2,7.1/#1);  
+  \draw[->,very thick,colred] (4.5,6.5/#1) -- node[left] {} (4.5,8/#1);  
+  
+  \draw[white] (0,0) -- (0,-0.5);
+\end{tikzpicture}
+}
+
+
+\newcommand{\energyemMstep}[1][2.15]{
+\begin{tikzpicture}
+  % Shaded region
+  \fill[colred!10] (0,6.5/#1) rectangle (5,8/#1);
+  
+  % Draw all levels
+  \draw[level,colred] (0,8/#1) -- node[above] {\color{black!99} EM (M-step)} (5,8/#1);  % new top
+  \draw[level,colblu,dashed] (0,6.5/#1) -- node[above] {} node[below] {} (2.5,6.5/#1);  % mid
+  \draw[level,colred,dashed] (2.5,6.5/#1) -- node[above] {} node[below] {} (5,6.5/#1);  % mid
+  \draw[level] (0,0) -- node[above] {} (5,0);  % bottom
+  \draw[level,colblu] (0,7.1/#1) -- node[above] {} node[below] {} (2.5,7.1/#1);  % mid
+  
+  % Draw arrows
+  \draw[<->,very thick] (0.75,7.1/#1) -- node[left] {\footnotesize $\KL(\tilde q\Vert p)$} (0.75,8/#1);
+  \draw[<->,very thick] (1.25,0) -- node[left] {\footnotesize $\cL_{\theta^*}(\tilde q)$} (1.25,7.1/#1);         
+  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^*)$} (3.5,8/#1);
+  \draw[->,very thick,colblu] (2,6.5/#1) -- node[left] {} (2,7.1/#1);  
+  \draw[->,very thick,colred] (4.5,6.5/#1) -- node[left] {} (4.5,8/#1);   
+
+  \draw[white] (0,0) -- (0,-0.5);
+\end{tikzpicture}
+}
+
+\newcommand{\energyvbEstep}[1][2.15]{
+\begin{tikzpicture}
+  % Draw all levels
+  \draw[draw=none] (0,8/#1) -- node[above] {VB (E-step)} (5,8/#1);  % new top
+  \draw[level,colred] (0,6.5/#1) -- node[above] {} node[below] {} (5,6.5/#1);  % top
+  \draw[level,colblu,dashed] (0,3.25/#1) -- node[above] {} node[below] {} (2.5,3.25/#1);  % mid
+  \draw[level] (0,0) -- node[above] {} (5,0);  % bottom
+  
+  % Draw arrows
+  \draw[<->,very thick] (0.75,5.25/#1) -- node[left] {\footnotesize $\KL(\tilde q \Vert p)$} (0.75,6.5/#1);
+  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^{\text{old}})$} (3.5,6.5/#1);
+  
+  % E-step
+  \draw[level,colblu] (0,5.25/#1) -- node[above] {} (2.5,5.25/#1);  % new KL level     
+  \draw[->,very thick,colblu] (2,3.25/#1) -- node[left] {} (2,5.25/#1);  % increase in L  
+  \draw[<->,very thick] (1.25,0) -- node[left,yshift=-33/#1] {\footnotesize $\cL_{\theta^{\text{old}}}(\tilde q)$} (1.25,5.25/#1);    
+
+  \draw[white] (0,0) -- (0,-0.5);
+\end{tikzpicture}
+}
+
+\newcommand{\energyvbMstepa}[1][2.15]{
+\begin{tikzpicture}
+  % Shaded region
+  \fill[colred!10] (0,6.5/#1) rectangle (5,8/#1);  
+  
+  % Draw all levels
+  \draw[level,colred] (0,8/#1) -- node[above] {\color{black!99} VB (M-step)---scenario A} (5,8/#1);  % new top
+  \draw[level,colred,dashed] (2.5,6.5/#1) -- node[above] {} node[below] {} (5,6.5/#1);  % top
+  \draw[level,colblu] (0,6.5/#1) -- node[above] {} node[below] {} (2.5,6.5/#1);  % top
+  \draw[level] (0,0) -- node[above] {} (5,0);  % bottom
+  \draw[level,colblu,dashed] (0,5.25/#1) -- node[above] {} (2.5,5.25/#1);  % new KL level     
+
+  % Draw arrows
+  \draw[<->,very thick] (0.75,6.5/#1) -- node[left] {\footnotesize $\KL(\tilde q\Vert p)$} (0.75,8/#1);   
+  \draw[<->,very thick] (1.25,0) -- node[left] {\footnotesize $\cL_{\theta^*}(\tilde q)$} (1.25,6.5/#1);                  
+  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^*)$} (3.5,8/#1);
+  \draw[->,very thick,colblu] (2,5.25/#1) -- node[left] {} (2,6.5/#1);        
+  \draw[->,very thick,colred] (4.5,6.5/#1) -- node[left] {} (4.5,8/#1);  
+
+  \draw[white] (0,0) -- (0,-0.5);
+\end{tikzpicture}
+}
+
+\newcommand{\energyvbMstepb}[1][2.15]{
+\begin{tikzpicture}
+  % Shaded region
+  \fill[colred!10] (0,6.5/#1) rectangle (5,7.25/#1);  
+  
+  % Draw all levels
+  \draw[draw=none] (0,8/#1) -- node[above] {\color{black} VB (M-step)---scenario B} (5,8/#1);  % new top
+  \draw[level,colred] (0,7.25/#1) -- node[above] {} (5,7.25/#1);  % new top
+  \draw[level,colred,dashed] (0,6.5/#1) -- node[above] {} node[below] {} (5,6.5/#1);  % top
+  \draw[level,colblu] (0,6/#1) -- node[above] {} node[below] {} (2.5,6/#1);  % top
+  \draw[level] (0,0) -- node[above] {} (5,0);  % bottom
+  \draw[level,colblu,dashed] (0,5.25/#1) -- node[above] {} (2.5,5.25/#1);  % new KL level     
+
+  % Draw arrows
+  \draw[<->,very thick] (0.75,6/#1) -- node[left,yshift=6.5/#1] {\footnotesize $\KL(\tilde q\Vert p)$} (0.75,7.25/#1);   
+  \draw[<->,very thick] (1.25,0) -- node[left] {\footnotesize $\cL_{\theta^*}(\tilde q)$} (1.25,6/#1);                  
+  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^*)$} (3.5,7.25/#1);
+  \draw[->,very thick,colblu] (2,5.25/#1) -- node[left] {} (2,6/#1);        
+  \draw[->,very thick,colred] (4.5,6.5/#1) -- node[left] {} (4.5,7.25/#1); 
+  
+  \draw[white] (0,0) -- (0,-0.5);
+\end{tikzpicture}
+}
+
+\newcommand{\energyvbMstepc}[1][2.15]{
+\begin{tikzpicture}
+  % Draw all levels
+  \draw[draw=none] (0,8/#1) -- node[above] {\color{black} VB (M-step)---scenario C} (5,8/#1);  % new top
+  \draw[level,colred] (0,6.5/#1) -- node[above] {} node[below] {} (5,6.5/#1);  % top
+  \draw[level,colblu] (0,5.8/#1) -- node[above] {} node[below] {} (2.5,5.8/#1);  % top
+  \draw[level] (0,0) -- node[above] {} (5,0);  % bottom
+  \draw[level,colblu,dashed] (0,5.25/#1) -- node[above] {} (2.5,5.25/#1);  % new KL level     
+
+  % Draw arrows
+  \draw[<->,very thick] (0.75,5.8/#1) -- node[left] {\footnotesize $\KL(\tilde q\Vert p)$} (0.75,6.5/#1);   
+  \draw[<->,very thick] (1.25,0) -- node[left] {\footnotesize $\cL(\tilde q;\theta^*)$} (1.25,5.8/#1);                  
+  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(y;\theta^*)$} (3.5,6.5/#1);
+  \draw[->,very thick,colblu] (2,5.25/#1) -- node[left] {} (2,5.8/#1);    
+  
+  \draw[white] (0,0) -- (0,-0.5);  
+\end{tikzpicture}
+}

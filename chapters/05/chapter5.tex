@@ -67,66 +67,66 @@ For example, inferences around log-odds is usually cumbersome for probit models,
 
 
 \newpage
-\section{A naïve model}
-\input{05a-naive}
-
-\section{A latent variable motivation: the I-probit model}
-\input{05b-iprobit}
-
-\section{Identifiability and IIA}\label{sec:iia}
-\input{05c-iia}
-
-\section{Estimation}
-\input{05d-iprobit_est}
-
-\section{A variational algorithm}\label{sec:iprobitvar}
-\input{05e-variational}
-
-\section{Post-estimation}
-\input{05f-post_est}
-
-\section{Computational consideration}
-\input{05g-iprobit_comp_cons}
-
-\section{Examples}
-
-\section{Discussion}
-
-I-prior extended to non-normal data. 
-Naive works good, but can be better.
-Simply transform the normal model through a squashing function.
-All the nice things about I-prior can be applied here too.
-Probit model variety of binary and multinomial regression models.
-
-Laplace slow, unreliable modes. MCMC also slow. Variational has similarity to EM, but advantageous: easier to calculate posterior s.d., ability to do inference on transformed parameters.
-
-As with the normal model, storage and time requirements slow.
-again, look to machine learning.
-improvements in variational algorithm.
-
-Extend to include class-specific covariates.
-
-improvement in calculating the normal integral?
-Need to see timing where takes longest
-
-In terms of similarity to other works, the generalised additive models (GAMs) of \cite{hastie1986} comes close.
-The setup of GAMs is near identical to the I-probit model, although estimation is done differently. 
-GAMs do not assume smooth functions from any RKHS, but instead estimates the $f$'s using a local scoring method or a local likelihood method.
-Kernel methods for classification are extremely popular in computer science and machine learning; examples include support vector machines \citep{scholkopf2002learning} and Gaussian process classification \citep{rasmussen2006gaussian}, with the latter being more closely related to the I-probit method.
-I-priors differ from Gaussian process priors in the specification of the covariance kernel.
-Gaussian process classification typically uses the logistic link function (or squashing function, to use machine learning nomenclature), and estimation is done most commonly using the Laplace approximation, but other methods such as expectation propagation \citep{minka2001expectation} and MCMC \citep{neal1999} have been explored as well.
-Variational inference for Gaussian process probit models have been studied by \cite{girolami2006variational}, with their work providing a close reference to the variational algorithm employed by us.
+%\section{A naïve model}
+%\input{05a-naive}
+%
+%\section{A latent variable motivation: the I-probit model}
+%\input{05b-iprobit}
+%
+%\section{Identifiability and IIA}\label{sec:iia}
+%\input{05c-iia}
+%
+%\section{Estimation}
+%\input{05d-iprobit_est}
+%
+%\section{A variational algorithm}\label{sec:iprobitvar}
+%\input{05e-variational}
+%
+%\section{Post-estimation}
+%\input{05f-post_est}
+%
+%\section{Computational consideration}
+%\input{05g-iprobit_comp_cons}
+%
+%\section{Examples}
+%
+%\section{Discussion}
+%
+%I-prior extended to non-normal data. 
+%Naive works good, but can be better.
+%Simply transform the normal model through a squashing function.
+%All the nice things about I-prior can be applied here too.
+%Probit model variety of binary and multinomial regression models.
+%
+%Laplace slow, unreliable modes. MCMC also slow. Variational has similarity to EM, but advantageous: easier to calculate posterior s.d., ability to do inference on transformed parameters.
+%
+%As with the normal model, storage and time requirements slow.
+%again, look to machine learning.
+%improvements in variational algorithm.
+%
+%Extend to include class-specific covariates.
+%
+%improvement in calculating the normal integral?
+%Need to see timing where takes longest
+%
+%In terms of similarity to other works, the generalised additive models (GAMs) of \cite{hastie1986} comes close.
+%The setup of GAMs is near identical to the I-probit model, although estimation is done differently. 
+%GAMs do not assume smooth functions from any RKHS, but instead estimates the $f$'s using a local scoring method or a local likelihood method.
+%Kernel methods for classification are extremely popular in computer science and machine learning; examples include support vector machines \citep{scholkopf2002learning} and Gaussian process classification \citep{rasmussen2006gaussian}, with the latter being more closely related to the I-probit method.
+%I-priors differ from Gaussian process priors in the specification of the covariance kernel.
+%Gaussian process classification typically uses the logistic link function (or squashing function, to use machine learning nomenclature), and estimation is done most commonly using the Laplace approximation, but other methods such as expectation propagation \citep{minka2001expectation} and MCMC \citep{neal1999} have been explored as well.
+%Variational inference for Gaussian process probit models have been studied by \cite{girolami2006variational}, with their work providing a close reference to the variational algorithm employed by us.
 
 
 \section{Miscellanea}
 \input{05-misc}
 
 \ifstandalone
-  \section*{Appendix}
-  \input{05-apx-01-distributions}
+%  \section*{Appendix}
+%  \input{05-apx-01-distributions}
 %  \input{05-apx-01-proofs}
-  \input{05-apx-02-derivations}
-  \input{05-apx-03-derivation2}
+%  \input{05-apx-02-derivations}
+%  \input{05-apx-03-derivation2}
 \fi
 
 \hClosingStuffStandalone
