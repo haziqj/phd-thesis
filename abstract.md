@@ -1,5 +1,3 @@
-# Abstract
-
 Regression analysis is undoubtedly an important tool to understand the relationship between one or more explanatory and independent variables of interest. 
 In this thesis, we explore a novel methodology for fitting a wide-range of parametric and non-parametric regression models, called the I-prior methodology. 
 We assume that the regression function belongs to a reproducing kernel Hilbert or Krein space of functions, and by doing so, it allows us to utilise the convenient topologies of these vector spaces. 
@@ -15,7 +13,3 @@ Finally, in the third part, we again turn to a fully Bayesian approach of variab
 Our study advocates the I-prior methodology as being a simple, intuitive and comparable, and often times better, alternative to similar leading state-of-the-art models.
 We illustrate the use of I-priors in various simulated and real-data examples.
 
-
-------------------------------------------------------------------------
-
-Copyright (C) 2014--2018 [Haziq Jamil](http://haziqj.ml). All rights reserved.
