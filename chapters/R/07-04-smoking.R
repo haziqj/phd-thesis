@@ -38,7 +38,7 @@ makeSmoke <- function(x) {
 dat.smoke <- NULL
 for (i in 1:nrow(smoking.small)) {
   dat.smoke <- rbind(dat.smoke, makeSmoke(smoking.small[i, ]))
-}
+}  # ignore warning about row names discarded
 dat.smoke$y <- as.factor(dat.smoke$y)
 levels(dat.smoke$y) <- c("Remain", "Quit")
 str(dat.smoke)
@@ -79,34 +79,63 @@ as.tibble(dat.smoke) %>%
 # This takes quite a long time, but saved object mod in data/smokingmod
 # mod1 <- iprobit(y ~ Group, dat.smoke)
 # save(mod1, file = "data/smoking-mod1")
-# mod2 <- iprobit(y ~ Group + Study, dat.smoke)
+# > mod1
+# Training error rate: 23.65 %
+# Lower bound value: -3210.76
+#
+# Class = 1 Class = 2
+# Intercept  -0.72533  -0.72533
+# res         1.00460   1.00460
+# >
+# mod2 <- iprobit(y ~ Group + Study, dat.smoke,
+#                 control = list(theta0 = c(3.86e+03, 1.06e-03), alpha0 = -0.769))
 # save(mod2, file = "data/smoking-mod2")
-# mod3 <- iprobit(y ~ Group * Study, dat.smoke)
+# > mod2
+# Training error rate: 29.3 %
+# Lower bound value: -3142.237
+#
+# Class = 1   Class = 2
+# Intercept     -0.76267    -0.76267
+# lambda[1,] 30593.69995 30593.69995
+# lambda[2,]     0.00084     0.00084
+# mod3 <- iprobit(y ~ Group * Study, dat.smoke,
+#                 control = list(theta0 = c(0.014894, 0.000878), alpha0 = -0.767))
 # save(mod3, file = "data/smoking-mod3")
+# > mod3
+# Training error rate: 23.48 %
+# Lower bound value: -3091.204
+#
+# Class = 1 Class = 2
+# Intercept   -0.76669  -0.76669
+# lambda[1,]   0.01437   0.01437
+# lambda[2,]   0.00087   0.00087
+
 
 ## ---- fit.smoke ----
 # load("data/smoking-mod1"); l1 <- logLik(mod1)
 # load("data/smoking-mod2"); l2 <- logLik(mod2)
 # load("data/smoking-mod3"); l3 <- logLik(mod3)
-# calc_odds <- function() {
+# calc_odds <- function(n.samp = 100) {
 #   studies <- levels(dat.smoke$Study)
 #   as.tibble(dat.smoke) %>%
 #     mutate(tmp = paste0(Study, Group)) -> tmp
 #   unq.i <- match(unique(tmp$tmp), tmp$tmp)
 #   quants <- predict(mod3, dat.smoke[unq.i, ], quantiles = TRUE, raw = TRUE,
-#                     n.samp = 1000)[[1]][[2]]
+#                     n.samp = n.samp)[[1]][[2]]  # prob quit
 #
 #   res <- quants[seq_len(length(studies) + 1), ]; res[] <- NA
 #   for (i in seq_along(studies)) {
 #     prob.treated <- quants[2 * i - 1, ]
 #     prob.control <- quants[2 * i, ]
-#     a <- prob.treated; b <- 1 - a
-#     c <- prob.control; d <- 1 - c
+#     a <- prob.treated; b <- 1 - a  # probs in treatment groups
+#     c <- prob.control; d <- 1 - c  # probs in control groups
+#     # OR.quit = (a / b) / (c / d) = (a * d) / (c * b)
 #     res[i, ] <- log(a * d) - log(b * c)
 #   }
+#
 #   unq.i <- match(unique(dat.smoke$Group), dat.smoke$Group)
 #   quants <- predict(mod1, dat.smoke[unq.i, ], quantiles = TRUE, raw = TRUE,
-#                     n.samp = 1000)[[1]][[2]]
+#                     n.samp = n.samp)[[1]][[2]]
 #   prob.treated <- quants[1, ]
 #   prob.control <- quants[2, ]
 #   a <- prob.treated; b <- 1 - a
@@ -125,7 +154,7 @@ as.tibble(dat.smoke) %>%
 # }
 # l <- c(l1, l2, l3)
 # b <- c(get_brier_score(mod1), get_brier_score(mod2), get_brier_score(mod3))
-# smoke.ip.res <- calc_odds()
+# smoke.ip.res <- calc_odds(5)
 # save(smoke.ip.res, file = "data/smoking-res")
 # save(l, file = "data/smoking-lb")
 # save(b, file = "data/smoking-brier")
@@ -137,17 +166,17 @@ load("data/smoking-brier")
 tab.compare <- as.data.frame(cbind(
   c("$f_1$", "$f_1 + f_2$",
     "$f_1 + f_2 + f_{12}$"),
-  paste0("$-", decPlac(-l, 2), "$"),
+  paste0("$-", dec_plac(-l, 2), "$"),
 
-  decPlac(b, 3),
+  dec_plac(b, 3),
   c(1, 2, 2)
 ))
 colnames(tab.compare) <- c("Model", "Lower bound", "Brier score",
                            "No. of RKHS\\newline scale param.")
-kable(tab.compare, longtable = TRUE, booktabs = TRUE, escape = FALSE,
-      align = c("l", "r", "r", "r"),
-      caption = "Results of the I-prior model fit for three models.") %>%
-  column_spec(4, width = "2.4cm")
+# kable(tab.compare, longtable = TRUE, booktabs = TRUE, escape = FALSE,
+#       align = c("l", "r", "r", "r"), format = "latex",
+#       caption = "Results of the I-prior model fit for three models.") %>%
+#   column_spec(4, width = "2.4cm")
 
 ## ---- smoke.forest.plot ----
 ggplot(rbind(smoke.raw.odds, smoke.re.res, smoke.ip.res), aes(Study, logodds)) +

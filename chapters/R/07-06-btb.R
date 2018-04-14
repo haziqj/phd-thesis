@@ -1,12 +1,16 @@
-# Chapter 7, Section 5
+# Chapter 5, examples
 # Spatio-temporal analysis of Bovine Tubercolosis in Cornwall
-source("00-prelim.R")
+library(iprobit)
+library(tidyverse)
+library(spatstat)
+library(knitr)
+library(kableExtra)
 
 ## ---- data.btb ----
 load("data/BTBppp.RData")
 plot.df <- as.data.frame(pppdata$window)
 W <- pppdata$window
-simpW <- simplify.owin(W, 1000)  # This reduces resolution of plot
+simpW <- simplify.owin(W, 100)  # This reduces resolution of plot
 plot.df <- as.data.frame(W)
 
 # Get data points (location, spoligotypes and year)
@@ -78,267 +82,176 @@ year <- scale(btb$year, scale = FALSE)
 mu.year <- attr(year, "scaled:center")
 period <- btb$period
 
-# # Spatial model only
-# mod1 <- iprobit(y = Spoligotype, X, kernel = "FBM",
-#                 control = list(restarts = 8, maxit = 500,
-#                                restart.method = "error",
-#                                common.RKHS.scale = TRUE,
-#                                common.intercept = FALSE))
+# ## ---- mod.btb.new ----
+# # Constant only model
+# mod0 <- iprobit(y = Spoligotype, X, control = list(int.only = TRUE, theta0 = -100))
+# save(mod0, file = "data/mod0-btb")
+# > mod0
+# Training error rate: 46.25 %
+# Lower bound value: -1204.242
 #
-# mod1a <- iprobit(y = Spoligotype, X, kernel = "FBM",
-#                  control = list(restarts = 8, maxit = 500,
-#                                 restart.method = "error",
-#                                common.RKHS.scale = FALSE,
-#                                common.intercept = FALSE))
+# Class = 1 Class = 2 Class = 3 Class = 4 Class = 5
+# Intercept   0.94755  -0.17268   0.10333  -0.20213  -0.67607
+# lambda      0.00000   0.00000   0.00000   0.00000   0.00000
 #
-# # Temporal only
-# mod2 <- iprobit(y = Spoligotype, year, kernel = "FBM",
-#                 control = list(restarts = 8, maxit = 500,
-#                                restart.method = "error",
-#                                common.RKHS.scale = TRUE,
-#                                common.intercept = FALSE))
-#
-# mod2a <- iprobit(y = Spoligotype, year, kernel = "FBM",
-#                  control = list(restarts = 8, maxit = 500,
-#                                 restart.method = "error",
-#                                 common.RKHS.scale = FALSE,
-#                                 common.intercept = FALSE))
-#
-# mod2.1 <- iprobit(y = Spoligotype, period, kernel = "FBM",
-#                   control = list(restarts = 8, maxit = 500,
-#                                  restart.method = "error",
-#                                  common.RKHS.scale = TRUE,
-#                                  common.intercept = FALSE))
-#
-# mod2.1a <- iprobit(y = Spoligotype, period, kernel = "FBM",
-#                    control = list(restarts = 8, maxit = 500,
-#                                   restart.method = "error",
-#                                   common.RKHS.scale = FALSE,
-#                                   common.intercept = FALSE))
-#
-# # Spatial and temporal
-# mod3 <- iprobit(y = Spoligotype, X, year, kernel = "FBM",
-#                 control = list(restarts = 8, maxit = 500,
-#                                restart.method = "error",
-#                                common.RKHS.scale = TRUE,
-#                                common.intercept = FALSE))
-#
-# mod3a <- iprobit(y = Spoligotype, X, year, kernel = "FBM",
-#                  control = list(restarts = 8, maxit = 500,
-#                                 restart.method = "error",
-#                                 common.RKHS.scale = FALSE,
-#                                 common.intercept = FALSE))
-#
-# mod3.1 <- iprobit(y = Spoligotype, X, period, kernel = "FBM",
-#                   control = list(restarts = 8, maxit = 500,
-#                                  restart.method = "error",
-#                                  common.RKHS.scale = TRUE,
-#                                  common.intercept = FALSE))
-#
-# mod3.1a <- iprobit(y = Spoligotype, X, period, kernel = "FBM",
-#                    control = list(restarts = 8, maxit = 500,
-#                                   restart.method = "error",
-#                                   common.RKHS.scale = FALSE,
-#                                   common.intercept = FALSE))
-#
-# # Save models
+# # Spatial model
+# mod1 <- iprobit(y = Spoligotype, X, kernel = "fbm",
+#                 control = list(maxit = 200, restarts = TRUE))
 # save(mod1, file = "data/mod1-btb")
-# save(mod1a, file = "data/mod1a-btb")
+# > mod1
+# Training error rate: 19.26 %
+# Lower bound value: -664.8668
+#
+# Class = 1 Class = 2 Class = 3 Class = 4 Class = 5
+# Intercept   1.36378  -0.43520  -0.02010  -0.77496  -0.13353
+# lambda      0.19391   0.19391   0.19391   0.19391   0.19391
+#
+# # Spatio-period model (period is categorical)
+# mod2 <- iprobit(y = Spoligotype, X, period, kernel = "fbm",
+#                 interactions = "1:2", control = list(maxit = 200, restarts = TRUE))
 # save(mod2, file = "data/mod2-btb")
-# save(mod2a, file = "data/mod2a-btb")
-# save(mod2.1, file = "data/mod21-btb")
-# save(mod2.1a, file = "data/mod21a-btb")
+# > mod2
+# Training error rate: 18.5 %
+# Lower bound value: -664.65
+#
+# Class = 1 Class = 2 Class = 3 Class = 4 Class = 5
+# Intercept    2.18919   0.30092   0.74937  -0.11294   0.65687
+# lambda[1,]   0.15575   0.15575   0.15575   0.15575   0.15575
+# lambda[2,]  -0.00376  -0.00376  -0.00376  -0.00376  -0.00376
+#
+# # Spatio-temporal model (year is continuous)
+# mod3 <- iprobit(y = Spoligotype, X, year, kernel = "fbm",
+#                 interactions = "1:2", control = list(maxit = 200, restarts = TRUE))
 # save(mod3, file = "data/mod3-btb")
-# save(mod3a, file = "data/mod3a-btb")
-# save(mod3.1, file = "data/mod31-btb")
-# save(mod3.1a, file = "data/mod31a-btb")
-load("data/mod1-btb")
-load("data/mod1a-btb")
+# > mod3
+# Training error rate: 17.95 %
+# Lower bound value: -656.2398
+#
+# Class = 1 Class = 2 Class = 3 Class = 4 Class = 5
+# Intercept    1.46258  -0.46739   0.02123  -0.84227  -0.02781
+# lambda[1,]   0.15698   0.15698   0.15698   0.15698   0.15698
+# lambda[2,]   0.00614   0.00614   0.00614   0.00614   0.00614
+#
+# load("data/mod0-btb")
+# load("data/mod1-btb")
 # load("data/mod2-btb")
-# load("data/mod2a-btb")
-# load("data/mod21-btb")
-# load("data/mod21a-btb")
-load("data/mod3-btb")
-load("data/mod3a-btb")
-load("data/mod31-btb")
-load("data/mod31a-btb")
-
-# For reference, comparison of the models
-# tab <- rbind(
-#   c("spatial", logLik(mod1)),
-#   c("spatial (multi)", logLik(mod1a)),
-#   c("temporal", logLik(mod2)),
-#   c("temporal (multi)", logLik(mod2a)),
-#   c("temporal (period)", logLik(mod2.1)),
-#   c("temporal (period, multi)", logLik(mod2.1a)),
-#   c("spatial + temporal", logLik(mod3)),
-#   c("spatial + temporal (multi)", logLik(mod3a)),
-#   c("spatial + temporal (period)", logLik(mod3.1)),
-#   c("spatial + temporal (period, multi)", logLik(mod3.1a))
-# )
-# tab <- as.tibble(tab) %>%
-#   mutate(model = V1, lb = as.numeric(V2)) %>%
-#   select(model, lb)
-
-## ---- caterpillar.plot.btb ----
-res1 <- summary(mod1)$tab
-res1 <- cbind(param = rownames(res1), res1, model = "Spatial model")
-res1[6, 1] <- "lambda[spatial]"
-
-res2 <- summary(mod2)$tab
-res2 <- cbind(param = rownames(res2), res2, model = "Temporal model")
-res2[6, 1] <- "lambda[temporal]"
-
-res3 <- summary(mod3)$tab
-res3 <- cbind(param = rownames(res3), res3, model = "Spatial and temporal model")
-res3[6, 1] <- "lambda[spatial]"
-res3[7, 1] <- "lambda[temporal]"
-
-dcast(res, mean + upper + lower + model + param ~ .)
-
-as.tibble(rbind(res1, res2, res3)) %>%
-  mutate(mean = as.numeric(Mean),
-         lower = as.numeric(`2.5%`),
-         upper = as.numeric(`97.5%`),
-         sd = as.numeric(`S.D.`)) %>%
-  select(param, mean, sd, lower, upper, model) %>%
-  mutate(param = gsub("\\[1\\]", "\\[sp9\\]", param),
-         param = gsub("\\[2\\]", "\\[sp12\\]", param),
-         param = gsub("\\[3\\]", "\\[sp15\\]", param),
-         param = gsub("\\[4\\]", "\\[sp20\\]", param),
-         param = gsub("\\[5\\]", "\\[other\\]", param)) -> res
-
-ggplot(res, aes(col = param)) +
-  facet_grid(. ~ model, scales = "free") +
-  geom_hline(yintercept = 0, linetype = "dashed", col = "grey30") +
-  geom_pointrange(aes(x = param, y = mean, ymin = lower, ymax = upper)) +
-  coord_flip() +
-  labs(x = NULL, y = "Estimate") +
-  theme_bw() +
-  theme(legend.position = "none")
+# load("data/mod3-btb")
 
 ## ---- table.btb ----
-# Function to make results table for each model
-# mod1, mod1a are spatial models (single + multiple)
-# mod3, mod3a are spatio-temporal models
-# mod3.1, mod3.1a are spatio-period models
-rest_fn <- function(mod, remove.alpha = TRUE) {
-  res <- summary(mod)$tab[, c(1, 2, 1)]
-  res[, 3] <- abs(res[, 3] / summary(mod)$tab[, 2])
-  tmp <- res
-  tmp[, 1] <- decPlac(res[, 1])
-  tmp[, 2] <- decPlac(res[, 2], 3)
-  tmp[, 3] <- decPlac(res[, 3], 1)
-  res <- cbind(tmp, symnum(2 * pnorm(-abs(res[, 3])), corr = FALSE, na = TRUE,
-                           cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
-                           symbols = c("***", "**", "*", ".", " ")))
-  colnames(res) <- c("Estimate", "S.D.", "|$Z$|-score", "")
+rest_fn <- function(mod) {
+  res <- iprior::dec_plac(summary(mod)$tab[, c(1, 2)], 3)
 
   mod.name <- deparse(substitute(mod))
+  if (mod.name == "mod0")
+    res <- rbind(res[-6, ], NA, NA)
   if (mod.name == "mod1")
     res <- rbind(res, NA)
-  if (mod.name == "mod1a")
-    for (i in 1:5) res <- rbind(res, NA)
-  # if (mod.name == "mod2")
-  #   res <- rbind(res[-nrow(res), ], NA, res[nrow(res), ])
-  # if (mod.name == "mod2a") {
-  #   tmp <- res[1:5, ]
-  #   for (i in 1:5) tmp <- rbind(tmp, NA)
-  #   res <- rbind(tmp, res[6:10, ])
-  # }
-  if (isTRUE(remove.alpha)) res <- res[-(1:5), ]
-  res
-}
 
-rest <- cbind(rest_fn(mod1), rest_fn(mod3), rest_fn(mod3.1))
-resta <- cbind(rest_fn(mod1a), rest_fn(mod3a), rest_fn(mod3.1a))
-tab.btb <- rbind(rest, resta)
+  pij <- fitted(mod)$p
+  suppressWarnings(y <- iprior::get_y(mod$ipriorKernel))
+  loglik <- sum(log(pij[cbind(seq_along(y), y)]))  # matrix indexing
+
+  rbind(
+    res,
+    # loglik = c(iprior::dec_plac(logLik(mod), 2), NA),
+    loglik = c(iprior::dec_plac(loglik, 2), NA),
+    error  = c(iprior::dec_plac(get_error_rate(mod), 2), NA),
+    brier  = c(iprior::dec_plac(get_brier_score(mod), 2), NA)
+  )
+}
+tab.btb <- cbind(rest_fn(mod0), " " = "",
+                 rest_fn(mod1), " " = "",
+                 rest_fn(mod2), " " = "",
+                 rest_fn(mod3))
 rownames(tab.btb) <- c(
-  "Spatial", "Temporal",
-  c(paste0("Spatial (", levels(btb$sp), ")"),
-    paste0("Temporal (", levels(btb$sp), ")"))
+  paste0("Intercept (", levels(btb$sp), ")"),
+  "Scale (spatial)", "Scale (temporal)",
+  "Log-likelihood", "Error rate (%)", "Brier score"
 )
 
 options(knitr.kable.NA = " ")
 kable(tab.btb, booktabs = TRUE, format = "latex", linesep = "", escape = FALSE,
-      align = rep(c("r", "r", "r", "l"), 3),
+      align = "r",
       caption = "Results of the fitted I-probit models.") %>%
   kable_styling() %>%
   add_header_above(c(" "               = 1,
-                     "Spatial"         = 3,
-                     " "               = 1,
-                     "Spatio-temporal" = 3,
-                     " "               = 1,
-                     "Spatio-period"   = 3)) %>%
-  add_header_above(c(" ", "Model" = 12), bold = TRUE) %>%
-  group_rows("Shared scale model", 1, 2) %>%
-  group_rows("Separate scale model", 3, 12) %>%
-  add_footnote(c(
-    paste0("Lower-bound values  (Brier scores) for the shared scale model are ",
-           decPlac(logLik(mod1), 1), " (", decPlac(get_brier_score(mod1), 3), "), ",
-           decPlac(logLik(mod3), 1), " (", decPlac(get_brier_score(mod3), 3), "), and ",
-           decPlac(logLik(mod3.1), 1), " (", decPlac(get_brier_score(mod3.1), 3), ") respectively."),
-    paste0("Lower-bound values  (Brier scores) for the separate scale model are ",
-           decPlac(logLik(mod1a), 1), " (", decPlac(get_brier_score(mod1a), 3), "), ",
-           decPlac(logLik(mod3a), 1), " (", decPlac(get_brier_score(mod3a), 3), "), and ",
-           decPlac(logLik(mod3.1a), 1), " (", decPlac(get_brier_score(mod3.1a), 3), ") respectively.")
-  ), notation = "symbol") %>%
-  landscape()
+                     "Intercepts only" = 2,
+                     "Spatial only"    = 2,
+                     # " "               = 1,
+                     "Spatio-temporal" = 2,
+                     # " "               = 1,
+                     "Spatio-period"   = 2)) %>%
+  # add_header_above(c(" ", "Model" = 12), bold = TRUE) %>%
+  # group_rows("Shared scale model", 1, 2) %>%
+  # group_rows("Separate scale model", 3, 12) %>%
+  # add_footnote(c(
+  #   paste0("Lower-bound values  (Brier scores) for the shared scale model are ",
+  #          decPlac(logLik(mod1), 1), " (", decPlac(get_brier_score(mod1), 3), "), ",
+  #          decPlac(logLik(mod3), 1), " (", decPlac(get_brier_score(mod3), 3), "), and ",
+  #          decPlac(logLik(mod3.1), 1), " (", decPlac(get_brier_score(mod3.1), 3), ") respectively."),
+  #   paste0("Lower-bound values  (Brier scores) for the separate scale model are ",
+  #          decPlac(logLik(mod1a), 1), " (", decPlac(get_brier_score(mod1a), 3), "), ",
+  #          decPlac(logLik(mod3a), 1), " (", decPlac(get_brier_score(mod3a), 3), "), and ",
+#          decPlac(logLik(mod3.1a), 1), " (", decPlac(get_brier_score(mod3.1a), 3), ") respectively.")
+# ), notation = "symbol") %>%
+landscape()
 
 ## ---- plot.btb.prep ----
-# Obtain points inside the polygon
-rescalee <- function(x) {
-  res <- x * rep(sd.x, each = nrow(x)) + rep(mu.x, each = nrow(x))
-  colnames(res) <- c("x", "y")
-  res
-}
-X.var <- 1:2
-maxmin <- cbind(apply(X, 2, min), apply(X, 2, max))
-xx <- list(NULL)
-for (j in 1:2) {
-  mm <- maxmin[X.var[j], ]
-  xx[[j]] <- seq(from = mm[1] - 1, to = mm[2] + 1, length.out = 500)
-}
-mm <- maxmin[X.var, ]
-x.df.full <- expand.grid(xx[[1]], xx[[2]])
-tmp <- x.df.full * rep(sd.x, each = nrow(x.df.full)) +
-  rep(mu.x, each = nrow(x.df.full))
-isin <- inside.owin(tmp[, 1], tmp[, 2], W)
-x.df <- x.df.full[isin, ]
-
-# Calculate fitted probabilities
-fill.col <- iprior::ggColPal(5)
-N <- nrow(x.df)
-a <- predict(mod1a, list(x.df))
-a1 <- predict(mod3.1a, list(x.df, matrix(rep(levels(btb$period)[1], N))))
-a2 <- predict(mod3.1a, list(x.df, matrix(rep(levels(btb$period)[2], N))))
-a3 <- predict(mod3.1a, list(x.df, matrix(rep(levels(btb$period)[3], N))))
-a4 <- predict(mod3.1a, list(x.df, matrix(rep(levels(btb$period)[4], N))))
+# # Obtain points inside the polygon
+# rescalee <- function(x) {
+#   res <- x * rep(sd.x, each = nrow(x)) + rep(mu.x, each = nrow(x))
+#   colnames(res) <- c("x", "y")
+#   res
+# }
+# X.var <- 1:2
+# maxmin <- cbind(apply(X, 2, min), apply(X, 2, max))
+# xx <- list(NULL)
+# for (j in 1:2) {
+#   mm <- maxmin[X.var[j], ]
+#   xx[[j]] <- seq(from = mm[1] - 1, to = mm[2] + 1, length.out = 300)  # change this for resolution
+# }
+# mm <- maxmin[X.var, ]
+# x.df.full <- expand.grid(xx[[1]], xx[[2]])
+# tmp <- x.df.full * rep(sd.x, each = nrow(x.df.full)) +
+#   rep(mu.x, each = nrow(x.df.full))
+# isin <- inside.owin(tmp[, 1], tmp[, 2], W)
+# x.df <- x.df.full[isin, ]
+#
+# # Calculate fitted probabilities
+# fill.col <- iprior::gg_col_hue(5)
+# N <- nrow(x.df)
+# a <- predict(mod1, list(x.df))  # spatial-model
+#
+# period.df <- data.frame(
+#   factor(rep(levels(btb$period)[1], N), levels = levels(btb$period)),
+#   factor(rep(levels(btb$period)[2], N), levels = levels(btb$period)),
+#   factor(rep(levels(btb$period)[3], N), levels = levels(btb$period)),
+#   factor(rep(levels(btb$period)[4], N), levels = levels(btb$period))
+# )
+#
+# a1 <- predict(mod2, list(x.df, period.df[, 1]))
+# a2 <- predict(mod2, list(x.df, period.df[, 2]))
+# a3 <- predict(mod2, list(x.df, period.df[, 3]))
+# a4 <- predict(mod2, list(x.df, period.df[, 4]))
+#
+# b <- list(NULL)
+# unq.year <- sort(as.numeric(unique(year)))
+# for (i in seq_along(unique(year))) {
+#   b[[i]] <- predict(mod3, list(x.df, matrix(unq.year[i], nrow = N, ncol = 1)))$prob
+#   print(i)
+# }
+load("data/btb_complete.RData")
 
 ## ---- plot.btb ----
 # Function to plot for SPATIAL MODEL
-plot_spatial_model <- function(m = 1, method = "top.pieces", points = FALSE,
+plot_spatial_model <- function(m = 1, method = "bottom.pieces", points = FALSE,
                                contour.labels = FALSE) {
   current.label <- paste0("Spoligotype ", gsub("Sp", "", levels(btb$sp)[m]))
   contour.df <- cbind(rescalee(x.df), prob = a$prob[, m])
   ggplot(data = contour.df, aes(x, y)) +
     geom_raster(aes(fill = prob)) -> v
 
-  if (isTRUE(points)) {
-    v <- v + geom_point(data = subset(btb, sp == levels(btb$sp)[m]), aes(x, y),
-                        col = "grey15", shape = 21, fill = fill.col[m], size = 1)
-  }
-
-  if (isTRUE(contour.labels)) {
-    v <- v + geom_dl(aes(z = prob, label = ..level..), stat = "contour",
-                     method = list(method, cex = 0.65),
-                     colour = "grey10") +
-      guides(fill = FALSE)
-  } else {
-    v <- v + guides(fill = guide_colorbar(barwidth = 0.45, barheight = 16))
-  }
-
-  v + geom_contour(aes(z = prob), col = "grey20", size = 0.3) +
+  v <- v + geom_contour(aes(z = prob), col = "grey20", size = 0.3) +
     geom_polygon(data = plot.df, aes(x, y, group = id), fill = NA,
                  col = "grey25") +
     labs(x = "Eastings (1,000 km)", y = "Northings (1,000 km)") +
@@ -348,30 +261,65 @@ plot_spatial_model <- function(m = 1, method = "top.pieces", points = FALSE,
                           limits = c(0, 1), breaks = seq(0, 1, by = 0.2)) +
     theme_bw() +
     annotate("text", x = min(plot.df$x), y = max(plot.df$y),
-             label = current.label, vjust = 1, hjust = 0)
+             label = current.label, vjust = 1, hjust = 0) +
+    theme(panel.grid = element_blank())
+
+  if (isTRUE(points)) {
+    v <- v + geom_point(data = subset(btb, sp == levels(btb$sp)[m]), aes(x, y),
+                        col = "grey30", shape = 21, fill = fill.col[m], size = 1)
+  }
+
+  if (isTRUE(contour.labels)) {
+    v <- v + directlabels::geom_dl(aes(z = prob, label = ..level..),
+                                   stat = "contour", colour = "grey20",
+                                   method = list("far.from.others.borders",
+                                                 "calc.boxes", "draw.rects",
+                                                 cex = 0.65)) +
+      guides(fill = FALSE)
+  } else {
+    v <- v + guides(fill = guide_colorbar(barwidth = 0.45, barheight = 16))
+  }
+
+  v
 }
-p1 <- plot_spatial_model(1, points = FALSE, contour.labels = TRUE)
-p2 <- plot_spatial_model(2, points = FALSE, contour.labels = TRUE)
-p3 <- plot_spatial_model(3, points = FALSE, contour.labels = TRUE)
-p4 <- plot_spatial_model(4, points = FALSE, contour.labels = TRUE)
-plot_grid(p1, p2, p3, p4, ncol = 2,
-          labels = c("(a)", "(b)", "(c)", "(d)"), label_size = 10,
-          label_fontface = "plain")
+
+p1 <- plot_spatial_model(1, points = TRUE, contour.labels = TRUE)
+p2 <- plot_spatial_model(2, points = TRUE, contour.labels = TRUE)
+p3 <- plot_spatial_model(3, points = TRUE, contour.labels = TRUE)
+p4 <- plot_spatial_model(4, points = TRUE, contour.labels = TRUE)
+cowplot::plot_grid(p1, p2, p3, p4, ncol = 2,
+                   labels = c("(a)", "(b)", "(c)", "(d)"), label_size = 10,
+                   label_fontface = "plain")
+# ggsave("btb_spat_1.pdf", p1, width = 5, height = 5)
+# ggsave("btb_spat_2.pdf", p2, width = 5, height = 5)
+# ggsave("btb_spat_3.pdf", p3, width = 5, height = 5)
+# ggsave("btb_spat_4.pdf", p4, width = 5, height = 5)
 
 ## ---- plot.temporal.btb ----
 # Function to plot for SPATIO-TEMPORAL MODEL
-plot_stemporal_model <- function(year = 1, points = TRUE) {
-  current.period <- levels(btb$period)[year]
-  current.label <- paste0("Year: ", current.period)
-  alphaa <- 0.95
-  if (year == 1)
-    contour.df <- cbind(rescalee(x.df), prob = a1$prob)
-  if (year == 2)
-    contour.df <- cbind(rescalee(x.df), prob = a2$prob)
-  if (year == 3)
-    contour.df <- cbind(rescalee(x.df), prob = a3$prob)
-  if (year == 4)
-    contour.df <- cbind(rescalee(x.df), prob = a4$prob)
+mean.year <- attr(year, "scaled:center")
+plot_stemporal_model <- function(year = 1, points = TRUE,
+                                 mod = c("period", "temporal")) {
+  mod <- match.arg(mod, c("period", "temporal"))
+
+  if (mod == "period") {
+    current.period <- levels(btb$period)[year]
+    current.label <- paste0("Year: ", current.period)
+    alphaa <- 0.95
+    if (year == 1)
+      contour.df <- cbind(rescalee(x.df), prob = a1$prob)
+    if (year == 2)
+      contour.df <- cbind(rescalee(x.df), prob = a2$prob)
+    if (year == 3)
+      contour.df <- cbind(rescalee(x.df), prob = a3$prob)
+    if (year == 4)
+      contour.df <- cbind(rescalee(x.df), prob = a4$prob)
+  } else if (mod == "temporal") {
+    current.period <- as.integer(mean.year + unq.year[year])
+    current.label <- paste0("Year: ", current.period)
+    alphaa <- 0.95
+    contour.df <- cbind(rescalee(x.df), prob = b[[year]])
+  }
 
   # Add first layer ------------------------------------------------------------
   p <- ggplot(contour.df, aes(x, y)) +
@@ -386,12 +334,12 @@ plot_stemporal_model <- function(year = 1, points = TRUE) {
   }
 
   # Add decision boundaries ----------------------------------------------------
-  tmp.df <- melt(contour.df, id.vars = c("x", "y"))
+  tmp.df <- reshape2::melt(contour.df, id.vars = c("x", "y"))
   p <- p +
     geom_contour(data = tmp.df, aes(x, y, z = value, col = variable), size = 1,
                  linetype = "dashed", binwidth = 0.1,
                  breaks = seq(0.5, 0.5, by = 0.1)) +
-    scale_colour_manual(values = iprior::ggColPal(5)[1:4])
+    scale_colour_manual(values = iprior::gg_colour_hue(5)[1:4])
 
   # # Add contour labels ---------------------------------------------------------
   # for (j in 1:4) {
@@ -404,12 +352,17 @@ plot_stemporal_model <- function(year = 1, points = TRUE) {
 
   # Add points -----------------------------------------------------------------
   if (isTRUE(points)) {
-    as.tibble(btb) %>%
-      subset(sp != "Other" & period == current.period) -> points.df
+    if (mod == "period") {
+      as.tibble(btb) %>%
+        subset(sp != "Others" & period == current.period) -> points.df
+    } else if (mod == "temporal") {
+      as.tibble(btb) %>%
+        subset(sp != "Others" & year == current.period) -> points.df
+    }
     p <- p +
       geom_point(data = points.df, aes(x, y, fill = sp), col = "grey15",
-                 shape = 21, size = 1) +
-      scale_fill_manual(values = iprior::ggColPal(5)[1:4])
+                 shape = 21, size = 2) +
+      scale_fill_manual(values = fill.col[1:4])
   }
 
   p +
@@ -426,16 +379,36 @@ plot_stemporal_model <- function(year = 1, points = TRUE) {
                                title.position = "top",
                                override.aes = list(size = 2))) +
     theme(legend.position = c(0.99, 0.01), legend.justification = c(1, 0),
-          legend.title = element_text(size = 8), legend.title.align = 0.5) +
+          legend.title = element_text(size = 8), legend.title.align = 0.5,
+          panel.grid = element_blank()) +
     # legend.box.background = element_rect(fill = NA)) +
     annotate("text", x = min(plot.df$x), y = max(plot.df$y),
              label = current.label, vjust = 1, hjust = 0)
 }
 
-p1 <- plot_stemporal_model(1)
-p2 <- plot_stemporal_model(2)
-p3 <- plot_stemporal_model(3)
-p4 <- plot_stemporal_model(4)
-plot_grid(p1, p2, p3, p4, ncol = 2,
-          labels = c("(a)", "(b)", "(c)", "(d)"), label_size = 10,
-          label_fontface = "plain")
+p1a <- plot_stemporal_model(1)
+p2a <- plot_stemporal_model(2)
+p3a <- plot_stemporal_model(3)
+p4a <- plot_stemporal_model(4)
+cowplot::plot_grid(p1a, p2a, p3a, p4a, ncol = 2,
+                   labels = c("(a)", "(b)", "(c)", "(d)"), label_size = 10,
+                   label_fontface = "plain")
+
+p1b <- plot_stemporal_model(1, mod = "temporal")
+p2b <- plot_stemporal_model(5, mod = "temporal")
+p3b <- plot_stemporal_model(10, mod = "temporal")
+p4b <- plot_stemporal_model(14, mod = "temporal")
+cowplot::plot_grid(p1b, p2b, p3b, p4b, ncol = 2,
+                   labels = c("(a)", "(b)", "(c)", "(d)"), label_size = 10,
+                   label_fontface = "plain")
+
+## ---- gif ----
+# makeplot <- function() {
+#   for (i in seq_along(unq.year)) {
+#     p <- plot_stemporal_model(i, mod = "temporal")
+#     print(p)
+#   }
+#   animation::ani.pause()
+# }
+# animation::saveGIF(makeplot(), interval = 1, ani.width = 600, ani.height = 550)
+

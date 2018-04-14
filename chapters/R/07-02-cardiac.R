@@ -1,7 +1,8 @@
-# Chapter 7, Section 2
+# Chapter 5, examples
 # Prediction of cardiac arrhythmia
-source("00-prelim.R")
-
+library(iprobit)
+library(tidyverse)
+library(reshape2)
 
 ## ---- data.cardiac ----
 # 451 observations with 194 continuous covariates
@@ -44,57 +45,60 @@ ggplot(plot.df, aes(x = x, y = value, col = variable)) +
   theme(legend.position = "none")
 
 ## ---- mod.full.cardiac ----
-(mod <- iprobit(y, X, kernel = "FBM", control = list(maxit = 100)))
-# (mod.sex <- iprobit(y, X, sex, kernel = "FBM"))
-# logLik(mod)
-#
-# samp <- sample(1:451, size = 50)
-# yy <- y[samp]
-# XX <- X[samp, ]
-# sexx <- sex[samp]
-# for (i in 1:10) {
-#   mod.sex <- iprobit(yy, XX, sexx, kernel = "FBM",
+set.seed(123)
+(mod <- iprobit(y, X, kernel = "fbm", control = list(maxit = 100)))
+# (mod.sex <- iprobit(y, X, sex, kernel = "fbm"))
+# for (i in 1:20) {
+#   samp <- sample(1:451, size = 200)
+#   yy <- y[samp]
+#   XX <- X[samp, ]
+#   sexx <- sex[samp]
+#   mod.sex <- iprobit(yy, XX, sexx, kernel = "fbm",
 #                      control = list(maxit = 5 , silent = TRUE))
 #   mod.pred <- predict(mod.sex, list(X[-samp, ], sex[-samp]), y[-samp])
-#   # print(mod.sex)
-#   print(mod.pred$test.error)
+#   print(mod.pred$error.rate)
 # }
 
 ## ---- cardiac.mod.full.plot ----
-tmp <- cowplot::plot_grid(iplot_lb(mod, lab.pos = "down"), NULL,
-                          rel_widths = c(1, 0.06))
-cowplot::plot_grid(tmp, iplot_error(mod), nrow = 2)
+# tmp <- cowplot::plot_grid(iplot_lb(mod, lab.pos = "down"), NULL,
+#                           rel_widths = c(1, 0.06))
+# cowplot::plot_grid(tmp, iplot_error(mod), nrow = 2)
+iplot_lb(mod, lab.pos = "down")
+iplot_error(mod)
 
 ## ---- simulations.cardiac ----
 source("07-03-classification_simulation.R")
-res.canonical <- ipmySim(nsim = 100)
-res.fbm <- ipmySim(nsim = 100, kernel = "FBM")
+set.seed(456)
+res.canonical <- my_iprobit_sim(nsim = 100, kernel = "canonical")
+res.fbm       <- my_iprobit_sim(nsim = 100, kernel = "fbm")
+res.se        <- my_iprobit_sim(nsim = 100, kernel = "se")
 
-(tab <- tabRes("I-probit (linear)" = res.canonical,
-               "I-probit (FBM-0.5)" = res.fbm))
+(tab <- tab_res("I-probit (linear)"  = res.canonical,
+               "I-probit (fBm-0.5)" = res.fbm,
+               "I-probit (SE-1.0)"  = res.se))
 
 # Other results
 knn.mean        <- c(40.64, 38.94, 35.76)
 knn.se          <- c(0.33, 0.33, 0.36)
-knn             <- meanAndSE(knn.mean, knn.se)
+knn             <- mean_and_se(knn.mean, knn.se)
 svm.mean        <- c(36.16, 35.64, 35.20)
 svm.se          <- c(0.47, 0.39, 0.35)
-svm             <- meanAndSE(svm.mean, svm.se)
+svm             <- mean_and_se(svm.mean, svm.se)
 svm.radial.mean <- c(48.39, 47.24, 46.85)
 svm.radial.se   <- c(0.49, 0.46, 0.43)
-svm.radial      <- meanAndSE(svm.radial.mean, svm.radial.se)
+svm.radial      <- mean_and_se(svm.radial.mean, svm.radial.se)
 gpc.radial.mean <- c(37.28, 33.80, 29.31)
 gpc.radial.se   <- c(0.42, 0.40, 0.35)
-gpc.radial      <- meanAndSE(gpc.radial.mean, gpc.radial.se)
+gpc.radial      <- mean_and_se(gpc.radial.mean, gpc.radial.se)
 rf.mean         <- c(31.65, 26.72, 22.40)
 rf.se           <- c(0.39, 0.29, 0.31)
-rf              <- meanAndSE(rf.mean, rf.se)
+rf              <- mean_and_se(rf.mean, rf.se)
 nsc.mean        <- c(34.98, 33.00, 31.08) # nearest shrunken centroids
 nsc.se          <- c(0.46, 0.440, 0.41)
-nsc             <- meanAndSE(nsc.mean, nsc.se)
+nsc             <- mean_and_se(nsc.mean, nsc.se)
 penlog.mean     <- c(34.92, 30.48, 26.12) # l1-penalised logistic regression
 penlog.se       <- c(0.42, 0.34, 0.27)
-penlog          <- meanAndSE(penlog.mean, penlog.se)
+penlog          <- mean_and_se(penlog.mean, penlog.se)
 
 other.tab <- rbind(
   "k-nn"              = knn,
@@ -126,7 +130,7 @@ tab.se <- rbind(tab$tab.se,
                 "NSC"        = nsc.se,
                 "L-1 logistic"      = penlog.se
 )
-tab.ranks <- tabRank(tab.mean, tab.se)
+tab.ranks <- tab_rank(tab.mean, tab.se)
 
 # Tabulate results
 tab.all <- cbind(rbind(tab$tab, other.tab), Rank = tab.ranks)
@@ -142,7 +146,6 @@ load("data/cardiac_mean_results")
 load("data/cardiac_se_results")
 load("data/cardiac_rank_results")
 load("data/cardiac_results")
-rownames(tab.all)[2] <- "I-probit (fBm-0.5)"
 # knitr::kable(tab.all, align = "r")
 
 ## ---- plot_cardiac ----
@@ -157,7 +160,7 @@ plot.df <- cbind(plot.df, se = plot.se[, 2], id2 = id2)
 plot.df$id <- factor(plot.df$id,
                      levels = names(sort(tab.ranks, decreasing = TRUE)))
 
-ggplot(plot.df, aes(x = value / 100, y = id, col = id2, label = decPlac(value))) +
+ggplot(plot.df, aes(x = value / 100, y = id, col = id2, label = dec_plac(value))) +
   geom_point(size = 2) +
   geom_text(nudge_y = 0.25, size = 3) +
   geom_errorbarh(aes(xmin = (value - 1.96 * se) / 100,
@@ -166,5 +169,5 @@ ggplot(plot.df, aes(x = value / 100, y = id, col = id2, label = decPlac(value)))
   facet_grid(. ~ variable) +
   labs(x = "Misclassification rate", y = "Method") + guides(col = FALSE) +
   scale_x_continuous(labels = scales::percent) +
-  coord_cartesian(xlim = c(0.21, 0.42)) +
+  coord_cartesian(xlim = c(0.21, 0.50)) +
   theme_bw()

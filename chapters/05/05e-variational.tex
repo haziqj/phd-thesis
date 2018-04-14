@@ -92,7 +92,7 @@ We denote this by $\by_{i \bigcdot}^* \iid \tN(\tilde\bmu_{i \bigcdot}, \bPsi^{-
 The required expectations $\E\by_{i \bigcdot}^* = \E (y_{i1}^*,\dots,y_{im}^*)^\top$ are tricky to compute.
 One strategy might be Monte Carlo integration: using samples from $\N_m(\tilde\bmu_{i \bigcdot},  \bPsi^{-1})$, disregard those that do not satisfy the condition $y_{iy_i}^* > y_{ik}^*, \forall k \neq j$, and then take the sample average.
 This works reasonably well so long as the truncation region does not fall into the extreme tails of the multivariate normal.
-Alternatively, a fast, Gibbs based approach to estimating the mean or any other quantity $\E r(\by_{i \bigcdot}^*)$ can be implemented, and this is detailed in the appendix.
+Alternatively, a fast, Gibbs based approach to estimating the mean or any other quantity $\E [r(\by_{i \bigcdot}^*)]$ can be implemented, and this is detailed in the appendix.
 
 If the independent I-probit model is considered, where the covariance matrix has the independent structure $\bPsi = \diag(\sigma_1^{-2},\dots,\sigma_m^{-2})$, then the expected value can be considered component-wise, and each component of this expectation is given by
 \begin{align}\label{eq:ystarupdate}

@@ -109,15 +109,83 @@ However, with multinomial responses, the arduous task of computing class probabi
 
 \subsection{Comparison of estimation methods}
 
-\hltodo{Compare: Laplace, variational and HMC.}
+In this subsection, we utilise a toy binary classification data set which has been simulated according to a spiral pattern, as in \cref{fig:exampleiprobit}.
+The predictor variables are $X_1$ and $X_2$, each of which are scaled similarly.
 
-The three estimation methods described aim to overcome the intractable integral by means of either a deterministic approximation (Laplace and variational inference) or a stochastic approximation (MCMC).
-In the Laplace and variational method, the posterior distribution of $\bw$ ends up being approximated by a Gaussian distribution, although the mean and variance is different in each method.
-In essence, once $\bw|\by$ is approximately normal, then estimation of the parameters $\theta$ using a direct optimisation approach or an EM-type approach is straightforward.
-On the other hand, MCMC approximates the density $p(\bw|\by)$ using samples generated via Gibbs sampling or HMC, and these samples would asymptotically be representative of draws from the true posterior.
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figure/05-example_data}
+  \caption{A plot of simulated spiral data set.}
+  \label{fig:exampleiprobit}
+\end{figure}
 
-Consider the data set...
-Plot the data. Explain priors for HMC and variational. Compare.
+The I-probit model that is fitted is
+\begin{gather*}
+  y_i \sim \Bern(p_i) \\
+  \Phi^{-1}(p_i) = \alpha + \sum_{k=1}^n h_\lambda(x_i,x_k)w_k  \\
+  w_1,\dots,w_n \iid \N(0,1).
+\end{gather*}
+This binary model follows from the more general multinomial I-probit model by fixing all latent propensities in one of the classes to zero, and setting $\bPsi = \bI_m$.
+This is possible because only differences in latent propensities are of interest, and not the actual values themselves, and thus only $m-1$ sets of posterior regression functions need to be estimated---see \cref{sec:mnint} for further details.
 
+The three estimation methods described aim to overcome the intractable integral by means of either a deterministic approximation (Laplace and variational inference) or a stochastic approximation (Hamiltonian MC).
+For the Bayesian methods, i.e. variational inference and Hamiltonian MC, vague priors were used on $\alpha$ and $\lambda$, namely $\N(0,100)$ and $\N_+(0,100)$ respectively.
+Restriction of $\lambda$ to the positive orthant is required for identifiability.
+The Laplace and variational methods were performed in the \pkg{iprobit} package, while \proglang{Stan} was used to code the Hamiltonian MC sampler.
+The results are presented in \cref{tab:compreiprobit}.
 
+\begin{table}[hbt]
+\centering
+\caption{Table comparing the estimated parameter values, (marginal) log-likelihood values, and also time taken for the three estimation methods.}
+\label{tab:compreiprobit}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+& Laplace approximation 
+& Variational inference 
+& Hamiltonian MC          \\ \midrule
+Intercept ($\alpha$)      & -0.02 (0.03)           & 0.00 (0.06)    & 0.00 (0.58)  \\
+Scale ($\lambda$)      & 0.85 (0.01)         & 5.67 (0.23)  & 29.3 (5.21)     \\[0.5em]
+Log density    & -202.7              & -140.7       & -163.8                  \\
+Error rate (\%) & 44.7               & 0.00        & 2.24                   \\
+Brier score & 0.20               & 0.02        & 0.01                   \\[0.5em]
+Iterations     & 20                  & 56          & 2000                    \\
+Time taken (s) & >3600                & 5.32         & >3600                     \\ \bottomrule
+\end{tabular}
+\end{table}
 
+The three methods pretty much concur on the estimation of the intercept, but not on the RKHS scale parameter.
+As a result, the log-density value at the optima is also different in all three methods.
+Notice the high posterior standard deviation for the scale parameter in the HMC method.
+The posterior density for $\lambda$ was very positively skewed, and this contributed to the large posterior mean.
+
+A plot of the log-likelihood surface for three methods in \cref{fig:exampleiprobitfit} reveals some insight.
+The variational likelihood reveals two ridges, with the maxima occurring around the intersection of these two ridges.
+The Laplace likelihood seems to indicate a similar shape---in both the Laplace and variational method, the posterior distribution of $\bw$ is approximated by a Gaussian distribution, with different means and variances.
+However, parts of the Laplace likelihood are poorly approximated resulting in a loss of fidelity around the supposed maxima, which might have contributed to the set of values that were estimated.
+Laplace's method is known to yield poor approximations to probit-type likelihoods, as studied by \citet{kuss2005assessing}.
+On the other hand, the log-likelihood using the posterior distribution of the Hamiltonian MC sampler (treating parameters as fixed values) yields a completely different shape compared to the other two methods.
+
+In terms of predictive abilities, both the variational and Hamiltonian MC methods, even though the posteriors are differently estimated, has good predictive performance as indicated by their error rates and Brier scores.
+\cref{fig:exampleiprobitfit} shows that HMC is more confident of new data predictions compared to variational inference, as indicated by the intensity of the shaded regions (HMC is stronger than VI).
+Laplace's method gave poor predictive performance.
+
+Finally, on the computational side, variational inference was by far the fastest method to fit the model.
+Sampling using Hamiltonian MC was very slow, because the parameter space is in effect $O(n + 2)$ (parameters are $\{w_1,\dots,w_n,\alpha,\lambda\}$), and unlike in the normal model, we are not able to easily marginalise out the I-prior.
+As for Laplace, each Newton step involves obtaining posterior modes of the $w$'s, and this contributed to the slowness of this method.
+The reality is that variational inference takes seconds to complete what either the Laplace or full MCMC methods would take hours to.
+The predictive performance, while not as good as HMC, is certainly an acceptable compromise in favour of speed.
+
+\begin{figure}[p]
+  \centering
+  \vspace{1em}
+  \includegraphics[width=0.49\textwidth]{figure/05-fit_lap}
+  \includegraphics[width=0.49\textwidth]{figure/05-lik_lap}
+  \vspace{1em}
+  \includegraphics[width=0.49\textwidth]{figure/05-fit_vi}
+  \includegraphics[width=0.49\textwidth]{figure/05-lik_vi}
+  \vspace{1em}
+  \includegraphics[width=0.49\textwidth]{figure/05-fit_hmc}
+  \includegraphics[width=0.49\textwidth]{figure/05-lik_hmc}
+  \caption{Plots showing predicted probabilities (shaded region) for belonging to class 1 or 2 indicated by colour and intensity, and likelihood surface plots for (a) Laplace's method, (b) variational inference, and (c) Hamiltonian MC.}
+  \label{fig:exampleiprobitfit}
+\end{figure}
