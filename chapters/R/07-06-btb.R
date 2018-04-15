@@ -175,26 +175,14 @@ kable(tab.btb, booktabs = TRUE, format = "latex", linesep = "", escape = FALSE,
       caption = "Results of the fitted I-probit models.") %>%
   kable_styling() %>%
   add_header_above(c(" "               = 1,
-                     "Intercepts only" = 2,
-                     "Spatial only"    = 2,
-                     # " "               = 1,
-                     "Spatio-temporal" = 2,
-                     # " "               = 1,
-                     "Spatio-period"   = 2)) %>%
-  # add_header_above(c(" ", "Model" = 12), bold = TRUE) %>%
-  # group_rows("Shared scale model", 1, 2) %>%
-  # group_rows("Separate scale model", 3, 12) %>%
-  # add_footnote(c(
-  #   paste0("Lower-bound values  (Brier scores) for the shared scale model are ",
-  #          decPlac(logLik(mod1), 1), " (", decPlac(get_brier_score(mod1), 3), "), ",
-  #          decPlac(logLik(mod3), 1), " (", decPlac(get_brier_score(mod3), 3), "), and ",
-  #          decPlac(logLik(mod3.1), 1), " (", decPlac(get_brier_score(mod3.1), 3), ") respectively."),
-  #   paste0("Lower-bound values  (Brier scores) for the separate scale model are ",
-  #          decPlac(logLik(mod1a), 1), " (", decPlac(get_brier_score(mod1a), 3), "), ",
-  #          decPlac(logLik(mod3a), 1), " (", decPlac(get_brier_score(mod3a), 3), "), and ",
-#          decPlac(logLik(mod3.1a), 1), " (", decPlac(get_brier_score(mod3.1a), 3), ") respectively.")
-# ), notation = "symbol") %>%
-landscape()
+                     "$$M_0$$: Intercepts only" = 2,
+                     " "               = 1,
+                     "$$M_1$$: Spatial only"    = 2,
+                     " "               = 1,
+                     "$$M_2$$: Spatio-temporal" = 2,
+                     " "               = 1,
+                     "$$M_3$$: Spatio-period"   = 2)) %>%
+  landscape()
 
 ## ---- plot.btb.prep ----
 # # Obtain points inside the polygon
@@ -394,13 +382,13 @@ cowplot::plot_grid(p1a, p2a, p3a, p4a, ncol = 2,
                    labels = c("(a)", "(b)", "(c)", "(d)"), label_size = 10,
                    label_fontface = "plain")
 
-p1b <- plot_stemporal_model(1, mod = "temporal")
-p2b <- plot_stemporal_model(5, mod = "temporal")
-p3b <- plot_stemporal_model(10, mod = "temporal")
-p4b <- plot_stemporal_model(14, mod = "temporal")
-cowplot::plot_grid(p1b, p2b, p3b, p4b, ncol = 2,
-                   labels = c("(a)", "(b)", "(c)", "(d)"), label_size = 10,
-                   label_fontface = "plain")
+# p1b <- plot_stemporal_model(1, mod = "temporal")
+# p2b <- plot_stemporal_model(5, mod = "temporal")
+# p3b <- plot_stemporal_model(10, mod = "temporal")
+# p4b <- plot_stemporal_model(14, mod = "temporal")
+# cowplot::plot_grid(p1b, p2b, p3b, p4b, ncol = 2,
+#                    labels = c("(a)", "(b)", "(c)", "(d)"), label_size = 10,
+#                    label_fontface = "plain")
 
 ## ---- gif ----
 # makeplot <- function() {

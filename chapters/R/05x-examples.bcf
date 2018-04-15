@@ -1939,6 +1939,7 @@
     <bcf:citekey order="13">diggle2005nonparametric</bcf:citekey>
     <bcf:citekey order="14">diggle2013spatial</bcf:citekey>
     <bcf:citekey order="15">taylor2013lgcp</bcf:citekey>
+    <bcf:citekey order="16">diggle2005nonparametric</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nyt">

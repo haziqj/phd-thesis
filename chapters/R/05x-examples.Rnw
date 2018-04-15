@@ -363,61 +363,52 @@ Other work includes \citet{diggle2013spatial}, who used a fully Bayes scheme for
 @
 
 We are able to investigate any spatio-temporal patterns of infection using I-priors rather simply.
-Let $p_{ij}$ denote the probability that a particular animal $i$ is infected with the disease with spoligotype $j \in \{1,\dots,m\}$.
-We model the transformed probabilities $g(p_{ij})$ (as described in the categorical response chapter) as following a smooth function $f$ which takes two covariates: the spatial data $x_1$ (Northings and Eastings, measured in kilometres), and the temporal data $x_2$ (year of infection):
+Let $p_{ij}$ denote the probability that a particular farm $i$ is infected with a BTB disease with spoligotype $j \in \{1,\dots,5\}$.
+We model the transformed probabilities $g(p_{ij})$ (as described in the categorical response chapter) as following a smooth function $f$ which takes two covariates: the spatial data $x_1 \in \bbR^2$ (Northings and Eastings, measured in kilometres), and the temporal data $x_2$ (year of infection):
 \begin{align*}
   g(p_{ij}) &= f_j(x_1, x_2) \\
   &= f_{1j}(x_1) + f_{2j}(x_2) + f_{12j}(x_1, x_2)
 \end{align*}
-We assume a smooth effect of space and time on the probabilities, and an appropriate RKHS for the functions $f_1$ and $f_2$ are the fBm-0.5 RKHS. Alternatively, as per Diggle et al., divide the data into four distinct time periods: 1) 1996 and earlier; 2) 1997 to 1998; 3) 1999 to 2000; and finally 4) 2001 to 2002. In this case, $x_2$ would indicate which period the infection took place in, and thus would have a nominal effect on the probabilities. An appropriate RKHS for $f_2$ in such a case would be the Pearson RKHS. In either case, the function $f_{12}$ would be the ``interaction effect'', meaning that with such an effect present, the spatial distribution of the diseases are assumed to vary across the years.
+We assume a smooth effect of space and time on the probabilities, and appropriate RKHSs for the functions $f_1 \in \cF_1$ and $f_2 \in \cF_2$ are the fBm-0.5 RKHS.
+Alternatively, as per \citet{diggle2005nonparametric}, divide the data into four distinct time periods:
+1) 1996 and earlier;
+2) 1997 to 1998;
+3) 1999 to 2000;
+and finally 4) 2001 to 2002.
+In this case, $x_2$ would indicate which period the infection took place in, and thus would have a nominal effect on the probabilities.
+An appropriate RKHS for $f_2$ in such a case would be the Pearson RKHS.
+In either case, the function $f_{12} \in \cF_1 \otimes \cF_2$ would be the ``interaction effect'', meaning that with such an effect present, the spatial distribution of the diseases are assumed to vary across the years.
+
+% The parameters $\lambda_{1j}$ and $\lambda_{2j}$ are the RKHS scale parameters for the spatial and temporal covariates respectively.
 
 Let $h_k$, $k \in \{1,2\}$ denote the reproducing kernel of the spatial and temporal RKHSs respectively.
-Then, an I-prior on $f_j$ takes the form
+Then, an I-prior on $f_j$, $j=1,\dots,5$, takes the form
 \[
-  f_j(x_1, x_2) = \lambda_{1j} \sum_{i=1}^n h_1(x_1, x_{i1}) w_{ij} +
-  \lambda_{2j} \sum_{i=1}^n h_2(x_2, x_{i2}) w_{ij} +
-   \lambda_{1j} \lambda_{2j} \sum_{i=1}^n  h_1(x_1, x_{i1})h_2(x_2, x_{i2}) w_{ij}
+  f_j(x_1,x_2) = \sum_{i=1}^n \big(
+  \lambda_1 h_1(x_1, x_{i1}) + \lambda_2 h_2(x_2, x_{i2}) +
+  \lambda_1\lambda_2 h_1(x_1, x_{i1}) h_2(x_2, x_{i2})
+  \big)w_{ij}
 \]
-where $\bw_j = (w_{1j}, \dots, w_{nj})^\top \sim \N(0,\bI_n)$ and each of the $\bw_j$ are also independent of each other.
-The parameters $\lambda_{1j}$ and $\lambda_{2j}$ are the RKHS scale parameters for the spatial and temporal covariates respectively.
-Notice that the functions are indexed by the classes $j$, such that there would be $2m$ scale parameters to estimate.
-This is the more general case, in which we assume \emph{separate scale} parameters in each class.
-However, we may also restrict the scale parameters to be equivalent in each class, so that this so-called \emph{shared scale} model has only two parameters to estimate, which is simpler to do inference.
-Note that there are also intercept parameters to estimate (one in each class), but these will not be reported as they are irrelevant to the discussion at hand.
-
-Spatio-temporal effects of the BTB breakdowns can be easily inferred through the RKHS scale parameters.
-The hypothesis of temporal significance is the same as testing the significance of the $\lambda_2$ parameter, while the test of both spatial and temporal effects are conducted on $\lambda_1$ and $\lambda_2$ simultaneously (equivalent to modelling $f$ with a constant).
-For these tests, it is simpler to infer from the shared scale model, for which we can read the results directly of off Table \ref{tab:table.btb}.
-The said table displays the posterior mean estimate of the scale parameters, and together with its posterior standard deviation.
-From Chapter X, we know that these scale parameters follow a normal posterior distribution, so we can calculate the $Z$-scores by dividing the mean by its corresponding s.d..
-Absolute values greater than three would satisfy a Bayesian hypothesis test of significance at the 0.01 level, for which we see all parameters satisfy in the shared scale model.
+where it is assumed $(w_{i1},\dots,w_{i5})^\top \iid \N(\bzero,\bI_5)$.
+Spatio-temporal effects of the BTB breakdowns can then be easily inferred through the RKHS scale parameters.
+The hypothesis of temporal significance is the same as testing the significance of the $\lambda_2$ parameter, while the test of both spatial and temporal effects are conducted on $\lambda_1$ and $\lambda_2$ simultaneously.
+From \hltodo{Chapter X}, we know that these scale parameters follow a normal posterior distribution, so we can calculate the $Z$-scores by dividing the mean by its corresponding standard deviation.
+Absolute values greater than three would satisfy a Bayesian hypothesis test of significance at the 0.01 level.
+The conclusion from \cref{tab:table.btb} is that the data supports a hypothesis for a spatio-temporal or spatio-period model.
+A similar conclusion is obtained  by looking at evidence lower bound values (ELBO) obtained from variational inference for model comparison.
 
 <<table.btb, echo = FALSE, results = "asis">>=
 @
-
-A similar conclusion is reached when inferring from the separate scale model. Instead of individual tests of significance, we now need to test
-\[
-  \text{H}_0: \lambda_1 = \dots = \lambda_m = 0.
-\]
-We know that by the mean-field approximation used, the $\lambda_j$s are independent of each other, and therefore a $\chi^2$ test statistic can be built via
-\[
-  \chi^2 = \sum_{j=1}^m Z_j^2
-\]
-which is then compared against extreme values of the $\chi^2_m$-distribution.
-As is often the case, separate scale models tend to fit the data better as it gives more generality due to having different scale parameters in each class.
-This is also the case for the BTB data, where we see from the footnotes of Table \ref{tab:table.btb} that the Brier scores for the separate scale models are better than the Brier scores in the shared scale models.
-For all following plots, we made use of the separate scale model for predicting the surface probabilities.
-Another comment regarding the models is that the conclusion remains the same if we had used the periodic formulation for $x_2$.
 
 For a more visual approach, we can look at the plots of the surface probabilities.
 To obtain these probabilities, we first determined the spatial points (Northings and Eastings) which fall inside the polygon which makes up Cornwall.
 We then obtained predicted probabilities for each class of disease at each location.
 Figure \ref{fig:plot.btb} was obtained using the model with spatial covariates only, thus ignoring any temporal effects.
-In the case of the spatio-temporal model, we used the model which had the period formulation for time.
-This way, we can obtain the surface probabilities in only four time periods, although there is no issue with using the continuous time model.
-It is more economical to display four plots rather than the 14 yearly plots within the margins of this thesis.
+In the case of the spatio-temporal model, we used the model which had the period formulation for time (Model 3).
+This way, we can display the surface probabilities of the time periods in four plots only, which is more economical to exhibit within the margins of this thesis.
+Note that there is no issue with using the continuous time model---we have produced an animated gif image at \hltodo{url}, showing the evolution of the surface probabilities over time.
 
-<<plot.btb, echo = FALSE, fig.height = 7.5, fig.width = 8, out.width = "\\linewidth", fig.cap = "Caption.", fig.pos = "h", dev = "png", dpi = 300, cache = TRUE>>=
+<<plot.btb, echo = FALSE, fig.height = 7.5, fig.width = 8, out.width = "\\linewidth", fig.cap = "Caption.", fig.pos = "p", dev = "png", dpi = 300, cache = TRUE>>=
 @
 
 As the model suggests, there is indeed spatial segregation for the four most common spoligotypes, and this is also very prominently seen from Figure \ref{fig:plot.btb}.
@@ -429,7 +420,7 @@ Spoligotype 9, which is most commonly seen in the east of Cornwall, seems to hav
 The other two spoligotypes seem to be rather constant over the years.
 This is supported also by the spatio-period model results in Table \ref{tab:table.btb}, where the test of nullity for the scale parameters of these two spoligotypes are not rejected.
 
-<<plot.temporal.btb, echo = FALSE, warning = FALSE, fig.height = 7.5, fig.width = 8, out.width = "\\linewidth", fig.cap = "Caption.", fig.pos = "h", dev = "png", dpi = 300, cache = TRUE>>=
+<<plot.temporal.btb, echo = FALSE, warning = FALSE, fig.height = 7.5, fig.width = 8, out.width = "\\linewidth", fig.cap = "Caption.", fig.pos = "p", dev = "png", dpi = 300, cache = TRUE>>=
 @
 
 \end{document}
