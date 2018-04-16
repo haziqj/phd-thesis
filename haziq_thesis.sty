@@ -106,6 +106,18 @@
 \usetikzlibrary{patterns,hobby}
 \usepackage{pgfplots}    % these are for squiggly lines
 \pgfplotsset{compat=1.6}  % https://tex.stackexchange.com/questions/160237/draw-somewhat-random-function/160274
+\usepackage{placeins}
+\makeatletter
+\AtBeginDocument{%
+  \expandafter\renewcommand\expandafter\subsection\expandafter
+    {\expandafter\@fb@secFB\subsection}%
+  \newcommand\@fb@secFB{\FloatBarrier
+    \gdef\@fb@afterHHook{\@fb@topbarrier \gdef\@fb@afterHHook{}}}%
+  \g@addto@macro\@afterheading{\@fb@afterHHook}%
+  \gdef\@fb@afterHHook{}%
+}
+\makeatother
+% https://tex.stackexchange.com/questions/118662/use-placeins-for-subsections
 
 % Tables
 \usepackage{longtable}

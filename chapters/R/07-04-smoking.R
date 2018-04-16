@@ -110,11 +110,10 @@ as.tibble(dat.smoke) %>%
 # lambda[1,]   0.01437   0.01437
 # lambda[2,]   0.00087   0.00087
 
-
-## ---- fit.smoke ----
-# load("data/smoking-mod1"); l1 <- logLik(mod1)
-# load("data/smoking-mod2"); l2 <- logLik(mod2)
-# load("data/smoking-mod3"); l3 <- logLik(mod3)
+# ## ---- fit.smoke ----
+# load("data/smoking-mod1"); l1 <- logLik(mod1); e1 <- get_error_rate(mod1)
+# load("data/smoking-mod2"); l2 <- logLik(mod2); e2 <- get_error_rate(mod2)
+# load("data/smoking-mod3"); l3 <- logLik(mod3); e3 <- get_error_rate(mod3)
 # calc_odds <- function(n.samp = 100) {
 #   studies <- levels(dat.smoke$Study)
 #   as.tibble(dat.smoke) %>%
@@ -153,16 +152,19 @@ as.tibble(dat.smoke) %>%
 #   tab
 # }
 # l <- c(l1, l2, l3)
+# err <- c(e1, e2, e3)
 # b <- c(get_brier_score(mod1), get_brier_score(mod2), get_brier_score(mod3))
 # smoke.ip.res <- calc_odds(5)
 # save(smoke.ip.res, file = "data/smoking-res")
 # save(l, file = "data/smoking-lb")
 # save(b, file = "data/smoking-brier")
+# save(err, file = "data/smoking-error")
 
 ## ---- mod.compare.smoke ----
 load("data/smoking-res")
 load("data/smoking-lb")
 load("data/smoking-brier")
+load("data/smoking-error")
 tab.compare <- as.data.frame(cbind(
   c("$f_1$", "$f_1 + f_2$",
     "$f_1 + f_2 + f_{12}$"),

@@ -156,13 +156,13 @@ rest_fn <- function(mod) {
     # loglik = c(iprior::dec_plac(logLik(mod), 2), NA),
     loglik = c(iprior::dec_plac(loglik, 2), NA),
     error  = c(iprior::dec_plac(get_error_rate(mod), 2), NA),
-    brier  = c(iprior::dec_plac(get_brier_score(mod), 2), NA)
+    brier  = c(iprior::dec_plac(get_brier_score(mod), 3), NA)
   )
 }
 tab.btb <- cbind(rest_fn(mod0), " " = "",
                  rest_fn(mod1), " " = "",
-                 rest_fn(mod2), " " = "",
-                 rest_fn(mod3))
+                 rest_fn(mod3), " " = "",
+                 rest_fn(mod2))
 rownames(tab.btb) <- c(
   paste0("Intercept (", levels(btb$sp), ")"),
   "Scale (spatial)", "Scale (temporal)",
@@ -175,13 +175,13 @@ kable(tab.btb, booktabs = TRUE, format = "latex", linesep = "", escape = FALSE,
       caption = "Results of the fitted I-probit models.") %>%
   kable_styling() %>%
   add_header_above(c(" "               = 1,
-                     "$$M_0$$: Intercepts only" = 2,
+                     "$M_0$: Intercepts only" = 2,
                      " "               = 1,
-                     "$$M_1$$: Spatial only"    = 2,
+                     "$M_1$: Spatial only"    = 2,
                      " "               = 1,
-                     "$$M_2$$: Spatio-temporal" = 2,
+                     "$M_2$: Spatio-temporal" = 2,
                      " "               = 1,
-                     "$$M_3$$: Spatio-period"   = 2)) %>%
+                     "$M_3$: Spatio-period"   = 2)) %>%
   landscape()
 
 ## ---- plot.btb.prep ----

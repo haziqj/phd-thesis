@@ -85,6 +85,7 @@ We find that the many advantages of the normal I-prior methodology  transfer ove
 
 \section{Examples}
 \label{sec:iprobiteg}
+\input{05x-examples}
 
 \section{Conclusion}
 
@@ -128,10 +129,15 @@ Suggestions for future work include:
   The $O(n^3m)$ time requirement for estimating I-probit models hinder its use towards large-data applications.
   In a limited study, we did not obtain reliable improvements using low-rank approximations of the kernel matrix such as the Nyström method.
   The key to improving computational efficiency could lie in sparse variational methods, a suggestion that was made to improve normal I-prior models as well.
-  \hltodo[Perhaps plot time vs $n$, for varying $m$, using simulated data in \pkg{iprobit}.]{}
-  
 %  \item \textbf{Efficient calculation of normal integrals}.
 \end{enumerate}
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.9\textwidth]{figure/05-iprobit_runtime}
+  \caption[Time taken to complete a single variational inference iteration]{Time taken to complete a single variational inference iteration for varying sample sizes and number of classes $m$. The solid line represents actual timings, while the dotted lines are linear extrapolations.}
+\end{figure}
+
 
 \section{Miscellanea}
 \input{05-misc}

@@ -26,7 +26,7 @@ ggplot2::theme_set(theme_bw())
 
 # knitr settings
 chapter.no <- substr(current_input(), start = 0, stop = 2)
-knitr::opts_chunk$set(fig.align = "center", prompt = TRUE, myspac = TRUE,
+knitr::opts_chunk$set(fig.align = "center", prompt = TRUE,
                       fig.path = paste0("figure/", chapter.no, "-"))
 knitr::knit_theme$set("bclear")
 options(prompt = "R> ", continue = "+  ", width = 70,
@@ -34,6 +34,7 @@ options(prompt = "R> ", continue = "+  ", width = 70,
 knit_hooks$set(myspac = function(before, options, envir) {
   if (before) return("\\singlespacing")
 })
+# need to set knitr::opts_chunk$set(myspac = TRUE)
 
 # BibLaTeX with Biber backend
 system(paste("biber", sub("\\.Rnw$", "", current_input())))

@@ -102,8 +102,7 @@ As expected, the lower bound value increases over time until a convergence crite
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\singlespacing\end{kframe}\begin{figure}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[t]
 
 {\centering \includegraphics[width=0.49\linewidth]{figure/05-cardiac_mod_full_plot-1} 
 \includegraphics[width=0.49\linewidth]{figure/05-cardiac_mod_full_plot-2} 
@@ -132,7 +131,7 @@ The experiment is set up as follows:
 Results for the methods listed above were extracted from the in-depth study by \citet{cannings2017random}, who also conducted an identical experiment using their random projection ensemble classification method (RP).
 The results are tabulated in \cref{tab:cardiac}.
 
-\begin{table}
+\begin{table}[htb]
   \caption{Mean out-of-sample misclassification rates and standard errors in parantheses for 100 runs of various training ($s$) and test ($451-s$) sizes for the cardiac arrhythmia binary classification task.}
   \label{tab:cardiac}
   \centering
@@ -162,7 +161,6 @@ The results are tabulated in \cref{tab:cardiac}.
   \hspace{0.5em} GP (Gaussian)     & 37.28 (0.42) & 33.80 (0.40) & 29.31 (0.35) \\
   \hspace{0.5em} NSC               & 34.98 (0.46) & 33.00 (0.40) & 31.08 (0.41) \\
   \hspace{0.5em} L-1 logistic      & 34.92 (0.42) & 30.48 (0.34) & 26.12 (0.27) \\
-  \bottomrule
   \end{tabular}
 \end{table}
 
@@ -188,10 +186,8 @@ Because of the study-specific characteristics, it is natural to consider multile
 Regardless of method, the approach of analysing study-level treatment effects instead of patient-level data only is the paradigm for meta-analysis, and our I-prior model takes this approach as well.
 % However, analysing study-level estimates of effect size can be problematic for various reasons, such as small group samples or rare occurences.
 
-
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\singlespacing\end{kframe}\begin{figure}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[htb]
 
 {\centering \includegraphics[width=\maxwidth]{figure/05-plot_data_smoke-1} 
 
@@ -202,7 +198,6 @@ Regardless of method, the approach of analysing study-level treatment effects in
 
 
 \end{knitrout}
-
 A summary of the data is displayed by the box-plot in Figure \ref{fig:plot.data.smoke}.
 On the whole, there are a total of 5908 patients, and they are distributed roughly equally among the control and treatment groups (46.33\% and 53.67\% respectively, on average).
 From the box-plots, it is evident that there are more patients who quit smoking in the treatment group as compared to the placebo control group.
@@ -235,7 +230,7 @@ The logistic random-effects model is
   \begin{pmatrix} \sigma_0^2 & \sigma_{01} \\ \sigma_{01} & \sigma_1^2 \\ \end{pmatrix}
   \right)
 \end{gather*}
-\citet{agresti2000tutorial} also made the additional assumption that $\sigma_{01} = 0$ so that, coupled with the contrast coding used for $x_{ij}$, the total variance $\Var(\beta_{0j} + \beta_{1j}x_{ij})$ would be constant in both treatment groups.
+\citet{agresti2000tutorial} also made the additional assumption $\sigma_{01} = 0$, so that, coupled with the contrast coding used for $x_{ij}$, the total variance $\Var(\beta_{0j} + \beta_{1j}x_{ij})$ would be constant in both treatment groups.
 The overall log odds ratio is represented by $\beta_1$, and this is estimated as $0.57 = \log 1.76$.
 
 In an I-prior model, the Bernoulli probabilities $p_{ij}$ are regressed against the treatment group indicators $x_{ij}$ and also the patients' study group $j$ via the regression function $f$ and a probit link:
@@ -252,22 +247,26 @@ In I-prior modelling, there are only two parameters to estimate, while in the st
 The results of the I-prior fit are summarised in the table below.
 
 
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
 \begin{table}[hbt]
   \centering
   \caption{Results of the I-prior model fit for three models.}
   \label{tab:mod.compare.smoke}
-  \begin{tabular}{lrrr}
+  \begin{tabular}{lrrrR{2cm}}
   \toprule
-  Model & ELBO & Brier score & No. of parameters \\
+  Model & Log-likelihood & Error rate (\%) & Brier score & No. of parameters \\
   \midrule
   $f_1$
   &-3210.76
+  &23.65
   &0.179 & 1 \\
   $f_1+f_2$
   &-3142.24
+  &29.30
   &0.206 & 2 \\
   $f_1+f_2+f_{12}$
   &-3091.20
+  &23.48
   &0.168 & 2 \\
   \bottomrule
   \end{tabular}
@@ -278,7 +277,7 @@ The approximated marginal log-likelihood value for the I-prior model (i.e. varia
 2) A model with a treatment effect and a study group effect; and
 3) Model 2 with the additional assumption that treatment effect varies across study groups.
 Model 1 disregards the study group effects, while Model 2 assumes that the effectiveness of the nicotine gum treatment does not vary across study groups (akin to a varying-intercept model).
-A model comparison using the evidence lower bound indicates that Model 3 has the highest value, and the difference is significant from a Bayes factor standpoint ($\BF(M_3,M_1)$ and $\BF(M_3,M_2)$ are bot greater than 150).
+A model comparison using the evidence lower bound indicates that Model 3 has the highest value, and the difference is significant from a Bayes factor standpoint ($\BF(M_3,M_1)$ and $\BF(M_3,M_2)$ are both greater than 150).
 % with both Bayes factor comparing Model 3 against Models 1 and 2 being greater than 150.
 % $\BF(M_3, M_1)iprior::dec_plac(exp(l[3] - l[1]), 2)$ and $\BF(M_3, M_2)iprior::dec_plac(exp(l[3] - l[2]), 2)$.
 % Although not soundly based in theory, we may compare variational lower bounds of the three models for model selection as a proxy to using the true log-likelihood value.
@@ -297,11 +296,10 @@ These log odds ratio for each study group can then be calculated as usual.
 For the overall log odds ratio, the probabilities that are used are the averaged probabilities weighted according to the sample sizes in each group.
 This has been calculated as $0.55 = \log 1.73$, slightly lower than both the raw log odds ratio and the log odds ratio estimated by the logistic random-effects model.
 This can perhaps be attributed to some shrinkage of the estimated probabilities due to placing a prior with zero mean on the regression functions.
-The credibility intervals in \cref{smoke.forest.plot} for the log odds ratios under an I-prior are also noticeably narrower compared to the multilevel model fitted.
+The credibility intervals in \cref{fig:smoke.forest.plot} for the log odds ratios under an I-prior are also noticeably narrower compared to the multilevel model fitted.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\singlespacing\end{kframe}\begin{figure}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[p]
 
 {\centering \includegraphics[width=\linewidth]{figure/05-smoke_forest_plot-1} 
 
@@ -330,7 +328,7 @@ Machine learning methods such as neural networks and nearest neighbour methods w
 
 \footnotetext{Data is publicaly available from the UCI Machine Learning Repository, URL: \url{https://archive.ics.uci.edu/ml/datasets/Connectionist+Bench+(Vowel+Recognition+-+Deterding+Data)}.}
 
-\begin{table}[]
+\begin{table}[htb]
 \centering
 \caption{The eleven words that make up the classes of vowels.}
 \label{tab:vowel}
@@ -357,8 +355,7 @@ Multiple restarts from different random seeds were conducted, and we found that 
 This alleviates any concerns that the model might have converged to different multiple local optima.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\singlespacing\end{kframe}\begin{figure}[h]
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[htb]
 
 {\centering \subfloat[Canonical kernel\label{fig:vowel.confusion.matrix1}]{\includegraphics[width=0.485\linewidth]{figure/05-vowel_confusion_matrix-1} }
 \subfloat[fBm-0.5 kernel\label{fig:vowel.confusion.matrix2}]{\includegraphics[width=0.485\linewidth]{figure/05-vowel_confusion_matrix-2} }
@@ -430,13 +427,12 @@ It also provides significant improvement over multiple linear regression.
 Data containing the number of breakdows of bovine tubercolosis (BTB) in Cornwall, the locations of the infected animals, and the year of occurence is analysed.
 The interest, as motivated by veterinary epidimiology, is to understand whether or not there is spatial segregation between the herds, and whether there is a time-element to presence or absence of this spatial segregation.
 There have been previous work done to analyse this data set: \cite{diggle2005nonparametric} developed a non-parametric method to estimate spatial segregation using a multivariate point process.
-The occurrences are modelled as Poisson point processes, and spatial segregation is said to have occured if the model-estimated type-specific breakdown probabilities at any given location are not significantly different from the sample proportions \hltodo{I think this is what they did - recheck}.
-The authors estimated the probabilities via kernel regression, and the resulting test statistic had to be estimated via Monte Carlo methods.
-Other work includes \citet{diggle2013spatial}, who used a fully Bayes scheme for spatio-temporal multivariate log-Gaussian Cox processes, and implemented in the \proglang{R} package ??? \citep{taylor2013lgcp}.
+The occurrences are modelled as Poisson point processes, and spatial segregation is said to have occured if the model-estimated type-specific breakdown probabilities at any given location are not significantly different from the sample proportions.
+The authors estimated the probabilities via kernel regression, and the test statistic of interest had to be estimated via Monte Carlo methods.
+Other work includes \citet{diggle2013spatial}, who used a fully Bayes scheme for spatio-temporal multivariate log-Gaussian Cox processes, and implemented in the \proglang{R} package \pkg{lgcp} \citep{taylor2013lgcp}.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\singlespacing\end{kframe}\begin{figure}[h]
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[htb]
 
 {\centering \includegraphics[width=\linewidth]{figure/05-plot_cow-1} 
 
@@ -448,11 +444,13 @@ Other work includes \citet{diggle2013spatial}, who used a fully Bayes scheme for
 
 \end{knitrout}
 
-\hltodo{Explain data set. $n=919$ cases in total. Originally there are 11 spoligotypes, but of these, four are most common. Therefore, the rest are combined into a separate class of `Others`. Total 14 years of data, so total number of classes is $m=5$.}
+The data set contains $n=919$ recorded cases over a span of 14 years.
+For each of the cases, spatial data pertaining to the location of the farm (Northings and Eastings, measured in kilometres) are available.
+Originally, 11 unique spoligotypes were recorded in the data, with the four most common spoligotypes being Sp9 ($m=1$), Sp12 ($m=2$), Sp15 ($m=3$) and Sp20 ($m=4$), as shown by the histogram in \cref{fig:plot.cow}.
+We had grouped the remaining seven spoligotypes into an `Others' category ($m=5$), so that the problem becomes a multinomial regression with five distinct outcomes.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\singlespacing\end{kframe}\begin{figure}[h]
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[htb]
 
 {\centering \includegraphics[width=\linewidth]{figure/05-plot_cornwall-1} 
 
@@ -466,7 +464,7 @@ Other work includes \citet{diggle2013spatial}, who used a fully Bayes scheme for
 
 We are able to investigate any spatio-temporal patterns of infection using I-priors rather simply.
 Let $p_{ij}$ denote the probability that a particular farm $i$ is infected with a BTB disease with spoligotype $j \in \{1,\dots,5\}$.
-We model the transformed probabilities $g(p_{ij})$ (as described in the categorical response chapter) as following a smooth function $f$ which takes two covariates: the spatial data $x_1 \in \bbR^2$ (Northings and Eastings, measured in kilometres), and the temporal data $x_2$ (year of infection):
+We model the transformed probabilities $g(p_{ij})$ (as described in the categorical response chapter) as following a smooth function $f$ which takes two covariates: the spatial data $x_1 \in \bbR^2$, and the temporal data $x_2$ (year of infection):
 \begin{align*}
   g(p_{ij}) &= f_j(x_1, x_2) \\
   &= f_{1j}(x_1) + f_{2j}(x_2) + f_{12j}(x_1, x_2)
@@ -481,10 +479,61 @@ In this case, $x_2$ would indicate which period the infection took place in, and
 An appropriate RKHS for $f_2$ in such a case would be the Pearson RKHS.
 In either case, the function $f_{12} \in \cF_1 \otimes \cF_2$ would be the ``interaction effect'', meaning that with such an effect present, the spatial distribution of the diseases are assumed to vary across the years.
 
-% The parameters $\lambda_{1j}$ and $\lambda_{2j}$ are the RKHS scale parameters for the spatial and temporal covariates respectively.
+\begin{sidewaystable}[p]
+\caption{\label{tab:table.btb}Results of the fitted I-probit models.}
+\centering
+\begin{tabular}[t]{lrrrrrrrrrrr}
+\toprule
+\multicolumn{1}{c}{ } & \multicolumn{2}{r}{$M_0$: Intercepts only} & \multicolumn{1}{c}{ } & \multicolumn{2}{r}{$M_1$: Spatial only} & \multicolumn{1}{c}{ } & \multicolumn{2}{r}{$M_2$: Spatio-temporal} & \multicolumn{1}{c}{ } & \multicolumn{2}{r}{$M_3$: Spatio-period} \\
+\cmidrule(l{2pt}r{2pt}){2-3} \cmidrule(l{2pt}r{2pt}){5-6} \cmidrule(l{2pt}r{2pt}){8-9} \cmidrule(l{2pt}r{2pt}){11-12}
+  & Mean & S.D. &   & Mean & S.D. &   & Mean & S.D. &   & Mean & S.D.\\
+\midrule
+Intercept (Sp9) & 0.948 & 0.033 &  & 1.364 & 0.033 &  & 1.401 & 0.033 &  & 1.395 & 0.033\\
+Intercept (Sp12) & -0.173 & 0.033 &  & -0.435 & 0.033 &  & -0.506 & 0.033 &  & -0.463 & 0.033\\
+Intercept (Sp15) & 0.103 & 0.033 &  & -0.020 & 0.033 &  & -0.008 & 0.033 &  & -0.010 & 0.033\\
+Intercept (Sp20) & -0.202 & 0.033 &  & -0.775 & 0.033 &  & -0.795 & 0.033 &  & -0.783 & 0.033\\
+Intercept (Others) & -0.676 & 0.033 &  & -0.134 & 0.033 &  & -0.091 & 0.033 &  & -0.139 & 0.033\\[0.5em]
+Scale (spatial) &  &  &  & 0.194 & 0.003 &  & -0.176 & 0.003 &  & 0.172 & 0.003\\
+Scale (temporal) &  &  &  &  &  &  & -0.006 & 0.000 &  & -0.004 & 0.000\\
+\\
+Log-likelihood & -1187.47 &  &  & -564.33 &  &  & -537.23 &  &  & -543.94 & \\
+Error rate (\%) & 46.25 &  &  & 19.26 &  &  & 18.06 &  &  & 18.50 & \\
+Brier score & 0.249 &  &  & 0.143 &  &  & 0.136 &  &  & 0.138 & \\
+\bottomrule
+\end{tabular}
+\end{sidewaystable}
 
+We fitted four different models:
+\begin{itemize}
+  \item \textbf{\boldmath$M_0$: Intercept only}.
+  \[
+    p_{ij} = g^{-1}_j\big( \alpha_k \big)_{k=1}^m
+  \]
+  \item \textbf{\boldmath$M_1$: Spatial segregation}.
+  \[
+    p_{ij} = g^{-1}_j\big(\alpha_k + f_{1k}(x_i) \big)_{k=1}^m
+  \]
+  $f_{1k} \in \cF_1$ Pearson RKHS.
+  \item \textbf{\boldmath$M_2$: Spatio-temporal}.
+  \[
+    p_{ij} = g^{-1}_j\big(\alpha_k + f_{1k}(x_i) + f_{2k}(t_i) + f_{12k}(x_i,t_i) \big)_{k=1}^m
+  \]
+  $f_{1k} \in \cF_1$ Pearson RKHS, $f_{2k} \in \cF_2$ fBm-0.5 RKHS, and $f_{12k} \in \cF_1\otimes\cF_2$
+  \item \textbf{\boldmath$M_3$: Spatio-period}.
+  \[
+    p_{ij} = g^{-1}_j\big(\alpha_k + f_{1k}(x_i) + f_{2k}(t_i) + f_{12k}(x_i,t_i) \big)_{k=1}^m
+  \]
+  $f_{1k} \in \cF_1$ Pearson RKHS, $f_{2k} \in \cF_2$ Pearson RKHS, and $f_{12k} \in \cF_1\otimes\cF_2$
+\end{itemize}
+where $g^{-1}$ is the link function described earlier.
+Model $M_0$ corresponds to a model which ignores any spatial or temporal effects (the baseline intercept only model).
+Model $M_1$ takes into account only spatial effects.
+Both models $M_2$ and $M_3$ account for spatio-temporal effects, but $M_2$ assumes a smooth effect of time, while $M_3$ segregates the points into four distinct time periods for analysis.
+Model comparison is easily done, and \cref{tab:table.btb} indicates that model $M_2$ has the highest log-likelihood of the four models, making it the preferable model.
+
+Alternatively, spatio-temporal effects of the BTB breakdowns can easily be inferred through the RKHS scale parameters.
 Let $h_k$, $k \in \{1,2\}$ denote the reproducing kernel of the spatial and temporal RKHSs respectively.
-Then, an I-prior on $f_j$, $j=1,\dots,5$, takes the form
+Then, an I-prior on $f_j = f_{1j} + f_{2j} + f_{12j}$, $j=1,\dots,5$, takes the form
 \[
   f_j(x_1,x_2) = \sum_{i=1}^n \big(
   \lambda_1 h_1(x_1, x_{i1}) + \lambda_2 h_2(x_2, x_{i2}) +
@@ -492,41 +541,10 @@ Then, an I-prior on $f_j$, $j=1,\dots,5$, takes the form
   \big)w_{ij}
 \]
 where it is assumed $(w_{i1},\dots,w_{i5})^\top \iid \N(\bzero,\bI_5)$.
-Spatio-temporal effects of the BTB breakdowns can then be easily inferred through the RKHS scale parameters.
 The hypothesis of temporal significance is the same as testing the significance of the $\lambda_2$ parameter, while the test of both spatial and temporal effects are conducted on $\lambda_1$ and $\lambda_2$ simultaneously.
 From \hltodo{Chapter X}, we know that these scale parameters follow a normal posterior distribution, so we can calculate the $Z$-scores by dividing the mean by its corresponding standard deviation.
 Absolute values greater than three would satisfy a Bayesian hypothesis test of significance at the 0.01 level.
 The conclusion from \cref{tab:table.btb} is that the data supports a hypothesis for a spatio-temporal or spatio-period model.
-A similar conclusion is obtained  by looking at evidence lower bound values (ELBO) obtained from variational inference for model comparison.
-
-\begin{kframe}
-\singlespacing\end{kframe}
-\begin{landscape}\begin{table}
-
-\caption{\label{tab:table.btb}Results of the fitted I-probit models.}
-\centering
-\begin{tabular}[t]{lrrrrrrrrrrr}
-\toprule
-\multicolumn{1}{c}{ } & \multicolumn{2}{c}{\$M\_0\$: Intercepts only} & \multicolumn{1}{c}{ } & \multicolumn{2}{c}{\$M\_1\$: Spatial only} & \multicolumn{1}{c}{ } & \multicolumn{2}{c}{\$M\_2\$: Spatio-temporal} & \multicolumn{1}{c}{ } & \multicolumn{2}{c}{\$M\_3\$: Spatio-period} \\
-\cmidrule(l{2pt}r{2pt}){2-3} \cmidrule(l{2pt}r{2pt}){5-6} \cmidrule(l{2pt}r{2pt}){8-9} \cmidrule(l{2pt}r{2pt}){11-12}
-  & Mean & S.D. &   & Mean & S.D. &   & Mean & S.D. &   & Mean & S.D.\\
-\midrule
-Intercept (Sp9) & 0.948 & 0.033 &  & 1.364 & 0.033 &  & 1.395 & 0.033 &  & 1.401 & 0.033\\
-Intercept (Sp12) & -0.173 & 0.033 &  & -0.435 & 0.033 &  & -0.463 & 0.033 &  & -0.506 & 0.033\\
-Intercept (Sp15) & 0.103 & 0.033 &  & -0.020 & 0.033 &  & -0.010 & 0.033 &  & -0.008 & 0.033\\
-Intercept (Sp20) & -0.202 & 0.033 &  & -0.775 & 0.033 &  & -0.783 & 0.033 &  & -0.795 & 0.033\\
-Intercept (Others) & -0.676 & 0.033 &  & -0.134 & 0.033 &  & -0.139 & 0.033 &  & -0.091 & 0.033\\
-Scale (spatial) &  &  &  & 0.194 & 0.003 &  & 0.172 & 0.003 &  & -0.176 & 0.003\\
-Scale (temporal) &  &  &  &  &  &  & -0.004 & 0.000 &  & -0.006 & 0.000\\
-Log-likelihood & -1187.47 &  &  & -564.33 &  &  & -543.94 &  &  & -537.23 & \\
-Error rate (%) & 46.25 &  &  & 19.26 &  &  & 18.50 &  &  & 18.06 & \\
-Brier score & 0.25 &  &  & 0.14 &  &  & 0.14 &  &  & 0.14 & \\
-\bottomrule
-\end{tabular}
-\end{table}
-\end{landscape}
-
-
 
 For a more visual approach, we can look at the plots of the surface probabilities.
 To obtain these probabilities, we first determined the spatial points (Northings and Eastings) which fall inside the polygon which makes up Cornwall.
@@ -534,44 +552,43 @@ We then obtained predicted probabilities for each class of disease at each locat
 Figure \ref{fig:plot.btb} was obtained using the model with spatial covariates only, thus ignoring any temporal effects.
 In the case of the spatio-temporal model, we used the model which had the period formulation for time (Model 3).
 This way, we can display the surface probabilities of the time periods in four plots only, which is more economical to exhibit within the margins of this thesis.
-Note that there is no issue with using the continuous time model---we have produced an animated gif image at \hltodo{url}, showing the evolution of the surface probabilities over time.
+Note that there is no issue with using the continuous time model---we have produced an animated gif image at \url{http://phd.haziqj.ml/examples/}, showing the evolution of the surface probabilities over time.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\singlespacing\end{kframe}\begin{figure}[p]
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[p]
 
 {\centering \includegraphics[width=\linewidth]{figure/05-plot_btb-1} 
 
 }
 
-\caption[Caption]{Caption.}\label{fig:plot.btb}
+\caption[Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium Mycobacterium bovis over the entire time period using model $M_1$]{Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium Mycobacterium bovis over the entire time period using model $M_1$.}\label{fig:plot.btb}
 \end{figure}
 
 
 \end{knitrout}
-
-As the model suggests, there is indeed spatial segregation for the four most common spoligotypes, and this is also very prominently seen from Figure \ref{fig:plot.btb}.
-In comparing the distribution of the spoligotypes over the years, we may refer to Figure \ref{fig:plot.temporal.btb}.
-For each time period, we superimpose the actual observations onto the predicted surface probabilities.
-In addition, coloured dotted lines are displayed to indicate the ``decision boundaries'' for each of the four spoligotypes.
-The most evident change is seen to the spatial distribution of spoligotype 12, with the decision boundary giving it a large area in years 1996 and earlier, but this steadily shrunk over the years.
-Spoligotype 9, which is most commonly seen in the east of Cornwall, seems to have made its way down to the south-west over the years.
-The other two spoligotypes seem to be rather constant over the years.
-This is supported also by the spatio-period model results in Table \ref{tab:table.btb}, where the test of nullity for the scale parameters of these two spoligotypes are not rejected.
-
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\singlespacing\end{kframe}\begin{figure}[p]
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[p]
 
 {\centering \includegraphics[width=\linewidth]{figure/05-plot_temporal_btb-1} 
 
 }
 
-\caption[Caption]{Caption.}\label{fig:plot.temporal.btb}
+\caption[Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium Mycobacterium bovis over four different time periods using model $M_3$]{Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium Mycobacterium bovis over four different time periods using model $M_3$.}\label{fig:plot.temporal.btb}
 \end{figure}
 
 
 \end{knitrout}
+\vspace{-1em}
+As the model suggests, there is indeed spatial segregation for the four most common spoligotypes, and this is also very prominently seen from \cref{fig:plot.btb}.
+In comparing the distribution of the spoligotypes over the years, we may refer to \cref{fig:plot.temporal.btb}.
+For each time period, we superimpose the actual observations onto the predicted surface probabilities.
+In addition, coloured dotted lines are displayed to indicate the ``decision boundaries'' for each of the four spoligotypes.
+The most evident change is seen to the spatial distribution of spoligotype 12, with the decision boundary giving it a large area in years 1996 and earlier, but this steadily shrunk over the years.
+Spoligotype 9, which is most commonly seen in the east of Cornwall, seems to have made its way down to the south-west over the years.
+The other two spoligotypes seem to be rather constant over the years.
+This is supported also by the spatio-period model results in \cref{tab:table.btb}, where the test of nullity for the scale parameters of these two spoligotypes are not rejected.
+
+
 
 \end{document}
 
