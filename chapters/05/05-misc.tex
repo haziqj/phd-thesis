@@ -180,11 +180,6 @@ By constraining the maximisation in the E-step to consider $q$ belonging to a fa
 In \cref{sec:varintro}, we saw that constraining $q$ to be of a factorised form, then $\tilde q$ is a mean-field density.
 This form of the EM is known as \emph{variational Bayes EM algorithm} (VB-EM) \citep{beal2003}.
 
-In variational inference, a fully Bayesian treatment of the parameters is considered, with the aim of obtaining approximation to their posterior distributions.
-In VB-EM, the variational approximation is only performed on the latent, or `missing' variables, to use the EM nomenclature.
-After a variational E-step, the M-step proceeds as usual, and as such, all of the material relating to the EM in the previous chapter is applicable.
-The VB-EM can also be seen as obtaining (approximate) maximum a posteriori estimates with diffuse priors on the parameters.
-
 \begin{figure}[p]
   \centering
   \energyemEstep \hspace{0.5cm}
@@ -199,7 +194,10 @@ The VB-EM can also be seen as obtaining (approximate) maximum a posteriori estim
   \caption{Illustration of EM vs VB-EM. Whereas the EM guarantees an increase in log-likelihood value (red shaded region), the VB-EM does not.}
 \end{figure}
 
-
+In variational inference, a fully Bayesian treatment of the parameters is considered, with the aim of obtaining approximation to their posterior distributions.
+In VB-EM, the variational approximation is only performed on the latent, or `missing' variables, to use the EM nomenclature.
+After a variational E-step, the M-step proceeds as usual, and as such, all of the material relating to the EM in the previous chapter is applicable.
+The VB-EM can also be seen as obtaining (approximate) maximum a posteriori estimates with diffuse priors on the parameters.
 
 \subsection{The EM algorithm for I-probit models is intractable---variational Bayes EM?}
 \label{sec:vbemiprobit}
