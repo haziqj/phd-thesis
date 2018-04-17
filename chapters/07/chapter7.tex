@@ -1,17 +1,30 @@
-\documentclass{article}
+\documentclass[a4paper,showframe,11pt]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
-  \usepackage{../../haziq_article}
+  \usepackage{../../haziq_thesis}  
   \usepackage{../../haziq_maths}
+  \usepackage{../../haziq_glossary}
+  \usepackage{../../knitr}
   \addbibresource{../../bib/haziq.bib}
+  \externaldocument{../01/.texpadtmp/chapter1}
+  \externaldocument{../02/.texpadtmp/chapter2}
+  \externaldocument{../03/.texpadtmp/chapter3}
+  \externaldocument{../04/.texpadtmp/chapter4}
+  \externaldocument{../05/.texpadtmp/chapter5}
+  \externaldocument{../06/.texpadtmp/chapter6}  
 \fi
 
 \begin{document}
+\hChapterStandalone[7]{Discussion}
 
+Wrap-up---what did I do? Summarise contributions. Raise questions.
 
+\section{Summary}
 
-\ifstandalone
-\printbibliography
-\fi
+\section{Questions}
+
+\section{Conclusion}
+
+\hClosingStuffStandalone
 \end{document}
