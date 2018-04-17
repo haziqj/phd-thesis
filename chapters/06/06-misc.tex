@@ -1,0 +1,39 @@
+\subsection{Recap: Bayesian linear regression}
+
+The ordinary least squares (OLS) estimates for the $\beta$ coefficients is given by $\hat\beta = (X^\top X)^{-1} X^\top y$, where $y$ is the $n$-vector of responses.
+This is obtained by maximising the normal likelihood of $\beta$, but interestingly, the exact same solution is obtained by minimising the sum of squared errors - without having to set any distributional assumption on the errors. 
+Thus the form of the solution comes from only what is known to us: the data, $X$ and $y$.
+
+The Bayesian approach to estimating the linear model takes a different outlook, in that it supplements what is already known from the data with additional information in the form of prior beliefs about the parameters $\Theta$, or simply, priors. 
+Inferences about the parameters are then performed on the posterior
+\[
+  p(\Theta|y) \propto 
+  {\color{gray} \overbrace{\color{black} p(y|\Theta)}^{\text{likelihood}}} 
+  \times 
+  {\color{gray} \overbrace{\color{black} p(\Theta)}^{\text{prior}}}
+\]
+such as taking the mean, which is known as the Minimum Mean Squared Error estimate (MMSE), or the mode, which corresponds to the maximum a posteriori estimate (MAP).
+The Bayesian approach of MAP is similar to maximum likelihood, but differs only in the fact that the optimisation objective (the likelihood function) is augmented with a prior distribution about the parameters. 
+
+For the normal linear model \eqref{eq:linmod}, conjugate priors for the regression coefficients of the form
+\[
+  \beta | \sigma^2 \sim \N(b, \sigma^2 B) 
+\]
+are popular, which results in the normal posterior distribution for $\beta$ with mean and variance
+\[
+  \tilde b = (X^\top X + B^{-1})^{-1}(X^\top y + B^{-1}b) \hspace{0.5cm}\text{and}\hspace{0.5cm} \tilde B = (X^\top X + B^{-1})^{-1}
+\]
+respectively.
+The choice of the prior hyperparameters $b$ and $B$ reflects one's belief about prior knowledge surrounding the parameters to be estimated.
+For the prior mean, $b = 0$ is a reasonable and convenient choice after standardising the data, since scaling and centring the data does not affect the validity of the model.
+Further, setting $B = \lambda I_p$, where $I_p$ is the identity matrix, is also common practice.
+Large values of $\lambda$ may be chosen to reflect the uninformativeness of the prior distribution.
+In this setting, the posterior solution for $\beta$ resembles that of \emph{ridge regression}.
+
+Another type of prior that is popular for linear regression (and in fact in variable selection too) is the $g$-prior \citep{zellner1986assessing}: $\beta \sim \N(0, \sigma^2 g (X^\top X)^{-1})$.
+The $g$-prior has the very convenient property of reducing the posterior and marginal distributions of the linear model to formulae involving the OLS estimator $\hat\beta$, the residual sum of squares $\Vert y - X\hat\beta \Vert^2$, and the hyperparamater $g$ \citep{fernandez2001benchmark}.
+Many studies have delved into appropriate choices or estimation procedures for $g$ \citep{liang2008mixtures}.
+
+On the topic of variable selection, the Lasso \citep{tibshirani1996regression} is a popular deterministic method which has the unique property that the L-1 penalised least squares solution for the regression coefficients may be exactly zero for some of them.
+Some may view the L-1 penalty as having a Bayesian interpretation, in that double exponential or Laplace priors are placed on the $\beta$ \citep{park2008bayesian}.
+

@@ -99,7 +99,6 @@ b.lambda.se <- postsd[grep("lambda", names(postsd))]
 b.w <- postmean[grep("w", names(postmean))]
 b.w.se <- postmean[grep("w", names(postsd))]
 
-
 # Slight hack
 mod.hmc <- iprobit(y ~ X1 + X2, dat, one.lam = TRUE, kernel = "fbm",
                    control = list(theta0 = log(b.lambda), int.only = TRUE))
@@ -109,45 +108,60 @@ iplot_predict(mod.hmc)
 
 ## ---- compare.lik ----
 no.points <- 50
-x <- log(get_lambda(mod))
+x <- log(get_lambda(mod.vi))
 x <- seq(x - 5, x + 5, length = no.points)
-y <- get_alpha(mod)
+y <- get_alpha(mod.vi)
 y <- seq(y - 5, y + 5, length = no.points)
 tab <- expand.grid(x = x, y = y)
 
-hmc_lik <- function(theta, w, dat) {
-  alpha <- theta[1]
-  lambda <- exp(theta[2])  # theta = log.lambda
-  mu <- as.numeric(alpha + lambda * dat$H %*% w)
-  pi1 <- pnorm(mu, log.p = TRUE)
-  pi0 <- pnorm(-mu, log.p = TRUE)
-  res <- sum(pi1[dat$y == 1]) + sum(pi0[dat$y == 0])
+# # Generate z points (takes a long time)
+stan.iprobit.mod <- "
+data {
+int<lower=0> n; // number of data
+int<lower=0,upper=1> y[n]; // data y
+matrix[n, n] H; // the kernel matrix
+real alpha;
+real<lower=0> lambda;
+}
+parameters {
+vector[n] w;
+}
+model {
+w ~ normal(0, 1);
+y ~ bernoulli(Phi_approx(alpha + lambda * H * w));
+}
+"
+m <- stan_model(model_code = stan.iprobit.mod)
+pre.dat <- list(y = as.numeric(dat$y) - 1, H = iprior::kern_fbm(dat$X), n = length(dat$y))
+
+do_it <- function() {
+  pb <- txtProgressBar(min = 0, max = nrow(tab), style = 3)
+  progress <- function(i) setTxtProgressBar(pb, i)
+
+  cl <- makeCluster(parallel::detectCores())
+  registerDoSNOW(cl)
+  res <- foreach(i = 1:1250, .combine = rbind,  # seq_len(nrow(tab))
+                 .packages = c("iprobit", "rstan", "coda", "purrr"),
+                 .export = c("mod.vi", "tab", "m", "pre.dat", "stan2coda"),
+                 .options.snow = list(progress = progress)) %dopar% {
+                   aa <- tab[i, 2]
+                   tt <- tab[i, 1]
+                   stan.iprobit.dat <- c(pre.dat, alpha = aa, lambda = exp(tt))
+                   fit.stan <- sampling(
+                     m, data = stan.iprobit.dat, iter = 60, chains = 1,
+                     thin = 1, init = list(list(w = rep(0, 300)))
+                    )
+                   res.hmc <- summary(stan2coda(fit.stan))$stat[301, 1]
+                   # res.var <- logLik(mod.vi, theta = tt, alpha = aa)
+                   # res.lap <- lap_bin(mu = c(aa, tt), object = mod.vi$ipriorKernel)
+                   # c(res.var, res.lap, res.hmc)
+                   res.hmc
+                 }
+  close(pb)
+  stopCluster(cl)
   res
 }
-
-# Generate z points (takes a long time)
-# do_it <- function() {
-#   pb <- txtProgressBar(min = 0, max = nrow(tab), style = 3)
-#   progress <- function(i) setTxtProgressBar(pb, i)
-#
-#   cl <- makeCluster(parallel::detectCores())
-#   registerDoSNOW(cl)
-#   res <- foreach(i = seq_len(nrow(tab)), .combine = rbind,
-#                  .packages = c("iprobit"),
-#                  .export = c("mod", "tab", "hmc_lik", "b.w", "stan.iprobit.dat"),
-#                  .options.snow = list(progress = progress)) %dopar% {
-#                    aa <- tab[i, 2]
-#                    tt <- tab[i, 1]
-#                    res.var <- logLik(mod, theta = tt, alpha = aa)
-#                    res.lap <- lap_bin(mu = c(aa, tt), object = mod$ipriorKernel)
-#                    res.hmc <- hmc_lik(c(aa, tt), w = b.w, dat = stan.iprobit.dat)
-#                    c(res.var, res.lap, res.hmc)
-#                  }
-#   close(pb)
-#   stopCluster(cl)
-#   res
-# }
-# z <- do_it()
+z <- do_it()
 # save(z, file = "data/iprobit_lik")
 load("data/iprobit_lik")
 
