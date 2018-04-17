@@ -15,7 +15,7 @@
 \fi
 
 \begin{document}
-\hChapterStandalone[6]{Bayesian variable selection for linear models}
+\hChapterStandalone[6]{Bayesian variable selection using I-priors}
 
 Earlier in \cref{sec:various-regression}, we saw that model \cref{eq:model1} subject to normal assumptions \cref{eq:model1ass}, model assumptions \ref{ass:A1}--\ref{ass:A3}, and $f$ belonging to the canonical RKHS of functions over $\cX \equiv \bbR^p$ yields the standard multilevel regression model
 \begin{align}\label{eq:linmod}
@@ -432,9 +432,9 @@ $X_6$ \\
 \end{table}
 
 The highest posterior model selected was the model with the variables $X_1$, $X_3$ and $X_5$.
-From the density plots in \cref{fig:aerobic-densplot}, we can see that the point mass at zero overwhelms the rest of the values, and hence these variables were dropped.
+In \cref{fig:aerobic-densplot}, we can see that the point mass at zero overwhelms the rest of the values in the density plots for $X_2$, $X_4$ and $X_6$, and hence these variables were dropped.
 
-\begin{figure}[htb]
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{figure/aerobic_coef}
   \caption[Posterior density plots of the regression coefficients for the aerobic data set.]{Posterior density plots of the regression coefficients $\btheta$ for the aerobic data set. The `spike' at zero observed in the density plots for $X_2$, $X_4$ and $X_6$ is indicative of these variable being dropped often in the posterior samples.}
@@ -585,7 +585,7 @@ We discuss three areas to concentrate on for future research and improvement:
   
   \item \textbf{Improvement in computational time}. 
   Although the model itself is not computationally intensive to run (roughly $O(np^2)$ in time per Gibbs iteration), the main bottleneck is the reliance on a stochastic sampling algorithm.
-  As in the previous chapter, variational inference is a promising area to look into, especially given that the Gibbs conditional distributions were straightforward to obtain, and these might be similar to a mean-field approximated variational distribution.
+  As in the previous chapter, variational inference is a promising area to look into, especially given that the Gibbs conditional distributions were straightforward to obtain, and these might be similar to a mean-field variational distribution.
   If this is successful, then it is expected to reduce computational time and avoid convergence issues that comes with traditional MCMCs.
   
   \item \textbf{Extension to generalised linear models}.
@@ -600,12 +600,13 @@ For instance, in selecting squared or interaction terms, we can insist on having
 \]
 Or perhaps, we could use a single $\gamma$ indicator for the dummy variables which make up a single categorical covariate, which we would then infer on the selection of the single covariate rather than each individual category of the covariate.
 
-\section{Miscellanea}
-\input{06-misc}
+%\section{Miscellanea}
+%\input{06-misc}
 
 \ifstandalone
   \section*{Appendix}
   \input{06-apx-01-gibbs}
+  \input{06-apx-02-compnote}
   \input{06-apx-02-data}
 \fi
 

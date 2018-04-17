@@ -1,9 +1,10 @@
 \section{Gibbs conditional distributions}
+\label{apx:gibbsbvs}
 
 The I-prior Bayesian variable selection model has the following hierarchical form:
 \begin{align*}
   \begin{gathered}
-    y|\alpha,\bbeta,\gamma,\sigma^2,\kappa \sim \N_n(\alpha\bone_n + \bX\btheta, \sigma^2 I_n) \\
+    \by|\alpha,\bbeta,\gamma,\sigma^2,\kappa \sim \N_n(\alpha\bone_n + \bX\btheta, \sigma^2 I_n) \\
     \btheta = (\gamma_1\beta_1,\dots,\gamma_p\beta_p)^\top \\
     \bbeta|\sigma^2,\kappa \sim \N_p(\bzero,\sigma^2\kappa \XTX) \\
     \alpha|\sigma^2 \sim \N(0,\sigma^2 A) \\
@@ -11,14 +12,15 @@ The I-prior Bayesian variable selection model has the following hierarchical for
     \gamma_j \sim \Bern(\pi_j) \hspace{0.5cm} j=1,\dots,p
   \end{gathered}
 \end{align*}
-In the simulations and real-data examples, we used $\pi_j=0.5 \forall j$, $A=100$, and $c=d=0.001$. 
+In the simulations and real-data examples, we used $\pi_j=0.5, \forall j$, $A=100$, and $c=d=0.001$, and the columns of the matrix $\bX$ are standardised.
+
 The first line of the set of equations above is the likelihood, while the joint prior density is given by
 \[
   p(\alpha,\beta,\gamma,\sigma^2,\kappa) = p(\beta|\sigma^2)p(\alpha|\sigma^2)p(\sigma^2)p(\kappa)p(\gamma_1)\cdots p(\gamma_p).
 \]    
 For simplicity, in the following subsections we shall denote by $\Theta$ the entire set of parameters, while $\Theta_{-\xi}$ implies the set of parameters excluding the parameter $\xi$.
 
-\subsection{Conditional posterior for $\beta$}
+\subsection{Conditional posterior for \texorpdfstring{$\bbeta$}{$beta$}}
 
 \begin{align*}
   \log p(\bbeta|\by,\Theta_{-\bbeta}) 
