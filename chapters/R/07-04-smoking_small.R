@@ -1,13 +1,16 @@
 # Chapter 7, Section 3
 # Meta-analysis of nicotine gum treatment for smoking cessation
-source("00-prelim.R")
+library(tidyverse)
 
 ## ---- data.smoke ----
 smoking <- read.table(
-  "data/gum.txt",
+  "/Users/haziqjamil/Desktop/Research/phd-thesis/chapters/R/data/gum.txt",
   sep = "\t", header = TRUE
 )
 sum(smoking[, c(3, 5)])  # sample size
+
+study.subsamp <- c(2, 15, 21, 27)
+smoking <- smoking[study.subsamp, ]  # SUBSAMPLES ONLY FOR TESTING
 smoking.small <- smoking
 
 levels(smoking[, 1]) <- c(levels(smoking[, 1]), "Summary measure")
@@ -43,79 +46,31 @@ dat.smoke$y <- as.factor(dat.smoke$y)
 levels(dat.smoke$y) <- c("Remain", "Quit")
 str(dat.smoke)
 
+
 # Distribution among control and treatment group
 tmp <- apply(smoking[, -1], 2, mean)[c(2, 4)]  # treatment vs control
 (dist.mean <- tmp / sum(tmp) * 100)
 
 # Raw odds ratio
-(raw.odds.ratio <- exp(smoke.raw.odds$logodds[28]))
+(raw.odds.ratio <- exp(smoke.raw.odds$logodds[length(smoke.raw.odds$logodds)]))
 
 # Load Logistic RE model results
-as.tibble(read.csv("data/smoking_re_results.csv")) %>%
-  mutate(n = study.size, method = "Logistic RE",
-         studynam = factor(studynam, levels = levels(smoke.raw.odds[[1]]))) %>%
-  rename(Study = studynam, logodds = eff) -> smoke.re.res
-
-## ---- plot.data.smoke ----
-as.tibble(dat.smoke) %>%
-  group_by(y, Group, Study) %>%
-  summarise(count = n()) %>%
-  ungroup() %>%
-  mutate(Group = factor(Group, levels = c("Control", "Treated")),
-         Group = recode(Group, Treated = "Treatment")) %>%
-  ggplot(aes(y, count, fill = y)) +
-  facet_grid(. ~ Group) +
-  geom_boxplot(notch = TRUE, outlier.alpha = 0) +
-  geom_jitter(width = 0.12, height = 0, pch = 21) +
-  # coord_flip() +
-  # coord_trans(y = "log10") +
-  scale_y_log10(breaks = c(1, 2, 5, 10, 25, 50, 100, 500)) +
-  labs(x = NULL, y = "Count") +
-  # coord_cartesian(ylim = c(0, 150)) +
-  theme_bw() +
-  theme(legend.position = "none")
+# as.tibble(read.csv("data/smoking_re_results.csv")) %>%
+#   mutate(n = study.size, method = "Logistic RE",
+#          studynam = factor(studynam, levels = levels(smoke.raw.odds[[1]]))) %>%
+#   rename(Study = studynam, logodds = eff) -> smoke.re.res
 
 ## ---- mod.smoke ----
-# This takes quite a long time, but saved object mod in data/smokingmod
-# mod1 <- iprobit(y ~ Group, dat.smoke)
-# save(mod1, file = "data/smoking-mod1")
-# > mod1
-# Training error rate: 23.65 %
-# Lower bound value: -3210.76
-#
-# Class = 1 Class = 2
-# Intercept  -0.72533  -0.72533
-# res         1.00460   1.00460
-# >
-# mod2 <- iprobit(y ~ Group + Study, dat.smoke,
-#                 control = list(theta0 = c(3.86e+03, 1.06e-03), alpha0 = -0.769))
-# save(mod2, file = "data/smoking-mod2")
-# > mod2
-# Training error rate: 29.3 %
-# Lower bound value: -3142.237
-#
-# Class = 1   Class = 2
-# Intercept     -0.76267    -0.76267
-# lambda[1,] 30593.69995 30593.69995
-# lambda[2,]     0.00084     0.00084
-# mod3 <- iprobit(y ~ Group * Study, dat.smoke,
-#                 control = list(theta0 = c(0.014894, 0.000878), alpha0 = -0.767))
-# save(mod3, file = "data/smoking-mod3")
-# > mod3
-# Training error rate: 23.48 %
-# Lower bound value: -3091.204
-#
-# Class = 1 Class = 2
-# Intercept   -0.76669  -0.76669
-# lambda[1,]   0.01437   0.01437
-# lambda[2,]   0.00087   0.00087
+mod1 <- iprobit(y ~ Group, dat.smoke)
+mod2 <- iprobit(y ~ Group + Study, dat.smoke)
+mod3 <- iprobit(y ~ Group * Study, dat.smoke)
 
-# ## ---- fit.smoke ----
-load("data/smoking-mod1"); l1 <- logLik(mod1); e1 <- get_error_rate(mod1)
-load("data/smoking-mod2"); l2 <- logLik(mod2); e2 <- get_error_rate(mod2)
-load("data/smoking-mod3"); l3 <- logLik(mod3); e3 <- get_error_rate(mod3)
+## ---- fit.smoke ----
+l1 <- logLik(mod1); e1 <- get_error_rate(mod1)
+l2 <- logLik(mod2); e2 <- get_error_rate(mod2)
+l3 <- logLik(mod3); e3 <- get_error_rate(mod3)
 calc_odds <- function(n.samp = 100) {
-  studies <- levels(dat.smoke$Study)
+  studies <- levels(dat.smoke$Study)[study.subsamp]
   as.tibble(dat.smoke) %>%
     mutate(tmp = paste0(Study, Group)) -> tmp
   unq.i <- match(unique(tmp$tmp), tmp$tmp)
@@ -154,11 +109,7 @@ calc_odds <- function(n.samp = 100) {
 l <- c(l1, l2, l3)
 err <- c(e1, e2, e3)
 b <- c(get_brier_score(mod1), get_brier_score(mod2), get_brier_score(mod3))
-smoke.ip.res <- calc_odds(100)
-# save(smoke.ip.res, file = "data/smoking-res")
-# save(l, file = "data/smoking-lb")
-# save(b, file = "data/smoking-brier")
-# save(err, file = "data/smoking-error")
+smoke.ip.res <- calc_odds(10)
 
 ## ---- mod.compare.smoke ----
 load("data/smoking-res")
@@ -181,13 +132,13 @@ colnames(tab.compare) <- c("Model", "Lower bound", "Brier score",
 #   column_spec(4, width = "2.4cm")
 
 ## ---- smoke.forest.plot ----
-ggplot(rbind(smoke.raw.odds, smoke.re.res, smoke.ip.res), aes(Study, logodds)) +
+ggplot(rbind(smoke.raw.odds, smoke.ip.res), aes(Study, logodds)) +
   geom_hline(yintercept = 0, linetype = "dotted", col = "grey50") +
   geom_errorbar(aes(ymin = lower, ymax = upper, linetype = method, col = Study),
                 width = 0.4, size = 0.5, position = position_dodge(width = 0.55)) +
   geom_point(aes(fill = Study, size = n, shape = method),
              position = position_dodge(width = 0.55), col = "white", alpha = 0.75) +
-  scale_x_discrete(name = NULL, limits = rev(levels(smoke.re.res$Study))) +
+  scale_x_discrete(name = NULL, limits = rev(levels(smoke.ip.res$Study))) +
   scale_y_continuous(name = NULL,
                      breaks = c(-0.5, 0, 0.5, 1, 1.5)
                      ) +
@@ -196,12 +147,8 @@ ggplot(rbind(smoke.raw.odds, smoke.re.res, smoke.ip.res), aes(Study, logodds)) +
   theme_bw() +
   scale_linetype_manual(name = NULL, values = c(1, 2, 0)) +
   scale_shape_manual(name = NULL, values = c(21, 22, 23)) +
-  guides(col = FALSE, size = FALSE, fill = FALSE,
-         linetype = guide_legend(override.aes = list(col = "black",
-                                                     fill = "black",
-                                                     # size = 2,
-                                                     linetype = c(1, 2, 0)))) +
-  # theme(legend.key.width = unit(2.5, "line"),
-  #        legend.justification = c(1, 0), legend.position = c(0.99, 0),
-  #       legend.background = element_rect(fill = scales::alpha("white", 0)))
+  guides(col = FALSE, size = FALSE, fill = FALSE) +
+         # linetype = guide_legend(override.aes = list(col = "black",
+         #                                             fill = "black",
+         #                                             linetype = c(1, 2, 0)))) +
   theme(legend.position = "top", legend.key.width = unit(2.5, "line"))

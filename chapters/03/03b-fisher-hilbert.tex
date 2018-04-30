@@ -140,11 +140,11 @@ From \cref{eq:frech2gat}, it must be that
 \begin{align*}
   \d^2 f(x)(v,v') &= \lim_{t\to 0} \frac{\d f(x + t v)(v') - \d f(x)(v')}{t} \\
   &= \lim_{t\to 0} \frac{\ip{\nabla f(x+tv), v'}_\cV - \ip{\nabla f(x), v'}_\cV}{t} \\
-  &= \left\langle \lim_{t\to 0} \frac{\nabla f(x+tv) - \nabla f(x)}{t} , v' \right\rangle_\cV \\%\hspace{10pt} \rlap{\color{gray} \text{by linearity}} \\
+  &= \lim_{t\to 0} \left\langle \frac{\nabla f(x+tv) - \nabla f(x)}{t} , v' \right\rangle_\cV \\%\hspace{10pt} \rlap{\color{gray} \text{by linearity}} \\
   &= \left\langle \partial_v \nabla f(x) , v' \right\rangle_\cV.
 \end{align*}
-The second line follows from the definition of gradients, and the third line follows by linearity of inner products.
-Note that since the Fréchet and Gâteaux differentials coincide, we have that $\partial_v \nabla f(x) = \d \nabla f(x) (v)$.
+The second line follows from the definition of gradients, the third line by linearity of inner products, and the final line by definition of Gâteaux derivatives and continuity of inner products\footnote{For any continuous function $g:\bbR\to\bbR$, $\lim_{x\to a} g(x) = g(\lim_{x\to a} x) = g(a)$.}.
+Since $\nabla f$ is continuous, its Fréchet and Gâteaux differentials coincide, and we have that $\partial_v \nabla f(x) = \d \nabla f(x) (v)$.
 Letting $\cV$, $\cW$ and $\cU$ be as before, we now define the Hessian for the function $f:\cU \to \cW$.
 
 \begin{definition}[Hessian]
@@ -205,17 +205,17 @@ The expectation of the score for any $b\in\Theta$ is shown to be
   &= \left\langle \left(\nabla \int p(Y|\cdot) \dint Y\right)(\theta)  , b \right\rangle_\Theta \\
   &=0.
 \end{align*}
-The interchange of Lebesgue integrals and Fréchet differentials is allowed under certain conditions\footnotemark~\citep{kammar2016}.
+The interchange of Lebesgue integrals and Fréchet differentials is allowed under certain conditions\footnotemark, which are satisfied here.
 The derivative of $\int p(Y|\cdot)\dint Y$ at any value of $\theta\in\Theta$ is the zero vector as it is the derivative of a constant (i.e., 1).
 \footnotetext{
-  The conditions are: 
+  Following \citet{kammar2016}, the conditions are: 
   \begin{enumerate}
     \item $L(\cdot|Y)$ is Frechét differentiable on $\cU\subseteq\Theta$ for almost every $Y\in\bbR$.
     \item $L(\theta|Y)$ and $\d L(\theta|Y)(b)$ are both integrable with respect to $Y$, for any $\theta \in \cU\subseteq\Theta$ and $b\in\Theta$.
     \item There is an integrable function $g(Y)$ such that $L(\theta|Y) \leq g(Y)$ for all $\theta \in \Theta$ and almost every $Y\in\bbR$.
   \end{enumerate}
   These conditions as stated are analogous to the measure theoretic requirements for Leibniz's integral rule to hold (differentiation under the integral sign).
-  For nice and well-behaved probability densities, like the normal density that we will be working with, this isn't an issue.
+  For nice and well-behaved probability densities, such as the normal density that we will be working with, there aren't issues with interchanging integrals and derivatives.
 }
 
 Using the classical notion that the Fisher information is the variance of the score function, then, for fixed $b,b'\in\Theta$, combined with the fact that $\E[\d L(\theta|Y)]$ is a zero mean function, we have that 
