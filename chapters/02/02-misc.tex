@@ -6,6 +6,31 @@ Secondly, multiplication of a function by a scalar $c$ can be thought of as $c$ 
 Indeed, running through the checklist of what constitutes a vector space, we find that a ``space of functions'' satisfies them all.
 In modern linear algebra texts, this checklist is the eight axioms of vector spaces over a field $\bbF$: The vectors forms an abelian group under addition, and this group has an $\bbF$-module structure.
 
+\subsection{Orthogonal functional ANOVA for square integrable functions}
+
+If $f$ is integrable, then the functional ANOVA decomposition of \cref{eq:functionalanova2} yields components which are orthogonal to each other.
+Suppose we consider the (Hilbert) space of square integrable functions over $\cX$ with measure $\nu$, $\cF \equiv \text{L}^2(\cX,\nu)$.
+There is an isomorphism $\text{L}^2(\cX_1\times\cdots\times\cX_d,\nu_1\times\cdots\times\nu_d) \cong \text{L}^2(\cX_1,\nu_1) \otimes \cdots \otimes \text{L}^2(\cX_d,\nu_d)$. 
+See, for example, \citet{reed1972methods,kree1974produits}.
+We notice that the decomposition in \cref{eq:functionalanova1} is orthogonal:
+
+\begin{claim}
+  For the one-way ANOVA decomposition in \cref{eq:functionalanova1}, $f_0$ and $f_1$ are orthogonal for the usual $\text{L}^2$ inner product.
+\end{claim}
+
+\begin{proof}
+  Note that $f_0$ is a constant function, and that $f_1 = f- f_0$.
+  Thus,
+  \begin{align*}
+    \ip{f_0,f_1} 
+    &= \int f_0f_1 \d\nu \\
+    &= f_0 \int \left(f - f_0\right) \d\nu \\
+    &= f_0 (f_0 - f_0) = 0. \qedhere
+  \end{align*}
+\end{proof}
+
+Therefore, the decomposition of $\cF = \cF_0 \displaystyle\mathop{\oplus}^\bot \bar\cF_1$ is in fact orthogonal. 
+Indeed, the requirement \cref{eq:funcanovaorth} ensures orthogonality of the summands in the functional ANOVA decomposition formula \cref{eq:functionalanova2} \citep[Definition 1]{sobol2001global}.
 
 %FOR TOPOLOGICAL SPACES ONLY: 
 %On the other hand, a set which contains all of its limit points is said to be \emph{closed}.

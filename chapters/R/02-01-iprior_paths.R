@@ -10,6 +10,13 @@ theme_kernel_path <- theme_classic() +
         # axis.text = element_blank()
   )
 
+theme_kernel_path_2 <- theme_classic() +
+  theme(legend.position = "none",
+        # axis.line = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank()
+  )
+
 kernel_path_constant <- function(n = 1000, seed = 789) {
   x <- seq(-1, 1, length = n)
   m <- 5  # no. of paths
@@ -154,12 +161,11 @@ conv_in_norm <- function(n = 1000, seed = 343, cen = TRUE,
   #                   iprior::kern_se(x, l = 0.1, centre = cen)) %*% w
   plot.df <- data.frame(x, f = f.path)
   plot.df <- melt(plot.df, id = "x")
-  p <- ggplot(plot.df, aes(x, value)) +
+  ggplot(plot.df, aes(x, value)) +
     geom_line(aes(col = variable)) +
     labs(x = expression(italic(x)), y = expression(italic(f(x))),
          title = "") +
-    theme_kernel_path
-  p
+    theme_kernel_path_2
 }; conv_in_norm()
 
 ggsave("figure/02-kernel_path_const.pdf", kernel_path_constant(),
@@ -187,6 +193,8 @@ ggsave("figure/02-kernel_path_se_01.pdf", kernel_path_se(l = 0.1),
 ggsave("figure/02-kernel_path_pearson.pdf", kernel_path_pearson(),
        width = 6.5 * 0.65, height = 4.5 * 0.65)
 
+ggsave("figure/02-conv_in_norm.pdf", conv_in_norm(),
+       width = 6.5 * 0.65, height = 4.5 * 0.65)
 
 move_fig_to_chapter()
 
