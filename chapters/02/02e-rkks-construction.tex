@@ -162,10 +162,10 @@ Given sets of observations $y_j = \{y_{1j},\dots,y_{n_jj}\}$, $j=1,\dots,m$, we 
 %Enter the ANOVA decomposition.
 This covariate-less model is used to make inferences about the  \emph{treatment means} $\mu_j$.
 Often, the model is written in the \emph{overparameterised} form by substituting $\mu_j = \mu + \tau_j$.
-This gives a different, arguably better, interpretability to the model: The $\tau_j$'s, referred to as the \emph{treatment effects}, now represent the amount of deviation from the grand, \emph{overall mean} $\mu$.
-Estimating all $\tau_j$'s and $\mu$ separately is not possible because there is one degree of freedom that needs to be addressed in the model: There are $p+1$ mean parameters to estimate but only information from $p$ means.
+This gives a different, arguably better, interpretability to the model: the $\tau_j$'s, referred to as the \emph{treatment effects}, now represent the amount of deviation from the grand, \emph{overall mean} $\mu$.
+Estimating all $\tau_j$'s and $\mu$ separately is not possible because there is one degree of freedom that needs to be addressed in the model: there are $p+1$ mean parameters to estimate but only information from $p$ means.
 %Knowledge of the overall mean $\mu$ would only allow us to freely ``choose'' only $m-1$ of the treatment effects $\mu_j$, since necessarily $\sum_{j=1}^m n_j\mu = \sum_{j=1}^m n_j\mu_j$.
-A common fix to the identifiability issue is to set one of the $\mu_j$'s, say the first one $\mu_1$, to zero, or impose the restriction $\sum_{j=1}^m \mu_j = 0$.
+A common fix to this identification issue is to set one of the $\mu_j$'s, say the first one $\mu_1$, to zero, or impose the restriction $\sum_{j=1}^m \mu_j = 0$.
 The former treats one of the $m$ levels as the control, while the latter treats all treatment effects symmetrically.
 
 %The imposition of these restriction corresponds to a particular hypothesis test regarding the group means.
@@ -182,11 +182,11 @@ where $A$ is an averaging operator that ``averages out'' its argument $x$ and re
 $f_o = Af$ is a constant function representing the \textit{\underline{o}verall mean}, whereas $f_t = (I - A)f$ is a function representing the \textit{\underline{t}reatment effects} $\tau_j$.
 Here are two choices of $A$:
 \begin{itemize}
-  \item $Af(x) = f(1) = \mu_1$. This implies $f(x) = f(1) + \big(f(x) - f(1)\big)$. The overall mean $\mu$ is the group mean $\mu_1$, which corresponds to setting the restriction $\mu_1=0$.
-  \item $Af(x) = \sum_{x=1}^m f(x) / m =: \bar \alpha$. This implies $f(x) = \bar \alpha + \big( f(x) - \bar \alpha \big)$. The overall mean is $\mu = \sum_{j=1}^m \alpha_j/m$, which corresponds to the restriction $\sum_{j=1}^m \mu_j = 0$.
+  \item {\boldmath$Af(x) = f(1) = \mu_1$}. This implies $f(x) = f(1) + \big(f(x) - f(1)\big)$. The overall mean $\mu$ is the group mean $\mu_1$, which corresponds to setting the restriction $\mu_1=0$.
+  \item {\boldmath$Af(x) = \sum_{x=1}^m f(x) / m =: \bar \alpha$}. This implies $f(x) = \bar \alpha + \big( f(x) - \bar \alpha \big)$. The overall mean is $\mu = \sum_{j=1}^m \alpha_j/m$, which corresponds to the restriction $\sum_{j=1}^m \mu_j = 0$.
 \end{itemize}
 By definition, $AAf = A^2f = Af$, because averaging a constant returns that constant
-[Side note: This idempotent property of the linear operator $A$ on $f$ speaks to the possibility of it being an \emph{orthogonal projection}, and indeed this is so---we shall return to this point later when we describe functional ANOVA decomposition].
+Side note: this idempotent property of the linear operator $A$ on $f$ speaks to the possibility of it being an \emph{orthogonal projection}, and indeed this is so---we shall return to this point later when we describe functional ANOVA decomposition.
 We must have that $Af_t = A(I - A)f = Af - A^2f = 0$.
 The choice of A is arbitrary, as is the choice of restriction, so long as it satisfies the condition that $Af_c = 0$.
 
@@ -242,24 +242,24 @@ Consider the linear operator $A_k:\cF\to \cF_{-k}$, where $\cF_{-k}$ is a vector
 Thus, for the one-way ANOVA ($p=1$), we get
 \begin{align}\label{eq:functionalanova1}
   f = 
-  \greyoverbrace{\int_\cX f(x)\d\nu(x)}{f_0} 
+  \greyoverbrace{\int_\cX f(x)\dint\nu(x)}{f_0} 
   + 
-  \greyoverbrace{\left( f - \int_\cX f(x)\d\nu(x) \right)}{f_1}
+  \greyoverbrace{\left( f - \int_\cX f(x)\dint\nu(x) \right)}{f_1}
 \end{align}
 and for the two-way ANOVA ($p=2$), we have $f = f_0 + f_1 + f_2 + f_{12}$, with
 \begin{align*}
   f_0 &= \int_{\cX_1}\int_{\cX_2} f(x_1,x_2) \dint\nu(x_1)\dint\nu(x_2) \\
   f_1 &= \int_{\cX_2} \left( f(x_1,x_2) - \int_{\cX_1} f(x_1,x_2) \dint\nu(x_1) \right) \dint\nu(x_2)\\  
   f_2 &= \int_{\cX_1} \left( f(x_1,x_2) - \int_{\cX_2} f(x_1,x_2) \dint\nu(x_2) \right) \dint\nu(x_1)\\  
-  f_{12} &= f(x_1,x_2) - \int_{\cX_1} f(x_1,x_2) \d\nu(x_1) - \int_{\cX_2} f(x_1,x_2) \dint\nu(x_2) \\
-  &\phantom{==} + \int_{\cX_1}\int_{\cX_2} f(x_1,x_2) \d\nu(x_1) \dint\nu(x_2).
+  f_{12} &= f(x_1,x_2) - \int_{\cX_1} f(x_1,x_2) \dint\nu(x_1) - \int_{\cX_2} f(x_1,x_2) \dint\nu(x_2) \\
+  &\phantom{==} + \int_{\cX_1}\int_{\cX_2} f(x_1,x_2) \dint\nu(x_1) \dint\nu(x_2).
 \end{align*}
 
 As a remark, the averaging operator $A_k$ defined in \cref{eq:avgoper} is indeed true to its name, in that it calculates the mean function of $f$ over the $k$th coordinate. 
 For comparison, this is identical to the second type of restriction we considered in the classical ANOVA previously (i.e., setting $\sum_j \mu_j = 0$).
 We must also have, as before, that $A_kf_\cK = 0, \forall k \in \cK \in \cP_p$.
 For the one-way functional ANOVA decomposition in \cref{eq:functionalanova1}, it must be that $f_1$ is a zero-mean function.
-As for the two-way ANOVA, it is the case that $\int_{\cX_k} f_1(x_1,x_2) \d\nu(x_k) = 0, k=1,2$, and $\int_{\cX_1}\int_{\cX_2} f_{12}(x_1,x_2) \d\nu(x_1)\d\nu(x_1) = 0$.
+As for the two-way ANOVA, it is the case that $\int_{\cX_k} f_1(x_1,x_2) \dint\nu(x_k) = 0, k=1,2$, and $\int_{\cX_1}\int_{\cX_2} f_{12}(x_1,x_2) \d\nu(x_1)\dint\nu(x_1) = 0$.
 
 We notice that the decomposition in \cref{eq:functionalanova1} is orthogonal:
 

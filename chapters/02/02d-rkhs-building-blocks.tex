@@ -1,7 +1,6 @@
 This section describes what we refer to as the ``building block'' RKHS of functions.
 In the context of regression modelling, we may assume that the regression function lies in any one of these single RKHS, although it may be more appropriate to consider function spaces built upon these RKHS for more complex models.
 Construction of new function spaces from these building block RKHS will be discussed in the next section.
-\hltodo[Update graphics.]{}
 
 \subsection{The RKHS of constant functions}
 
@@ -35,7 +34,7 @@ The space $\cF$ can be equipped with a norm to form an RKHS, as shown in the fol
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[scale=0.5]{figure/kernel_path_const_th}
+  \includegraphics[width=0.6\textwidth]{figure/02-kernel_path_const}
   \caption{Sample paths from the RKHS of constant functions.}
 \end{figure}
 
@@ -110,7 +109,7 @@ We define the centred canonical RKHS as follows.
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[scale=0.3]{figure/kernel_path_canonical_th}
+  \includegraphics[width=0.6\textwidth]{figure/02-kernel_path_canonical}
   \caption{Sample paths from the canonical RKHS.}
 \end{figure}
 
@@ -129,7 +128,7 @@ The Hurst parameter plays two roles: 1) It describes the raggedness of the resul
 When $\gamma=1/2$ exactly, then the fBm is a standard Brownian motion and its increments are independent; when $\gamma > 1/2$ (resp. $\gamma < 1/2$) its increments are positively (resp. negatively) correlated.
 
 Now let $\cX$ be a Hilbert space. 
-\cite{schoenberg1937} has shown that, for $0 < \gamma\leq 1$, there exists a Hilbert space $\cV$ and a function $\phi_\gamma:\cX\to\cV$ such that $\forall x,x' \in \cX$,
+\citet{schoenberg1937} has shown that, for $0 < \gamma\leq 1$, there exists a Hilbert space $\cV$ and a function $\phi_\gamma:\cX\to\cV$ such that $\forall x,x' \in \cX$,
 \[
   \big\Vert \phi_\gamma(x) - \phi_\gamma(x') \big\Vert_\cV = \norm{x-x'}_\cX^\gamma.
 \]
@@ -232,10 +231,10 @@ We define the centred fBm RKHS as follows.
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[scale=0.22]{figure/kernel_path_fbm_01_th}
-  \includegraphics[scale=0.43]{figure/kernel_path_fbm_03_th}
-  \includegraphics[scale=0.43]{figure/kernel_path_fbm_05_th}
-  \includegraphics[scale=0.4]{figure/kernel_path_fbm_07_th}
+  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_1}
+  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_3}
+  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_5}
+  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_7}
   \caption{Sample paths from the fBm RKHS with varying Hurst coefficients.}
 \end{figure}
 
@@ -296,9 +295,9 @@ In a similar manner to the two previous subsections, we may also derive the \emp
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[scale=0.4]{figure/kernel_path_se_1_th}
-  \includegraphics[scale=0.4]{figure/kernel_path_se_05_th}
-  \includegraphics[scale=0.4]{figure/kernel_path_se_01_th}
+  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_se_10}
+  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_se_05}
+  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_se_01}
   \caption{Sample paths from the SE RKHS with varying values for the lengthscale.}
 \end{figure}
 
@@ -358,7 +357,7 @@ The Pearson RKHS contains functions which are centred, and has the desirable pro
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[scale=0.15]{figure/kernel_path_pearson_th}
+  \includegraphics[width=0.6\textwidth]{figure/02-kernel_path_pearson}
   \caption{Sample ``paths'' from the Pearson RKHS. These are represented as points over a finite set.}
 \end{figure}
 

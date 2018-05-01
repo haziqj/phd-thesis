@@ -9,9 +9,9 @@ In addition, assume $\nu$ is a probability measure over $\Theta$ so that $(\Thet
   Denote by $p$ a probability density over $\Theta$ relative to $\nu$.
   Suppose that $\int p\log p \dint \nu < \infty$, i.e., $p \log p$ is Lebesgue integrable and belongs to the space $\text{L}^1(\Theta,\nu)$.
   The entropy of a distribution $p$ over $\Theta$ relative to a measure $\nu$ is defined as
-  \[
+  \begin{align}\label{eq:entrop}
     H(p) = - \int_\Theta p(\theta) \log p(\theta) \, \d\nu(\theta).
-  \]
+  \end{align}
 \end{definition}
 
 
@@ -94,7 +94,7 @@ A prior for $f$ therefore need not have support $\cF$, instead it is sufficient 
 We now state and prove the I-prior theorem.
 
 \begin{theorem}[The I-prior]
-  Let $\cF$ be an RKHS with kernel $h$, and consider the finite dimensional subspace $\cF_n$ of $\cF$ equipped with an inner product as in Lemma 2.5.
+  Let $\cF$ be an RKHS with kernel $h$, and consider the finite dimensional subspace $\cF_n$ of $\cF$ equipped with an inner product as in \cref{thm:Fninnerprod}.
 %  Suppose $\Theta$ is a finite dimensional affine subspace of a Hilbert space with norm $\norm{\cdot}_\Theta$. 
 %  We have a metric space $(\cF_n,d)$, where $d(f,f')^2 = \ip{f-f',f-f'}$.
   Let $\nu$ be a volume measure induced by the norm $\norm{\cdot}_{\cF_n} = \sqrt{\ip{\cdot,\cdot}_{\cF_n}}$.
@@ -195,14 +195,14 @@ We now state and prove the I-prior theorem.
 \end{proof}
 
 In closing, we reiterate the fact that the I-prior for $f$ in the normal regression model subject to $f$ belonging to some RKHS $\cF$ has the simple representation
-\begin{align*}
+\begin{align}\label{eq:iprior2}
   \begin{gathered}
     f(x_i) = f_0(x_i) + \sum_{k=1}^n h(x_i,x_k)w_k \\
     (w_1,\dots,w_n)^\top \sim \N_n(\bzero,\bPsi).
   \end{gathered}
-\end{align*}
+\end{align}
 Equivalently, this may be written as a Gaussian process-like prior 
-\[
+\begin{align}\label{eq:iprior3}
   \big(f(x_1),\dots,f(x_n) \big)^\top \sim \N(\bff_0,\bH\bPsi\bH),
-\]
+\end{align}
 where $\bff_0 = \big(f_0(x_1),\dots,f_0(x_n) \big)^\top$ is the vector of prior mean functional evaluations, and $\bH$ is the kernel matrix.

@@ -81,7 +81,7 @@ Consider the following example of applying Lemma \cref{thm:fisherregf} to obtain
   Let $\cX = \bbR^p$, and the feature space $\cV = \bbR^p$ be equipped with the usual dot product $\ip{\cdot,\cdot}_\cV:\cV \otimes \cV \to \bbR$ defined by $v^\top v$.
   Consider also the identity feature map $\phi:\cX \to \cV$ defined by $\phi(\bx)=\bx$.
   For some $\boldsymbol\beta \in \cV$, the linear regression model is such that $f(\bx) = \bx^\top \boldsymbol\beta = \ip{\phi(\bx),\boldsymbol\beta}_\cV$.
-  Therefore, according to Lemma \cref{thm:fisherregf}, the Fisher information for $\beta$ is
+  Therefore, according to \cref{thm:fisherregf}, the Fisher information for $\beta$ is
   \begin{align*}
     \cI(\boldsymbol\beta) 
     &= \sum_{i=1}^n\sum_{j=1}^n \psi \cdot \phi(\bx_i) \otimes \phi(\bx_j) \\
