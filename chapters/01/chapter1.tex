@@ -23,8 +23,8 @@ The essence of regression modelling using I-priors is introduced briefly below, 
 This thesis has three main chapters which we hope to present as methodological innovations surrounding the use of I-priors for regression modelling.
 Chapter 4 describes computational methods relating to the estimation of I-prior models.
 Chapter 5 extends the I-prior methodology to fit discrete outcome models.
-Chapter 6 discusses the use of I-priors for model selection. 
-This short chapter ultimately provides an outline of the thesis, in addition to introducing the statistical model of interest.
+Chapter 6 discusses the use of I-priors in variable selection for linear models. 
+In addition to introducing the statistical model of interest and  motivating the use of I-priors, this current chapter ultimately provides a summary outline of the thesis.
 
 \section{Regression models}
 \label{sec:introregmod}
@@ -211,7 +211,7 @@ These are of course well-known results in Gaussian process literature---see, for
 \footnotetext{
 The fact that it is the same is inconsequential.
 It happens to be that the mean of the predictive distribution $\E[y_\new|\by]$ for a normal model is the same as \emph{prediction of the mean at the posterior}, $\E[f(x_\new)|\by]$.
-\cite{rasmussen2006gaussian} points out that this is due to symmetries in the model and the posterior.
+\citet{rasmussen2006gaussian} points out that this is due to symmetries in the model and the posterior.
 }
 
 There is also the matter of optimising model parameters $\theta$, which in our case, collectively refers to the kernel parameters $\eta$ and the precision matrix of the errors $\bPsi$.
@@ -251,20 +251,20 @@ The I-prior methodology has the following advantages:
   Marginal likelihoods after integrating out the I-prior are easily obtained, making model selection via comparison of likelihood a viable option.
   This method of comparing marginal likelihood with maximum likelihood estimate plug-ins of the model parameters, is viewed as comparing empirical Bayes factors in the Bayesian literature.
   
-  \item \textbf{Proper prior and posterior}
-  
-  \hltodo[Is this an advantage?]{Both the I-prior for $f$ and the posterior solution lies in $\cF$.}
+%  \item \textbf{Proper prior and posterior}
+%  
+%  \hltodo[Is this an advantage?]{Both the I-prior for $f$ and the posterior solution lies in $\cF$.}
   
 \end{enumerate}
 
-The main drawback of using I-prior models computational in nature, namely, the requirement of working with an $n \times n$ matrix and its inverse, as seen in Equations \cref{eq:postmean} and \cref{eq:postvar}, regardless of estimation method (ML or Bayes).
+The main drawback of using I-prior models is computational in nature, namely, the requirement of working with an $n \times n$ matrix and its inverse, as seen in Equations \cref{eq:postmean} and \cref{eq:postvar}, regardless of estimation method (ML or Bayes).
 Analysis of data sets that are not more than a few thousand in size can be considered feasible; anything more than this is debilitatingly slow to compute.
 In addition, care must be taken to avoid numerical instabilities when calculating the marginal log-likelihood during parameter estimation, which can affect gradient based optimisation or the EM algorithm.
 
 Another issue when performing likelihood based methods is that the optimisation objective may be non-convex such that multiple local optima may exist. 
 In such cases, multiple restarts from different initialisation may ultimately lead to a global maximum, although some difficulties may be faced when numerical instabilities occur.
 
-Lastly, a remark on model assumptions, which are twofold: 1) Assumption of $f \in \cF$, some RKHS; and 2) normality of errors.
+Lastly, a remark on model assumptions, which are twofold: 1) the assumption of $f \in \cF$ an RKHS; and 2) normality of errors.
 Of the two, the latter is more likely to be violated, especially when dealing with discrete responses, e.g. in classification.
 Deviating from the normality assumption would require approximation techniques to be implemented in order to obtain the posterior distributions of interest.
 
