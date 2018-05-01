@@ -6,6 +6,11 @@
   \usepackage{../../haziq_maths}
   \usepackage{../../haziq_glossary}
   \addbibresource{../../bib/haziq.bib}
+  \externaldocument{../01/.texpadtmp/chapter1}
+  \externaldocument{../02/.texpadtmp/chapter2}
+  \externaldocument{../03/.texpadtmp/chapter3}
+  \externaldocument{../04/.texpadtmp/chapter4}
+  \externaldocument{../05/.texpadtmp/chapter5}
 \fi
 
 \begin{document}
@@ -18,12 +23,12 @@ Regression analysis concerns the estimation of said regression function, and onc
 Estimation of the regression function may be done in many ways.
 This thesis concerns the use of \emph{I-priors} \citep{bergsma2017}, in a semi-Bayesian\index{Bayes} manner, for regression modelling.
 The I-prior is an objective, entropy-maximising prior for the regression function which makes use of its Fisher information.
-The essence of regression modelling using I-priors is introduced briefly below, but as the development of I-priors is fairly recent, we dedicate two full chapters (Chapters 2 and 3) to describe the concept fully.
+The essence of regression modelling using I-priors is introduced briefly below, but as the development of I-priors is fairly recent, we dedicate two full chapters (\cref{chapter2,chapter3}) to describe the concept fully.
 
 This thesis has three main chapters which we hope to present as methodological innovations surrounding the use of I-priors for regression modelling.
-Chapter 4 describes computational methods relating to the estimation of I-prior models.
-Chapter 5 extends the I-prior methodology to fit discrete outcome models.
-Chapter 6 discusses the use of I-priors in variable selection for linear models. 
+\cref{chapter4} describes computational methods relating to the estimation of I-prior models.
+\cref{chapter5} extends the I-prior methodology to fit discrete outcome models.
+\cref{chapter6} discusses the use of I-priors in variable selection for linear models. 
 In addition to introducing the statistical model of interest and  motivating the use of I-priors, this current chapter ultimately provides a summary outline of the thesis.
 
 \section{Regression models}
@@ -76,12 +81,12 @@ Often, the reproducing kernel (or simply kernel, for short) is indexed by one or
 Correspondingly, the kernel is rightfully denoted as $h_\eta$ to indicate the dependence of the parameters on the kernels, though where this is seemingly obvious, might be omitted.
 Throughout this thesis we shall make the assumption that our regression function lies in a reproducing kernel Hilbert space $\cF$.
 
-RKHSs provides a geometrical advantage to learning algorithms: Projections of the inputs to a richer and more informative (and higher dimensional) feature space, where learning is more likely to be successful, need not be figured out explicitly.
+RKHSs provides a geometrical advantage to learning algorithms: projections of the inputs to a richer and more informative (and higher dimensional) feature space, where learning is more likely to be successful, need not be figured out explicitly.
 Instead, the feature maps are implicitly calculated by the use of kernel functions. 
-This is known as the ``kernel trick'' in the machine learning literature, and it has facilitated the success of kernel methods for learning, particularly in algorithms with inner products involving the transformed inputs. 
+This is known as the ``kernel trick'' in the machine learning literature \citep{hofmann2008kernel}, and it has facilitated the success of kernel methods for learning, particularly in algorithms with inner products involving the transformed inputs. 
 
-Due to the one-to-one mapping between the set of kernel functions and the set of RKHSs, choosing a regression function is equivalent to choosing a kernel function, and this is chosen according to the desired effects of the covariates on the regression function.
-An in-depth discussion on kernels and RKHSs will be provided later in Chapter 2, but for now, it suffices to say that kernels which invoke a linear, smooth and categorical dependence, are of interest.
+Due to the one-to-one mapping between the set of kernel functions and the set of RKHSs, choosing the space in which the regression function lies is equivalent to choosing a particular kernel function, and this is chosen according to the desired effects of the covariates on the regression function.
+An in-depth discussion on kernels and RKHSs will be provided later in \cref{chapter2}, but for now, it suffices to say that kernels which invoke either a linear, smooth or categorical dependence, or any combinations thereof, are of interest.
 This would allow us to fit the various models described earlier within this RKHS framework.
 
 \section{Estimating the regression function}
@@ -165,7 +170,7 @@ As a result, we may view the I-prior for $f$ as having the Gaussian process dist
 with $\bH_{\eta}$ an $n \times n$ matrix with $(i,j)$ entries equal to $h_\eta(x_i,x_j)$, and $\bff_0$ a vector containing the $f_0(x_i)$'s.
 The covariance matrix of this multivariate normal prior is related to the Fisher information for $f$, and hence the name I-prior---the `I' stands for information.
 Furthermore, the I-prior happens to be an entropy-maximising prior, subject to certain constraints.
-More on the I-prior in Chapter 2.
+More on the I-prior in \cref{chapter3}.
 
 %\footnotetext{
 %That is to say, $\cF$ is spanned by the functions $h(\cdot,x)$. 
@@ -239,7 +244,7 @@ The I-prior methodology has the following advantages:
   
   As alluded to earlier, the process of inferring $f$ from data is an ``ill-posed'' problem.
   In fact, any function $f$ that passes through the data points is a solution.
-  Regularising the problem with the use of I-priors prevents over-fitting, with the added advantage that the posterior solution under an I-prior does not tend to under-smooth as much as Tikhonov regularisation does (see Chapter 2 for details).
+  Regularising the problem with the use of I-priors prevents over-fitting, with the added advantage that the posterior solution under an I-prior does not tend to under-smooth as much as Tikhonov regularisation does (see \cref{chapter2} for details).
   Under-smoothing can adversely impact the estimate of $f$, and in real terms might even show features and artefacts that are not really there.
   
   \item \textbf{Better prediction.}
@@ -257,7 +262,7 @@ The I-prior methodology has the following advantages:
   
 \end{enumerate}
 
-The main drawback of using I-prior models is computational in nature, namely, the requirement of working with an $n \times n$ matrix and its inverse, as seen in Equations \cref{eq:postmean} and \cref{eq:postvar}, regardless of estimation method (ML or Bayes).
+The main drawback of using I-prior models is computational in nature, namely, the requirement of working with an $n \times n$ matrix and its inverse, as seen in equations \cref{eq:postmean} and \cref{eq:postvar}, regardless of estimation method (ML or Bayes).
 Analysis of data sets that are not more than a few thousand in size can be considered feasible; anything more than this is debilitatingly slow to compute.
 In addition, care must be taken to avoid numerical instabilities when calculating the marginal log-likelihood during parameter estimation, which can affect gradient based optimisation or the EM algorithm.
 
@@ -296,6 +301,7 @@ This thesis is structured as follows:
   We use a stochastic search method to choose models that have high posterior probabilities of occurring, equivalent to choosing models that have large Bayes factors.
 \end{itemize}
 
+%\cref{chapter4,chapter5,chapter6} 
 Chapters 4--6 contain computer implementations of the statistical methodologies described therein, and the code for replication are made available at \url{http://myphdcode.haziqj.ml}.
 
 \hClosingStuffStandalone
