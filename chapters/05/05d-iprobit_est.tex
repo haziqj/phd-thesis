@@ -2,7 +2,39 @@
 %Several methods may be employed, namely quadrature methods, Laplace approximation, and Markov chain Monte Carlo (MCMC) methods, but these all fail in the face of high dimensionality when the sample size $n$ is large.
 
 As with the normal I-prior model, an estimate of the posterior regression function with optimised hyperparameters is sought.
-The log likelihood function $L(\cdot)$ for $\theta$ using all $n$ observations $\{(y_1,x_1),\dots,(y_n,x_n)\}$ is obtained by integrating out the I-prior from the categorical likelihood, as follows:
+The log likelihood function $L(\cdot)$ for $\theta$ using all $n$ observations $\{(y_1,x_1),\dots,(y_n,x_n)\}$ is obtained by performing the following integration:
+\begin{equation}\label{eq:iprobitlik}
+  L(\theta) 
+  = \log \iint p(\by|\by^*,\theta) p(\by^*|\bw,\theta) p(\bw|\theta) \dint \by^* \dint \bw  
+\end{equation}
+Here, $p(\bw|\theta)$ is the pdf of $\MN_{n,m}(\bzero,\bI_n,\bPsi)$, $p(\by^*|\bw,\theta)$ is the pdf of $\MN_{n,m}(\bone_n\balpha^\top + \bH_\eta\bw,\bI_n,\bPsi^{-1})$, and $p(\by|\by^*,\theta) = \prod_{i=1}^n \prod_{j=1}^m \big[y_{ij}^* 
+    = \max \by^*_{i\bigcdot}\big]^{[y_i = j]}$, with $0^0 := 1$.
+Note that, given the corresponding latent propensities $\by^*_{i\bigcdot} = (y_{i1}^*,\dots,y_{im}^*)^\top$, the distribution $y_i|\by^*_{i\bigcdot}$ is tantamount to a degenerate categorical distribution, since after knowing which of the latent propensities is largest, knowledge of the outcome of the categorical response becomes a certainty.
+
+Marginalising out the random effects $\bw$ from the pdf of the latent propensities is a relatively simple task as this involves two normal densities, but simplicity ends there.
+Continuing on \cref{eq:iprobitlik}, we get
+\begin{align*}
+  L(\theta) 
+  &= \log \int p(\by|\by^*,\theta) p(\by^*|\theta) \dint \by^* \\
+  &= \log \int \prod_{i=1}^n \big[y_{iy_i}^* 
+  = \max \by^*_{i\bigcdot}\big]
+  \phi(\by^*|\bone_n\balpha^\top, \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n) \dint \by^*.
+%  &= \log \idotsint_{\cC_{y_i}} \phi(\by^*|\bone_n\balpha^\top, \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n) \dint \by^*
+\end{align*}
+Being an integral of order $nm$, it is an incredibly daunting problem to tackle which hampers hope of obtaining parameter estimates via direct likelihood maximisation methods.
+Furthermore, the posterior distribution of the regression function, which requires the density of $\bw|\by$, obtained via
+\begin{align*}
+  p(\bw|\by) 
+  &\propto p(\by|\bw)p(\bw) \\
+  &= \int p(\by|\by^*,\bw)p(\by^*|\bw)p(\bw)\d\by^*,
+\end{align*}
+has normalising constant equal to the marginalisation integral in  \cref{eq:iprobitlik}.
+The challenge of estimation is then to first overcome this intractability by means of a suitable approximation of the integral.
+We present three possible avenues to achieve this aim, namely the Laplace approximation, variational Bayes, and Markov chain Monte Carlo (MCMC) methods.
+
+\subsection{Laplace approximation}
+
+An alternative approach to compute the log-likelihood function is to bypass the latent propensities completely, i.e.
 \begin{align}
   L(\theta) 
   &= \log \int p(\by | \bw, \theta) \, p(\bw|\theta) \dint \bw \nonumber \\
@@ -10,37 +42,30 @@ The log likelihood function $L(\cdot)$ for $\theta$ using all $n$ observations $
   \greyoverbrace{f_k(x_i)}{\hidewidth\sum_{i'=1}^n h_\eta(x_i,x_{i'})w_{i'k}\hidewidth}
   \,\big)_{k=1}^m \Big)^{[y_i=j]} \cdot \MN_{n,m}(\bw|\bzero,\bI_n, \bPsi) \dint \bw \label{eq:intractablelikelihood}
 \end{align}
-where we have denoted the probit relationship from \cref{eq:pij} using the function $g_j^{-1}:\bbR^m \to [0,1]$.
-Unlike in the continuous response models, the integral does not present itself in closed form due to the conditional categorical PMF of the $y_i$'s, which they themselves involve integrals of multivariate normal densities.
-For binary response models, $g^{-1}$ is simply the probit function, but for multinomial responses, this can be quite challenging to evaluate---more on this in \cref{sec:mnint}.
+where we have denoted the class probabilities $p_{ij}$ from \cref{eq:pij} using the function $g_j^{-1}:\bbR^m \to [0,1]$, which highlights the dependence of the class probabilities on $\bw$.
+This formulation sets us up nicely to apply Laplace's method of approximating the integral in \cref{eq:intractablelikelihood}.
 
-Furthermore, the posterior distribution of the regression function, which requires the density of $\bw|\by$, depends on the marginalisation provided by \cref{eq:intractablelikelihood}.
-The challenge of estimation is then to first overcome this intractability by means of a suitable approximation of the integral.
-We present three possible avenues to achieve this aim, namely the Laplace approximation, variational Bayes, and Markov chain Monte Carlo (MCMC) methods.
-
-\subsection{Laplace approximation}
-
-To compute the posterior density $p(\bw|\by) \propto p(\by|\bw)p(\bw) =: e^{Q(\bw)}$ with normalising constant equal to the marginal density of $\by$, $p(\by) = \int e^{Q(\bw)} \dint \bw$, we have established that this is intractable.
-Laplace's method \citep[§4.1.1, pp. 777--778]{kass1995bayes} entails expanding a Taylor series for $Q$ about its posterior mode $\hat\bw = \argmax_\bw p(\by|\bw)p(\bw)$, which gives the relationship
+The focus here is to obtain the posterior density $p(\bw|\by) \propto p(\by|\bw)p(\bw) =: e^{R(\bw)}$ with normalising constant equal to the marginal density of $\by$, $p(\by) = \int e^{R(\bw)} \dint \bw$.
+Laplace's method \citep[§4.1.1, pp. 777--778]{kass1995bayes} entails expanding a Taylor series for $R$ about its posterior mode $\hat\bw = \argmax_\bw p(\by|\bw)p(\bw)$, which gives the relationship
 \begin{align*}
-  Q(\bw) 
-  &= Q(\hat\bw) + 
-  \cancelto{0}{(\bw - \hat\bw)^\top \nabla Q(\hat\bw)} 
+  R(\bw) 
+  &= R(\hat\bw) + 
+  \cancelto{0}{(\bw - \hat\bw)^\top \nabla R(\hat\bw)} 
   - \half (\bw - \hat\bw)^\top \bOmega (\bw - \hat\bw) + \cdots \\
-  &\approx Q(\hat\bw) + 
+  &\approx R(\hat\bw) + 
   - \half (\bw - \hat\bw)^\top \bOmega (\bw - \hat\bw),
 \end{align*}
-because, assuming that $Q$ has a unique maxima, $\nabla Q$ evaluated at its mode is zero.
+because, assuming that $R$ has a unique maximum, $\nabla R$ evaluated at its mode is zero.
 This is recognised as the logarithm of an unnormalised Gaussian density, implying $\bw|\by \sim \N_n(\hat\bw,\bOmega^{-1})$.
-Here, $\bOmega = -\nabla^2 Q(\bw)|_{\bw=\hat\bw}$ is the negative Hessian of $Q$ evaluated at the posterior mode, and is typically obtained as a byproduct of the maximisation routine of $Q$ using gradient or quasi-gradient based methods.
+Here, $\bOmega = -\nabla^2 R(\bw)|_{\bw=\hat\bw}$ is the negative Hessian of $Q$ evaluated at the posterior mode, and is typically obtained as a byproduct of the maximisation routine of $R$ using gradient or quasi-gradient based methods.
 
 The marginal distribution is then approximated by
 \begin{align*}
   p(\by) 
-  &\approx \int \exp
-  \greyoverbrace{Q(\bw)}{\hidewidth Q(\hat\bw) - \half (\bw - \hat\bw)^\top \bOmega (\bw - \hat\bw)\hidewidth}
+  &= \int \exp
+  \greyoverbrace{R(\bw)}{\hidewidth \approx \ R(\hat\bw) - \half (\bw - \hat\bw)^\top \bOmega (\bw - \hat\bw)\hidewidth}
    \dint \bw \\
-  &= (2\pi)^{n/2} \abs{\bOmega}^{-1/2} e^{Q(\hat\bw)} 
+  &\approx (2\pi)^{n/2} \abs{\bOmega}^{-1/2} e^{Q(\hat\bw)} 
   \int (2\pi)^{-n/2} \abs{\bOmega}^{1/2} \exp \left(- \half (\bw - \hat\bw)^\top \bOmega (\bw - \hat\bw) \right) \dint\bw \\
   &= (2\pi)^{n/2} \abs{\bOmega}^{-1/2} p(\by|\hat\bw)p(\hat\bw).
 %  &= \cancelto{1}{\int \phi(\bw|\hat\bw,\bOmega^{-1})}

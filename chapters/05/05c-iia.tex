@@ -3,7 +3,7 @@ Unrestricted probit models are not identified for two reasons.
 Firstly, an addition of a non-zero constant $a\in\bbR$ to the latent variables $y_{ij}^*$'s in \cref{eq:latentmodel} will not change which latent variable is maximal, and therefore leaves the model unchanged.
 It is for this reason assumptions \ref{ass:A4} and \ref{ass:A5} are imposed.
 Secondly, all latent variables can be scaled by some positive constant $c\in\bbR_{>0}$ without changing which latent variable is largest.
-This means that $m$-variate normal distribution of the underlying latent variables $\by_{i\bigcdot}^*$ with mean and variance $\{\bmu(x_i), \bPsi^{-1} \}$ would yield the same class probabilities as the multivariate normal distribution with mean and variance $\{a\bone_m + c\bmu(x_i), c^2\bPsi^{-1} \}$, according to \cref{eq:pij}.
+This means that $m$-variate normal distribution $\N_m\big(\bmu(x_i), \bPsi^{-1}\big)$ of the underlying latent variables $\by_{i\bigcdot}^*$ would yield the same class probabilities as the multivariate normal distribution $\N_m\big( a\bone_m + c\bmu(x_i), c^2\bPsi^{-1} \big)$, according to \cref{eq:pij}.
 Therefore, the multinomial probit model is not identified as there exists more than one set of parameters for which the categorical likelihood $\prod_{i,j} p_{ij}$ is the same.
 
 Identification for the probit model is resolved by setting one restriction on the intercepts $\alpha_1,\dots,\alpha_m$ (location) and $m+1$ restrictions on the precision matrix $\bPsi$ (scale).
