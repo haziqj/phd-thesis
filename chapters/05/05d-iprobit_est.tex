@@ -78,42 +78,68 @@ This is a slow and difficult undertaking, especially for large sample sizes $n$-
 Furthermore, obtaining standard errors for the parameters are cumbersome, and it is likely that a computationally burdensome bootstrapping approach is needed.
 Lastly, as a comment, Laplace's method only approximates the true marginal likelihood well if the true function is small far away from the mode.
 
-\subsection{Variational inference}
+\subsection{Variational EM algorithm}
 
-We turn to variational inference as a method of estimation. 
+We turn to variational methods as a means of approximating the posterior densities of interest and obtain parameter estimates.
 Variational methods are widely discussed in the machine learning literature, but there have been efforts to popularise it in statistics \citep{blei2017variational}.
-In a fully Bayesian setting, one obtains an approximation to the intractable posterior distribution of interest, which is then used for inferential purposes in lieu of the actual posterior distribution.
+Although variational inference is typically seen as a fully Bayesian method, whereby approximate posterior densities are sought for the latent variables and parameters, our goal is to apply variational inference to facilitate a pseudo maximum likelihood approach.
 
-In addition to the I-probit model, suppose that prior distributions are assigned on the hyperparameters of the model, $\theta \sim p(\theta)$.
-By appending the latent variables $\{\by^*,\bw\}$ to the hyperparameters $\theta$, we seek an approximation
+Consider employing an EM algorithm, similar to the one seen in the previous chapter, to estimate I-probit models.
+This time, treat both the latent propensities $\by^*$ and the I-prior random effects $\bw$ as `missing', so the complete data is $\{\by,\by^*,\bw\}$.
+Now, due to the independence of the observations $i=1,\dots,n$, the complete data log-likelihood is
+\begin{align*}
+  \log p&(\by,\by^*,\bw) \\
+  &= \sum_{i=1}^n \Big\{ 
+  \log p(y_i|\by^*_{i \bigcdot}) + \log p(\by^*_{i \bigcdot}|\bw_{i \bigcdot}) + \log p(\bw_{i \bigcdot}) 
+  \Big\} \\
+  &= - \half \sum_{i=1}^n [y_{ij}^* = \max_k y_{ik}^*] \Bigg\{
+%   \cancel{\half\log\abs{\bPsi}} 
+    \big(\by^*_{i \bigcdot} - \balpha - \bw_{i \bigcdot}^\top\bh_\eta(x_i)\big)^\top 
+    \bPsi 
+    \big(\by^*_{i \bigcdot} - \balpha - \bw_{i \bigcdot}^\top\bh_\eta(x_i)\big) \\
+  &\hspace{9.5cm} + \bw_{i \bigcdot}^\top \bPsi^{-1} \bw_{i \bigcdot} \Bigg\} 
+%  \cancel{- \half\log\abs{\bPsi}} 
+   + \const
+\end{align*}
+which looks like the complete data log-likelihood seen previously in \cref{eq:QfnEstep}, except that here, together with the $\bw_{i \bigcdot}$'s, the $\by^*_{i \bigcdot}$'s are never observed.
+
+For the E-step, it is of interest to determine the posterior density $p(\by^*,\bw|\by) = p(\by^*|\bw,\by)p(\bw|\by)$, which we have discerned from the discussion at the beginning of this section that this is hard to obtain, since it involves an intractable marginalising integral.
+We thus seek a suitable approximation
 \[
-  p(\by^*,\bw,\theta | \by) \approx \tilde q(\by^*,\bw,\theta),
+  p(\by^*,\bw | \by, \theta) \approx \tilde q(\by^*,\bw),
 \]
 where $\tilde q$ satisfies $\tilde q = \argmin_q \KL(q\Vert p)$, subject to certain constraints.
 The constraint considered by us in this thesis is that $q$ satisfies a \emph{mean-field} factorisation
 \[
-  q(\by^*,\bw,\theta) = q(\by^*)q(\bw)q(\theta).
+  q(\by^*,\bw,\theta) = q(\by^*)q(\bw).
 \]
-Under this scheme, the posterior for $\by^*$ is found to be a \emph{conically truncated multivariate normal} distribution, and for $\bw$, a multivariate normal distribution.
-The posterior density $q(\theta)$ is often of a recognisable form, and usually one of the exponential family densities (normal, Wishart or gamma).
-This is useful, because point estimates of the hyperparameters can be taken to be either the mean or mode of these well-known distributions.
-In cases where $q(\theta)$ does not conform to an exponential family type density, then inference can still be done by sampling methods.
+Under this scheme, the variational distribution for $\by^*$ is found to be a \emph{conically truncated multivariate normal} distribution, and for $\bw$, a multivariate normal distribution.
 
-It can be shown that, for some variational density $q$, the marginal log-likelihood is an upper-bound for the quantity $\cL$
+It can be shown that, for some variational density $q$, the marginal log-likelihood is an upper-bound for the quantity $\cL_\theta(q)$
 \[
-  \log p(\by) \geq 
-    \E_{ q} \log p(\by,\by^*,\bw,\theta)
-    - \E_{ q} \log \tilde q(\by^*,\bw,\theta) =: \cL,
+  \log p(\by|\theta) \geq 
+    \E_{\by^*,\bw\sim q} \log p(\by,\by^*,\bw|\theta)
+    - \E_{\by^*,\bw\sim q} \log  q(\by^*,\bw) =: \cL_\theta(q),
 %  }{\cL},
 \]
 a quantity often referred to as the \emph{evidence lower bound} (ELBO).
-It turns out that minimising $\KL(q\Vert p)$ is equivalent to maximising the ELBO, a quantity that is more practical to work with than the KL divergence.
-That is, if $\tilde q$ approximates the true posterior well, then the ELBO is a suitable proxy for the maximised marginal log-likelihood.
+It turns out that minimising $\KL(q\Vert p)$ is equivalent to maximising the ELBO, a quantity that is more practical to work with than the KL divergence, and certainly more tractable than the log marginal density.
+Hence, if $q$ approximates the true posterior well, then the ELBO is a suitable proxy for the marginal log-likelihood.
 
-The algorithm to obtain $\tilde q$ which maximises the ELBO is known as the \emph{coordinate ascent variational inference} (CAVI) algorithm.
-The algorithm itself typically condenses to that of a simple, sequential updating scheme, akin to the expectation-maximisation (EM) algorithm for exponential families we saw in Chapter 4, which is very fast to implement compared to the other methods described in the previous subsections.
-A full derivation of the variational algorithm used by us will be described in \cref{sec:iprobitvar}.
-%\citep{mclachlan2007algorithm}
+In practice, obtaining parameter estimates which maximise the ELBO and the approximate posterior distribution $q(\by^*,\bw) $ is achieved using a variational EM algorithm, an EM algorithm in which the conditional distributions are replaced with a variational approximation.
+The $t$'th E-step entails obtaining the density $q^{(t+1)}$ as a solution to $\argmax_q \cL_\theta(q)$, keeping $\theta$ fixed at the current estimate $\theta^{(t)}$.
+Let $\bar\by^* = \by^* - \bone_n\balpha^\top$.
+The objective function to be maximised is computed as
+\begin{align*}
+  Q(\theta) 
+  &= \E_{\by^*,\bw\sim q^{(t+1)}}  \big[ \log p(\by,\by^*,\bw|\theta) \big] \\
+  &= \const -\half \tr\E_{\by^*,\bw\sim q} \left[ 
+  \bPsi\big( \bar\by^{*\top}\bar\by^* + \bw^\top\bH_\eta^2\bw - 2\bw^\top\bH_\eta\bar\by^* \big)
+  + \bPsi^{-1} \bw^\top\bw 
+  \right],
+\end{align*}
+and this is maximised with respect to $\theta$ in the M-step to obtain $\theta^{(t+1)}$, and the process repeated until convergence of the ELBO.
+A full derivation of the variational EM algorithm used by us will be described in \cref{sec:iprobitvar}.
 
 \subsection{Markov chain Monte Carlo methods}
 

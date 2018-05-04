@@ -9,17 +9,6 @@ The following flat, uninformative priors are suggested:
   \]
   As $v_k^{-1}\to 0$, the prior becomes $p(\lambda_k)\propto \const$, an improper prior.
   The default choice for the rest of the kernel parameters is an improper prior $p(\eta) \propto \const$
-%  \item \textbf{Error precision $\bPsi$}. For the full I-probit model,
-%  \[
-%    \bPsi \sim \Wis(\bG,g)
-%  \]
-%  with known scale matrix $\bG = \diag(0.001,\dots,0.001)$ and degrees of freedom $g=m+1.001$. 
-%  This implies a vague gamma prior for the precisions, and a near uniform prior for the off-diagonal elements \citep{alvarez2014bayesian}.
-%  For the independent I-probit model such that $\bPsi = \diag(\psi_1,\dots,\psi_m)$,
-%  \[
-%    \psi_j \iid \Gamma(s,r), \ j=1,\dots,m,
-%  \]
-%  with vague shape $s = 0.001$ and rate $r = 0.001$ parameters. Note that as $s,r \to 0$ then $p(\psi_j) \propto \psi_j^{-1}$, an improper Jeffreys' prior for scale parameters.
   \item \textbf{Intercepts $\alpha_1,\dots,\alpha_m$}. Assign independent, vague normal priors for each intercept
   \[
     \alpha_j \iid \N(0,v_\alpha=0.001^{-1}).
