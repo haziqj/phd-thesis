@@ -16,19 +16,28 @@ Continuing on \cref{eq:iprobitlik}, we get
 \begin{align*}
   L(\theta) 
   &= \log \int p(\by|\by^*,\theta) p(\by^*|\theta) \dint \by^* \\
-  &= \log \int \prod_{i=1}^n \big[y_{iy_i}^* 
-  = \max \by^*_{i\bigcdot}\big]
-  \phi(\by^*|\bone_n\balpha^\top, \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n) \dint \by^*.
-%  &= \log \idotsint_{\cC_{y_i}} \phi(\by^*|\bone_n\balpha^\top, \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n) \dint \by^*
+  &= \log \int \bigg\{ \prod_{i=1}^n \prod_{j=1}^m \big[y_{ij}^* 
+  = \max \by^*_{i\bigcdot}\big]^{[y_i = j]} \bigg\}
+  \phi(\by^*|\bone_n\balpha^\top, \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n) \dint \by^* \\
+  &= \log 
+  \int_{\bigcap_{i=1}^n  \{ y_{iy_i}^* > y_{ik}^* | \forall k \neq y_i \}}
+  \phi(\by^*|\bone_n\balpha^\top, \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n) \dint \by^*,
 \end{align*}
+which is the logarithm of a probability of a $mn$-dimensional normal variate.
 Being an integral of order $nm$, it is an incredibly daunting problem to tackle which hampers hope of obtaining parameter estimates via direct likelihood maximisation methods.
-Furthermore, the posterior distribution of the regression function, which requires the density of $\bw|\by$, obtained via
+Furthermore, the posterior density of the regression function, which requires the density of $\bw|\by$, obtained via 
 \begin{align*}
   p(\bw|\by) 
   &\propto p(\by|\bw)p(\bw) \\
-  &= \int p(\by|\by^*,\bw)p(\by^*|\bw)p(\bw)\d\by^*,
+  &= p(\bw) \int p(\by|\by^*)p(\by^*|\bw) \dint \by^*,
 \end{align*}
-has normalising constant equal to the marginalisation integral in  \cref{eq:iprobitlik}.
+has normalising constant equal to the marginalisation integral in  \cref{eq:iprobitlik} and cannot be found in closed-form.
+This then rules out obtaining the posterior density of the latent variables
+\[
+  p(\by^*,\bw|\by) = p(\by^*|\bw,\by)p(\bw|\by),
+\]
+or even $p(\by^*|\by) = \int p(\by^*|\bw,\by)p(\bw|\by) \dint \bw$.
+
 The challenge of estimation is then to first overcome this intractability by means of a suitable approximation of the integral.
 We present three possible avenues to achieve this aim, namely the Laplace approximation, variational Bayes, and Markov chain Monte Carlo (MCMC) methods.
 
@@ -87,21 +96,20 @@ Although variational inference is typically seen as a fully Bayesian method, whe
 Consider employing an EM algorithm, similar to the one seen in the previous chapter, to estimate I-probit models.
 This time, treat both the latent propensities $\by^*$ and the I-prior random effects $\bw$ as `missing', so the complete data is $\{\by,\by^*,\bw\}$.
 Now, due to the independence of the observations $i=1,\dots,n$, the complete data log-likelihood is
-\begin{align*}
-  \log p&(\by,\by^*,\bw) \\
-  &= \sum_{i=1}^n \Big\{ 
-  \log p(y_i|\by^*_{i \bigcdot}) + \log p(\by^*_{i \bigcdot}|\bw_{i \bigcdot}) + \log p(\bw_{i \bigcdot}) 
-  \Big\} \\
-  &= - \half \sum_{i=1}^n [y_{ij}^* = \max_k y_{ik}^*] \Bigg\{
-%   \cancel{\half\log\abs{\bPsi}} 
-    \big(\by^*_{i \bigcdot} - \balpha - \bw_{i \bigcdot}^\top\bh_\eta(x_i)\big)^\top 
-    \bPsi 
-    \big(\by^*_{i \bigcdot} - \balpha - \bw_{i \bigcdot}^\top\bh_\eta(x_i)\big) \\
-  &\hspace{9.5cm} + \bw_{i \bigcdot}^\top \bPsi^{-1} \bw_{i \bigcdot} \Bigg\} 
-%  \cancel{- \half\log\abs{\bPsi}} 
-   + \const
-\end{align*}
-which looks like the complete data log-likelihood seen previously in \cref{eq:QfnEstep}, except that here, together with the $\bw_{i \bigcdot}$'s, the $\by^*_{i \bigcdot}$'s are never observed.
+\begin{align}
+  \log p&(\by,\by^*,\bw) \nonumber \\
+  &= \cancelto{0}{\sum_{i=1}^n \sum_{j=1}^m \log p(y_{ij}|\by^*_{i \bigcdot})} \!\!\!
+  + \log p(\by^*|\bw) + \log p(\bw) \nonumber \\
+  &= \const + \cancel{\half\log\abs{\bPsi}} - \half \tr  
+  \Big(
+    \bPsi(\by^* - \bone_n\balpha^\top - \bH_\eta\bw)^\top 
+    (\by^* - \bone_n\balpha^\top - \bH_\eta\bw)
+  \Big) \nonumber \\
+  &\phantom{==} \cancel{- \half\log\abs{\bPsi}} 
+  - \half \tr \Big(\bPsi^{-1} \bw^\top  \bw \Big)
+  \label{eq:logjointprobit}
+\end{align}
+which looks like the complete data log-likelihood seen previously in \cref{eq:QfnEstep} (Chapter 4, p. \pageref{eq:QfnEstep}), except that here, together with $\bw$, $\by^*_{i \bigcdot}$ is not observed.
 
 For the E-step, it is of interest to determine the posterior density $p(\by^*,\bw|\by) = p(\by^*|\bw,\by)p(\bw|\by)$, which we have discerned from the discussion at the beginning of this section that this is hard to obtain, since it involves an intractable marginalising integral.
 We thus seek a suitable approximation
@@ -132,13 +140,19 @@ Let $\bar\by^* = \by^* - \bone_n\balpha^\top$.
 The objective function to be maximised is computed as
 \begin{align*}
   Q(\theta) 
-  &= \E_{\by^*,\bw\sim q^{(t+1)}}  \big[ \log p(\by,\by^*,\bw|\theta) \big] \\
-  &= \const -\half \tr\E_{\by^*,\bw\sim q} \left[ 
-  \bPsi\big( \bar\by^{*\top}\bar\by^* + \bw^\top\bH_\eta^2\bw - 2\bw^\top\bH_\eta\bar\by^* \big)
-  + \bPsi^{-1} \bw^\top\bw 
-  \right],
+  &= \E_{\by^*,\bw\sim q^{(t+1)}}  \big[ \log p(\by,\by^*,\bw|\theta) \,|\, \theta^{(t)} \big] \\
+  &= \const -\half\tr\Big( \E[\bw^\top\bH_\eta^2\bw]  + \bPsi^{-1} \E[\bw^\top\bw] \Big)  \\
+  &\phantom{==} - \half \tr \Big( 
+  \bPsi \big( 
+  \E[\by^{*\top}\by^*] 
+  + n \balpha\balpha^\top 
+  - 2\balpha \bone_n \E[\by^*]
+  - 2\E[\bw]^\top\bH_\eta (\E[\by^*] - \bone_n\balpha^\top) 
+  \big) \Big)
+  ,
 \end{align*}
-and this is maximised with respect to $\theta$ in the M-step to obtain $\theta^{(t+1)}$, and the process repeated until convergence of the ELBO.
+and this is maximised with respect to $\theta$ in the M-step to obtain $\theta^{(t+1)}$
+The algorithm alternates between the E- and M-step until convergence of the ELBO.
 A full derivation of the variational EM algorithm used by us will be described in \cref{sec:iprobitvar}.
 
 \subsection{Markov chain Monte Carlo methods}
@@ -170,14 +184,13 @@ The predictor variables are $X_1$ and $X_2$, each of which are scaled similarly.
   \label{fig:exampleiprobit}
 \end{figure}
 
-The I-probit model that is fitted is
+Following \cref{eq:iprobitbin}, the binary I-probit model that is fitted is
 \begin{gather*}
   y_i \sim \Bern(p_i) \\
   \Phi^{-1}(p_i) = \alpha + \sum_{k=1}^n h_\lambda(x_i,x_k)w_k  \\
-  w_1,\dots,w_n \iid \N(0,1).
+  w_1,\dots,w_n \iid \N(0,1),
 \end{gather*}
-This binary model follows from the more general multinomial I-probit model by fixing all latent propensities in one of the classes to zero, and setting $\bPsi = \bI_m$.
-This is possible because only differences in latent propensities are of interest, and not the actual values themselves, and thus only $m-1$ sets of posterior regression functions need to be estimated---see \cref{sec:mnint} for further details.
+where $h_\lambda$ is the (scaled) kernel of the fBm RKHS.
 
 The three estimation methods described aim to overcome the intractable integral by means of either a deterministic approximation (Laplace and variational inference) or a stochastic approximation (Hamiltonian MC).
 For the Bayesian methods, i.e. variational inference and Hamiltonian MC, vague priors were used on $\alpha$ and $\lambda$, namely $\N(0,100)$ and $\N_+(0,100)$ respectively.
@@ -209,6 +222,21 @@ As a result, the log-density value at the optima is also different in all three 
 Notice the high posterior standard deviation for the scale parameter in the HMC method.
 The posterior density for $\lambda$ was very positively skewed, and this contributed to the large posterior mean.
 
+\begin{figure}[p]
+  \centering
+  \vspace{1em}
+  \includegraphics[width=0.49\textwidth]{figure/05-fit_lap}
+  \includegraphics[width=0.49\textwidth]{figure/05-lik_lap}
+  \vspace{1em}
+  \includegraphics[width=0.49\textwidth]{figure/05-fit_vi}
+  \includegraphics[width=0.49\textwidth]{figure/05-lik_vi}
+  \vspace{1em}
+  \includegraphics[width=0.49\textwidth]{figure/05-fit_hmc}
+  \includegraphics[width=0.49\textwidth]{figure/05-lik_hmc}
+  \caption{Plots showing predicted probabilities (shaded region) for belonging to class 1 or 2 indicated by colour and intensity, and likelihood surface plots for (a) Laplace's method, (b) variational inference, and (c) Hamiltonian MC.}
+  \label{fig:exampleiprobitfit}
+\end{figure}
+
 A plot of the log-likelihood surface for three methods in \cref{fig:exampleiprobitfit} reveals some insight.
 The variational likelihood reveals two ridges, with the maxima occurring around the intersection of these two ridges.
 The Laplace likelihood seems to indicate a similar shape---in both the Laplace and variational method, the posterior distribution of $\bw$ is approximated by a Gaussian distribution, with different means and variances.
@@ -226,17 +254,3 @@ As for Laplace, each Newton step involves obtaining posterior modes of the $w$'s
 The reality is that variational inference takes seconds to complete what either the Laplace or full MCMC methods would take hours to.
 The predictive performance, while not as good as HMC, is certainly an acceptable compromise in favour of speed.
 
-\begin{figure}[p]
-  \centering
-  \vspace{1em}
-  \includegraphics[width=0.49\textwidth]{figure/05-fit_lap}
-  \includegraphics[width=0.49\textwidth]{figure/05-lik_lap}
-  \vspace{1em}
-  \includegraphics[width=0.49\textwidth]{figure/05-fit_vi}
-  \includegraphics[width=0.49\textwidth]{figure/05-lik_vi}
-  \vspace{1em}
-  \includegraphics[width=0.49\textwidth]{figure/05-fit_hmc}
-  \includegraphics[width=0.49\textwidth]{figure/05-lik_hmc}
-  \caption{Plots showing predicted probabilities (shaded region) for belonging to class 1 or 2 indicated by colour and intensity, and likelihood surface plots for (a) Laplace's method, (b) variational inference, and (c) Hamiltonian MC.}
-  \label{fig:exampleiprobitfit}
-\end{figure}

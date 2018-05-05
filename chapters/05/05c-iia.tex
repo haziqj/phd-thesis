@@ -69,12 +69,12 @@ Many possible specifications of the restriction on $\bPsi$ is possible, dependin
   Fixing the last class, say, to zero, i.e. $y_{im}^* = 0,\forall i=1,\dots,n$ has the effect of shrinking $\bPsi$ to $(m-1)\times(m-1)$ in size, and thus one more restriction needs to be made (typically, the first element $\bPsi_{11}$ is set to one).
   This speaks to the fact that the absolute values of the latent propensities themselves do not matter, but their relative differences do---see \hltodo{Section X}.   
   We also remark that for the binary case ($m=2$), setting the latent propensities for the second class to zero and fixing the remaining variance parameter to one yields, for $i=1,\dots,n$,
-  \begin{align*}
+  \begin{align}
     p_{i1} 
-    &= \Prob(y_{i1}^* > y_{i2}^* = 0) \\
-    &= \Prob\big(\alpha_1 + f_1(x_i) + \epsilon_{i1} > 0 \,|\, \epsilon_{i1} \iid \N(0,1) \big) \\
-    &= \Phi\big( \alpha_1 + f_1(x_i) \big)
-  \end{align*}
+    &= \Prob(y_{i1}^* > y_{i2}^* = 0) \nonumber \\
+    &= \Prob\big(\alpha_1 + f_1(x_i) + \epsilon_{i1} > 0 \,|\, \epsilon_{i1} \iid \N(0,1) \big) \nonumber \\
+    &= \Phi\big( \alpha_1 + f_1(x_i) \big) \label{eq:iprobitbin}
+  \end{align}
   and $p_{i2} = 1 - \Phi\big( \alpha_1 + f_1(x_i) \big)$, the familiar binary probit model.
   Note that in the binary case only one set of latent propensities need to be estimated, so we can drop the subscript `1' in the above equations.
   In fact, for $m$ classes, only $m-1$ sets of regression functions need to be estimated (since one of them needs to be fixed), but in the multinomial presentation of this thesis we define regression functions for each class.
