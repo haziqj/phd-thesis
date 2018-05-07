@@ -1,45 +1,46 @@
-Computational challenges for the I-probit model stems from two sources: 1) calculation of the class probabilities \cref{eq:pij}; and 2) storage and time requirements for the CAVI.
-We also discuss issues faced with the estimation of the error precision $\bPsi$, and suggest ways to overcome this for future work.
+Computational challenges for the I-probit model stems from two sources: 1) calculation of the class probabilities \cref{eq:pij}; and 2) storage and time requirements for the variational EM algorithm.
+Ways in which to overcome these challenges are discussed.
+In addition, we also discuss considerations to take into account if estimation of the error precision $\bPsi$ is desired, and thus path a road for future work.
 
 \subsection{Efficient computation of class probabilities}
 \label{sec:mnint}
 
 %\hltodo{computationally burdensome using quadrature methods for m > 4. Realise that the dimension of the integral is m-1. describe two methods: 1) frequency sampler 2) efficient frequency sampler. NOTE THIS PART IS DIFFERENT FROM SIMULATING FROM TRUNCATED NORMAL---THIS ONLY APPEARS IN BAYESIAN METHODS SUCH AS GIBBS, VI, etc.}
 
-As an opening remark, note that the dimension of the integral \cref{eq:pij} is $m-1$, since the $j$'th coordinates is fixed relative to the others.
-An alternative specification of the I-probit model can be made in terms of \emph{relative differences} of the latent propensities.
-Choosing the first category as the reference category, define new random variables $z_{ij} = y_{ij}^* - y_{i1}^*$, for $j = 2,\dots,m$. 
-The model \cref{eq:latentmodel} is equivalently represented by
-\begin{equation}
-  y_i = 
-  \begin{cases}
-    1 & \text{if } \max (z_{i2},\dots,z_{im}) < 0 \\
-    j & \text{if } \max (z_{i2},\dots,z_{im}) = z_{ij} \geq 0.
-  \end{cases}
-\end{equation} 
-Write $\bz_{i\bigcdot} = (z_{i2},\dots,z_{im})^\top \in \bbR^{m-1}$.
-Then $\bz_{i\bigcdot} = \bQ\by^*_{i\bigcdot}$, where $\bQ \in \bbR^{(m-1)\times m}$  is the $(m-1)$ identity matrix pre-augmented with a column vector of minus ones.
-We have that $\bz_{i\bigcdot} \iid \N_{m-1}(\bnu, \bOmega)$, where $\bnu_{i\bigcdot} = \bQ\bmu_{i\bigcdot}$ and $\bOmega = \bQ\bPsi^{-1}\bQ^\top$.
-Note that if $\bPsi$ is diagonal, then the transformation to $\bOmega$ will not retain diagonality---indeed, each component will undoubtedly be correlated with one another as they are all anchored on the same latent variable.
-
-Now, the class probabilities for $j=2,\dots,m$ are
-\begin{align}
-  p_{ij} = 
-  \int\displaylimits_{\{z_{ik} < 0 \,|\, \forall k \neq 1,j \}} \ind[z_{ij} \geq 0] \,\phi(\bz_{i\bigcdot} |\bnu_{i\bigcdot}, \bOmega) \dint\bz_{i\bigcdot} \ . \label{eq:pij3}
-\end{align}
-The class probability $p_{i1}$ is simply $p_{i1} = 1- \sum_{k\neq 1} p_{ik}$.
-From this representation of the model, with $m=2$ (binary outcomes) we see that
-\[
-  p_{i1} = 
-%  \int \ind(z_{i2} < 0) \phi(z_{i2}) \dint z_{i2} = 
-  \Phi \left( \frac{z_{i2} - \nu}{\omega^{1/2}} \right)
-  \hspace{0.5cm}\text{and}\hspace{0.5cm}
-  p_{i2} = 
-%  \int \ind(z_{i2} \geq 0) \phi(z_{i2}) \dint z_{i2} = 
-  1 - \Phi \left( \frac{z_{i2} - \nu}{\omega^{1/2}} \right),
-\]
-where $\Phi(\cdot)$ is the CDF of the standard normal univariate distribution, and $\nu$ and $\omega$ are the mean and variance of the univariate random variable $\bz_{i\bigcdot} = z_{i2}$.
-The probit link function involving the cdf of a standard normal is clearly seen here, especially if the error precision is treated as fixed such that $\omega = 1$. 
+%As an opening remark, note that the dimension of the integral \cref{eq:pij} is $m-1$, since the $j$'th coordinates is fixed relative to the others.
+%An alternative specification of the I-probit model can be made in terms of \emph{relative differences} of the latent propensities.
+%Choosing the first category as the reference category, define new random variables $z_{ij} = y_{ij}^* - y_{i1}^*$, for $j = 2,\dots,m$. 
+%The model \cref{eq:latentmodel} is equivalently represented by
+%\begin{equation}
+%  y_i = 
+%  \begin{cases}
+%    1 & \text{if } \max (z_{i2},\dots,z_{im}) < 0 \\
+%    j & \text{if } \max (z_{i2},\dots,z_{im}) = z_{ij} \geq 0.
+%  \end{cases}
+%\end{equation} 
+%Write $\bz_{i\bigcdot} = (z_{i2},\dots,z_{im})^\top \in \bbR^{m-1}$.
+%Then $\bz_{i\bigcdot} = \bQ\by^*_{i\bigcdot}$, where $\bQ \in \bbR^{(m-1)\times m}$  is the $(m-1)$ identity matrix pre-augmented with a column vector of minus ones.
+%We have that $\bz_{i\bigcdot} \iid \N_{m-1}(\bnu, \bOmega)$, where $\bnu_{i\bigcdot} = \bQ\bmu_{i\bigcdot}$ and $\bOmega = \bQ\bPsi^{-1}\bQ^\top$.
+%Note that if $\bPsi$ is diagonal, then the transformation to $\bOmega$ will not retain diagonality---indeed, each component will undoubtedly be correlated with one another as they are all anchored on the same latent variable.
+%
+%Now, the class probabilities for $j=2,\dots,m$ are
+%\begin{align}
+%  p_{ij} = 
+%  \int\displaylimits_{\{z_{ik} < 0 \,|\, \forall k \neq 1,j \}} \ind[z_{ij} \geq 0] \,\phi(\bz_{i\bigcdot} |\bnu_{i\bigcdot}, \bOmega) \dint\bz_{i\bigcdot} \ . \label{eq:pij3}
+%\end{align}
+%The class probability $p_{i1}$ is simply $p_{i1} = 1- \sum_{k\neq 1} p_{ik}$.
+%From this representation of the model, with $m=2$ (binary outcomes) we see that
+%\[
+%  p_{i1} = 
+%%  \int \ind(z_{i2} < 0) \phi(z_{i2}) \dint z_{i2} = 
+%  \Phi \left( \frac{z_{i2} - \nu}{\omega^{1/2}} \right)
+%  \hspace{0.5cm}\text{and}\hspace{0.5cm}
+%  p_{i2} = 
+%%  \int \ind(z_{i2} \geq 0) \phi(z_{i2}) \dint z_{i2} = 
+%  1 - \Phi \left( \frac{z_{i2} - \nu}{\omega^{1/2}} \right),
+%\]
+%where $\Phi(\cdot)$ is the CDF of the standard normal univariate distribution, and $\nu$ and $\omega$ are the mean and variance of the univariate random variable $\bz_{i\bigcdot} = z_{i2}$.
+%The probit link function involving the cdf of a standard normal is clearly seen here, especially if the error precision is treated as fixed such that $\omega = 1$. 
 
 The issue at hand here is that for $m>4$, the evaluation of the class probabilities in \cref{eq:pij} is computationally burdensome using classical methods such as quadrature methods \citet{geweke1994alternative}.
 

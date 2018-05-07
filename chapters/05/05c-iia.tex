@@ -202,10 +202,10 @@ Allowing all $m(m+1)/2$ covariance elements of $\bPsi$ to be non-zero leads to t
 
 While it is an advantage to be able to model the correlations across choices (unlike in logistic models), there are applications where the IIA assumption would not adversely affect the analysis, such as classification tasks.
 Some analyses might also be indifferent as to whether or not choice dependency exists.
-In these situations, it would be beneficial, algorithmically speaking, to reduce the I-probit model to a simpler version by assuming $\bPsi = \diag(\psi_1,\dots,\psi_m)$, which would trigger the IIA assumption in the I-probit model.
+In these situations, it would be beneficial, algorithmically speaking, to reduce the I-probit model to a simpler version by assuming $\bPsi = \diag(\psi_1,\dots,\psi_m)$, which would trigger an IIA assumption in the I-probit model.
 We refer to this model as the \emph{independent I-probit model}.
-The independence assumption causes the distribution of the latent variables to be $y_{ij}^* \sim \N(\mu_k(x_i), \sigma_j^2)$ for $j=1,\dots,m$, where $\sigma_j^2 = \psi_j^{-1}$.
-As a continuation of line \cref{eq:pij}, we can show the class probability $p_{ij}$ to be
+The independence structure causes the distribution of the latent variables to be $y_{ij}^* \sim \N(\mu_k(x_i), \sigma_j^2)$ for $j=1,\dots,m$, where $\sigma_j^2 = \psi_j^{-1}$.
+As a continuation of line \cref{eq:pij}, we can show the class probabilities $p_{ij}$ to be
 \begin{align}
   p_{ij} 
   &= \idotsint\displaylimits_{\{y_{ij}^* > y_{ik}^* | \forall k \neq j\}} 
@@ -218,7 +218,7 @@ As a continuation of line \cref{eq:pij}, we can show the class probability $p_{i
 \end{align}
 where $Z\sim\N(0,1)$, $\Phi(\cdot)$ its cdf, and $\phi(\cdot|\mu,\sigma^2)$ is the pdf of $X\sim\N(\mu,\sigma^2)$.
 The equation \cref{eq:pij} is thus simplified to a unidimensional integral involving the Gaussian pdf and cdf, which can be computed fairly efficiently using quadrature methods.
-The probit link function is evidently seen in the above equation.
+%The probit link function is evidently seen in the above equation.
 %Moreover, in the binary case where $m=2$ and fixed error precision $\psi_1 = \psi_2 = 1/2$, we get
 %\[
 %  p_{i1} = 1 - \Phi\big(\mu_1(x_i) - \mu_2(x_i)\big) \ \text{ and } \ p_{i2} =  \Phi\big(\mu_1(x_i) - \mu_2(x_i)\big),

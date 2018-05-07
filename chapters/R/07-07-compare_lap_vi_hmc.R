@@ -19,7 +19,7 @@ options(mc.cores = parallel::detectCores())
 chapter.no <- "05"
 
 ## ---- spiral.data ----
-dat <- gen_spiral(n = 300, seed = 123)  # generate binary toy example data set
+dat <- iprobit::gen_spiral(n = 300, seed = 123)  # generate binary toy example data set
 
 ## ---- iprobit.vi ----
 mod.vi <- iprobit(y ~ X1 + X2, dat, one.lam = TRUE, kernel = "fbm")
@@ -45,8 +45,10 @@ parameters {
   vector[n] w;
 }
 transformed parameters {
+  vector[n] mu;
   vector<lower=0,upper=1>[n] pi;
-  pi = Phi(alpha + lambda * H * w);
+  mu = alpha + lambda * H * w;
+  pi = Phi(mu);
 }
 model {
   y ~ bernoulli(pi);
@@ -57,15 +59,17 @@ generated quantities {
   // generate from posterior of y
   vector[n] ypred;
   vector[n] yvec;
-  // real logLik;
   real brierscore;
   real errorrate;
-  // logLik = bernoulli_lpmf(y | pi);
   for (i in 1:n)
     yvec[i] = y[i];
   brierscore = mean(square(pi - yvec));
   for (i in 1:n)
-    ypred[i] = bernoulli_rng(pi[i]);
+    if (mu[i] > 0) {
+      ypred[i] = 1;
+    } else {
+      ypred[i] = 0;
+    }
   errorrate = mean(square(ypred - yvec)) * 100;
 }
 "
@@ -81,7 +85,7 @@ print(fit.stan, pars = c("alpha", "lambda", "brierscore", "errorrate"))
 
 # Check fit
 a <- stan2coda(fit.stan)
-fit.ggs <- ggs(a[, c("alpha", "lambda", "logLik")])
+fit.ggs <- ggs(a[, c("alpha", "lambda")])
 ggs_density(fit.ggs)
 ggs_traceplot(fit.ggs)
 ggs_running(fit.ggs)
@@ -126,13 +130,26 @@ real<lower=0> lambda;
 parameters {
 vector[n] w;
 }
+transformed parameters {
+vector<lower=0,upper=1>[n] pi;
+pi = Phi_approx(alpha + lambda * H * w);
+}
 model {
 w ~ normal(0, 1);
-y ~ bernoulli(Phi_approx(alpha + lambda * H * w));
+y ~ bernoulli(pi);
 }
 "
 m <- stan_model(model_code = stan.iprobit.mod)
 pre.dat <- list(y = as.numeric(dat$y) - 1, H = iprior::kern_fbm(dat$X), n = length(dat$y))
+stan.iprobit.dat <- c(pre.dat, b.alpha, b.lambda)
+fit.stan <- sampling(
+  m, data = stan.iprobit.dat, iter = 60, chains = 1, pars = c("pi"),
+  thin = 1, init = list(list(w = rep(0, 300)))
+)
+# postmean <- summary(stan2coda(fit.stan))$stat[, 1]
+# tmp <- data.frame(1 - postmean[-301], postmean[-301])
+# colnames(tmp) <- levels(dat$y)
+# loglik <- with(tmp, {sum(log(tmp[cbind(seq_along(dat$y), dat$y)]))})
 
 do_it <- function() {
   pb <- txtProgressBar(min = 0, max = nrow(tab), style = 3)
@@ -208,14 +225,14 @@ p1f <- iplot_predict(mod.vi)
 p2f <- iplot_predict(mod.lap)
 p3f <- iplot_predict(mod.hmc)
 
-ggsave("figure/05-example_data.pdf", plot(dat), "pdf", width = 6.5, height = 4)
+ggsave("figure/05-example_data.pdf", plot(dat), "pdf", width = 6, height = 4.5)
 ggsave("figure/05-fit_lap.pdf",
        p2f + ggtitle("(a) Laplace approximation"), "pdf",
-       width = 6.5 * 0.9, height = 4)
+       width = 6.5 * 0.9, height = 4.5)
 ggsave("figure/05-fit_vi.pdf",
-       p1f + ggtitle("(b) Variational inference"), "pdf",
-       width = 6.5 * 0.9, height = 4)
+       p1f + ggtitle("(b) Variational EM"), "pdf",
+       width = 6.5 * 0.9, height = 4.5)
 ggsave("figure/05-fit_hmc.pdf",
        p3f + ggtitle("(c) Hamiltonian MC"), "pdf",
-       width = 6.5 * 0.9, height = 4)
+       width = 6.5 * 0.9, height = 4.5)
 move_fig_to_chapter()
