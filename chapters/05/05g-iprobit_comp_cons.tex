@@ -5,10 +5,7 @@ In addition, we also discuss considerations to take into account if estimation o
 \subsection{Efficient computation of class probabilities}
 \label{sec:mnint}
 
-%\hltodo{computationally burdensome using quadrature methods for m > 4. Realise that the dimension of the integral is m-1. describe two methods: 1) frequency sampler 2) efficient frequency sampler. NOTE THIS PART IS DIFFERENT FROM SIMULATING FROM TRUNCATED NORMAL---THIS ONLY APPEARS IN BAYESIAN METHODS SUCH AS GIBBS, VI, etc.}
 
-%As an opening remark, note that the dimension of the integral \cref{eq:pij} is $m-1$, since the $j$'th coordinates is fixed relative to the others.
-%An alternative specification of the I-probit model can be made in terms of \emph{relative differences} of the latent propensities.
 %Choosing the first category as the reference category, define new random variables $z_{ij} = y_{ij}^* - y_{i1}^*$, for $j = 2,\dots,m$. 
 %The model \cref{eq:latentmodel} is equivalently represented by
 %\begin{equation}
@@ -43,105 +40,152 @@ In addition, we also discuss considerations to take into account if estimation o
 %The probit link function involving the cdf of a standard normal is clearly seen here, especially if the error precision is treated as fixed such that $\omega = 1$. 
 
 The issue at hand here is that for $m>4$, the evaluation of the class probabilities in \cref{eq:pij} is computationally burdensome using classical methods such as quadrature methods \citet{geweke1994alternative}.
-
-The simplest strategy to overcome this is a frequency simulator (otherwise known as Monte Carlo integration): obtain random samples from $\N_{m-1}(\bnu_{i\bigcdot}, \bOmega)$, and calculate how many of these samples fall within the required  region.
+As such, simulation techniques (Monte Carlo integration) are employed instead.
+The simplest strategy to overcome this is a frequency simulator (otherwise known as Monte Carlo integration): obtain random samples from $\N_{m}\big(\bmu(x_i), \bPsi^{-1}\big)$, and calculate how many of these samples fall within the required  region.
 This method is fast and yields unbiased estimates of the class probabilities.
-However, accuracy of this method is questionable when the mean $\bnu_{i\bigcdot}$ of the multivariate normal is many standard deviations away from zero (the cutoff region as per \cref{eq:pij3}).
+However, in an extensive comparative study of various probability simulators, \citet{hajivassiliou1996simulation} concluded that the Geweke-Hajivassiliou-Keane (GHK) probability simulator \citep{geweke1989bayesian,hajivassiliou1998method,keane1994solution} is the most reliable under a multitude of scenarios.
+This is now described, and for clarity, we drop the subscript $i$ denoting individuals. 
 
-A more reliable method is the probability simulator of Geweke-Hajivassiliou-Keane (GHK)  \citep{geweke1991efficient,hajivassiliou1996simulation,keane1994computationally}, which we describe now.
-For clarity, we drop the subscript $i$ denoting individuals, and write $\bz = (z_1,\dots,z_m)$, remembering that $z_1=0$.
 Suppose that an observation $y=j$ has been made.
-Rewrite the model by anchoring on the $j$'th latent variable $z_{j}$ as follows:
+Reformulate $\by^*$ in \cref{eq:latentmodel} by anchoring on the $j$'th latent variable $y_j^*$ to obtain
 \[
-  \tilde\bz := (
-  \greyoverbrace{z_1 - z_j}{\tilde z_1},
+  \bz := (
+  \greyoverbrace{y_1^* - y_j^*}{ z_1},
   \dots,
-  \greyoverbrace{z_{j-1} - z_j}{\tilde z_{j-1}},
-  \greyoverbrace{z_{j+1} - z_j}{\tilde z_{j+1}},
+  \greyoverbrace{y_{j-1}^* - y_j^*}{ z_{j-1}},
+  \greyoverbrace{y_{j+1}^* - y_j^*}{ z_{j}},
   \dots, 
-  \greyoverbrace{z_m - z_j}{\tilde z_m},
+  \greyoverbrace{y_m^* - y_j^*}{ z_{m-1}},
   )^\top \in \bbR^{m-1}.
 \]
-Let $\bnu_{(j)}$ and $\bOmega_{(j)}$ be the appropriately transformed mean vector and covariance matrix for $\tilde \bz$.
+Note that we have indexed the vector $\bz$ using $j' = k$ if $k < j$, and $j' = k -1$ if $k > j$ for $k=1,\dots,m$, so that the index $j'$ runs from $1$ to $m-1$.
+Let $\bQ \in \bbR^{(m-1)\times m}$ be a matrix formed by inserting a column of minus ones at the $j$'th position in an $(m-1)$ identity matrix.
+We can then write $\bz = \bQ\by^*$, and thus we have that $\bz\sim\N_{m-1}(\bnu_{(j)}, \bOmega_{(j)})$, where $\bnu_{(j)} = \bQ\bmu(x_i)$ and $\bOmega_{(j)} = \bQ\bPsi^{-1}\bQ^\top$.
 These are indexed by `$(j)$' because the transformation is dependent on which latent variable the $\bz$'s are anchored on.
-Since this transformation is linear, $\tilde\bz \sim \N_{m-1}(\bnu_{(j)},\bOmega_{(j)})$.
-For the symmetric and positive definite matrix $\bPsi^{-1}$, obtain its Cholesky decomposition as $\bOmega_{(j)} = \bL\bL^\top$, where $\bL$ is a lower triangular matrix.
-Then, $\tilde\bz = \bnu_{(j)} + \bL\bzeta$, where $\bzeta \sim\N_{m-1}(\bzero,\bI_{m-1})$.
+
+\begin{remark}
+  Incidentally, the probit model in \cref{eq:latentmodel} is equivalently represented by 
+  \begin{equation}\label{eq:latentmodel2}
+    y_i = 
+    \begin{cases}
+      1 & \text{if } \max (y_{i2}^* - y_{i1}^*,\dots,y_{im}^* - y_{i1}^*) < 0 \\
+      j & \text{if } \max (y_{i2}^* - y_{i1}^*,\dots,y_{im}^* - y_{i1}^*) = y_{ij}^* - y_{i1}^* \geq 0,
+    \end{cases}
+  \end{equation}   
+  which is obtained by anchoring on the first latent variable (referred to as the reference category), although the choice of reference category is arbitrary.
+  This is similar to fixing the latent variables of the reference category to zero, and thus, as discussed previously in \hltodo{section}, full identification is achieved by fixing one more element of the covariance matrix.
+\end{remark}
+
+For the symmetric and positive definite covariance matrix $\bOmega_{(j)}$, obtain its Cholesky decomposition as $\bOmega_{(j)} = \bL\bL^\top$, where $\bL$ is a lower triangular matrix.
+Then, $\bz = \bnu_{(j)} + \bL\bzeta$, where $\bzeta \sim\N_{m-1}(\bzero,\bI_{m-1})$.
 That is,
-\begin{equation*}
+\begin{align*}
   \begin{pmatrix}
-    \tilde z_1 \\
-    \tilde z_2 \\
+    z_1 \\
+    z_2 \\
     \vdots \\
-    \tilde z_m
+    z_{m-1}
   \end{pmatrix}  
-  =
+  &=
   \begin{pmatrix}
     \nu_{(j)1} \\
     \nu_{(j)2} \\    
     \vdots \\
-    \nu_{(j)m}
+    \nu_{(j)m-1}
   \end{pmatrix}  
-  +
+  + 
   \begin{pmatrix}
     L_{11} &       &       & \\
     L_{21} &L_{22} &       & \\
     \vdots &\vdots &\ddots & \\
-    L_{m1} &L_{m2} &\cdots &L_{mm} \\
+    L_{m-1,1} &L_{m-1,2} &\cdots &L_{m-1,m-1} \\
   \end{pmatrix} 
   \begin{pmatrix}
     \zeta_1 \\
     \zeta_2 \\    
     \vdots \\
-    \zeta_m
-  \end{pmatrix}
-  =
+    \zeta_{m-1}
+  \end{pmatrix} \\ %\displaybreak
+  &=
   \begin{pmatrix}
     \nu_{(j)1} + L_{11}\zeta_1 \\
     \nu_{(j)2} + \sum_{k=1}^2 L_{k2} \zeta_k \\    
     \vdots \\
-    \nu_{(j)m} + \sum_{k=1}^m L_{km} \zeta_k
+    \nu_{(j)m-1} + \sum_{k=1}^{m-1} L_{k,m-1} \zeta_k
   \end{pmatrix}.  
-\end{equation*}
+\end{align*}
 
-With this setup, we can calculate $p_{j}$, the probability of class $j$, which is equivalent to the probability that each $\tilde z_k = z_k - z_j < 0$, as follows
+With this setup, the probability $p_{j}$ of an observation belonging to class $j$, which is equivalent to the probability that each $ z_{j'} < 0$, $j'=1,\dots,m-1$, can be expressed as
 \begin{align*}
   p_j 
-  &= \Prob(\tilde z_1 < 0,\dots,\tilde z_{j-1} < 0, \tilde z_{j+1} < 0,\dots, \tilde z_m < 0) \\
+  &= \Prob( z_1 < 0,\dots, z_{m-1} < 0) \\
   &= 
-  \Prob(\zeta_1 < u_1,\dots,\zeta_{j-1}<u_{j-1},\zeta_{j+1}<u_{j+1},\dots,\zeta_{m}<u_{m}) \\
+  \Prob(\zeta_1 < u_1,\dots,\zeta_{m-1}<u_{m-1}) \\
   &= 
   \Prob(\zeta_1 < u_1)
   \Prob(\zeta_2 < u_2|\zeta_1 < u_1)
+  \Prob(\zeta_3 < u_3|\zeta_1 < u_1,\zeta_2 < u_2)
   \cdots \\
   &\phantom{==}\cdots
-  \Prob(\zeta_{m}<u_{m}|\zeta_1 < u_1,\dots,\zeta_{j-1}<u_{j-1},\zeta_{j+1}<u_{j+1},\dots,\zeta_{m-1}<u_{m-1}),
+  \Prob(\zeta_{m-1}<u_{m-1}|\zeta_1 < u_1,\dots,\zeta_{m-2}<u_{m-2}),
 \end{align*}
-where $u_i = u_i(\zeta_1,\dots,\zeta_{i-1}) = - (\nu_{(j)i} + \sum_{k=1}^{i-1} L_{ki}\zeta_k) / L_{ii}$.
-Thus, the integral involving a $(m-1)$-variate normal density \cref{eq:pij3} is turned into a product of $m-1$ univariate normal cdfs, which can be computed fairly efficiently in modern computer systems.
-
-As an aside, the GHK probability simulator, can be used to sample from a truncated multivariate normal distribution:
+where 
+\begin{equation*}
+  u_{j'} = 
+  u_{j'}(\zeta_1,\dots,\zeta_{j'-1}) =
+  \begin{cases}
+    - \nu_{(j)1} / L_{11} &\text{for } j' = 1 \\
+    - \big(\nu_{(j)j'} + \sum_{k=1}^{j'-1} L_{kj'}\zeta_k \big) / L_{j'j'} &\text{for } j' = 2,\dots,m-1
+  \end{cases}
+\end{equation*}
+%Thus, the original integral in \cref{eq:pij} involving an $m$-variate normal density is turned into a product of $m-1$ univariate normal cdfs, which can be computed fairly efficiently in modern computer systems.
+The GHK algorithm entails making draws from truncated standard normal distributions (for instance, using an inverse transform method detailed in \hltodo{appendix}):
 \begin{itemize}
   \item Draw $\tilde\zeta_1 \sim \tN(0,1,-\infty,u_1)$.
   \item Draw $\tilde\zeta_2 \sim \tN(0,1,-\infty,\tilde u_2)$, where $\tilde u_2 = u_2(\tilde\zeta_1)$.
+  \item Draw $\tilde\zeta_3 \sim \tN(0,1,-\infty,\tilde u_3)$, where $\tilde u_2 = u_2(\tilde\zeta_1,\tilde\zeta_2)$. 
   \item $\cdots$
-  \item  Draw $\tilde\zeta_{j-1} \sim \tN(0,1,-\infty,\tilde u_{j-1})$, where $\tilde u_{j-1} = u_{j-1}(\tilde\zeta_1,\dots,\tilde\zeta_{j-2})$.
-  \item Draw $\tilde\zeta_{j+1} \sim \tN(0,1,-\infty,\tilde u_{j+1})$, where $\tilde u_{j+1} = u_{j+1}(\tilde\zeta_1,\dots,\tilde\zeta_{j-1})$.
-  \item $\cdots$
-  \item Draw $\tilde\zeta_m \sim \tN(0,1,-\infty,\tilde u_m)$, where $\tilde u_m = u_m(\tilde\zeta_1,\dots,\tilde\zeta_{j-1},\tilde\zeta_{j+1},\dots,\tilde\zeta_{m-1})$.
+  \item Draw $\tilde\zeta_{m-1} \sim \tN(0,1,-\infty,\tilde u_{m-2})$, where $\tilde u_{m-1} = u_m(\tilde\zeta_1,\dots,\tilde\zeta_{m-2})$.
 \end{itemize}
-Then, $\tilde z = \bnu_{(j)} \bL\tilde\zeta$ will be distributed according to $\N_{m-1}(\bnu_{(j)},\bOmega_{(j)})$.
-Any quantity of interest, e.g. $\E r(\tilde z)$, can then be estimated by the sample mean.
-In the variational algorithm, we require quantities such as first and second moments and also the entropy of a truncated multivariate normal distribution.
-Alternative methods are also discussed in the appendix.
+These values are then used in the following manner:
+\begin{itemize}
+  \item Use $\tilde\zeta_1$ to obtain a ``draw'' of $\Prob(\zeta_2 < u_2|\zeta_1 < \zeta_1)$,
+  \begin{align*}
+    \widetilde\Prob(\zeta_2 < u_2|\zeta_1 < \zeta_1)
+    &=\Prob(\zeta_2 < u_2|\zeta_1 = \tilde\zeta_1) \\
+    &= \Phi \Big( - \big(\nu_{(j)2} +  L_{12}\tilde\zeta_1 \big) / L_{22} \Big)
+  \end{align*}
+  \item Use $\tilde\zeta_1$ and $\tilde\zeta_2$ to obtain a ``draw'' of $\Prob(\zeta_3 < u_3|\zeta_1 < u_1,\zeta_2 < u_2)$,
+  \begin{align*}
+    \widetilde\Prob(\zeta_3 < u_3|\zeta_1 < u_1,\zeta_2 < u_2)
+    &=\Prob(\zeta_3 < u_3|\zeta_1 = \tilde\zeta_1,\zeta_2 = \tilde\zeta_2)\\
+    &= \Phi \Big( - \big(\nu_{(j)3} + L_{13}\tilde\zeta_1 + L_{23}\tilde\zeta_2 \big) / L_{33} \Big)
+  \end{align*} 
+  \item And so on. 
+\end{itemize}
+Therefore, a simulated probability for $p_j$ (denoted with a tilde) is obtained as
+\begin{equation}\label{eq:tildepj}
+  \tilde p_j = \Phi\left( -\nu_{(j)1}/ L_{11} \right) 
+  \prod_{j'=2}^{m-1} \Phi \left( 
+  - \big(\nu_{(j)j'} + \textstyle\sum_{k=1}^{j'-1} L_{kj'}\zeta_k \big) / L_{j'j'} 
+  \right).
+\end{equation}
+By performing the above scheme $T$ number of times to obtain $T$ such simulated probabilities $\{p_j^{(1)},\dots,p_j^{(T)} \}$, the actual probability of interest $p_j$ is then approximated by the sample mean of the draws,
+\[
+  \hat p_j = \frac{1}{T} \sum_{t=1}^T p_j^{(t)}.
+\]
 
-Finally, a point on independent probit models.
-As we alluded to earlier in the chapter, the class probabilities condense to a unidimensional integral involving products of normal cdfs (see \cref{eq:pij2}) if $\bPsi$ is diagonal.
-While this represents a massive simplification, care should be taken when dealing with the formula in \cref{eq:pij2}.
-When at least one of the normal cdfs in the product is extremely small, this can cause loss of significance due to floating-point errors.
-In the \pkg{iprobit} package, the product of normal cdfs is handled as a sum on the log scale to avoid this issue.
+If it so happens that one of the standard normal cdfs in \cref{eq:tildepj} is extremely small, this can cause loss of significance due to floating-point errors (catastrophic cancellation).
+It is better to work on a log-probability scale, so the products in \cref{eq:tildepj} turn into sums, and revert back by exponentiating.
 
-\subsection{Computational complexity of the CAVI algorithm}
+\begin{remark}
+  The GHK algorithm provides reasonably fast and accurate calculations of class probabilities when $\bPsi$ is dense.
+  As we alluded to earlier in the chapter, the class probabilities condense to a unidimensional integral involving products of normal cdfs (see \cref{eq:pij2}) if $\bPsi$ is diagonal.
+  Note that if $\bPsi$ is diagonal, then the transformed $\bOmega_{(j)} = \bQ\bPsi^{-1}\bQ^\top$ is certainly not: the components of $\bz$ are correlated because they are all anchored on the same random variable.
+  Thus, direct evaluation of \cref{eq:pij2} using quadrature methods avoids the Cholesky step and random sampling employed by the GHK method.
+\end{remark}
+
+\subsection{Efficient Kronecker product inverse}
 \label{sec:complxiprobit}
 
 As with the normal I-prior model, the time complexity of the variational inference algorithm for I-probit models is dominated by the step involving the posterior evaluation of the I-prior random effects $\bw$, which essentially is the inversion of an $nm \times nm$ matrix.
@@ -168,44 +212,75 @@ Its inverse is
   &= (\bQ \otimes \bV)(\bP \otimes \bU^2 + \bP^{-1} \otimes \bI_n)^{-1}(\bQ^\top \otimes \bV^\top)
 \end{align*}
 which is easy to compute since the middle term is an inverse of diagonal matrices.
-This brings time complexity of the CAVI down to a similar requirement as if $\bPsi$ was diagonal.
+This brings time complexity of the variational EM algorithm down to a similar requirement as if $\bPsi$ were diagonal.
+Unfortunately, storage requirements remain at $O(n^2m^2)$ when $\bPsi$ is dense, because the entire $nm \times nm$ matrix $\bV_w$ is needed to evaluate the posterior mean of $\vecc\bw$.
 
-Storage requirements are still $O(n^2)$, and methods described in the previous chapter are applicable, particularly the discussion surrounding exponential family EM algorithm.
-Prediction of a new data point is $O(n^2m)$, because there are essentially $m$ `separate' normal I-prior regressions, and each take $O(n^2)$ to evaluate.
+%Prediction of a single new data point is $O(n^2m)$ in time, because there are essentially $m$ I-prior posterior regression functions, and each take $O(n^2)$ to evaluate.
 
-\subsection{Difficulties faced with estimating \texorpdfstring{$\bPsi$}{$\Psi$}}
+\subsection{Estimation of \texorpdfstring{$\bPsi$}{$\Psi$} in future work}
 \label{sec:difficultPsi}
 
-Suppose that, alongside the $\by^*$, $\bw$, $\eta$ and $\balpha$ in the CAVI algorithm described in \cref{sec:iprobitvar}, $\bPsi$ is a free parameter to be estimated.
-If so, we find that the variational density $q$ for $\bPsi$ satisfies
+Suppose that $\bPsi \in \bbR^{m\times m}$ is a free parameter to be estimated, bearing in mind that only $m(m-1)/2 - 1$ variance components are identified in the I-probit model (see \cref{sec:iia}).
+If so, the $Q$ function from \cref{eq:iprobitQEstep} conditional on the rest of the parameters can be written as
 \begin{align*}
-  q(\bPsi)
-  &\propto \exp\Bigg[-\half \tr \Big(
-  \big( %\bG + 
+  Q(\bPsi|\balpha,\eta)
+  &= \const 
+  -\half \tr 
+  \big( 
+  \bPsi
   \greyoverbrace{\E[(\by^* - \bmu)^\top (\by^* - \bmu)]}{\bG_1}
-  \big)\bPsi +
-  \greyoverbrace{\E[\bw^\top\bw]}{\bG_2} \bPsi^{-1}
-  \Big) \Bigg] \times p(\bPsi)
+  +
+  \bPsi^{-1}
+  \greyoverbrace{\E[\bw^\top\bw]}{\bG_2} 
+  \Big)
 \end{align*}
-where $p(\bPsi)$ is a prior density chosen for $\bPsi$.
-Unfortunately, this does not resemble any known distribution, regardless of the prior choice for $\bPsi$.
-One can resort to sampling techniques to obtain quantities such as the mean or entropy, which are needed, but this has not been studied for this project due to time limitations.
-Even if this was possible, this requires, among other things, second moments of a truncated multivariate normal density $\by^*$, and also of $\bH_\eta\bw \in \bbR^{n\times m}$---of which both are a bit awkward to obtain.
-
-What we realise, however, is that the \emph{posterior mode} is relatively easy to obtain, especially with an improper prior $p(\bPsi)\propto \const$ 
-To see this, we look specifically at the case where $\bPsi$ is diagonal.
-On the log scale,
+with $\bmu = \bone_n\balpha^\top + \bH_\eta\bw$.
+This can be differentiated with respect to $\bPsi$ to obtain
 \begin{align*}
-  \log  q(\psi_j)
-  &= \const - \half\sum_{j=1}^m \psi_j \E\norm{\by_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 - \half\sum_{j=1}^m \psi_j^{-1} \E\norm{\bw_{\bigcdot j}}^2 \\
+  \frac{\partial}{\partial\bPsi}Q(\bPsi|\balpha,\eta)
+  &= -\half \tr \left(\frac{\partial\bPsi}{\partial\bPsi}\bG_1 + \frac{\partial\bPsi^{-1}}{\partial\bPsi}\bG_2 \right) \\
+  &= -\half \tr \left(\bG_1 - \bPsi^{-2} \bG_2 \right). 
+\end{align*}
+Setting this to zero and solving for $\bPsi$ yields the M-step update equation for $\bPsi$\hltodo[Actually, I don't know how to solve this?]{}. 
+This can be solved numerically, though it must be ensured that the identifiability constraints and positive-definiteness are satisfied.
+
+Specifically in the case where $\bPsi$ is a diagonal matrix $\diag(\psi_1,\dots,\psi_m)$, then
+\begin{align*}
+  Q(\bPsi|\balpha,\eta)
+  &= \const -\half \sum_{j=1}^m \psi_j \tr
+  \E[(\by^*_{\bigcdot j} - \bmu_{\bigcdot j})(\by^*_{\bigcdot j} - \bmu_{\bigcdot j})^\top] \\
+  &\phantom{==} -\half \sum_{j=1}^m \psi_j^{-1} \tr
+  \E[\bw_{\bigcdot j}\bw_{\bigcdot j}^\top] 
 \end{align*}
 is maximised, for $j=1,\dots,m$, at
 \[
-  \hat\psi_j = \sqrt{\frac{ \E\norm{\by_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 }{\E\norm{\bw_{\bigcdot j}}^2}}.
+  \hat\psi_j = \left( 
+  \frac{\E[ \bw_{\bigcdot j}^\top\bw_{\bigcdot j} ] }{\E[ (\by^*_{\bigcdot j} - \bmu_{\bigcdot j})^\top (\by^*_{\bigcdot j} - \bmu_{\bigcdot j}) ]}
+  \right)^{\half},
+\] 
+independently of the rest of the other $\psi_k$'s, $k\neq j$.
+As per the derivations in \hltodo{section}, the numerator of this expression is equal to $\tr(\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot j}^\top) = \tr \tilde\bW_{jj}$.
+The denominator on the other hand is
+\[
+  \E[\by_{\bigcdot j}^{*\top}\by_{\bigcdot j}^*] - 
+  n\alpha_j^2 - \tr( \bH_\eta^2 \tilde\bW_{jj}) 
+  - 2\by^{*\top}_{\bigcdot j}\bH_\eta\tilde\bw_{\bigcdot j}
+  - 2\alpha_j \sum_{i=1}^n\sum_{i'=1}^n (y_{ij}^* - h_\eta(x_{i},x_{i'}) \tilde w_{ij}).
 \]
-Perhaps, if the posterior mean is close to the mode, and not withstanding the involved calculations of the require second moments, then this quantity can be used instead in the CAVI algorithm.
-This ties with the idea of \emph{variational Bayes EM algorithm}, which is an alternative to a fully Bayesian treatment of variational inference.
-This is discussed in \cref{sec:varEM,sec:vbemiprobit}, but unfortunately, time constraints had made it impossible for us to examine this within the scope of this thesis.
 
+In either the full or I-probit model, solving $\bPsi$ involves the second moments of a truncated normal distribution.
+In the case where $\bPsi$ is dense, this is obtained by Monte Carlo methods, where samples from a truncated multivariate normal distribution are obtained using Gibbs sampling.
+Although this strategy can be used when $\bPsi$ is diagonal, in \cref{thm:contruncn}, we show that the form for the second moments  involve integration of standard normal cdfs and pdfs, much like in formula for the first moments.
+
+%where $p(\bPsi)$ is a prior density chosen for $\bPsi$.
+%Unfortunately, this does not resemble any known distribution, regardless of the prior choice for $\bPsi$.
+%One can resort to sampling techniques to obtain quantities such as the mean or entropy, which are needed, but this has not been studied for this project due to time limitations.
+%Even if this was possible, this requires, among other things, second moments of a truncated multivariate normal density $\by^*$, and also of $\bH_\eta\bw \in \bbR^{n\times m}$---of which both are a bit awkward to obtain.
+%
+%
+%Perhaps, if the posterior mean is close to the mode, and not withstanding the involved calculations of the require second moments, then this quantity can be used instead in the CAVI algorithm.
+%This ties with the idea of \emph{variational Bayes EM algorithm}, which is an alternative to a fully Bayesian treatment of variational inference.
+%This is discussed in \cref{sec:varEM,sec:vbemiprobit}, but unfortunately, time constraints had made it impossible for us to examine this within the scope of this thesis.
+%
 
 

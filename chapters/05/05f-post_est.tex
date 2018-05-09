@@ -57,6 +57,8 @@ For the independent I-probit model, class probabilities are obtained in a more c
   \Phi \left(\frac{\hat\sigma_j(x_\text{new})}{\hat\sigma_k(x_\text{new})} Z + \frac{\hat\mu_j(x_\new) - \hat\mu_k(x_\new)}{\hat\sigma_k^2(x_\text{new})} \right) \Bigg],
 \]
 as per \cref{eq:pij2}, since the $m$ components of $\bff(x_\new)$, and hence the $\by^*_{\new,j}$'s, are independent of each other ($\bPsi$ and $\hat\bV_\new$ are diagonal).
+Prediction of a single new data point takes $O(n^2m)$ time, because there are essentially $m$ I-prior posterior regression functions, and each take $O(n^2)$ to evaluate.
+This is assuming negligible time to compute the class probabilities.
 
 We are able to take advantage of the Bayesian machinery to obtain credibility intervals for probability estimates or any transformation of these probabilities (e.g. log odds or odds ratios).
 The procedure is as follows.
@@ -81,25 +83,36 @@ To obtain a statistic of interest, say, a 95\% credibility interval of a functio
       \item Compute $\hat\theta^{(t)} = \argmax_\theta \cL_q(\theta)$ using the data $\cS^{(t)}$.
     \end{enumerate}
     \item For the $l$-th component of $\theta$, compute its variance estimator using
-    
     \[
       \widehat\Var(\hat\theta_l) = \frac{1}{T} \sum_{t=1}^T (\hat\theta_l^{(t)} - \bar\theta_l)^2
-    \]
-    where
-    \[
+      \hspace{0.5cm}\text{where}\hspace{0.5cm}
       \bar\theta_l = \frac{1}{T} \sum_{t=1}^T \hat\theta_l^{(t)}.
     \]
+%    where
+%    \[
+%      \bar\theta_l = \frac{1}{T} \sum_{t=1}^T \hat\theta_l^{(t)}.
+%    \]
   \end{enumerate}
   The obvious downside to this is computational time.
-  In any case, inference surrounding kernel parameters or intercepts is not of interest.
 \end{remark}
 
-Finally, on model selection.
-It is possible to perform model comparison by comparing the maximised ELBO quantity of several candidate models \citep{beal2003}, and the justification for this is that it supposedly gives a good approximation to the marginal log-likelihood (log model evidence), especially if the variational density is close in the KL divergence sense to the true posterior density.
-This would allow model selection using (empirical) Bayes factors as a model selection criterion.
-\citet{kass1995bayes} suggest the following interpretation of observed Bayes factor values for comparing model $M_1$ against model $M_0$.
+Finally, a discussion on model comparison, which, in the variational inference literature, is achieved by comparing ELBO values of competing models \citep{beal2003}.
+The rationale is that the ELBO serves as a conservative estimate for the log marginal likelihood, which would allow model selection via (empirical) Bayes factors.
+This stems from the fact that (see note in \hltodo{section})
+\begin{align*}
+  \log p(\by|\theta) 
+  &= \cL_q(\theta) + \KL(q \Vert p ) 
+  > \cL_q(\theta),
+\end{align*}
+since the Kullbeck-Leibler divergence from the true posterior density $p(\by^*,\bw|\by)$ to the variational density $q(\by^*,\bw)$ is strictly positive (it is zero if and only if the two densities are equivalent), and is minimised under a variational inference scheme.
+\citet{kass1995bayes} suggest \cref{tab:BF} as a way of interpreting  observed Bayes factor values $\BF(M_1,M_0)$ for comparing model $M_1$ against model $M_0$, where $\BF(M_1,M_0)$ is approximated by
+\[
+  \BF(M_1,M_0) \approx \frac{\cL_q(\theta|M_1)}{\cL_q(\theta|M_0)},
+\]
+and $\cL_q(\theta|M_k)$, $k=0,1$, is the ELBO for model $M_k$.
+It should be noted that while this works in practice, there is no theoretical basis for model comparison using the ELBO \citep{blei2017variational}.
 
-\begin{table}[H]
+\begin{table}[t]\label{tab:BF}
   \centering
   \caption{Guidelines for interpreting Bayes factors.}
   \label{tab:bf}
@@ -113,11 +126,3 @@ This would allow model selection using (empirical) Bayes factors as a model sele
     >10   &>150    &Very strong \\ 
   \end{tabular}
 \end{table}
-\vspace{-1.4em}
-\noindent where $\BF(M_1,M_0)$ is approximated by
-\[
-  \BF(M_1,M_0) \approx \frac{\cL_q(\theta|M_1)}{\cL_q(\theta|M_0)},
-\]
-and $\cL_q(\theta|M_k)$, $k=0,1$, is the ELBO for model $M_k$.
-It should be noted that while this works in practice, there is no theoretical basis for model comparison using the ELBO \citep{blei2017variational}.
-

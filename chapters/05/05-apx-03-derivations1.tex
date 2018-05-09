@@ -1,26 +1,24 @@
-\section{Derivation of the CAVI algorithm}
+\section{Derivation of the variational densities}
 
-Let $\cZ = \{\by^*,\bw,\balpha,\eta,\bPsi \}$.
-Approximate the posterior for $\cZ$ by a mean-field variational distribution
+In what follows, the implicit dependence of the densities on the parameters of the model $\theta$ are dropped.
+We derive a mean-field variational approximation of
 \begin{align*}
-  p(\by^*, \bw, \alpha, \eta, \bPsi | \by) 
-  &\approx q(\by^*)q(\bw)q(\balpha)q(\eta)q(\bPsi) \\
-  &= \prod_{i=1}^n q(\by_{i}^*)q(\bw)q(\balpha)q(\eta)q(\bPsi).
+  p(\by^*, \bw| \by) 
+  &\approx q(\by^*)q(\bw) \\
+  &= \prod_{i=1}^n q(\by_{i}^*)q(\bw).
 \end{align*}
 The first line is by assumption, while the second line follows from an induced factorisation on the latent propensities, as we will see later. 
-If needed, we also assume that $q(\eta)$ factorises into its constituents components.
-Recall that, for each $\xi\in\cZ$, the optimal mean-field variational density $\tilde q$ for $\xi$ satisfies
-\[
-  \log \tilde q(\xi) = \E_{-\xi} [\log p(\by, \cZ)] + \const \tag{\ref{eq:qtilde}}
-\]
-Write $\bff = \bH_\eta \bw \in  \bbR^{n\times m}$.
+Recall that the optimal mean-field variational density $\tilde q$ satisfy
+\begin{align}
+  \log \tilde q(\by^*) &= \E_{\bw\sim\tilde q} \big[ \log p(\by,\by^*,\bw) \big] + \const \tag{from \ref{{eq:logqystar}}} \\
+  \log \tilde q(\bw) &= \E_{\by^*\sim\tilde q} \big[ \log p(\by,\by^*,\bw) \big] + \const \tag{from \ref{{eq:logqw}}}
+\end{align}
 The joint likelihood $p(\by, \cZ)$ is given by
 \begin{align*}
-  p(\by, \cZ) 
-  &= p(\by|\cZ)p(\cZ) \\
-  &= p(\by|\by^*) p(\by^* | \balpha,\bw,\eta,\bPsi) p(\bw|\bPsi) p(\eta) p(\bPsi)p(\balpha).
+  p(\by, \by^*,\bw) 
+  &= p(\by|\by^*) p(\by^* | \bw) p(\bw).
 \end{align*}
-For reference, the relevant distributions are listed below.
+For reference, the three relevant distributions are listed below.
 
 \begin{itemize}
   \item {\boldmath$p(\by|\by^*)$}. For each observation $i\in\{1,\dots,n\}$, given the corresponding latent propensities $\by^*_i = (y_{i1}^*,\dots,y_{im}^*)$, the distribution for $y_i$ is a degenerate distribution which depends on the $j$'th component of $\by^*_i$ being largest, where the value observed for $y_i$ was $j$. Since each of the $y_i$'s are independent, everything is multiplicative.
@@ -57,40 +55,7 @@ For reference, the relevant distributions are listed below.
     &= \exp \left[-\half[nm]\log 2\pi - \half[n]\log\abs{\bPsi} - \half\tr \big( \bw \bPsi^{-1} \bw^\top \big)  \right] \\
     &= \exp \left[-\half[nm]\log 2\pi - \half[n]\log\abs{\bPsi} - \half\sum_{i=1}^n  \bw_{i \bigcdot}^\top \bPsi^{-1} \bw_{i \bigcdot}   \right].
   \end{align*}
-  
-  \item {\boldmath$p(\eta)$}. The most common scenario would be $\eta = \{\lambda_1,\dots,\lambda_p\}$ only. In this case, choose independent normal priors for each $\lambda_k \sim \N(m_k,v_k)$, $k=1,\dots,p$, whose pdf is
-  \begin{align*}
-    p(\eta) = \prod_{k=1}^p \exp\left[-\half\log 2\pi - \half\log v_k - \frac{1}{2v_k} (\lambda_k - m_k)^2 \right].
-  \end{align*} 
-  An improper prior $p(\eta) \propto \const$ can be used as well, and this is the same as letting $m_k \to 0$ and $v_k\to 0$.
-  The resulting posterior will be proper.
-  If $\eta$ contains other parameters as well, such as the Hurst coefficient $\gamma \in (0,1)$, SE lengthscale $l >0$ or polynomial offset $c>0$, then appropriate priors should be used to match the support of the parameter.
-  Choices include $p(\gamma) = \ind\big(\gamma \in (0,1)\big)$ and $l,c \sim \Gamma(a,b)$.
-  
-  \item {\boldmath$p(\bPsi)$}. Our analysis shows that regardless of prior choice of $\bPsi$, be it in the full or independent I-probit model, the posterior for $\bPsi$ will not be of a recognisable form. Without giving too much thought, assume an improper prior on $\bPsi$, i.e. $p(\bPsi) \propto \const$
-%  For the precision matrix, a Wishart prior with scale matrix $\bG^{-1}$ and $g$ degrees of freedom, denoted $\bPsi \sim \Wis_m(\bG^{-1},g)$, is convenient. It has pdf
-%  \[
-%    p(\bPsi) = \exp\left[\const + \half[g-m-1]\log \abs{\bPsi} - \half\tr(\bG\bPsi)  \right].
-%  \]
-%  For the independent I-probit model, $\bPsi = \diag(\psi_1,\dots,\psi_m)$, and we choose independent Gamma distributions for each precision $\sigma_j^{-2} \sim \Gamma(s_j,r_j)$, where $s_j$ and $r_j$ are the shape and rate parameters.
-%  Then,
-%  \[
-%    p(\bPsi) = \prod_{j=1}^m \exp\left[\const + (s_j - 1)\log \psi_j - r_j\psi_j \right].
-%  \] 
-  
-  \item {\boldmath$p(\balpha)$}. Choose independent normal priors for the intercept, $\alpha_j \sim \N(a_j,A_j)$ for $j=1,\dots,m$. The pdf is
-  \[
-    p(\balpha) = \prod_{j=1}^m \exp\left[
-    -\half\log 2\pi - \half\log A_j - \frac{1}{2A_j} (\alpha_j - a_j)^2  
-    \right].
-  \]
 \end{itemize}
-
-\begin{remark}
-  The priors on the parameters $\{ \balpha,\eta \}$ can be set to very vague or even improper priors, and the resulting posterior will still yield a proper distribution.
-  Using improper priors eases the algebra slightly.
-  For the precision matrix $\bPsi$, it is best to stick with the Wishart prior to avoid positive-definite issues, unless the independent I-probit model is used, in which case Jeffreys' prior for the precisions $p(\sigma_j^{-2})\propto \sigma_j^2$ is a convenient choice.
-\end{remark}
 
 \subsection{Derivation of \texorpdfstring{$\tilde q(\by^*)$}{$\tilde q(y^*)$}}
 % [Derivation of q ystar]
@@ -268,273 +233,3 @@ If $\bC = \diag(c_1,\dots,c_m)$, then
   &= \sum_{j=1}^m c_j
   \tr \big( \bD (\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j} \tilde\bw_{\bigcdot j}^\top) \big)
 \end{align*}
-
-\subsection{Derivation of $\tilde q(\eta)$}
-
-
-By looking at only the terms involving $\eta$ in \cref{eq:qtilde}, we deduce that $\tilde q$ for $\eta$ satisfies
-\begin{align*}
-  \log\tilde q(\eta) 
-  &=  -\half\tr\E_{\cZ\backslash\{\eta\}\sim q} \Big[ 
-  (\by^* - \bone_n\balpha^\top - \bH_\eta\bw) \bPsi (\by^* - \bone_n\balpha^\top - \bH_\eta\bw)^\top \Big] + \log p(\eta) \\
-  &\phantom{==} + \const \\
-  &=  -\half\tr \E_{\cZ\backslash\{\eta\}\sim q} \Big(
-  \bPsi\bw^\top\bH_\eta^2\bw - 2\bPsi\bw^\top\bH_\eta(\by^*-\balpha)
-  \Big) + \log p(\eta)  + \const \\
-  &= -\half \tr \Big( 
-   \tilde\bPsi \E[\bw^\top\bH_\eta^2\bw] - 2\tilde\bPsi\tilde\bw^\top\bH_\eta(\tilde\by^* - \tilde\balpha)
-   \Big) + \log p(\eta) + \const
-\end{align*}
-with some appropriate prior $p(\eta)$.
-In general, this does not have a recognisable form in $\eta$, especially when it is not linearly dependent on the kernel matrix.
-This happens when considering parameters other than the scales of the RKHSs.
-Our interest would be to obtain $\tilde\bH_\eta := \E_{\eta\sim q}\bH_\eta$ and $\tilde\bH_\eta^2 := \E_{\eta\sim q}\bH_\eta^2$.
-We use a Metropolis random-walk algorithm to obtain these quantities, as detailed in the algorithm below.
-
-\begin{algorithm}[hbt]
-\caption{Metropolis random-walk to sample $\eta$}
-\begin{algorithmic}[1]
-  \State \textbf{inputs} $\tilde\balpha$, $\tilde\bw$, $\tilde\bPsi$, and  $s$ Metropolis sampling s.d.
-  \State \textbf{initialise} $\eta^{(0)} \in \bbR^q$ and $t \gets 0$
-  \For{$t=1,\dots,T$}
-    \State Draw $\eta^* \sim \N_q(\eta^{(t)}, s^2)$
-    \State Accept/reject proposal state, i.e.
-    \[
-      \eta^{(t+1)} \gets 
-      \begin{cases}
-        \eta^* &\text{if } u\sim\Unif(0,1) < \pi_{\text{acc}} \\
-        \eta^{(t)} &\text{otherwise}       
-      \end{cases}
-    \]
-    \hspace{1.8em}where
-    \[
-      \pi_{\text{acc}} = \min\left(1, 
-%      \frac{\tilde q(\eta^*)}{\tilde q(\eta^{(t)})}
-      \exp\big(\log \tilde q(\eta^*) - \log \tilde q(\eta^{(t)})\big)
-      \right).
-    \]
-  \EndFor
-  \State $\tilde\bH_\eta \gets \frac{1}{T}\sum_{i=1}^T \bH_{\eta^{(t)}}$ and $\tilde\bH_\eta^2 \gets \frac{1}{T}\sum_{i=1}^T \bH_{\eta^{(t)}}^2$
-\end{algorithmic}
-\end{algorithm}
-
-%In calculating the acceptance probabilities, we need the matrix $\E[\bw^\top\bH_\eta^2\bw]$.
-%This is a bit awkward to compute---it requires sampling $\vecc \bw^{(t)}$ from the distribution $\tilde q(\vecc \bw)$, an $nm$-variate normal distribution, and the sample mean of $\bw^{(t)\top}\bH_\eta^2\bw^{(t)}$ calculated.
-%If the independent I-probit model is considered, then 
-%\[
-%  \tr(\tilde\bPsi \E[\bw^\top\bH_\eta^2\bw])
-%  = \sum_{i,j=1}^m \tilde\bPsi_{ij}\E[\bw_{\bigcdot i}^\top\bH_\eta^2\bw_{\bigcdot j}]
-%\]
-%where each $\bw_{\bigcdot j} \sim \N_n(\tilde\bw_{\bigcdot j},\bV_{w_j})$ and are independent of each other, so
-%$\E[\bw_{\bigcdot i}^\top\bH_\eta^2\bw_{\bigcdot j}] = \tilde\bw_{\bigcdot i} \bH_\eta^2 \tilde\bw_{\bigcdot j}$.
-
-
-%
-%\begin{align*}
-%  \vecc \bH_\eta\bw \sim \N_{nm}(\vecc \bH_\eta\wtilde, (\bI_m\otimes\bH_\eta)\bV_w(\bI_m\otimes\bH_\eta))
-%\end{align*}
-%
-%\begin{align*}
-%  \E[(\vecc \bH_\eta\bw)(\vecc \bH_\eta\bw)^\top] &=
-%  (\bI_m\otimes\bH_\eta)\bV_w(\bI_m\otimes\bH_\eta) + \vecc \bH_\eta\wtilde (\vecc \bH_\eta\wtilde)^\top \\
-%  \E[\bw^\top\bH_\eta^2\bw] &=
-%  (\bI_m\otimes\bH_\eta)\bV_w(\bI_m\otimes\bH_\eta) + \vecc \bH_\eta\wtilde (\vecc \bH_\eta\wtilde)^\top  
-%\end{align*}
-
-Now consider the case where $\eta = \{\lambda_1,\dots,\lambda_p \}$ (RKHS scale parameters only), and the scenario described in the exponential family EM algorithm of \cref{sec:expfamEM} applies.
-In particular, for $k=1,\dots,p$, we can decompose the kernel matrix as $\bH_\eta = \lambda_k \bR_k + \bS_k$ and its square as $\bH_\eta^2 = \lambda_k^2 \bR_k^2 + \lambda_k \bU_k + \bS_k^2$.
-Then, for $j = 1,\dots,m$, assuming each of the $q(\lambda_k)$ densities are independent of each other, we find that
-\begin{align*}
-  \log \tilde q(\lambda_k) 
-  &= \E_{\cZ\backslash\{\eta\}\sim q} \left[ 
-  - \half\tr \big((\by^* - \bmu) \bPsi (\by^* - \bmu)^\top  \big)
-  \right] 
-  - \frac{1}{2v_k^2} (\lambda_k - m_k)^2 + \const \\
-  &= - \half\tr \E_{\cZ\backslash\{\eta\}\sim q} \left[ \bPsi\bw^\top \bH_\eta^2 \bw - 2\bPsi(\by^* - \bone\balpha^\top)^\top\bH_\eta \bw \right] \\
-  &\phantom{==} - \frac{1}{2v_k^2} (\lambda_k - m_k)^2 + \const \\
-  &= - \half\tr \E_{\cZ\backslash\{\eta\}\sim q} \left[ \bPsi\bw^\top (\lambda_k^2\bR_k^2 + \lambda_k\bU_k) \bw - 2\bPsi(\by^* - \bone\balpha^\top)^\top(\lambda_k\bR_k) \bw \right] \\
-  &\phantom{==} - \frac{1}{2v_k^2} (\lambda_k^2 - 2m_k\lambda_k) + \const \\
-  &= - \half\tr \E_{\cZ\backslash\{\eta\}\sim q} \left[ 
-  \lambda_k^2\bPsi\bw^\top \bR_k^2 \bw 
-  -2 \lambda_k \Big(
-  \bPsi(\by^* - \bone\balpha^\top)^\top\bR_k \bw 
-  -\half\bPsi\bw^\top \bU_k \bw
-  \Big) \right] \\
-  &\phantom{==} - \half\left(\frac{1}{v_k^2}\lambda_k^2  - 2 \frac{m_k}{v_k^2} \lambda_k \right) + \const \\
-  &= -\half \Big[ 
- \lambda_k^2 \big( 
- \greyoverbrace{\tr(\tilde\bPsi\E[\bw^\top\bR_k^2\bw]) + v_k^{-2}}{c_k}
- \big) \\ 
-  &\hspace{2cm} - 2\lambda_k \Big( 
-  \greyoverbrace{
-  \tr\Big( \tilde\bPsi(\tilde\by^* - \bone_n\tilde\balpha^\top)^\top\bR_k \tilde\bw 
-  - \half\tilde\bPsi\E[\bw^\top \bU_k \bw] \Big) 
-  + m_k v_k^{-2}}{d_k}
-  \Big) \Big]
-\end{align*}
-By completing the squares, we recognise this is as the kernel of a univariate normal density. 
-Specifically, $\lambda_k \sim \N(d_k/c_k,1/c_k)$.
-The quantity $\tilde\bH_\eta$ can be obtained by substituting $\lambda_k \mapsto \E_{\lambda_k\sim q}[\lambda_k]$ in the expression $\bH_\eta = \lambda_k \bR_k + \bS_k$.
-However, in the calculation of $\tilde\bH_\eta^2$ using $\lambda_k^2 \bR_k^2 + \lambda_k \bU_k + \bS_k^2$, we must replace occurrences of  $\lambda_k^2$ with $\E_{\lambda_k\sim q}[\lambda_k]^2 +  \Var_{\lambda_k\sim q}[\lambda_k]$.
-This can be cumbersome, so if felt necessary, use the approximation $\lambda_k^2 \mapsto \E_{\lambda_k\sim q}[\lambda_k]^2$ instead.
-
-\begin{example}
-  Suppose $k=1$, and we only have $\lambda$ to estimate.
-  Then, $\bH_\eta = \lambda \bH$, $\bR_k = \bH$, $\bR_k^2 = \bH^2$, and $\bU_k = \bzero$.
-  Suppose also we use an improper prior $\lambda_k \propto \const$, which is the same as having $v_k^2 \to 0$ and $m_k v_k^{-2} \to 0$.
-  The mean field distribution for $\lambda$ is then
-  \[
-    \lambda \sim \N \left( 
-    \frac{\tr\big(\tilde\bPsi(\tilde\by^* - \bone\tilde\balpha^\top)^\top \bH \tilde\bw \big)}{\tr(\tilde\bPsi\E[\bw^\top\bH^2\bw])},
-    \frac{1}{\tr(\tilde\bPsi\E[\bw^\top\bH^2\bw])}
-    \right)
-  \]
-  Further, if $\tilde\bPsi = \tilde\psi\bI_m$, then
-  \[
-    \lambda \sim \N \left( 
-    \frac{\sum_{j=1}^m (\tilde\by^*_{\bigcdot j} - \tilde\alpha_j\bone)^\top \bH \tilde\bw_{\bigcdot j} }{\sum_{j=1}^m
-  \tr \big( \bH^2 \E [\bw_{\bigcdot j} \bw_{\bigcdot j}^\top] \big)},
-    \frac{1}{\sum_{j=1}^m
-  \tr \big( \bH^2 \E [\bw_{\bigcdot j} \bw_{\bigcdot j}^\top] \big)}
-    \right)
-  \]
-  which bears a resemblance to the exponential family EM algorithm solutions described in Chapter 4.
-  Now, $\tilde \bH_\eta = \E[\lambda \bH] = \tilde\lambda \bH$, and $\tilde \bH_\eta^2 = \E[\lambda^2 \bH^2] = (\Var\lambda + \tilde\lambda^2) \bH^2$.
-\end{example}
-
-\subsection{Derivation of \texorpdfstring{$\tilde q(\bPsi)$}{$\tilde q(\Psi)$}}
-
-%Introduce the transformed random matrix $\bu = \bw\bPsi^{-1} \in \bbR^{n\times m}$.
-%Since we have that  $\vecc \bu = (\vecc \bw)^\top (\bPsi^{-1} \otimes \bI_n)$, the optimal mean-field distribution for $\bu$ is normal with mean $\vecc \tilde\bu = \vecc (\tilde\bw\tilde\bPsi^{-1} )$ and variance
-%\begin{align*}
-%  \tilde \bV_u
-%  &= (\tilde\bPsi^{-1} \otimes \bI_n) \tilde \bV_w (\tilde\bPsi^{-1} \otimes \bI_n). 
-%\end{align*}
-%In the case of the independent model, its mean is $\tilde\bu_{\bigcdot j} = \tilde\psi_j^{-1} \tilde\bu_{\bigcdot j}$ for $j=1,\dots,m$ and its variance is
-%\begin{align*}
-%  \tilde \bV_u 
-%  &= \diag(\tilde\psi_1^{-2}\tilde\bV_{w_1},\dots,\tilde\psi_m^{-2}\tilde\bV_{w_m}).
-%\end{align*}
-
-We find that $q(\bPsi)$ satisfies
-\begin{align*}
-  \log q(\bPsi)
-  &= \E_{\cZ\backslash\{\bPsi\}\sim q} \Big[ 
-%  \half[n]\log\abs{\bPsi} 
-  - \half\tr \big((\by^* - \bmu)^\top (\by^* - \bmu)\bPsi  \big)
-%  - \half[n]\log\abs{\bPsi} 
-  - \half\tr \big( \bw^\top\bw\bPsi^{-1} \big)
-  \Big] \\
-  &\phantom{==} 
-  + \log p(\bPsi)
-%  + \half[g-m-1]\log \abs{\bPsi} - \half\tr(\bG\bPsi) 
-  + \const \\
-  &= -\half \tr \Big(
-  \big( %\bG + 
-  \greyoverbrace{\E[(\by^* - \bmu)^\top (\by^* - \bmu)]}{\bG_1}
-  \big)\bPsi +
-  \greyoverbrace{\E[\bw^\top\bw]}{\bG_2} \bPsi^{-1}
-  \Big) \\
-  &\phantom{==} 
-  + \log p(\bPsi)
-%  + \half[g-m-1]\log \abs{\bPsi} - \half\tr(\bG\bPsi) 
-  + \const 
-\end{align*}
-This seems to be the pdf of $\Wis(\bG+\bG_1,g)$ plus the pdf of a distribution which almost resembles an inverse Wishart pdf.
-Unfortunately, the properties such as its moments and entropy are unknown.
-%However, we can compute the posterior mode:
-%\begin{align*}
-%  \frac{\partial}{\partial\bPsi} \log q(\bPsi)
-%  &= -\half \tr \left(\frac{\partial}{\partial\bPsi} (\bG_1\bPsi) + \frac{\partial}{\partial\bPsi}(\bG_2\bPsi^{-1}) \right) \\
-%  &= -\half \tr \left( \bG_1 - \bG_2\bPsi^{-2} \right)
-%\end{align*}
-%equated to zero means solving $m$ quadratic equations 
-
-The matrix $\bG_1$ is 
-\begin{align*}
-  \bG_1 
-  &= \E[(\by^* - \bmu)^\top (\by^* - \bmu)] \\
-  &= \E \big[\by^{*\top}\by^* + \balpha\bone_n^\top \bone_n\balpha^\top + \bw^\top\bH_\eta^2\bw -2\by^{*\top}\bone_n\balpha^\top -2\by^{*\top}\bH_\eta\bw -2 \balpha\bone_n^\top\bH_\eta\bw \big] \\
-  &= \E \big[\by^{*\top}\by^*] + n\E[\balpha\balpha^\top] + \E[\bw^\top\bH_\eta\bw] -2(\tilde\by^{*\top}\bone_n\tilde\balpha^\top + \tilde\by^{*\top}\tilde\bH_\eta\tilde\bw + \tilde\balpha\bone_n^\top\tilde\bH_\eta\tilde\bw),
-\end{align*}
-and this involves second order moments of a conically truncated multivariate normal distribution, which needs to be obtained via simulation.
-Meanwhile,
-\begin{align*}
-  \bG_{2,ij}
-  &= \E[\bw^\top\bw]_{ij} \\
-  &= \E[\bw_{\bigcdot i}^\top \bw_{\bigcdot j}] \\
-  &= \tilde\bV_w[i,j] + \tilde\bw_{\bigcdot i}^\top  \tilde\bw_{\bigcdot j}.
-\end{align*}
-
-In the case of the independent I-probit model, we use a gamma prior on each of the precisions in the diagonal entries of $\bPsi=\diag(\psi_1,\dots,\psi_m)$.
-Then, the variational density for each $\psi_j$ is found to be
-\begin{align*}
-  \log  q(\psi_j)
-  &= \E_{\cZ\backslash\{\bPsi\}\sim q} \Big[ 
-  \half[n]\log (\psi_1\cdots\psi_m) - \half\sum_{j=1}^m \sum_{i=1}^n \psi_j(\by^*_{ij} - \bmu_{ij})^2 
-  \Big] \\
-  &\phantom{==} +\E_{\cZ\backslash\{\bPsi\}\sim q} \Big[ 
-  -\half[n]\log (\psi_1\cdots\psi_m) - \half\sum_{j=1}^m \sum_{i=1}^n \psi_j^{-1} \bw_{ij}^2 
-  \Big] \\
-  &\phantom{==} + \sum_{j=1}^m \big( (s_j - 1)\log \psi_j - r_j\psi_j \big) + \const \\
-  &= (s_j - 1)\log \psi_j 
-  - \psi_j \left( \half \E\norm{\by_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 +  r_j \right) \\
-  &\phantom{==}
-  - \psi_j^{-1} \left( \half\E\norm{\bw_{\bigcdot j}}^2  \right) + \const
-\end{align*}
-which again, is a pdf of an unknown distribution.
-However, its posterior mode can be computed.
-Write $a = -\left( \half \E\norm{\by_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 + r_j \right)$,
-$b = s_j - 1$, and $c=\left( \half\E\norm{\bw_{\bigcdot j}}^2  \right)$.
-Then,
-\begin{align*}
-  \frac{\partial}{\partial\psi_j} \log q(\psi_j)
-  = \frac{\partial}{\partial\psi_j} \left( a\psi_j + b\log \psi_j - c\psi_j^{-1} \right) 
-  = a +b\psi_j^{-1} + c\psi_j^{-2} 
-\end{align*}
-equated to zero means solving a quadratic equation in $\psi_j$.
-Suppose that $p(\psi_j) \propto \const$, then $s_j=1$ and $r_j = 0$ so $\tilde\psi_j$ can be solved directly to be
-\[
-  \hat\psi_j = \sqrt{\frac{ \E\norm{\by_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 }{\E\norm{\bw_{\bigcdot j}}^2}}.
-\]
-%The mean is given by $\tilde\psi_j = (s_j + n)(\half \E\norm{\by_{\bigcdot j}^* - \bmu_{\bigcdot j}}^2 + \half \E\norm{\bu_{\bigcdot j}}^2  + r_j)^{-1}$.
-If the posterior mean is close to its mode, then $\hat\psi_j$ is a good approximation for $\tilde\psi_j$.
-
-To calculate $\E\norm{y_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 = \E \sum_{i=1}^n (\by_{ij}^* - \mu_{ij})^2$, one first needs $\E (y_{ij}^* - \alpha_j - \bw_{\bigcdot j}^\top\bh_\eta(x_i))^2$.
-This, in itself, presents a challenge to compute analytically, because it requires, among other things, the second moments $\E y_{ij}^{*2}$ and $\E [\bw_{\bigcdot j}^\top\bh_\eta(x_i)\bh_\eta(x_i)^\top \bw_{\bigcdot j}]$.
-Although not entirely accurate, it is simpler to use the approximation
-\[
-  \E\norm{\by_{\bigcdot j}^* -  \bmu_{\bigcdot j}}^2 \approx 
-  \norm{\tilde \by_{\bigcdot j}^* -  \tilde \bmu_{\bigcdot j}}^2.
-\]
-% from the distribution of $\by_{i \bigcdot} \sim \tN(\bmu_{i \cdot}, \tilde\bPsi^{-1}, \cC_{y_i})$.
-%Because of the independence structure, these can be computed componentwise.
-(see note \labelcref{note2} on page \pageref{note2}).
-Also, we have $\bw_{\bigcdot j} \sim \N_n(\tilde\bw_{\bigcdot j}, \tilde\bV_{w_j})$, and so $  \E\norm{\bw_{\bigcdot j}}^2 = \tr(\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot j}^\top)$.
-
-\subsection{Derivation of \texorpdfstring{$\tilde q(\balpha)$}{$\tilde q(\alpha)$}}
-
-Let $\bA = \diag(A_1,\dots,A_m)$ and $\ba = (a_1,\dots,a_m)^\top$.
-The terms involving $\alpha_j$ in \cref{eq:qtilde} are
-\begin{align*}
-  \log q(\balpha)
-  &= \E_{\cZ\backslash\{\balpha\}\sim q} \left[ 
-  -\half\sum_{i=1}^n 
-  \big(\by^*_{i \bigcdot} - \balpha - \bw^\top\bh_\eta(x_i)\big)^\top 
-  \bPsi \big(\by^*_{i \bigcdot} - \balpha - \bw^\top\bh_\eta(x_i)\big)
-  \right] \\
-  &\phantom{==}
-  - \half (\balpha - \ba)^\top \bA^{-1} (\balpha - \ba) + \const \\
-  &= -\half \Bigg[ \balpha^\top(
-  \greyoverbrace{n\bPsi + \bA^{-1}}{\tilde \bA}
-  )\balpha -2\Bigg( \, 
-   \greyoverbrace{\sum_{i=1}^n \bPsi\big( \tilde\by^*_{i \bigcdot} - \tilde\bw^\top\tilde\bh_\eta(x_i) \big) + \bA^{-1} \ba}{\tilde \ba} 
-  \, \Bigg)^\top \balpha \Bigg]
-\end{align*}
-which implies a normal mean-field distribution for $\balpha$ whose mean and variance are $\tilde\balpha = \tilde \bA^{-1}\tilde \ba$ and $\tilde \bA^{-1}$ respectively.
-If $\bPsi$ is diagonal, the components of $\balpha$ would be independent.
-
-As a remark, due to identifiability, only $m-1$ of these intercept are estimable.
-We can either put a constraint that one of the intercepts is fixed at zero, or the sum of the intercepts equals zero.
-The latter constraint is implemented in this thesis, and this is realised by estimating all the intercepts and then centring them.
-

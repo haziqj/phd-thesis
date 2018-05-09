@@ -223,8 +223,9 @@ Generally speaking, there are no closed-form expressions for $\E g(X)$ for any w
 One strategy to obtain values such as $\E X$ (mean), $\E X^2$ (second moment) and $E \log p(X)$ (entropy) would be Monte Carlo integration.
 If $X^{(1)},\dots,X^{(T)}$ are samples from $X\sim\tN_d(\mu,\Sigma,\cA)$, then $\widehat{\E g(X)} = \frac{1}{T} \sum_{i=1}^T g(X^{(i)})$.
 
-Sampling from a truncated multivariate normal distribution is described by \citet{robert1995simulation} and \citet{damien2001sampling}.
-In the latter, the authors explore a simple Gibbs-based approach that is easy to implement in practice.
+Sampling from a truncated multivariate normal distribution is described by \citet{robert1995simulation}, who used a Gibbs-based approach, which we now describe.
+%\citet{damien2001sampling}.
+%In the latter, the authors explore a simple Gibbs-based approach that is easy to implement in practice.
 Assume that the one-dimensional slices of $\cA$ 
 \[
   \cA_k(X_{-j}) = \{X_j | (X_1,\dots,X_{j-1},X_j, X_{j+1},\dots,X_d) \in \cA \}
@@ -241,21 +242,25 @@ According to \citet{robert1995simulation}, if $\Psi = \Sigma^{-1}$, then
   \Sigma_{-j,-j}^{-1} = \Psi_{-j,-j} - \Psi_{j,-j}\Psi_{-j,-j}^\top / \Psi_{jj}
 \]
 which means that we need only compute one global inverse $\Sigma^{-1}$.
-Introduce a latent variable $Y \in \bbR$ such that the joint pdf of $X$ and $Y$ is
-\[
-  p(X_1,\dots,X_d,Y) \propto \exp(-Y/2) \ind[y > (x-\mu)^\top\Sigma^{-1}(x-\mu)]\ind[X\in\cA].
-\]
-Now, the Gibbs conditional densities for the $X_k$'s are given by
-\[
-  p(X_j|X_{-j},Y) \propto \ind[X_j \in \cB_j]
-\]
-where
-\[
-  \cB_j \in (x_j^-, x_j^+) \cap \{X_j | (X-\mu)^\top\Sigma^{-1}(X-\mu) < Y \}.
-\]
-Thus, given values for $X_{-j}$ and $Y$, the bounds for $X_j$ involves solving a quadratic equation in $X_j$.
-The Gibbs conditional density for $Y|X$ is a shifted exponential distribution, which can be sampled using the inverse-transform method.
-Thus, both $X$ and $Y$ can be sampled directly from uniform variates.
+Therefore, the Gibbs sampler makes draws from truncated normal distributions in the following sequence:
+\begin{enumerate}
+  \item Draw ...
+\end{enumerate}
+%Introduce a latent variable $Y \in \bbR$ such that the joint pdf of $X$ and $Y$ is
+%\[
+%  p(X_1,\dots,X_d,Y) \propto \exp(-Y/2) \ind[y > (x-\mu)^\top\Sigma^{-1}(x-\mu)]\ind[X\in\cA].
+%\]
+%Now, the Gibbs conditional densities for the $X_k$'s are given by
+%\[
+%  p(X_j|X_{-j},Y) \propto \ind[X_j \in \cB_j]
+%\]
+%where
+%\[
+%  \cB_j \in (x_j^-, x_j^+) \cap \{X_j | (X-\mu)^\top\Sigma^{-1}(X-\mu) < Y \}.
+%\]
+%Thus, given values for $X_{-j}$ and $Y$, the bounds for $X_j$ involves solving a quadratic equation in $X_j$.
+%The Gibbs conditional density for $Y|X$ is a shifted exponential distribution, which can be sampled using the inverse-transform method.
+%Thus, both $X$ and $Y$ can be sampled directly from uniform variates.
 
 For probit models, we are interested in the conical truncations $\cC_j = \{ X_j > X_k | k\neq j, \text{and } k=1,\dots,m  \}$ for which the $j$'th component of $X$ is largest.
 These truncations form cones in $d$-dimensional space such that $\cC_1 \cup \cdots \cup \cC_d = \bbR^d$, and hence the name.

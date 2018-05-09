@@ -10,8 +10,8 @@ Apart from the fact that the variational EM algorithm uses approximate condition
 Let $\tilde q(\by^*,\bw)$ be the pdf that minimises the Kullbeck-Leibler divergence $\KL\big[ q \Vert p \big]$ subject to the mean-field constraint $q(\by^*,\bw) = q(\by^*)q(\bw)$.
 By appealing to \citet[equation 10.9, p. 466]{bishop2006pattern}, the optimal mean-field variational density $\tilde q$ for the latent variables $\by^*$ and $\bw$ satisfy
 \begin{align}
-  \log \tilde q(\by^*) &= \E_{\bw\sim\tilde q} \big[ \log p(\by,\by^*,\bw) \big] + \const \\
-  \log \tilde q(\bw) &= \E_{\by^*\sim\tilde q} \big[ \log p(\by,\by^*,\bw) \big] + \const 
+  \log \tilde q(\by^*) &= \E_{\bw\sim\tilde q} \big[ \log p(\by,\by^*,\bw) \big] + \const \label{eq:logqystar} \\
+  \log \tilde q(\bw) &= \E_{\by^*\sim\tilde q} \big[ \log p(\by,\by^*,\bw) \big] + \const \label{eq:logqw}
 \end{align}
 where $p(\by,\by^*,\bw) = p(\by|\by^*) p(\by^*|\bw) p(\bw)$ is as per \cref{eq:iprobitlik}.
 We now present the variational densities $\tilde q(\by^*)$ and $\tilde q(\bw)$.
@@ -111,7 +111,7 @@ From \cref{eq:iprobitQEstep}, the function to be maximised in the M-step is
   + n \balpha\balpha^\top 
   - 2\tilde\by^{*\top}\bone_n \balpha^\top 
   - 2\tilde\bw^\top\bH_\eta (\tilde\by^* - \bone_n\balpha^\top) 
-  \Big) \Big) \tag{\ref{eq:iprobitQEstep}}
+  \Big) \Big) %\tag{from \ref{eq:iprobitQEstep}}
   ,
 \end{align*}
 where expectations are taken with respect to the variational distributions of $\by^*$ and $\bw$. 
