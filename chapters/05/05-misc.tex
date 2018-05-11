@@ -1,12 +1,136 @@
+Consider a statistical model for which we have real-valued observations $\by := \{y_1,\dots,y_n\}$, which are treated as realisations from an assumed probability distribution with parameters $\theta$.
+The crux of statistical inference is to estimate $\theta$ given the observed values.
+In the \emph{frequentist setting}, the \emph{likelihood} function, or simply likelihood, is a function of the parameters $\theta$ which measures the plausibility of the parameter value given the observed data to fit a statistical model.
+It is defined as the mapping $\theta \mapsto p(\by|\theta)$, where $p(\by|\theta)$ is the probability density function (or in the case of discrete observations, the probability mass function) of the modelled distribution of the observations.
+ 
+It is logical to consider the parameter set which provides the largest likelihood value,
+\begin{equation}
+  \hat\theta_{\text{ML}} = \argmax_\theta p(\by|\theta).
+\end{equation}
+The value $\hat\theta$ is referred to as the \emph{maximum likelihood estimate} for $\theta$.
+For convenience, it is often the cases that the \emph{log-likelihood} function $L(\theta) = \log p(\by|\theta)$ is maximised instead.
+As the logarithm is a monotonically increasing function, the maximiser of the log-likelihood function is exactly the maximiser of the likelihood function itself.
+Besides invariance, the ML estimate comes with the attractive limiting property $\surd{n}(\theta_{\text{ML}} - \theta_{\text{true}}) \xrightarrow{\text{dist.}} \N(0,\cI)$ \citep{casella2002statistical} as sample size $n\to\infty$, where $\cI$ is the Fisher information (consistent, efficient, and asymptotically normal).
+
+The \emph{Bayesian} approach to estimating $\theta$ takes a different outlook, in that it supplements what is already known from the data with additional information in the form of prior beliefs about the parameters.
+This usually means treating the parameters as random, following some distribution dictated by a \emph{prior density} $p(\theta)$.
+There are many ways of categorising different types of priors, but broadly speaking, priors, and hence Bayesian analysis \citep{robert2007bayesian,kadane2011principles}, can be either \emph{subjective} or \emph{objective}, with the demonyms `subjectivists' and `objectivists' used to refer to those subscribing to each respective principle.
+Subjectivists assert that probabilities are merely opinions, while objectivists, in contrast, view probabilities as an extension of logic.
+In this regard, objectives Bayes seek to minimise the statistician's contribution to inference and `let data speak for itself', while subjective Bayes does the opposite.
+
+In either case, inference about the parameters are then performed using the \emph{posterior density}
+\begin{equation}
+  p(\theta|\by) \propto 
+  \greyoverbrace{p(\by|\theta)}{\text{likelihood}}
+  \times
+  \greyoverbrace{p(\theta)}{\text{prior}},
+\end{equation}
+
+The normalising constant is the marginal likelihood over the distribution of the parameters, $p(\by) = \int p(\by|\theta) p(\theta) \dint \theta$.
+Note that this quantity is free of $\theta$ because the parameters have been marginalised out, or put another way, considered in  entirety and averaged over all possible values of $\theta$ drawn from its prior density.
+The quantity $p(\by)$ is also known as the \emph{model evidence}, or simply, \emph{evidence}.
+
+The posterior density $p(\theta|\by)$ encapsulates the uncertainty surrounding the parameters $\theta$ after observing the data $\by$.
+The \emph{posterior mean} 
+\begin{equation}\label{eq:postmeanest}
+  \tilde \theta = \int \theta p(\theta|\by) \dint\theta
+\end{equation}
+is normally taken to be the point estimate for $\theta$, with its uncertainty usually reported in the form of a \emph{credible interval}: if $\theta_k$ is the $k$'th component of $\theta$, then a $(1-\alpha) \times 100\%$ credible interval for $\theta_k$ is $(\theta_k^l, \theta_k^u)$, where  $\Prob( \theta_k^l \leq \theta_k \leq \theta_k^u ) = (1-\alpha) \times 100\%$.
+Under a quadratic loss function, $\tilde\theta$ minimises the expected loss $\E[(\theta - \theta_{\text{true}})^2 ]$ \citep[§4.4.2, Result 3]{berger2013statistical}, and is hence also viewed as the \emph{minimum mean squared error} (MMSE) estimator.
+
+On a practical note, integration over the parameter space may be intractable, for instance, the model consists of a large number of parameters for which we would like the posterior mean of, or the marginalising integral cannot be found in closed form.
+Markov chain Monte Carlo (MCMC) methods are the standard way of approximating such integrals, by way of random sampling from the posterior.
+The sample $\{\theta^{(1)},\dots,\theta^{(T)} \}$ is then manipulated in a way to derive its approximation.
+In the case of the posterior mean,
+\begin{equation}
+  \hat{\E[\theta|\by]} = \frac{1}{T}\sum_{i=1}^T \theta^{(t)}
+\end{equation}
+gives an approximation, and its $(1-\alpha) \times 100\%$ credible interval can be approximated using the lower $\alpha/2\times 100\%$ and upper $(1-\alpha/2)\times 100\%$ quantile of the sample.
+
+One may also find the value of $\theta$ which maximises the posterior,
+\begin{equation}\label{eq:mapest}
+  \hat\theta_{\text{MAP}} = \argmax_\theta p(\by|\theta)p(\theta),
+\end{equation}
+which is the mode of the posterior distribution.
+This quantity is known as the \emph{maximum a posteriori} (MAP) estimate. 
+It is different from the ML estimate in that the maximisation objective is augmented with with the prior density for $\theta$.
+In this sense, MAP estimation can be seen as regularisation of the ML estimation procedure, whereby a `penalty' term is added to avoid overfitting.
+
+MAP estimation is often criticised for not being representative of Bayesian methods.
+That is, MAP estimation returns a point estimation with no apparent way of quantifying uncertainty of this point estimate.
+Furthermore, unlike ML estimators, MAP estimators are invariant under reparameterisation.
+If $\theta$ is a random variable with density $p(\theta)$, then the pdf of $\xi := g(\theta)$, where $g:\theta \mapsto g(\theta)$ is a one-to-one transformation, is
+\begin{equation}\label{eq:pdftransform}
+  p_\xi(\xi) = p_\theta\big(g^{-1}(\xi)\big) \left\vert \frac{\d }{\d \xi} g^{-1}(\xi) \right\vert.
+\end{equation}
+The second term in \cref{eq:pdftransform} is called the \emph{Jacobian (determinant)}.
+Therefore, a different parameterisation of $\theta$ will impact the location of the maximum because of the introduction of the Jacobian into the optimisation objective \cref{eq:mapest}.
+
+The term \emph{empirical Bayes} \citep{robbins1956empirical,casella1985introduction} refers to procedure in which features of the prior is informed by the data.
+This is realised by parameterising the prior by a hyper-parameter $\eta$, i.e. $\theta \sim p(\theta|\eta)$.
+%Consider a scenario in which the parameters to be estimated are the mean components of a multivariate normal distribution. 
+%It is reasonable to assume that the means were drawn from an identical prior distribution, hyper-parameterised by $\eta$.
+%%That is, if $\theta = (\theta_1,\dots,\theta_p)^\top$, then $\theta_k|\eta \iid p(\theta_k|\eta)$ for each $k=1,\dots,p$.
+%The posterior density for $\theta$ is now written
+%\begin{equation}
+%  p(\theta|\by) 
+%  = \int p(\theta,\eta|\by)p(\eta|\by) \dint\eta
+%  = \int \frac{p(\by|\theta)p(\theta|\eta)}{p(\by|\eta)}p(\eta|\by) \dint\eta.
+%\end{equation}
+%Assuming that the density $p(\eta|\by)$ is concentrated around a point estimate, $\hat\eta = \argmax_\eta p(\eta|\by)$ say, then we can assume that
+%\begin{equation}
+%  p(\theta|\by) \approx \frac{p(\by|\theta)p(\theta|\hat\eta)}{p(\by|\hat\eta)}.
+%\end{equation}
+%This approach of optimising the hyperparameters $\eta$ by maximising the 
+Values for the hyper-parameter are clearly important, because they appear in the posterior for $\theta$: 
+\begin{equation}\label{eq:empbayes1}
+  p(\theta|\by) = \frac{p(\by|\theta)p(\theta|\eta)}{p(\by|\eta)} 
+\end{equation}
+To avoid the subjectivist's approach of specifying values for $\eta$ a priori, one instead turns to the data for guidance.
+Information concerning $\eta$ is contained in the marginal likelihood $p(\by|\eta) = \int p(\by|\theta)p(\theta|\eta) \dint \theta$.
+This paves the way for using the \emph{maximum marginal likelihood} estimate
+\begin{equation}
+  \hat\eta = \argmax_\eta p(\by|\eta) 
+\end{equation}
+in place of $\eta$ in the equation of \cref{eq:empbayes1}.
+This procedure is coined \emph{maximum likelihood type-II} by \citet{rasmussen2006gaussian}, and is commonly referred to as such in the machine learning literature.
+It is also commonplace in statistics, especially in random-effects or latent variable models which employ a maximum likelihood procedure such as EM algorithm.
+
+As a remark, estimation of $\eta$ itself can be made to conform to Bayesian philosophy, i.e., by placing priors on it and inferring $\eta$ through its posterior.
+Such a procedure is referred to as \emph{Bayesian hierarchical modelling}.
+A motivation for doing this is because the ML estimate of $\eta$ ignores any uncertainty in it.
+Of course, the hyper-prior for $\eta$ could  parameterised by a hyper-hyper-parameter, and itself have a prior, and so on and so forth.
+Evidently the model is specified until such a point where there are parameters of the model which are left `unoptimised' and must be specified in subjective manner.
+
+
+\subsection{The EM algorithm for ML estimation}
+
+\hltodo{direct ml ``difficult'', meaning no closed form estimates and requires numerical methods. gradient-based newton or quasinewton need derivatives, if not readily available then approximate numerical methods. if the z were known, then it is easy => EM algorithm.}
+
+Often times, there are unobserved, random variables $\bz=\{z_1,\dots,z_n\}$ that are assumed to make up the data generative process, prescribed in the statistical model through the \emph{joint pdf} $p(\by,\bz|\theta)$.
+Examples of models that include latent variables are plenty: Gaussian mixture models, latent class analysis, factor models, random coefficient models, and so on.
+In order to obtain the ML estimates through a direct maximisation of the likelihood, it is necessary to first marginalise out the latent variables via
+\begin{equation}\label{eq:varint}
+  p(\by|\theta) 
+  = \int 
+  \greyoverbrace{p(\by|\bz,\theta)p(\bz|\theta)}{p(\by,\bz|\theta)}
+  \dint \bz
+\end{equation}
+and obtain the \emph{marginal likelihood}.
+Note that the integral is replaced by a summation over all possible values in the case of discrete latent variables $\bz$.
+
+
+\subsection{A functional view of EM}
+
 \subsection{A brief introduction to variational inference}
 \label{sec:varintro}
 
 Consider a statistical model for which we have observations $\by := \{y_1,\dots,y_n\}$, but also some latent variables $\bz := \{z_1,\dots,z_n\}$.
 Typically, in such models, there is a want to to evaluate the integral 
-\begin{equation}\label{eq:varint}
+\begin{equation}
   \cI = \int p(\by|\bz) p(\bz) \dint \bz.
 \end{equation}
-Models that include latent variables are plenty, for example: Gaussian mixture models, latent class analysis, factor models, random coefficient models, and so on.
+
 Marginalising out the latent variables in \cref{eq:varint} is usually a precursor to obtaining a log-likelihood function to be maximised, in a frequentist setting.
 In Bayesian analysis, the $\bz$'s are parameters which are treated as random, and the integral corresponds to the marginal density for $\by$, on which the posterior depends.
 

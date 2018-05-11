@@ -172,12 +172,12 @@ Some useful properties of the matrix normal distribution are listed:
 
 \subsection{Truncated univariate normal distribution}
 
-Let $X \sim \N(\mu,\sigma^2)$ with $X$ lying in the interval $(a,b)$.
+Let $X \sim \N(\mu,\sigma^2)$ with the random variable $X$ restricted to the interval $(a,b) \subset \bbR$.
 Then we say that $X$ follows a truncated normal distribution, and we denote this by $X\sim\tN(\mu,\sigma^2,a,b)$.
 Let $\alpha = (a-\mu)/\sigma$, $\beta = (b-\mu)/\sigma$, and $C = \Phi(\beta) - \Phi(\alpha)$.
 Then,
 \begin{itemize}
-  \item \textbf{Pdf}. $p(X|\mu,\sigma,a,b) = C^{-1} (2\pi\sigma^2)^{-1/2}e^{-\frac{1}{2\sigma^2} (X-\mu)^2} = \sigma C^{-1} \phi(\frac{x-\mu}{\sigma})$.
+  \item \textbf{Pdf}. $p(X|\mu,\sigma,a,b) = C^{-1} (2\pi\sigma^2)^{-1/2}e^{-\frac{1}{2\sigma^2} (X-\mu)^2} = \sigma C^{-1} \phi(\frac{X-\mu}{\sigma})$.
   \item \textbf{Moments}. 
   \vspace{-1.2em}
   \begin{gather*}
@@ -211,6 +211,7 @@ The latter algorithm is inspired by the Ziggurat algorithm \citep{marsaglia2000z
 
 
 \subsection{Truncated multivariate normal distribution}
+\label{sec:truncmultinorm}
 
 Consider the restriction of $X\sim \N_d(\mu,\Sigma)$ to a convex subset\footnote{A convex subset is a subset of a space that is closed under convex combinations. In Euclidean space, for every pair of points in a convex set, all the points that lie on the straight line segment which joins the pair of points are also in the set.}~$\cA \subset \bbR^d$.
 Call this distribution the truncated multivariate normal distribution, and denote it $X \sim \tN_d(\mu,\Sigma,\cA)$.
@@ -233,7 +234,7 @@ Assume that the one-dimensional slices of $\cA$
 are readily available so that the bounds or anti-truncation region of $X_j$ given the rest of the components $X_{-j}$ are known to be $(x_j^-, x_j^+)$.
 Using properties of the normal distribution, the full conditionals of $X_j$ given $X_{-j}$ is
 \begin{gather*}
-  X_j \sim \tN(\tilde\mu_j,\tilde\sigma_j^2, x_j^-, x_j^+) \\
+  X_j|X_{-j} \sim \tN(\tilde\mu_j,\tilde\sigma_j^2, x_j^-, x_j^+) \\
   \tilde\mu_j = \mu_{j} + \Sigma_{j,-j}^\top\Sigma_{-j,-j}(x_{-j} - \mu_{-j}) \\
   \tilde\sigma_j^2 = \Sigma_{11} - \Sigma_{j,-j}^\top \Sigma_{-j,-j} \Sigma_{j,-j}.
 \end{gather*}
@@ -242,25 +243,29 @@ According to \citet{robert1995simulation}, if $\Psi = \Sigma^{-1}$, then
   \Sigma_{-j,-j}^{-1} = \Psi_{-j,-j} - \Psi_{j,-j}\Psi_{-j,-j}^\top / \Psi_{jj}
 \]
 which means that we need only compute one global inverse $\Sigma^{-1}$.
-Therefore, the Gibbs sampler makes draws from truncated normal distributions in the following sequence:
-\begin{enumerate}
-  \item Draw ...
-\end{enumerate}
-%Introduce a latent variable $Y \in \bbR$ such that the joint pdf of $X$ and $Y$ is
-%\[
-%  p(X_1,\dots,X_d,Y) \propto \exp(-Y/2) \ind[y > (x-\mu)^\top\Sigma^{-1}(x-\mu)]\ind[X\in\cA].
-%\]
-%Now, the Gibbs conditional densities for the $X_k$'s are given by
-%\[
-%  p(X_j|X_{-j},Y) \propto \ind[X_j \in \cB_j]
-%\]
-%where
-%\[
-%  \cB_j \in (x_j^-, x_j^+) \cap \{X_j | (X-\mu)^\top\Sigma^{-1}(X-\mu) < Y \}.
-%\]
-%Thus, given values for $X_{-j}$ and $Y$, the bounds for $X_j$ involves solving a quadratic equation in $X_j$.
-%The Gibbs conditional density for $Y|X$ is a shifted exponential distribution, which can be sampled using the inverse-transform method.
-%Thus, both $X$ and $Y$ can be sampled directly from uniform variates.
+Therefore, the Gibbs sampler makes draws from truncated normal distributions in the following sequence, given initial values $X^{(0)}$:
+\begin{itemize}
+  \item Draw $X^{(t)}_1|X^{(t)}_2,\dots,X^{(t)}_d \sim \tN(\tilde\mu_1,\tilde\sigma_1^2, x_1^-, x_1^+)$.
+  \item Draw $X^{(t)}_2|X^{(t+1)}_1,X^{(t)}_3,\dots,X^{(t)}_d \sim \tN(\tilde\mu_2,\tilde\sigma_1^2, x_2^-, x_2^+)$.
+  \item $\cdots$
+  \item Draw $X^{(t)}_d|X^{(t+1)}_1,\dots,X^{(t+1)}_{d-1} \sim \tN(\tilde\mu_d,\tilde\sigma_d^2, x_d^-, x_d^+)$.
+\end{itemize}
+
+In a later work, \citet{damien2001sampling} introduce a latent variable $Y \in \bbR$ such that the joint pdf of $X$ and $Y$ is
+\[
+  p(X_1,\dots,X_d,Y) \propto \exp(-Y/2) \ind[y > (x-\mu)^\top\Sigma^{-1}(x-\mu)]\ind[X\in\cA].
+\]
+Now, the Gibbs conditional densities for the $X_k$'s are given by
+\[
+  p(X_j|X_{-j},Y) \propto \ind[X_j \in \cB_j]
+\]
+where
+\[
+  \cB_j \in (x_j^-, x_j^+) \cap \{X_j | (X-\mu)^\top\Sigma^{-1}(X-\mu) < Y \}.
+\]
+Thus, given values for $X_{-j}$ and $Y$, the bounds for $X_j$ involves solving a quadratic equation in $X_j$.
+The Gibbs conditional density for $Y|X$ is a shifted exponential distribution, which can be sampled using the inverse-transform method.
+Thus, both $X$ and $Y$ can be sampled directly from uniform variates.
 
 For probit models, we are interested in the conical truncations $\cC_j = \{ X_j > X_k | k\neq j, \text{and } k=1,\dots,m  \}$ for which the $j$'th component of $X$ is largest.
 These truncations form cones in $d$-dimensional space such that $\cC_1 \cup \cdots \cup \cC_d = \bbR^d$, and hence the name.

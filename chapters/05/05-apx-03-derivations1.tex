@@ -13,7 +13,7 @@ Recall that the optimal mean-field variational density $\tilde q$ satisfy
   \log \tilde q(\by^*) &= \E_{\bw\sim\tilde q} \big[ \log p(\by,\by^*,\bw) \big] + \const \tag{from \ref{{eq:logqystar}}} \\
   \log \tilde q(\bw) &= \E_{\by^*\sim\tilde q} \big[ \log p(\by,\by^*,\bw) \big] + \const \tag{from \ref{{eq:logqw}}}
 \end{align}
-The joint likelihood $p(\by, \cZ)$ is given by
+The joint likelihood is given by
 \begin{align*}
   p(\by, \by^*,\bw) 
   &= p(\by|\by^*) p(\by^* | \bw) p(\bw).
@@ -29,70 +29,64 @@ For reference, the three relevant distributions are listed below.
     = \max_k y_{ik}^*]^{\ind[y_i = j]}.
   \end{align*}
   
-  \item {\boldmath$p(\by^*|\balpha,\bw,\eta,\bPsi)$}. Given values for the parameters and I-prior random effects, the distribution of the latent propensities is matrix normal
+  \item {\boldmath$p(\by^*|\bw)$}. Given values for the parameters and I-prior random effects, the distribution of the latent propensities is matrix normal
   \[
     \by^*|\balpha,\bw,\eta,\bPsi \sim \MN_{n,m}(\bone_n\balpha^\top + \bH_\eta\bw, \bI_n, \bPsi^{-1}).
   \]
-%  Equivalently, 
-%  \[
-%    \vecc \by^* | \balpha,\bw,\eta,\bPsi \sim \N_{nm}\big(\vecc(\bone_n\balpha^\top + \bH_\eta\bw), \bPsi^{-1} \otimes \bI_n \big).
-%  \]
-%  The $n$ rows of $\by^* = (\by_1^{*\top},\dots,\by_n^{*\top})^\top$ are independent of each other, with each row following a $m$-variate normal distribution $\by_i^* \sim \N_{m}(\balpha + \bff(x_i), \bPsi^{-1})$.
   Write $\bmu = \bone_n\balpha^\top + \bH_\eta\bw$.
   Its pdf is
   \begin{align*}
-    p(\by^*|\balpha,\bw,\eta,\bPsi)
-%    &= \prod_{i=1}^n \phi(\by_i^*|\balpha + \bff(x_i), \bPsi^{-1}) \\
+    p(\by^*|\bw)
     &= \exp \left[-\half[nm]\log 2\pi + \half[n]\log\abs{\bPsi} - \half\tr \big((\by^* - \bmu) \bPsi (\by^* - \bmu)^\top  \big)  \right] \\
     &= \exp \left[-\half[nm]\log 2\pi + \half[n]\log\abs{\bPsi} - \half\sum_{i=1}^n (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})   \right],
   \end{align*}
-  where $\by^*_i \in\bbR^m$ and $\bmu_i \in\bbR^m$ are the rows of $\by^*$ and $\bmu$ respectively.
-  The second line follows directly from the definition of the trace, but  also emanates from the fact that $\by_i^*$ are independent multivariate normal with mean $\bmu_i$ and variance $\bPsi^{-1}$.
+  where $\by^*_{i \bigcdot} \in\bbR^m$ and $\bmu_{i \bigcdot} \in\bbR^m$ are the rows of $\by^*$ and $\bmu$ respectively.
+  The second line follows directly from the definition of the trace, but also emanates from the fact that $\by_{i \bigcdot}^*$ are independent multivariate normal with mean $\bmu_i$ and variance $\bPsi^{-1}$.
   
-  \item {\boldmath$p(\bw|\bPsi)$}. The $\bw$'s are normal random matrices $\bw \sim \MN_{n,m}(\bzero, \bI_n,\bPsi)$ with pdf
+  \item {\boldmath$p(\bw)$}. The $\bw$'s are normal random matrices $\bw \sim \MN_{n,m}(\bzero, \bI_n,\bPsi)$ with pdf
   \begin{align*}
-    p(\bw|\bPsi) 
+    p(\bw) 
     &= \exp \left[-\half[nm]\log 2\pi - \half[n]\log\abs{\bPsi} - \half\tr \big( \bw \bPsi^{-1} \bw^\top \big)  \right] \\
     &= \exp \left[-\half[nm]\log 2\pi - \half[n]\log\abs{\bPsi} - \half\sum_{i=1}^n  \bw_{i \bigcdot}^\top \bPsi^{-1} \bw_{i \bigcdot}   \right].
   \end{align*}
 \end{itemize}
 
 \subsection{Derivation of \texorpdfstring{$\tilde q(\by^*)$}{$\tilde q(y^*)$}}
-% [Derivation of q ystar]
 
 The rows of $\by^*$ are independent, and thus we can consider the variational density for each $\by_i^*$ separately.
-Consider the case where $y_i$ takes one particular value $j \in \{1,\dots,m\}$. The mean-field density $q(\by_{i}^*)$ for each $i=1,\dots,n$ is found to be
+Consider the case where $y_i$ takes one particular value $j \in \{1,\dots,m\}$. 
+In such cases, we have that $y_{ij}^* > y_{ik}$ for all $k\neq j$, and that
 \begin{align*}
-  \log \tilde q(\by_{i}^*) 
-  &=  \ind[y_{ij}^* = \max_k y_{ik}^*] \, \E_{\cZ\backslash\{\by^*\}\sim q} \left[ - \half (\by^*_i - \bmu_i)^\top \bPsi (\by^*_i - \bmu_i)  \right] + \const \\
-  &= \ind[y_{ij}^* = \max_k y_{ik}^*] \, \left[ - \half (\by^*_i - \tilde\bmu_i)^\top \tilde\bPsi (\by^*_i - \tilde\bmu_i)  \right] + \const \tag{$\star$} \\
-%  &\equiv
-%  \begin{cases}
-%    \prod_{k=1}^m \N(\tilde f_{ik}, 1) & \text{ if } y_{ij}^* > y_{ik}^*, \forall k \neq j \\
-%    0 & \text{ otherwise} \\
-%  \end{cases}
-  &\equiv
+  \log \tilde q(\by_{i \bigcdot}^*) 
+  &=  \E_{\bw\sim \tilde q} \left[ - \half (\by^*_i - \bmu_i)^\top \bPsi (\by^*_i - \bmu_i)  \right] + \const \\
+  &= \left[ - \half (\by^*_i - \tilde\bmu_i)^\top \bPsi (\by^*_i - \tilde\bmu_i)  \right] + \const \tag{$\star$} 
+\end{align*}
+where $\tilde\bmu_{i \bigcdot} = \balpha + \tilde\bw\bh_\eta(x_i)$,  $\tilde\bw = \E_{\bw\sim\tilde q}[\bw]$.
+This is recognised as the logarithm of a multivariate normal pdf with mean $\tilde \mu_{i \bigcdot}$ and variance $\bPsi^{-1}$.
+On the other hand, when $y_i \neq j$, the pdf is zero.
+Thus,
+\begin{align*}
+  \tilde q(\by_{i \bigcdot}^*) =
   \begin{cases}
-    \phi(\by_i^*|\tilde\bmu_i,\tilde\bPsi) & \text{ if } y_{ij}^* > y_{ik}^*, \forall k \neq j \\
-    0 & \text{ otherwise} \\
+    \phi(\by_{i \bigcdot}^*|\bmu_{i \bigcdot},\bPsi^{-1}) & \text{ if } y_{ij}^* > y_{ik}^*, \forall k \neq j \\
+    0 & \text{ otherwise,} \\
   \end{cases}
 \end{align*}
-where $\tilde\bmu_i = \E\balpha + (\E\bH_\eta \E\bw)_i$, and expectations are taken under the optimal mean-field distribution $\tilde q$. 
-The distribution $q(\by_i^*)$ is a truncated $m$-variate normal distribution such that the $j$'th component is always largest. 
-Unfortunately, the expectation of this distribution cannot be found in closed-form, and must be approximated by techniques such as Monte Carlo integration.
-If, however, the independent I-probit model is used and $\tilde\bPsi$ is diagonal, then \cref{thm:contruncn} provides a simplification.
+implying a truncated multivariate normal distribution for $\by_{i \bigcdot}^*$.
+The required moments from the truncated multivariate normal distribution can be obtained using the methods described in \cref{sec:truncmultinorm}.
+
 
 \begin{remark}
-  In ($\star$)  above,  we needn't consider the second order terms in the expectations because they do not involve $\by^*$ and can be absorbed into the constant.
+  In the above derivation,  we needn't consider the second order terms in the expectations because they do not involve $\by^*_{i \bigcdot}$, and thus, these terms can be absorbed into the constant.
   To see this,
   \begin{align*}
-    \E[(\by^*_i - \bmu_i)^\top\bPsi(\by^*_i - \bmu_i)]
-    &= \E[\by^{*\top}_i\bPsi \by^*_i + \bmu_i^\top\bPsi\bmu_i - 2\bmu_i^\top\bPsi\by^*_i] \\
-    &= \by^{*\top}_i\bPsi \by^*_i - 2 \E[\bmu_i^\top] \E[\bPsi]\by^*_i + \const \\
-    &= \by^{*\top}_i\bPsi \by^*_i - 2 \tilde\bmu_i^\top\tilde\bPsi\by^*_i + \const \\
-    &= (\by^*_i - \tilde\bmu_i)^\top \tilde\bPsi (\by^*_i - \tilde\bmu_i) + \const
+    \E[(\by^*_{i \bigcdot} - \bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})]
+    &= \E[\by^{*\top}_{i \bigcdot}\bPsi \by^*_{i \bigcdot} + \bmu_{i \bigcdot}^\top \bPsi \bmu_{i \bigcdot} - 2\bmu_{i \bigcdot}^\top\bPsi\by^*_{i \bigcdot}] \\
+    &= \by^{*\top}_{i \bigcdot}\bPsi \by^*_{i \bigcdot} - 2 \E[\bmu_{i \bigcdot}^\top] \bPsi \by^*_{i \bigcdot} + \const \\
+    &= \by^{*\top}_{i \bigcdot} \bPsi \by^*_{i \bigcdot} - 2 \tilde\bmu_{i \bigcdot} ^\top\bPsi\by^*_{i \bigcdot} + \const \\
+    &= (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot}) + \const
   \end{align*}
-  We will see this occurring a lot later on and we shall take note of this fact.
+  The square is then completed to get the final line, which is the expression for the term ($\star$) multiplied by a half.
 \end{remark}
 
 
@@ -112,88 +106,80 @@ For simplicity, write $\bar\by^* = \vecc(\by^* - \bone_n\balpha^\top)$, and $\bM
 Thus,
 \begin{align*}
   \log \tilde q(\bw) 
-  &= \E_{\cZ\backslash\{\bw \}\sim q} \left[ 
+  &= \E_{\by^*\sim \tilde q} \left[ 
   -\half (\bar\by^* - \bM\vecc\bw )^\top(\bPsi^{-1} \otimes \bI_n)^{-1} (\bar\by^* - \bM\vecc\bw )
   \right] \\
-  &\phantom{==} + \E_{\cZ\backslash\{\bw \}\sim q} \left[ 
+  &\phantom{==} + \E_{\by^*\sim \tilde q} \left[ 
   -\half (\vecc \bw )^\top(\bPsi \otimes \bI_n)^{-1} \vecc (\bw ) \right] + \const \\
-  &= -\half\E_{\cZ\backslash\{\bw \}\sim q} \left[ 
+  &= -\half\E_{\by^*\sim \tilde q} \left[ 
   (\vecc\bw)^\top \Big( \,
   \greyoverbrace{\bM^\top(\bPsi \otimes \bI_n)\bM + (\bPsi^{-1} \otimes \bI_n)}{\bA} 
   \, \Big) \vecc (\bw )
   \right] \\
-  &\phantom{==} + \E_{\cZ\backslash\{\bw \}\sim q} \Big[ 
+  &\phantom{==} + \E_{\by^*\sim \tilde q} \Big[ 
   \greyoverbrace{\bar\by^{*\top} (\bPsi \otimes \bI_n) \bM}{\ba^\top} \vecc (\bw )
   \Big] + \const \\
-  &= -\half\E_{\cZ\backslash\{\bw \}\sim q} \left[
+  &= -\half\E_{\by^*\sim \tilde q} \left[
   (\vecc\bw - \bA^{-1}\ba)^\top \bA (\vecc\bw - \bA^{-1}\ba)
   \right] + \const
 \end{align*}
 This is recognised as a multivariate normal of dimension $nm$ with mean and precision given by $\vecc \tilde\bw = \E[\bA^{-1}\ba]$ and $\tilde\bV_w ^{-1}= \E[\bA]$ respectively.
 With a little algebra, we find that
 \begin{align*}
-  \bV_w^{-1} 
-  &= \E_{\cZ\backslash\{\bw \}\sim q} [\bA] \\
-  &= \E_{\cZ\backslash\{\bw \}\sim q} \left[(\bI_m \otimes \bH_\eta)^\top(\bPsi \otimes \bI_n)(\bI_m \otimes \bH_\eta) + (\bPsi^{-1} \otimes \bI_n) \right] \\
-  &= \E_{\cZ\backslash\{\bw \}\sim q} \left[(\bPsi \otimes \bH_\eta^2) + (\bPsi^{-1} \otimes \bI_n) \right] \\
-  &= (\tilde\bPsi \otimes \tilde\bH_\eta^2) + (\tilde\bPsi^{-1} \otimes \bI_n) 
+  \tilde\bV_w 
+  &= \big\{ \E_{\by^*\sim \tilde q} [\bA] \big\}^{-1} \\
+  &= \left\{ \E_{\by^*\sim \tilde q} \left[(\bI_m \otimes \bH_\eta)^\top(\bPsi \otimes \bI_n)(\bI_m \otimes \bH_\eta) + (\bPsi^{-1} \otimes \bI_n) \right] \right\}^{-1} \\
+  &= \big( \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n \big)^{-1}
 \end{align*}
-and making a first-order approximation $(\E \bA )^{-1} \approx \E [\bA^{-1}]$\footnotemark,
+and 
 \begin{align*}
   \vecc \wtilde 
-  &= \E_{\cZ\backslash\{\bw \}\sim q} [\bA^{-1}\ba] \\
-  &= \tilde\bV_w \E_{\cZ\backslash\{\bw \}\sim q} \big[(\bI_m \otimes \bH_\eta) (\bPsi \otimes \bI_n) \vecc(\by^* - \bone_n\balpha^\top)  \big] \\
-  &= \tilde\bV_w \E_{\cZ\backslash\{\bw \}\sim q} \big[(\bPsi \otimes \bH_\eta) \vecc(\by^* - \bone_n\balpha^\top)  \big] \\
-  &= \tilde\bV_w (\tilde\bPsi \otimes \tilde\bH_\eta) \vecc(\tilde\by^* - \bone_n\tilde\balpha^\top).
+  &= \E_{\by^*\sim \tilde q} [\bA^{-1}\ba] \\
+  &= \tilde\bV_w \E_{\by^*\sim \tilde q} \big[(\bI_m \otimes \bH_\eta) (\bPsi \otimes \bI_n) \vecc(\by^* - \bone_n\balpha^\top)  \big] \\
+  &= \tilde\bV_w (\bPsi \otimes \bH_\eta) \E_{\by^*\sim \tilde q} \big[\vecc(\by^* - \bone_n\balpha^\top)  \big] \\
+  &= \tilde\bV_w (\bPsi \otimes \bH_\eta) \vecc(\tilde\by^* - \bone_n\balpha^\top).
 \end{align*}
+We will often refer to $\tilde\bw$ as the $n\times m$ matrix constructed by filling in its entries with $\vecc \tilde\bw$ column-wise (akin to the opposite of vectorisation).
+This way, the $\tilde\bw$ contains posterior mean values arranged by class $j=1,\dots,m$ column-wise, and by observations $i=1,\dots,n$ row-wise.
 Ideally, we do not want to work with the $nm \times nm$ matrix $\bV_w$, since its inverse is expensive to compute.
 Refer to \cref{sec:complxiprobit} for details.
-
-\footnotetext{
-  \citet{groves1969note} show that $\E [\bA^{-1}] = (\E \bA )^{-1} + \bB$, where $\bB$ is a positive-definite matrix. This approximation has been used also by \citet{girolami2006variational} in their work.
-}
 
 In the case of the I-probit model, where $\bPsi = \diag(\psi_1,\dots,\psi_m)$, then the covariance matrix takes a simpler form.
 Specifically, it has the block diagonal structure:
 \begin{align*}
   \tilde\bV_w
-  &= \E \big[\diag(\psi_1,\dots,\psi_m) \otimes \bH_\eta^2 + \diag(\psi_1,\dots,\psi_m) \otimes \bI_n \big]^{-1} \\
+  &=  \big( \diag(\psi_1,\dots,\psi_m) \otimes \bH_\eta^2 + \diag(\psi_1,\dots,\psi_m) \otimes \bI_n \big)^{-1} \\
   &= \diag\Big(
-  \E\big( \psi_1\bH_\eta^2 + \psi_1^{-1}\bI_n\big)^{-1},
+  \big( \psi_1\bH_\eta^2 + \psi_1^{-1}\bI_n\big)^{-1},
   \cdots,
-  \E\big(\psi_m\bH_\eta^2 + \psi_m^{-1}\bI_n\big)^{-1}
-  \Big) \\
-  &\approx \diag\Big(
-  \big( \tilde\psi_1\tilde\bH_\eta^2 + \tilde\psi_1^{-1}\bI_n\big)^{-1},
-  \cdots,
-  \big(\tilde\psi_m\tilde\bH_\eta^2 + \tilde\psi_m^{-1}\bI_n\big)^{-1}
+  \big(\psi_m\bH_\eta^2 + \psi_m^{-1}\bI_n\big)^{-1}
   \Big) \\
   &=: \diag(\tilde\bV_{w_1},\dots,\tilde\bV_{w_m}).
   \end{align*}
 The mean $\vecc \tilde\bw$ is
 \begin{align*}
   \vecc \tilde\bw 
-  &= \tilde\bV_w (\diag(\tilde\psi_1,\dots,\tilde\psi_m) \otimes \tilde\bH_\eta) \vecc(\tilde\by^* - \bone_n\tilde\balpha^\top) \\
+  &= \tilde\bV_w (\diag(\psi_1,\dots,\psi_m) \otimes \tilde\bH_\eta) \vecc(\tilde\by^* - \bone_n\balpha^\top) \\
   &= \diag(\tilde\bV_{w_1},\dots,\tilde\bV_{w_m})
-  \diag(\tilde\psi_1\tilde\bH_\eta,\dots,\tilde\psi_m\tilde\bH_\eta)  
-  \vecc(\tilde\by^* - \bone_n\tilde\balpha^\top) \\
-  &= \diag(\tilde\psi_1\tilde\bV_{w_1}\tilde\bH_\eta,\dots,\tilde\psi_m\tilde\bV_{w_m}\tilde\bH_\eta)  
-  (\tilde\by^* - \bone_n\tilde\balpha^\top) \\
+  \diag(\psi_1\bH_\eta,\dots,\psi_m\bH_\eta)  
+  \vecc(\tilde\by^* - \bone_n\balpha^\top) \\
+  &= \diag(\psi_1\tilde\bV_{w_1}\bH_\eta,\dots,\psi_m\tilde\bV_{w_m}\bH_\eta)  
+  (\tilde\by^* - \bone_n\balpha^\top) \\
   &= 
   \bordermatrix{
-  &\color{gray}\tilde\bw_{\bigcdot 1} 
+  &\color{gray}\tilde\bw_{\bigcdot 1}^\top 
   &\color{gray}\cdots 
-  &\color{gray}\tilde\bw_{\bigcdot m} \cr
-  &\tilde\psi_1\tilde\bV_{w_{1}}\tilde\bH_\eta(\tilde\by^*_{\bigcdot 1} - \tilde\alpha_1\bone_n)      
+  &\color{gray}\tilde\bw_{\bigcdot m}^\top \cr
+  &\big(\psi_1\tilde\bV_{w_{1}}\bH_\eta(\tilde\by^*_{\bigcdot 1} - \alpha_1\bone_n)\big)^\top
   &\cdots 
-  &\tilde\psi_m\tilde\bV_{w_{m}}\tilde\bH_\eta(\tilde\by^*_{\bigcdot m} - \tilde\alpha_m\bone_n) 
+  &\big(\psi_m\tilde\bV_{w_{m}}\bH_\eta(\tilde\by^*_{\bigcdot m} - \alpha_m\bone_n)\big)^\top
   }{}^\top.
 \end{align*}
 Therefore, we can consider the distribution of $\bw = (\bw_{\bigcdot 1},\dots,\bw_{\bigcdot m})$ columnwise, and each are normally distributed with mean and variance
 \[
-  \tilde\bw_{\bigcdot j} = \tilde\sigma_j^{-2}\tilde\bV_{w_{j}}\tilde\bH_\eta(\tilde\by^*_{\bigcdot j} - \tilde\alpha_j\bone_n) 
+  \tilde\bw_{\bigcdot j} = \psi_j\tilde\bV_{w_{j}}\bH_\eta(\tilde\by^*_{\bigcdot j} - \alpha_j\bone_n)
   \hspace{0.5cm}\text{and}\hspace{0.5cm}
-  \tilde\bV_{w_{j}} = \big(\tilde\sigma_j^{-2}\tilde\bH_\eta^2 + \tilde\sigma_j^2\bI_n\big)^{-1}.
+  \tilde\bV_{w_{j}} = \big( \psi_j\bH_\eta^2 + \psi_j^{-1}\bI_n\big)^{-1}.
 \]
 
 A quantity that we will be requiring time and again will be $\tr(\bC\E[\bw^\top\bD\bw ])$, where $\bC \in \bbR^{m \times m}$ and $\bD \in \bbR^{n \times n}$ are both square and symmetric matrices.
@@ -231,5 +217,5 @@ If $\bC = \diag(c_1,\dots,c_m)$, then
   \tilde\bw_{\bigcdot j}^\top \bD \tilde\bw_{\bigcdot j}
   \right) \\
   &= \sum_{j=1}^m c_j
-  \tr \big( \bD (\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j} \tilde\bw_{\bigcdot j}^\top) \big)
+  \tr \big( \bD (\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j} \tilde\bw_{\bigcdot j}^\top) \big).
 \end{align*}
