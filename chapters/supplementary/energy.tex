@@ -100,7 +100,7 @@
 \newcommand{\energyvbEstep}[1][2.15]{
 \begin{tikzpicture}
   % Draw all levels
-  \draw[draw=none] (0,8/#1) -- node[above] {VB (E-step)} (5,8/#1);  % new top
+  \draw[draw=none] (0,8/#1) -- node[above] {VEM (E-step)} (5,8/#1);  % new top
   \draw[level,colred] (0,6.5/#1) -- node[above] {} node[below] {} (5,6.5/#1);  % top
   \draw[level,colblu,dashed] (0,3.25/#1) -- node[above] {} node[below] {} (2.5,3.25/#1);  % mid
   \draw[level] (0,0) -- node[above] {} (5,0);  % bottom
@@ -124,7 +124,7 @@
   \fill[colred!10] (0,6.5/#1) rectangle (5,8/#1);  
   
   % Draw all levels
-  \draw[level,colred] (0,8/#1) -- node[above] {\color{black!99} VB (M-step)---scenario A} (5,8/#1);  % new top
+  \draw[level,colred] (0,8/#1) -- node[above] {\color{black!99} VEM (M-step)---scenario A} (5,8/#1);  % new top
   \draw[level,colred,dashed] (2.5,6.5/#1) -- node[above] {} node[below] {} (5,6.5/#1);  % top
   \draw[level,colblu] (0,6.5/#1) -- node[above] {} node[below] {} (2.5,6.5/#1);  % top
   \draw[level] (0,0) -- node[above] {} (5,0);  % bottom
@@ -147,7 +147,7 @@
   \fill[colred!10] (0,6.5/#1) rectangle (5,7.25/#1);  
   
   % Draw all levels
-  \draw[draw=none] (0,8/#1) -- node[above] {\color{black} VB (M-step)---scenario B} (5,8/#1);  % new top
+  \draw[draw=none] (0,8/#1) -- node[above] {\color{black} VEM (M-step)---scenario B} (5,8/#1);  % new top
   \draw[level,colred] (0,7.25/#1) -- node[above] {} (5,7.25/#1);  % new top
   \draw[level,colred,dashed] (0,6.5/#1) -- node[above] {} node[below] {} (5,6.5/#1);  % top
   \draw[level,colblu] (0,6/#1) -- node[above] {} node[below] {} (2.5,6/#1);  % top
@@ -168,7 +168,7 @@
 \newcommand{\energyvbMstepc}[1][2.15]{
 \begin{tikzpicture}
   % Draw all levels
-  \draw[draw=none] (0,8/#1) -- node[above] {\color{black} VB (M-step)---scenario C} (5,8/#1);  % new top
+  \draw[draw=none] (0,8/#1) -- node[above] {\color{black} VEM (M-step)---scenario C} (5,8/#1);  % new top
   \draw[level,colred] (0,6.5/#1) -- node[above] {} node[below] {} (5,6.5/#1);  % top
   \draw[level,colblu] (0,5.8/#1) -- node[above] {} node[below] {} (2.5,5.8/#1);  % top
   \draw[level] (0,0) -- node[above] {} (5,0);  % bottom
