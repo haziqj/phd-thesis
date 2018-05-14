@@ -27,7 +27,7 @@
   
   % Draw arrows
   \draw[<->,very thick] (0.75, 3.25/#1) -- node[left] {$\KL(q\Vert p)$} (0.75, 6.5/#1);
-  \draw[<->,very thick] (1.75,0) -- node[left] {$\cL_\theta(q)$} (1.75,3.25/#1);
+  \draw[<->,very thick] (1.75,0) -- node[left] {$\cL(q,\theta)$} (1.75,3.25/#1);
   \draw[<->,very thick] (3.5,0) -- node[right] {$\log p(\by|\theta)$} (3.5,6.5/#1);
 \end{tikzpicture}
 }
@@ -45,9 +45,9 @@
   \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^{\text{old}})$} (3.5,6.5/#1);
   
   % E-step
-  \draw[level,colblu] (0,6.5/#1) -- node[above] {\color{black!99}\footnotesize $ \KL(\tilde q\Vert p) = 0$} (2.5,6.5/#1);  % top      
+  \draw[level,colblu] (0,6.5/#1) -- node[above] {\color{black!99}\footnotesize $ \KL(q^{\text{new}} \Vert p) = 0$} (2.5,6.5/#1);  % top      
   \draw[->,very thick,colblu] (2,3.25/#1) -- node[left] {} (2,6.5/#1);  
-  \draw[<->,very thick] (1.25,0) -- node[left,yshift=-33/#1] {\footnotesize $\cL_{\theta^{\text{old}}}(\tilde q)$} (1.25,6.5/#1);      
+  \draw[<->,very thick] (1.25,0) -- node[left,yshift=-33/#1] {\footnotesize $\cL(q^{\text{new}},\theta^{\text{old}})$} (1.25,6.5/#1);      
   
   \draw[white] (0,0) -- (0,-0.5);
 \end{tikzpicture}
@@ -63,9 +63,9 @@
   \draw[level,colblu] (0,7.1/#1) -- node[above] {} node[below] {} (2.5,7.1/#1);  % mid
   
   % Draw arrows
-  \draw[<->,very thick] (0.75,7.1/#1) -- node[left] {\footnotesize $\KL(\tilde q\Vert p)$} (0.75,8/#1);
-  \draw[<->,very thick] (1.25,0) -- node[left] {\footnotesize $\cL_{\theta^*}(\tilde q)$} (1.25,7.1/#1);         
-  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^*)$} (3.5,8/#1);
+  \draw[<->,very thick] (0.75,7.1/#1) -- node[left] {\footnotesize $\KL(q^{\text{new}} \Vert p)$} (0.75,8/#1);
+  \draw[<->,very thick] (1.25,0) -- node[left] {\footnotesize $\cL(q^{\text{new}},\theta^{\text{new}})$} (1.25,7.1/#1);         
+  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^{\text{new}})$} (3.5,8/#1);
   \draw[->,very thick,colblu] (2,6.5/#1) -- node[left] {} (2,7.1/#1);  
   \draw[->,very thick,colred] (4.5,6.5/#1) -- node[left] {} (4.5,8/#1);  
   
@@ -87,9 +87,9 @@
   \draw[level,colblu] (0,7.1/#1) -- node[above] {} node[below] {} (2.5,7.1/#1);  % mid
   
   % Draw arrows
-  \draw[<->,very thick] (0.75,7.1/#1) -- node[left] {\footnotesize $\KL(\tilde q\Vert p)$} (0.75,8/#1);
-  \draw[<->,very thick] (1.25,0) -- node[left] {\footnotesize $\cL_{\theta^*}(\tilde q)$} (1.25,7.1/#1);         
-  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^*)$} (3.5,8/#1);
+  \draw[<->,very thick] (0.75,7.1/#1) -- node[left] {\footnotesize $\KL(q^{\text{new}}\Vert p)$} (0.75,8/#1);
+  \draw[<->,very thick] (1.25,0) -- node[left] {\footnotesize $\cL(q^{\text{new}},\theta^{\text{new}})$} (1.25,7.1/#1);         
+  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^{\text{new}})$} (3.5,8/#1);
   \draw[->,very thick,colblu] (2,6.5/#1) -- node[left] {} (2,7.1/#1);  
   \draw[->,very thick,colred] (4.5,6.5/#1) -- node[left] {} (4.5,8/#1);   
 
@@ -106,13 +106,13 @@
   \draw[level] (0,0) -- node[above] {} (5,0);  % bottom
   
   % Draw arrows
-  \draw[<->,very thick] (0.75,5.25/#1) -- node[left] {\footnotesize $\KL(\tilde q \Vert p)$} (0.75,6.5/#1);
+  \draw[<->,very thick] (0.75,5.25/#1) -- node[left] {\footnotesize $\KL(q^{\text{new}} \Vert p)$} (0.75,6.5/#1);
   \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^{\text{old}})$} (3.5,6.5/#1);
   
   % E-step
   \draw[level,colblu] (0,5.25/#1) -- node[above] {} (2.5,5.25/#1);  % new KL level     
   \draw[->,very thick,colblu] (2,3.25/#1) -- node[left] {} (2,5.25/#1);  % increase in L  
-  \draw[<->,very thick] (1.25,0) -- node[left,yshift=-33/#1] {\footnotesize $\cL_{\theta^{\text{old}}}(\tilde q)$} (1.25,5.25/#1);    
+  \draw[<->,very thick] (1.25,0) -- node[left,yshift=-33/#1] {\footnotesize $\cL(q^{\text{new}},\theta^{\text{old}})$} (1.25,5.25/#1);    
 
   \draw[white] (0,0) -- (0,-0.5);
 \end{tikzpicture}
@@ -131,9 +131,9 @@
   \draw[level,colblu,dashed] (0,5.25/#1) -- node[above] {} (2.5,5.25/#1);  % new KL level     
 
   % Draw arrows
-  \draw[<->,very thick] (0.75,6.5/#1) -- node[left] {\footnotesize $\KL(\tilde q\Vert p)$} (0.75,8/#1);   
-  \draw[<->,very thick] (1.25,0) -- node[left] {\footnotesize $\cL_{\theta^*}(\tilde q)$} (1.25,6.5/#1);                  
-  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^*)$} (3.5,8/#1);
+  \draw[<->,very thick] (0.75,6.5/#1) -- node[left] {\footnotesize $\KL(q^{\text{new}}\Vert p)$} (0.75,8/#1);   
+  \draw[<->,very thick] (1.25,0) -- node[left] {\footnotesize $\cL(q^{\text{new}},\theta^{\text{new}})$} (1.25,6.5/#1);                  
+  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^{\text{new}})$} (3.5,8/#1);
   \draw[->,very thick,colblu] (2,5.25/#1) -- node[left] {} (2,6.5/#1);        
   \draw[->,very thick,colred] (4.5,6.5/#1) -- node[left] {} (4.5,8/#1);  
 
@@ -155,9 +155,9 @@
   \draw[level,colblu,dashed] (0,5.25/#1) -- node[above] {} (2.5,5.25/#1);  % new KL level     
 
   % Draw arrows
-  \draw[<->,very thick] (0.75,6/#1) -- node[left,yshift=6.5/#1] {\footnotesize $\KL(\tilde q\Vert p)$} (0.75,7.25/#1);   
-  \draw[<->,very thick] (1.25,0) -- node[left] {\footnotesize $\cL_{\theta^*}(\tilde q)$} (1.25,6/#1);                  
-  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^*)$} (3.5,7.25/#1);
+  \draw[<->,very thick] (0.75,6/#1) -- node[left,yshift=6.5/#1] {\footnotesize $\KL(q^{\text{new}}\Vert p)$} (0.75,7.25/#1);   
+  \draw[<->,very thick] (1.25,0) -- node[left] {\footnotesize $\cL(q^{\text{new}},\theta^{\text{new}})$} (1.25,6/#1);                  
+  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(\by|\theta^{\text{new}})$} (3.5,7.25/#1);
   \draw[->,very thick,colblu] (2,5.25/#1) -- node[left] {} (2,6/#1);        
   \draw[->,very thick,colred] (4.5,6.5/#1) -- node[left] {} (4.5,7.25/#1); 
   
@@ -175,9 +175,9 @@
   \draw[level,colblu,dashed] (0,5.25/#1) -- node[above] {} (2.5,5.25/#1);  % new KL level     
 
   % Draw arrows
-  \draw[<->,very thick] (0.75,5.8/#1) -- node[left] {\footnotesize $\KL(\tilde q\Vert p)$} (0.75,6.5/#1);   
-  \draw[<->,very thick] (1.25,0) -- node[left] {\footnotesize $\cL(\tilde q;\theta^*)$} (1.25,5.8/#1);                  
-  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(y;\theta^*)$} (3.5,6.5/#1);
+  \draw[<->,very thick] (0.75,5.8/#1) -- node[left] {\footnotesize $\KL(q^{\text{new}}\Vert p)$} (0.75,6.5/#1);   
+  \draw[<->,very thick] (1.25,0) -- node[left] {\footnotesize $\cL(q^{\text{new}},\theta^{\text{new}})$} (1.25,5.8/#1);                  
+  \draw[<->,very thick] (3.5,0) -- node[right] {\footnotesize $\log p(y|\theta^{\text{new}})$} (3.5,6.5/#1);
   \draw[->,very thick,colblu] (2,5.25/#1) -- node[left] {} (2,5.8/#1);    
   
   \draw[white] (0,0) -- (0,-0.5);  
