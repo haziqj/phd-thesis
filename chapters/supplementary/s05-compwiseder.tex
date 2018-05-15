@@ -1,0 +1,43 @@
+
+
+Let $\cX$ be a topological vector space, and $g:\cX\to\bbR$ a real-valued function over $\cX$.
+Also suppose that $\{e_1,e_2,\dots\}$ is an (algebraic) orthonormal basis for $\cX$, such that any $x\in\cX$ can be represented as $x = x_1e_1 + x_2e_2 + \cdots = (x_1,x_2,\dots)$.
+We define the partial derivative of $g$ with respect to the $k$'th component of $x$ as
+\[
+  \frac{\partial g(x)}{\partial x_k}  = \lim_{t\to 0} \frac{g(x_1,\dots,x_k+t,\dots) - g(x_1,x_2,\dots)}{t}.
+\]
+Incidentally, this definition also coincides with the Gâteaux derivative of $g$ at $x$ in the direction $e_k$, i.e., $\frac{\partial g(x)}{\partial x_k} = \partial_{e_k}g(x)$.
+Denote by 
+\[
+  \nabla g(x) = \left(
+  \frac{\partial g(x)}{\partial x_1}, 
+  \frac{\partial g(x)}{\partial x_2},
+  \dots
+  \right)
+\]
+the total differential, or as it is more commonly known, the gradient of $g$ at $x$.
+This is, in essence, a component-wise derivative of $g$ using the usual definition of derivatives.
+The issue here is that the existence of the limits for each component of the differential does not guarantee existence of the gradient.
+This is because component-wise convergence does not guarantee convergence with respect to the actual topology of the  space.
+
+\begin{example}[Existence of partial derivatives does not imply differentiability]
+Define $g:\bbR^2\to\bbR$ by
+\[
+  g(x) = 
+  \begin{cases}
+    \displaystyle\frac{x_1x_2}{x_1^2 + x_2^2} &\text{if } (x_1,x_2) \neq (0,0) \\
+    0 &\text{if } x_1=x_2=0.
+  \end{cases}
+\]
+We note that $\lim_{x\to 0} g(x) = \half \neq 0 = g(0,0)$ along the line $x_1 = x_2$.
+Therefore, this function is discontinuous, and hence non-differentiable, at zero.
+On the other hand, the partial derivatives of $g$ are 
+\[
+  \frac{\partial g(x)}{\partial x_1} = \frac{x_2(x_2^2-x_1^2)}{(x_1^2+x_2^2)^2}
+  \hspace{0.5cm}\text{and}\hspace{0.5cm}
+  \frac{\partial g(x)}{\partial x_2} = \frac{x_1(x_1^2-x_2^2)}{(x_1^2+x_2^2)^2},
+\]
+and thus along the $x_1$-axis, $\frac{\partial g(x_1,0)}{\partial x_1} = 0$, and similarly along the $x_2$-axis, $\frac{\partial g(0,x_2)}{\partial x_2} = 0$.
+Existence of partial derivatives is not sufficient in this case for the existence of the gradient.
+
+\end{example}

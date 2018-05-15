@@ -1,21 +1,20 @@
-\section{Proofs related to conically truncated multivariate normal distribution}
-\label{apx:contrunproof}
+We present the proof for \cref{thm:contruncn} related to the conically truncated independent multivariate normal distribution, which we had not encountered in the literature.
 
-\subsection{Proof of \cref{thm:contruncn}: Pdf}
+\section{Proof of \cref{thm:contruncn}: Pdf}
 
 Using the fact that $\int p(x) \dint x = 1$, and that
   \begin{align*}
     \idotsint & \ind[x_i < x_j, \forall i \neq j] \prod_{i=1}^d \phi(x_i|\mu_i, \sigma_i^2) \dint x_1 \cdots \dint x_d \\
     =&  \idotsint \ind[x_i < x_j, \forall i \neq j] \prod_{i=1}^d \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma_i} \right) \right] \dint x_1 \cdots \dint x_d \\
     =&  \idotsint \ind[x_i < x_j, \forall i \neq j] \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right)\mathop{\prod_{i=1}^d}_{i \neq j} \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma_i} \right) \right] \dint x_1 \cdots \dint x_d \\    
-    =& \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{x_j - \mu_i}{\sigma_i} \right) \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right) \dint x_j \\
+    =& \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{x_j - \mu_i}{\sigma_i} \right) \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right) \dint x_j \displaybreak \\
     =& \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j z + \mu_j - \mu_i}{\sigma_i} \right) \phi(z) \dint z \\
     \phantom{=}&\phantom{==} {\color{gray} (\text{by using the standardisation } z = (x_j - \mu_j) / \sigma_j)} \\    
     =& \E_Z \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j}{\sigma_i}Z + \frac{\mu_j - \mu_i}{\sigma_i} \right) \bigg] 
   \end{align*}
   the proof follows directly.
 
-\subsection{Proof of \cref{thm:contruncn}: Moments}
+\section{Proof of \cref{thm:contruncn}: Moments}
 
 Recall that for $Y \sim \tN(\mu,\sigma^2,-\infty,b)$, for some function $g$ of $Y$, we have that
 \[
@@ -157,8 +156,9 @@ Lastly, we use the following result in the derivation above.
   Then, the derivative of
   \[
     g_{m+1}(z) = \mathop{\prod_{k=1}^{m+1}}_{k \neq j} \Phi_k = g_m(z) \Phi_{m+1}
+    \vspace{-0.5em}
   \]
-  is found to be
+  \vspace{-0.5em}is found to be
   \begin{align*}
     \dot g_{m+1}(z) &= \sigma_{m+1} \phi_{m+1} g_m(z) + \dot g_m(z) \Phi_{m+1} \\
     &= \sigma_{m+1} \phi_{m+1} \mathop{\prod_{k=1}^m}_{k \neq j} \Phi_k + \mathop{\sum_{i=1}^m}_{i \neq j} \bigg[  \sigma_i \phi_i \mathop{\prod_{k=1}^m}_{k \neq i,j} \Phi_k \bigg] \Phi_{m+1} \\
@@ -169,14 +169,13 @@ Lastly, we use the following result in the derivation above.
   Using linearity of expectations, the proof is complete.
 \end{proof}
 
-
-\subsection{Proof of \cref{thm:contruncn}: Entropy}
+\section{Proof of \cref{thm:contruncn}: Entropy}
 
 As a direct consequence of the definition of entropy,
 \begin{align*}
     H(p) 
-    &= -\E \log p(X) \\
+    &= -\E [\log p(X)] \\
     &= -\E \left[-\log C - \half[d] \log 2\pi - \half \sum_{i=1}^d \log \sigma_i^2 - \half \sum_{i=1}^d \left( \frac{x_i - \mu_i}{\sigma_i} \right)^2 \right] \\
     &= \log C + \half[d] \log 2\pi + \half \sum_{i=1}^d \log \sigma_i^2 + \half \sum_{i=1}^d \frac{1}{\sigma_i^2} \E [ x_i - \mu_i ]^2.
-  \end{align*}
+\end{align*}
 

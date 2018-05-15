@@ -1,0 +1,45 @@
+The Kronecker product crops up in the definition of matrix normal distributions, which is used in \cref{chapter5} for the I-probit model.
+
+\begin{definition}[Kronecker product]\label{def:kroneckerprod}
+  The Kronecker matrix product, denoted by $\otimes$, for two matrices $A \in \bbR^{n\times m}$ and $B \in \bbR^{p\times q}$ is defined by
+  \[
+    A \otimes B = 
+    \begin{pmatrix}
+      A_{11}B &A_{12}B &\cdots &A_{1m}B \\
+      A_{21}B &A_{22}B &\cdots &A_{2m}B \\    
+      \vdots & \vdots &\ddots  &\vdots \\
+      A_{n1}B &A_{n2}B &\cdots &A_{nm}B \\
+    \end{pmatrix} \in \bbR^{np\times mq}.
+  \]
+\end{definition}
+
+The Kronecker product is a generalisation of the outer product for vectors to matrices.
+Of use will be these properties of the Kronecker product \citep{zhang2013kronecker}:
+\begin{itemize}
+  \item \textbf{Bilinearity and associativity}. For appropriately sized matrices $A$, $B$ and $C$, and a scalar $\lambda$,
+  \begin{align*}
+    A \otimes (B + C) &= A \otimes B + A \otimes C \\
+    (A + B) \otimes C &= A \otimes C + B \otimes C \\
+    \lambda A \otimes B &= A \otimes \lambda B = \lambda(A \otimes B) \\
+    (A \otimes B) \otimes C &= A \otimes (B \otimes C)
+  \end{align*}
+  \item \textbf{Non-commutative}. In general, $A \otimes B \neq B \otimes A$, but they are \emph{permutation equivalent}, i.e. $A \otimes B \neq P(B \otimes A)Q$ for some permutation matrices $P$ and $Q$.
+  \item \textbf{The mixed product property}. $(A \otimes B)(C \otimes D) = AC \otimes BD$.
+  \item \textbf{Inverse}. $A \otimes B$ is invertible if and only if $A$ and $B$ are both invertible, and $(A \otimes B)^{-1} = A^{-1} \otimes B^{-1}$.
+  \item \textbf{Transpose}. $(A \otimes B)^\top = A^\top \otimes B^\top$.
+  \item \textbf{Determinant}. If $A$ is $n\times n$ and $B$ is $m \times m$, then $\abs{A \otimes B} = \abs{A}^m \abs{B}^n$. Note that the exponent of $\abs{A}$ is the order of $B$ and vice versa.
+  \item \textbf{Trace}. Suppose $A$ and $B$ are square matrices. Then $\tr (A \otimes B) = \tr A \tr B$.
+  \item \textbf{Rank}. $\rank (A \otimes B) = \rank A \rank B$.
+  \item \textbf{Matrix equations}. $AXB = C \Leftrightarrow (B^\top \otimes A) \vecc X = \vecc (AXB) = \vecc C$.
+\end{itemize}
+
+The equivalence between matrix normal and multivariate normal distributions are established making use of vectorisation for matrices.
+This is defined below.
+
+\begin{definition}\label{def:vectorisation}
+The vectorisation operation `$\vecc$' stacks the columns of the matrices into one long vector, for instance, for the matrix $A\in\bbR^{n \times m}$
+\[
+  \vecc A = (A_{11},\dots,A_{n1},A_{12},\dots,A_{n2},\dots,A_{1m},\dots,A_{nm})^\top \in \bbR^{nm}.
+\] 
+\end{definition}
+

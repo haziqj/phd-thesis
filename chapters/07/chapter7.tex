@@ -22,6 +22,11 @@ Wrap-up---what did I do? Summarise contributions. Raise questions.
 
 \section{Summary}
 
+The I-prior for the regression model \cref{eq:model1} subject to \cref{eq:model1ass} is seemingly data dependent, which violates Bayesian first principles.
+That is, an I-prior for $f$ as per \cref{eq:iprior2} makes use of the same data $\bx:=\{x_1,\dots,x_n\}$ in the covariance matrix for $f$ that appears in the model.
+However, the whole model is implicitly conditional on $\bx$.
+If the prior depended instead on the responses $\by$, then the state of knowledge a priori and a posteriori is exactly the same, and this violates Bayesian principles.
+
 \section{Questions}
 
 \section{Conclusion}
