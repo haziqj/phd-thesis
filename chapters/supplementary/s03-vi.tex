@@ -274,6 +274,20 @@ Derivation of the CAVI algorithm and ELBO for specific models is certainly more 
 Often, quantities that are required in the derivation include $\E[\theta]$, $\E[\theta^2]$, $\E[\theta^{-1}]$, $\E[\log \theta]$ or any other moment of some function of $\theta$, where expectations are taken under the approximating $q$ posterior density.
 For certain distributions $q(\theta)$ these quantities can be awkward to compute, and may need approximating themselves.
 
+The computational time and storage requirements of variational methods is virtually the same as EM algorithm \citep{beal2003variational,blei2017variational}.
+Consider the mean-field variational approximation.
+In variational inference or variational EM, the updating step for the factors involve
+\begin{equation}\label{eq:viEstep1}
+  \tilde q_k^{(t+1)}(z_{[k]}) \gets \const \times \exp \left( \E_{\bz_{-k}\sim\tilde q^{(t)}}[\log p(\by,\bz)]\right),
+\end{equation}
+for each of the factors of the approximate posterior $q(\bz) = \prod_{k=1}^M q_k(z_{[k]})$.
+In the EM algorithm E-step, one obtains the $Q$ function
+\begin{equation}\label{eq:emEstep1}
+  Q(\theta|\theta^{(t)}) = \E_{\bz}[\log p(\by,\bz)|\by,\theta^{(t)}].
+\end{equation}
+We can see that in both equations \cref{eq:viEstep1} and \cref{eq:emEstep1}, there is a need to compute the expectation of the joint log density, but the difference between the variational inference and EM or variational EM lies in the M-step.
+In variational inference one seeks a distribution, while in EM or variational EM one seeks a point estimate (posterior mode) of this distribution.
+
 {\renewcommand{\arraystretch}{1.5}
 \begin{table}[]
 \centering
@@ -283,8 +297,8 @@ For certain distributions $q(\theta)$ these quantities can be awkward to compute
 \toprule
 Variational inference & Variational EM\\ 
 \midrule
-GOAL: Posterior densities for $(\bz, \theta)$                                                          
-& GOAL: ML/MAP estimates for $\theta$ \\
+\textbf{GOAL}: Posterior densities for $(\bz, \theta)$                                                          
+& \textbf{GOAL}: ML/MAP estimates for $\theta$ \\
 Variational approximation for latent variables and parameters $q(\bz,\theta)\approx p(\bz,\theta|\by)$ 
 & Variational approximation for latent variables only $q(\bz)\approx p(\bz|\by)$ \\
 Priors required on $\theta$                                                                            
@@ -293,6 +307,8 @@ Derivation can be tedious
 & Derivation less tedious \\
 Inference on $\theta$ through posterior density $q(\theta)$
 & Asymptotic distribution of $\theta$ not well studied; standard errors for $\theta$ not easily obtained \\
+Suited to conjugate exponential family models: posteriors will be easily recognisable
+& Suited to conjugate exponential family models, but not necessary \\
 \bottomrule
 \end{tabular}
 \end{table}
