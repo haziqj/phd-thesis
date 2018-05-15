@@ -98,7 +98,7 @@ To obtain a statistic of interest, say, a 95\% credibility interval of a functio
 
 Finally, a discussion on model comparison, which, in the variational inference literature, is achieved by comparing ELBO values of competing models \citep{beal2003}.
 The rationale is that the ELBO serves as a conservative estimate for the log marginal likelihood, which would allow model selection via (empirical) Bayes factors.
-This stems from the fact that (see note in \hltodo{section})
+This stems from the fact that 
 \begin{align*}
   \log p(\by|\theta) 
   &= \cL_q(\theta) + \KL(q \Vert p ) 
@@ -126,3 +126,11 @@ It should be noted that while this works in practice, there is no theoretical ba
     >10   &>150    &Very strong \\ 
   \end{tabular}
 \end{table}
+
+\begin{remark}
+  In the previous chapter on normal I-prior models, the I-prior could be integrated out of the model completely, resulting in a normal  log-likelihood for the parameters.
+  Model comparison can be validly done using likelihood ratio tests and asymptotic chi-square distributions.
+  Here however, we only have a lower bound to the log-likelihood, and most likely the asymptotic results of likelihood ratio tests do not hold.
+  Then, the concept of approximate (empirical) Bayes factors seem most intuitive, even if not rooted in theory.
+\end{remark}
+

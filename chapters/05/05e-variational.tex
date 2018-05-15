@@ -35,7 +35,7 @@ We denote this by $\by_{i \bigcdot}^* \iid \tN(\tilde\bmu_{i \bigcdot}, \bPsi^{-
 The required expectation $\tilde\by^* := \E_{\by^*\sim\tilde q}\by^*_{i\bigcdot} = \E_{\by^*\sim\tilde q} (y_{i1}^*,\dots, y_{im}^*)^\top$ in the M-step can be tricky to obtain.
 One strategy that can be considered is Monte Carlo integration: using samples from $\N_m(\tilde\bmu_{i \bigcdot},  \bPsi^{-1})$, disregard those that do not satisfy the condition $y_{iy_i}^* > y_{ik}^*, \forall k \neq j$, and then take the sample average.
 This works reasonably well so long as the truncation region does not fall into the extreme tails of the multivariate normal.
-Alternatively, a fast, Gibbs-based approach \citep{robert1995simulation} for sampling from a truncated multivariate normal can be implemented, and this is detailed in the appendix.
+Alternatively, a Gibbs-based approach \citep{robert1995simulation} for sampling from a truncated multivariate normal can be implemented, and this is detailed in \cref{apx:truncmultinorm} (p. \pageref{apx:truncmultinorm}).
 
 If the independent I-probit model is under consideration, whereby the covariance matrix has the independent structure $\bPsi = \diag(\sigma_1^{-2},\dots,\sigma_m^{-2})$, then the first moment  can be considered component-wise. 
 Each component of this expectation is given by
@@ -49,6 +49,7 @@ Each component of this expectation is given by
   \end{cases}
 \end{align}
 with 
+\vspace{-1em}
 \begin{align*}
   \phi_{ik}(Z) &= \phi \left(\frac{\sigma_{y_i}}{\sigma_k} Z + \frac{\tilde\mu_{iy_i} - \tilde\mu_{ik}}{\sigma_k} \right) \\
   \Phi_{ik}(Z) &= \Phi \left(\frac{\sigma_{y_i}}{\sigma_k} Z + \frac{\tilde\mu_{iy_i} - \tilde\mu_{ik}}{\sigma_k} \right) \\
@@ -68,7 +69,7 @@ The variational density $q$ for $\vecc \bw \in \bbR^{nm}$ is found to be Gaussia
   \tilde \bV_w^{-1} = \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n = \bV_{y^*}.
 \end{gather}
 As a computational remark, computing the inverse $\tilde\bV_w^{-1}$ presents a challenge, as this takes $O(n^3m^3)$ time if computed naïvely. 
-By exploiting the Kronecker product structure in $\tilde\bV_w$, we are able to efficiently compute the required inverse in roughly $O(n^3m)$ time---see the \hltodo{Section X} for details.
+By exploiting the Kronecker product structure in $\tilde\bV_w$, we are able to efficiently compute the required inverse in roughly $O(n^3m)$ time---see \cref{sec:complxiprobit} for details.
 Storage requirement is $O(n^2m^2)$, as a result of the covariance matrix in \cref{eq:varipostw}.
 
 If the independent I-probit model is assumed, i.e. $\bPsi = \diag(\psi_1,\dots,\psi_m)$, then the posterior covariance matrix $\tilde\bV_w$ has a simpler structure which implies column independence in the matrix $\bw$.
@@ -121,7 +122,7 @@ On closer inspection, the trace involving the second moments of $\bw$ is found t
   \tr \Big( \bPsi\E[\bw^\top\bH_\eta^2\bw]  + \bPsi^{-1} \E[\bw^\top\bw] \Big)
   &= \sum_{i,j=1}^m \left\{ \psi_{ij} \tr(\bH_\eta^2\tilde\bW_{ij}) + \psi_{ij}^- \tr(\tilde\bW_{ij}) \right\}
 \end{align*}
-by the results of \hltodo{equation} derived in the appendix.
+by the results of the derivations in \cref{{apx:qw}} (p. \pageref{eq:trCEwDw}).
 In the above, we had defined $\psi_{ij}^-$ to be the $(i,j)$'th element of $\bPsi^{-1}$, and
 \[
   \tilde\bW_{ij} 
@@ -213,7 +214,7 @@ These circular dependencies are dealt with by way of an iterative updating schem
 The updating sequence is repeated until no significant increase in the convergence criterion, the ELBO, is observed.
 The ELBO for the I-probit model is given by the quantity
 \begin{align}
-  \cL_q(\theta) = \half[nm] + \sum_{i=1}^n \log C_i(\theta) + \half\log \abs{\tilde\bV_w} - \half[n]\log\abs{\bPsi} - \half\sum_{i,j=1}^m \psi_{ij}^- \tr(\tilde\bW_{ij}),
+  \cL(q, \theta) = \half[nm] + \sum_{i=1}^n \log C_i(\theta) + \half\log \abs{\tilde\bV_w} - \half[n]\log\abs{\bPsi} - \half\sum_{i,j=1}^m \psi_{ij}^- \tr(\tilde\bW_{ij}),
 \end{align}
 where $C_i(\theta)$ is the normalising constant of the distribution $\tN_m(\balpha + \bw^\top\bh_\eta(x_i),\bPsi^{-1},\cC_{y_i})$, with $\cC_{y_i} = \{y_{iy_i}^* > y_{ik}^* | \forall k \neq y_i \}$.
 That is,

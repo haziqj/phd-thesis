@@ -73,7 +73,7 @@ These are indexed by `$(j)$' because the transformation is dependent on which la
     \end{cases}
   \end{equation}   
   which is obtained by anchoring on the first latent variable (referred to as the reference category), although the choice of reference category is arbitrary.
-  This is similar to fixing the latent variables of the reference category to zero, and thus, as discussed previously in \hltodo{section}, full identification is achieved by fixing one more element of the covariance matrix.
+  This is similar to fixing the latent variables of the reference category to zero, and thus, as discussed previously in \cref{sec:iia}, full identification is achieved by fixing one more element of the covariance matrix.
 \end{remark}
 
 For the symmetric and positive definite covariance matrix $\bOmega_{(j)}$, obtain its Cholesky decomposition as $\bOmega_{(j)} = \bL\bL^\top$, where $\bL$ is a lower triangular matrix.
@@ -139,7 +139,7 @@ where
   \end{cases}
 \end{equation*}
 %Thus, the original integral in \cref{eq:pij} involving an $m$-variate normal density is turned into a product of $m-1$ univariate normal cdfs, which can be computed fairly efficiently in modern computer systems.
-The GHK algorithm entails making draws from truncated standard normal distributions (for instance, using an inverse transform method detailed in \hltodo{appendix}):
+The GHK algorithm entails making draws from one-sided right truncated standard normal distributions (for instance, using an inverse transform method detailed in \cref{apx:truncuninorm} (p. \pageref{apx:truncuninorm})):
 \begin{itemize}
   \item Draw $\tilde\zeta_1 \sim \tN(0,1,-\infty,u_1)$.
   \item Draw $\tilde\zeta_2 \sim \tN(0,1,-\infty,\tilde u_2)$, where $\tilde u_2 = u_2(\tilde\zeta_1)$.
@@ -185,6 +185,10 @@ It is better to work on a log-probability scale, so the products in \cref{eq:til
   Thus, direct evaluation of \cref{eq:pij2} using quadrature methods avoids the Cholesky step and random sampling employed by the GHK method.
 \end{remark}
 
+%\begin{remark}
+%  The GHK probability simulator relates to the \emph{method of simulated likelihood}.  
+%\end{remark}
+
 \subsection{Efficient Kronecker product inverse}
 \label{sec:complxiprobit}
 
@@ -215,13 +219,12 @@ which is easy to compute since the middle term is an inverse of diagonal matrice
 This brings time complexity of the variational EM algorithm down to a similar requirement as if $\bPsi$ were diagonal.
 Unfortunately, storage requirements remain at $O(n^2m^2)$ when $\bPsi$ is dense, because the entire $nm \times nm$ matrix $\bV_w$ is needed to evaluate the posterior mean of $\vecc\bw$.
 
-%Prediction of a single new data point is $O(n^2m)$ in time, because there are essentially $m$ I-prior posterior regression functions, and each take $O(n^2)$ to evaluate.
-
 \subsection{Estimation of \texorpdfstring{$\bPsi$}{$\Psi$} in future work}
 \label{sec:difficultPsi}
 
 Suppose that $\bPsi \in \bbR^{m\times m}$ is a free parameter to be estimated, bearing in mind that only $m(m-1)/2 - 1$ variance components are identified in the I-probit model (see \cref{sec:iia}).
 If so, the $Q$ function from \cref{eq:iprobitQEstep} conditional on the rest of the parameters can be written as
+\vspace{-1em}
 \begin{align*}
   Q(\bPsi|\balpha,\eta)
   &= \const 
@@ -246,11 +249,13 @@ This can be solved numerically, though it must be ensured that the identifiabili
 
 Specifically in the case where $\bPsi$ is a diagonal matrix $\diag(\psi_1,\dots,\psi_m)$, then
 \begin{align*}
+  \vspace{-0.5em}
   Q(\bPsi|\balpha,\eta)
   &= \const -\half \sum_{j=1}^m \psi_j \tr
   \E[(\by^*_{\bigcdot j} - \bmu_{\bigcdot j})(\by^*_{\bigcdot j} - \bmu_{\bigcdot j})^\top] \\
   &\phantom{==} -\half \sum_{j=1}^m \psi_j^{-1} \tr
   \E[\bw_{\bigcdot j}\bw_{\bigcdot j}^\top] 
+  \vspace{-0.5em}
 \end{align*}
 is maximised, for $j=1,\dots,m$, at
 \[
@@ -259,7 +264,7 @@ is maximised, for $j=1,\dots,m$, at
   \right)^{\half},
 \] 
 independently of the rest of the other $\psi_k$'s, $k\neq j$.
-As per the derivations in \hltodo{section}, the numerator of this expression is equal to $\tr(\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot j}^\top) = \tr \tilde\bW_{jj}$.
+As per the derivations in \cref{{apx:qw}} (p. \pageref{eq:trCEwDw}), the numerator of this expression is equal to $\tr(\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot j}^\top) = \tr \tilde\bW_{jj}$.
 The denominator on the other hand is
 \[
   \E[\by_{\bigcdot j}^{*\top}\by_{\bigcdot j}^*] - 
@@ -268,19 +273,7 @@ The denominator on the other hand is
   - 2\alpha_j \sum_{i=1}^n\sum_{i'=1}^n (y_{ij}^* - h_\eta(x_{i},x_{i'}) \tilde w_{ij}).
 \]
 
+\vspace{-1em}
 In either the full or I-probit model, solving $\bPsi$ involves the second moments of a truncated normal distribution.
 In the case where $\bPsi$ is dense, this is obtained by Monte Carlo methods, where samples from a truncated multivariate normal distribution are obtained using Gibbs sampling.
-Although this strategy can be used when $\bPsi$ is diagonal, in \cref{thm:contruncn}, we show that the form for the second moments  involve integration of standard normal cdfs and pdfs, much like in formula for the first moments.
-
-%where $p(\bPsi)$ is a prior density chosen for $\bPsi$.
-%Unfortunately, this does not resemble any known distribution, regardless of the prior choice for $\bPsi$.
-%One can resort to sampling techniques to obtain quantities such as the mean or entropy, which are needed, but this has not been studied for this project due to time limitations.
-%Even if this was possible, this requires, among other things, second moments of a truncated multivariate normal density $\by^*$, and also of $\bH_\eta\bw \in \bbR^{n\times m}$---of which both are a bit awkward to obtain.
-%
-%
-%Perhaps, if the posterior mean is close to the mode, and not withstanding the involved calculations of the require second moments, then this quantity can be used instead in the CAVI algorithm.
-%This ties with the idea of \emph{variational Bayes EM algorithm}, which is an alternative to a fully Bayesian treatment of variational inference.
-%This is discussed in \cref{sec:varEM,sec:vbemiprobit}, but unfortunately, time constraints had made it impossible for us to examine this within the scope of this thesis.
-%
-
-
+Although this strategy can be used when $\bPsi$ is diagonal, we show that the form for the second moments  involve integration of standard normal cdfs and pdfs (\cref{thm:contruncn}, p. \pageref{thm:contrunc}), much like the formula for the first moments.

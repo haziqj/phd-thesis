@@ -71,16 +71,5 @@ Nonetheless, we suggest the following as considerations for future work:
   \item \textbf{Accelerating the EM algorithm further}. Two methods can be explored. The first is called parameter-expansion EM algorithm (PXEM) by \citep{liu1998parameter}, which has been shown to be promising for random-effects type models. It involves correcting the M-step by a `covariance adjustment', so that extra information can be capitalised on to improve convergence rates. The second is a quasi-Newton acceleration of the EM algorithm as proposed by \citet{lange1995quasi}. A slight change to the EM gradient algorithm in the M-step steers the EM algorithm to the Newton-Raphson algorithm, thus exploiting the benefits of the EM algorithm in the early stages (monotonic increase in likelihood) and avoiding the pitfalls of Newton-Raphson (getting stuck in local optima). Both algorithms require an in-depth reassessment of the EM algorithm to be tailored to I-prior models.
 \end{enumerate}
 
-\section{Miscellanea}
-\input{04-misc}
-
-\ifstandalone
-  \section*{Appendix}
-  \input{04-apx-01-posterior}
-  \input{04-apx-02-expem}
-  \input{04-apx-03-postestimation}
-  \input{04-apx-04-fishermultinormal}
-\fi
-
 \hClosingStuffStandalone
 \end{document}

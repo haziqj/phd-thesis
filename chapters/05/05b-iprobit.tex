@@ -1,4 +1,5 @@
-It is convenient, as we did in \hltodo{Section X naive classification}, to again think of the responses $y_i \in \{1,\dots,m\} = \cM$ as comprising of a binary vector $\by_{i \bigcdot} = (y_{i1},\dots,y_{im})^\top$, with a single `1' at the position corresponding to the value that $y_i$ takes. 
+We derive the I-probit model through a latent variable motivation.
+It is convenient, as we did in \hltodo{Section X naive classification}, to again think of the responses $y_i \in \{1,\dots,m\} $ as comprising of a binary vector $\by_{i \bigcdot} = (y_{i1},\dots,y_{im})^\top$, with a single `1' at the position corresponding to the value that $y_i$ takes. 
 That is,
 \[
   y_{ik} =
@@ -28,11 +29,10 @@ Instead of modelling the observed $y_{ij}$'s directly, we model instead the $n$ 
 \begin{equation}\label{eq:multinomial-latent}
   \begin{gathered}
     y_{ij}^* = \alpha + \alpha_j + f_j(x_i) + \epsilon_{ij} \\
-    (\epsilon_{i1}, \dots, \epsilon_{im})^\top  \iid \N_m(\bzero, \bPsi^{-1}). 
+    (\epsilon_{i1}, \dots, \epsilon_{im})^\top  \iid \N_m(\bzero, \bPsi^{-1}), 
   \end{gathered}
 \end{equation}
-%with $\alpha_j$ being an intercept, and $f_j:\cX \to \bbR$ a regression function belonging to some RKHS/RKKS of functions $\cF$.
-%having the reproducing kernel $h_{\eta_j}: \cX \times \cX \to \bbR$. 
+with $\alpha$ the grand intercept, $\alpha_j$ group/class intercepts, and $f_j:\cX \to \bbR$ a regression function belonging to some RKHS/RKKS $\cF$ of functions over the covariate set $\cX$ with reproducing kernel $h_\eta$.
 We can see some semblance of this model with the one in \cref{eq:naiveclassiprior}, and ultimately the aim is to assign I-priors to the regression function of these latent variables, which we shall describe shortly.
 For now, write $\bmu(x_i) \in \bbR^m$ whose $j$'th component is $\alpha + \alpha_j + f_j(x_i)$, and realise that each $\by_{i \bigcdot}^* = (y_{i1}^*, \dots, y_{im}^*)^\top$ has the distribution $\N_m(\bmu(x_i), \bPsi^{-1})$, conditional on the data $x_i$,  the intercepts $\alpha,\alpha_1,\dots,\alpha_m$, the evaluations of the functions at $x_i$ for each class $f_1(x_i), \dots, f_m(x_i)$, and the error covariance matrix $\bPsi^{-1}$.
 
@@ -87,6 +87,8 @@ To establish notation, let
   \item $\bmu = \bone_n\balpha^\top + \bff$, whose $(i,j)$ entries are $\mu_{j}(x_i) = \alpha + \alpha_j + f_j(x_i)$; and
   \item $\by^* \in \bbR^{n \times m}$ denote the matrix containing $(i,j)$ entries $y_{ij}^*$, that is, $\by^* = \bmu + \bepsilon$, so $\by^*|\bw \sim \MN_{n,m}(\bmu = \bone_n\balpha^\top + \bH_\eta\bw, \bI_n, \bPsi^{-1})$ and $\vecc \by^* \sim \N_{nm}\big(\vecc (\bone_n\balpha^\top), \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n\big)$ (note that the marginal distribution of $\by^*$ cannot be expressed as a matrix normal, except when $\bPsi=\bI_m$). 
 \end{itemize}
+Note that we have made use of matrix normal distributions (denoted by $\MN(\cdot,\cdot)$).
+The definition and properties of matrix normal distributions can be found in the appendix.
 
 Before proceeding with estimating the I-probit model \cref{eq:iprobitmod}, we lay out several standing assumptions:
 \begin{enumerate}[label=A\arabic*,ref=A\arabic*]

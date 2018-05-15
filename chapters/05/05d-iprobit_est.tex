@@ -2,7 +2,7 @@ The premise of the I-probit model is having regression functions capture the dep
 Therefore, as with the normal I-prior model, an estimate of the posterior regression function with optimised hyperparameters is sought.
 A schematic diagram depicting the I-probit model is shown in \cref{fig:iprobitdag}.
 
-\begin{figure}[t]
+\begin{figure}[hbt]
   \centering
   \begin{tikzpicture}[scale=1, transform shape]
     \tikzstyle{main}=[circle, minimum size=10mm, thick, draw=black!80, node distance=16mm]
@@ -44,7 +44,7 @@ The log likelihood function for $\theta$ using all $n$ observations $\{(y_1,x_1)
 \end{align}
 Here, $p(\bw|\theta)$ is the pdf of $\MN_{n,m}(\bzero,\bI_n,\bPsi)$, $p(\by^*|\bw,\theta)$ is the pdf of $\MN_{n,m}(\bone_n\balpha^\top + \bH_\eta\bw,\bI_n,\bPsi^{-1})$, and $p(\by|\by^*,\theta) = \prod_{i=1}^n \prod_{j=1}^m \big[y_{ij}^* 
     = \max \by^*_{i\bigcdot}\big]^{[y_i = j]}$, with $0^0 := 1$.
-Note that, given the corresponding latent propensities $\by^*_{i\bigcdot} = (y_{i1}^*,\dots,y_{im}^*)^\top$, the distribution $y_i|\by^*_{i\bigcdot}$ is tantamount to a degenerate categorical distribution, since after knowing which of the latent propensities is largest, knowledge of the outcome of the categorical response becomes a certainty.
+Note that, given the corresponding latent propensities $\by^*_{i\bigcdot} = (y_{i1}^*,\dots,y_{im}^*)^\top$, the distribution $y_i|\by^*_{i\bigcdot}$ is tantamount to a degenerate categorical distribution: with knowledge of which latent propensities is largest, the outcome of the categorical response becomes a certainty.
 
 The integral appearing in \cref{eq:iprobitlik} is of order $2nm$, and so presents a massive computational challenge for classical numerical integration methods.
 This can be reduced by either integrating out the random effects $\bw$ or the latent propensities $\by^*$ separately.
@@ -64,10 +64,9 @@ by recognising that $\int p(\by^*|\bw,\theta) p(\bw|\theta) \dint \bw$ has a clo
 \begin{align}
   L(\theta) 
   &= \log \int p(\by | \bw, \theta) \, p(\bw|\theta) \dint \bw \nonumber \\
-  &= \log \int \prod_{i=1}^n \prod_{j=1}^m \Big( g_j^{-1} \big(  
+  &= \log \int \prod_{i=1}^n \Bigg\{ \prod_{j=1}^m \Big( g_j^{-1} \big(  
   \greyoverbrace{\balpha + \bw^\top \bh_\eta(x_i)}{\hidewidth \bmu(x_i) \hidewidth}
-  \,|\, \bPsi \big) \Big)^{[y_i=j]} \cdot \MN_{n,m}(\bw|\bzero,\bI_n, \bPsi) \dint \bw, 
-%  &= \log \int \prod_{i=1}^n \prod_{j=1}^m \Big( g_j^{-1} \big( \balpha + \bw^\top \bh_\eta(x_i) \big) \Big)^{[y_i=j]} \cdot \MN_{n,m}(\bw|\bzero,\bI_n, \bPsi) \dint \bw,
+  \,|\, \bPsi \big) \Big)^{[y_i=j]} \, \phi(\bw_{i \bigcdot}|\bzero,\bPsi) \dint \bw_{i \bigcdot} \Bigg\}, 
   \label{eq:intractablelikelihood2}
 \end{align}
 where we have denoted the class probabilities $p_{ij}$ from \cref{eq:pij} using the function $g_j^{-1}(\cdot|\bPsi):\bbR^m \to [0,1]$.
@@ -104,7 +103,7 @@ The marginal distribution is then approximated by
   &= \int \exp
   \greyoverbrace{R(\bw)}{\hidewidth \approx \ R(\hat\bw) - \half (\bw - \hat\bw)^\top \bOmega (\bw - \hat\bw)\hidewidth}
    \dint \bw \\
-  &\approx (2\pi)^{n/2} \abs{\bOmega}^{-1/2} e^{Q(\hat\bw)} 
+  &\approx (2\pi)^{n/2} \abs{\bOmega}^{-1/2} e^{R(\hat\bw)} 
   \int (2\pi)^{-n/2} \abs{\bOmega}^{1/2} \exp \left(- \half (\bw - \hat\bw)^\top \bOmega (\bw - \hat\bw) \right) \dint\bw \\
   &= (2\pi)^{n/2} \abs{\bOmega}^{-1/2} p(\by|\hat\bw)p(\hat\bw).
 %  &= \cancelto{1}{\int \phi(\bw|\hat\bw,\bOmega^{-1})}
@@ -114,8 +113,13 @@ Note that, should a fully Bayesian approach be undertaken, i.e. priors prescribe
 
 In any case, each evaluation of the objective function $L(\theta) = \log p(\by|\btheta)$ involves finding the posterior modes $\hat\bw$.
 This is a slow and difficult undertaking, especially for large sample sizes $n$---even assuming computation of the class probabilities $g^{-1}$ is efficient---because the dimension of this integral is exactly the sample size.
-Furthermore, obtaining standard errors for the parameters are cumbersome, and it is likely that a computationally burdensome bootstrapping approach is needed.
-Lastly, as a comment, Laplace's method only approximates the true marginal likelihood well if the true function is small far away from the mode.
+
+Standard errors for the parameters can be obtained from diagonal entries of the information matrix involving the second derivatives of $\log p(\by)$.
+However, it is not known whether the asymptotic variance of the parameters are affected by a Laplace approximation to the likelihood.
+
+Lastly, as a comment, Laplace's method only approximates the true marginal likelihood well if the true posterior density function is small far away from the mode.
+In other words, a second order approximation of $R(\bw)$ must be be reliable for Laplace's method to be successful.
+This is typically the case if the posterior distribution is symmetric about the mode and falls quickly in the tails.
 
 \subsection{Variational EM algorithm}
 
@@ -140,38 +144,38 @@ Now, due to the independence of the observations $i=1,\dots,n$, the complete dat
   - \half \tr \Big(\bPsi^{-1} \bw^\top  \bw \Big)
   \label{eq:logjointprobit}
 \end{align}
-which looks like the complete data log-likelihood seen previously in \cref{eq:QfnEstep} (Chapter 4, p. \pageref{eq:QfnEstep}), except that here, together with $\bw$, $\by^*_{i \bigcdot}$ is not observed.
+which looks like the complete data log-likelihood seen previously in \cref{eq:QfnEstep} (Chapter 4, p. \pageref{eq:QfnEstep}), except that here, together with $\bw$, the $\by^*_{i \bigcdot}$'s are not observed.
 
-For the E-step, it is of interest to determine the posterior density $p(\by^*,\bw|\by) = p(\by^*|\bw,\by)p(\bw|\by)$, which we have discerned from the discussion at the beginning of this section that this is hard to obtain, since it involves an intractable marginalising integral.
+For the E-step, it is of interest to determine the posterior density $p(\by^*,\bw|\by) = p(\by^*|\bw,\by)p(\bw|\by)$. 
+We have discerned from the discussion at the beginning of this section that this is hard to obtain, since it involves an intractable marginalising integral.
 We thus seek a suitable approximation
 \[
   p(\by^*,\bw | \by, \theta) \approx \tilde q(\by^*,\bw),
 \]
-where $\tilde q$ satisfies $\tilde q = \argmin_q \KL(q\Vert p)$, subject to certain constraints.
+where $\tilde q$ satisfies $\tilde q = \argmin_q \KL(q\Vert p) = \argmin_q \int \log \frac{q(\by^*,\bw)}{p(\by^*,\bw | \by, \theta)} q(\by^*,\bw) \dint\bz$, subject to certain constraints.
 The constraint considered by us in this thesis is that $q$ satisfies a \emph{mean-field} factorisation
 \[
   q(\by^*,\bw,\theta) = q(\by^*)q(\bw).
 \]
 Under this scheme, the variational distribution for $\by^*$ is found to be a \emph{conically truncated multivariate normal} distribution, and for $\bw$, a multivariate normal distribution.
 
-It can be shown that, for some variational density $q$, the marginal log-likelihood is an upper-bound for the quantity $\cL_\theta(q)$
+It can be shown that, for any variational density $q$, the marginal log-likelihood is an upper-bound for the quantity $\cL(q,\theta)$ defined by
 \[
   \log p(\by|\theta) \geq 
-    \E_{\by^*,\bw\sim q} \log p(\by,\by^*,\bw|\theta)
-    - \E_{\by^*,\bw\sim q} \log  q(\by^*,\bw) =: \cL_\theta(q),
-%  }{\cL},
+    \E_{\by^*,\bw\sim q} [\log p(\by,\by^*,\bw|\theta)]
+    - \E_{\by^*,\bw\sim q} [\log  q(\by^*,\bw)] =: \cL(q,\theta),
 \]
 a quantity often referred to as the \emph{evidence lower bound} (ELBO).
 It turns out that minimising $\KL(q\Vert p)$ is equivalent to maximising the ELBO, a quantity that is more practical to work with than the KL divergence, and certainly more tractable than the log marginal density.
 Hence, if $q$ approximates the true posterior well, then the ELBO is a suitable proxy for the marginal log-likelihood.
 
-In practice, obtaining parameter estimates which maximise the ELBO and the approximate posterior distribution $q(\by^*,\bw) $ is achieved using a variational EM algorithm, an EM algorithm in which the conditional distributions are replaced with a variational approximation.
-The $t$'th E-step entails obtaining the density $q^{(t+1)}$ as a solution to $\argmax_q \cL_\theta(q)$, keeping $\theta$ fixed at the current estimate $\theta^{(t)}$.
+In practice, obtaining ML parameter estimates and the posterior density $q(\by^*,\bw)$ which maximise the ELBO is achieved using a \emph{variational EM algorithm}, an EM algorithm in which the conditional distribution are replaced with a variational approximation.
+The $t$'th E-step entails obtaining the density $q^{(t+1)}$ as a solution to $\argmax_q \cL(q,\theta)$, keeping $\theta$ fixed at the current estimate $\theta^{(t)}$.
 Let $\bar\by^* = \by^* - \bone_n\balpha^\top$.
 The objective function to be maximised is computed as
 \begin{align}
   Q(\theta) 
-  &= \E_{\by^*,\bw\sim q^{(t+1)}}  \big[ \log p(\by,\by^*,\bw|\theta) \,|\, \theta^{(t)} \big] \nonumber \\
+  &= \E_{\by^*,\bw\sim q^{(t+1)}}  \big[ \log p(\by,\by^*,\bw|\theta) \big] \nonumber \\
   &= \const -\half\tr\Big( \bPsi \E[\bw^\top\bH_\eta^2\bw]  + \bPsi^{-1} \E[\bw^\top\bw] \Big)  \nonumber \\
   &\phantom{==} - \half \tr \Big( 
   \bPsi \big( 
@@ -265,7 +269,7 @@ Time taken (s) & >3600                & 5.32         & >3600                    
   \vspace{1em}
   \includegraphics[width=0.49\textwidth]{figure/05-fit_hmc}
   \includegraphics[width=0.49\textwidth]{figure/05-lik_hmc}
-  \caption{Plots showing predicted probabilities (shaded region) for belonging to class 1 or 2 indicated by colour and intensity, and likelihood surface plots for (a) Laplace's method, (b) variational EM, and (c) Hamiltonian MC.}
+  \caption{Plots showing predicted probabilities (shaded region) for belonging to class 1 or 2 indicated by colour and intensity, and log-likelihood/ELBO surface plots for (a) Laplace's method, (b) variational EM, and (c) Hamiltonian MC.}
   \label{fig:exampleiprobitfit}
 \end{figure}
 

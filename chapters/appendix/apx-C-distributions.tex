@@ -286,6 +286,7 @@ Some useful properties of the matrix normal distribution are listed:
 \end{itemize}
 
 \section{Truncated univariate normal distribution}
+\label{apx:truncuninorm}
 
 Let $X \sim \N(\mu,\sigma^2)$ with the random variable $X$ restricted to the interval $(a,b) \subset \bbR$.
 Then we say that $X$ follows a truncated normal distribution, and we denote this by $X\sim\tN(\mu,\sigma^2,a,b)$.
@@ -326,7 +327,7 @@ The latter algorithm is inspired by the Ziggurat algorithm \citep{marsaglia2000z
 
 
 \section{Truncated multivariate normal distribution}
-\label{sec:truncmultinorm}
+\label{apx:truncmultinorm}
 
 Consider the restriction of $X\sim \N_d(\mu,\Sigma)$ to a convex subset\footnote{A convex subset is a subset of a space that is closed under convex combinations. In Euclidean space, for every pair of points in a convex set, all the points that lie on the straight line segment which joins the pair of points are also in the set.}~$\cA \subset \bbR^d$.
 Call this distribution the truncated multivariate normal distribution, and denote it $X \sim \tN_d(\mu,\Sigma,\cA)$.
