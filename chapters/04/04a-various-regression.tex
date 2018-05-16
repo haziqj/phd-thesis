@@ -84,9 +84,9 @@ with $h_1$ the centred canonical kernel and $h_2$ the Pearson kernel.
 The reason for not including an RKHS of constant functions in $\cF$ is because the overall intercept is usually simpler to estimate as an external parameter (see \cref{sec:intercept}).
 
 We can show that the regression function \cref{eq:anovamultilevel} corresponds to the standard way of writing the multilevel model, 
-\[
+\begin{equation}\label{eq:standmultilevel}
   f(\bx_i^{(j)}, j) = \beta_0 + \bx_i^{(j)\top}\boldsymbol{\beta}_1 + \beta_{0j} + \bx_i^{(j)\top}\boldsymbol{\beta}_{1j}.   
-\]
+\end{equation}
 and determine the prior distributions on $(\beta_{0j},\boldsymbol{\beta}_{1j}^\top)^\top \in \bbR^{p+1}$.
 For the interested reader, the details are in \cref{misc:multilevelmodels}.
 The standard multilevel random effects assumption is that $(\beta_{0j},\boldsymbol{\beta}_{1j}^\top)^\top$ is normally distributed with mean zero and covariance matrix $\bPhi$.
@@ -171,7 +171,7 @@ where $\alpha$ is an overall constant, $f_k\in\cF_k$, $k=1,2,3$,  $f_{j3}\in\cF_
 $\cF_1$ is the Pearson RKHS, but choices for $\cF_2$ and $\cF_3$ are plentiful.
 In fact, any of the RKHS/RKKS described in Chapter 3 can be used to either model a linear dependence (canonical RKHS), nominal dependence (Pearson RKHS), polynomial dependence (polynomial RKKS) or smooth dependence (fBm or SE RKHS) on the $x_i$'s and $t$'s on $f$.
 
-\subsection{Classification}
+\subsection{Classification}\label{sec:naiveclass}
 \input{05a-naive}
 
 \subsection{Smoothing models}

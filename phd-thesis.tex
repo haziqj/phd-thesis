@@ -43,11 +43,13 @@
 %%% TOC & VARIOUS LISTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hTOCandLists
+\hltodo[Abbreviations and indices?]{}
 \clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% BODY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hltodo[Clean up figure and table captions (no dots at end).]{}
 
 \chapter{Introduction} 
 \subimport{chapters/01/}{chapter1}
@@ -71,6 +73,11 @@
 \input{chapters/07/chapter7}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% SUPPLEMENTARY CHAPTERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subimport{chapters/supplementary/}{supplementary}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% REFERENCES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\nocite{*}
@@ -80,22 +87,7 @@
 %%% APPENDIX %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
-\chapter{Regression modelling using I-priors}
-\subimport{chapters/04/}{04-apx-01-posterior}
-\subimport{chapters/04/}{04-apx-02-expem}
-\subimport{chapters/04/}{04-apx-03-postestimation}
-\subimport{chapters/04/}{04-apx-04-fishermultinormal}
-
-\chapter{I-priors for categorical responses}
-\subimport{chapters/05/}{05-apx-01-distributions}
-\subimport{chapters/05/}{05-apx-02-proofs}
-\subimport{chapters/05/}{05-apx-03-derivations1}
-\subimport{chapters/05/}{05-apx-04-derivations2}
-
-\chapter{Bayesian variable selection using I-priors}
-\subimport{chapters/06/}{06-apx-01-gibbs}
-\subimport{chapters/06/}{06-apx-02-compnote}
-\subimport{chapters/06/}{06-apx-02-data}
+\subimport{chapters/appendix/}{appendix}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \printindex
