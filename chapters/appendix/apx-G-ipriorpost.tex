@@ -43,7 +43,7 @@ and that $\Cov(\bw,\by) = \bPsi\bH_\eta = \bH_\eta\bPsi = \Cov(\by,\bw)$ by symm
     \end{pmatrix},
     \begin{pmatrix}
       \bV_y         & \bH_\eta\bPsi \\
-      \bH_\eta\bPsi & \bPsi \\
+      \bPsi\bH_\eta & \bPsi \\
     \end{pmatrix}
   \right).
 \] 
@@ -51,7 +51,7 @@ Thus,
 \begin{align*}
   \E [\bw|\by] 
   &= \E \bw + \Cov(\bw,\by) (\Var \by)^{-1} (\by - \E \by) \\
-  &= \bH_\eta\bPsi\bV_y^{-1}(\by - \balpha - \bff_0),
+  &= \bPsi\bH_\eta\bV_y^{-1}(\by - \balpha - \bff_0),
 \end{align*}
 and
 \begin{align*}
