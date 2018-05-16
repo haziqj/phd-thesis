@@ -224,7 +224,7 @@ Unfortunately, storage requirements remain at $O(n^2m^2)$ when $\bPsi$ is dense,
 
 Suppose that $\bPsi \in \bbR^{m\times m}$ is a free parameter to be estimated, bearing in mind that only $m(m-1)/2 - 1$ variance components are identified in the I-probit model (see \cref{sec:iia}).
 If so, the $Q$ function from \cref{eq:iprobitQEstep} conditional on the rest of the parameters can be written as
-\vspace{-1em}
+\vspace{-1.3em}
 \begin{align*}
   Q(\bPsi|\balpha,\eta)
   &= \const 
@@ -255,7 +255,7 @@ Specifically in the case where $\bPsi$ is a diagonal matrix $\diag(\psi_1,\dots,
   \E[(\by^*_{\bigcdot j} - \bmu_{\bigcdot j})(\by^*_{\bigcdot j} - \bmu_{\bigcdot j})^\top] \\
   &\phantom{==} -\half \sum_{j=1}^m \psi_j^{-1} \tr
   \E[\bw_{\bigcdot j}\bw_{\bigcdot j}^\top] 
-  \vspace{-0.5em}
+  \vspace{-1em}
 \end{align*}
 is maximised, for $j=1,\dots,m$, at
 \[
@@ -264,7 +264,7 @@ is maximised, for $j=1,\dots,m$, at
   \right)^{\half},
 \] 
 independently of the rest of the other $\psi_k$'s, $k\neq j$.
-As per the derivations in \cref{{apx:qw}} (p. \pageref{eq:trCEwDw}), the numerator of this expression is equal to $\tr(\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot j}^\top) = \tr \tilde\bW_{jj}$.
+As per the derivations in \cref{apx:qw} (p. \pageref{eq:trCEwDw}), the numerator of this expression is equal to $\tr(\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot j}^\top) = \tr (\tilde\bW_{jj})$.
 The denominator on the other hand is
 \[
   \E[\by_{\bigcdot j}^{*\top}\by_{\bigcdot j}^*] - 
@@ -276,4 +276,4 @@ The denominator on the other hand is
 \vspace{-1em}
 In either the full or I-probit model, solving $\bPsi$ involves the second moments of a truncated normal distribution.
 In the case where $\bPsi$ is dense, this is obtained by Monte Carlo methods, where samples from a truncated multivariate normal distribution are obtained using Gibbs sampling.
-Although this strategy can be used when $\bPsi$ is diagonal, we show that the form for the second moments  involve integration of standard normal cdfs and pdfs (\cref{thm:contruncn}, p. \pageref{thm:contrunc}), much like the formula for the first moments.
+Although this strategy can be used when $\bPsi$ is diagonal, we show that the form for the second moments  involve integration of standard normal cdfs and pdfs (\cref{thm:contruncn}, p. \pageref{thm:contruncn}), much like the formula for the first moments.

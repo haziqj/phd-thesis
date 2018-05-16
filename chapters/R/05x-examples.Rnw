@@ -27,7 +27,7 @@ knitr::read_chunk("07-06-btb.R")
 
 \begin{document}
 
-\section{Examples}  % remove this
+% \section{Examples}  % remove this
 
 We present analyses of real-data examples using the I-probit model for a variety of applicaitons, namely binary and multiclass classification, meta-analysis, and spatio-temporal modelling of point processes.
 Examples in this section have been analysed using the \proglang{R} package \pkg{iprobit} developed by us.
@@ -246,11 +246,11 @@ For the overall log odds ratio, the probabilities that are used are the averaged
 This has been calculated as $\Sexpr{iprior::dec_plac(smoke.ip.res$logodds[28])} = \log \Sexpr{iprior::dec_plac(exp(smoke.ip.res$logodds[28]))}$, slightly lower than both the raw log odds ratio and the log odds ratio estimated by the logistic random-effects model.
 This can perhaps be attributed to some shrinkage of the estimated probabilities due to placing a prior with zero mean on the regression functions.
 
-The credibility intervals for the log odds ratios in the forest plot of \cref{fig:smoke.forest.plot} are also noticeably narrower under an I-prior compared to the fitted multilevel model.
-One explanation is that empirical Bayes estimates, such as the I-probit estimates under a variational EM framework, tend to underestimate the variability in the estimates because the variability in the parameters are ignored when point estimates are used, compared to distributions in a true Bayesian estimation framework.
-
 <<smoke.forest.plot, echo = FALSE, warning = FALSE, fig.height = 7.6, fig.width = 6, out.width = "\\linewidth", fig.cap = "Forest plot of effect sizes (log odds ratios) in each group as well as the overall effect size together with their 95\\% confidence bands. The plot compares the raw log odds ratios, the logistic random-effect estimates, and the I-prior estimates. Sizes of the points indicate the relative sample sizes per study group.", fig.pos = "p">>=
 @
+
+The credibility intervals for the log odds ratios in the forest plot of \cref{fig:smoke.forest.plot} are also noticeably narrower under an I-prior compared to the fitted multilevel model.
+One explanation is that empirical Bayes estimates, such as the I-probit estimates under a variational EM framework, tend to underestimate the variability in the estimates because the variability in the parameters are ignored when point estimates are used, compared to distributions in a true Bayesian estimation framework.
 
 \subsection{Multiclass classification: Vowel recognition data set}
 <<vowel.data, include = FALSE>>=
@@ -299,7 +299,7 @@ In contrast, both the fBm-0.5 and SE model were quicker to converge.
 Multiple restarts from different random seeds were conducted, and we found that they all converged to a similar lower bound value.
 This alleviates any concerns that the model might have converged to different multiple local optima.
 
-<<vowel.confusion.matrix, echo = FALSE, fig.show = "hold", fig.height = 4.5, fig.width = 5, out.width = "0.485\\linewidth", fig.cap = "Confusion matrices for the vowel classification problem in which predicted values were obtained from the I-probit models. The maximum value for any one cell is 42. Blank cells indicate nil values.", fig.subcap=c("Canonical kernel", "fBm-0.5 kernel", "SE kernel"), fig.pos = "htb">>=
+<<vowel.confusion.matrix, echo = FALSE, fig.show = "hold", fig.height = 4.5, fig.width = 5, out.width = "0.485\\linewidth", fig.cap = "Confusion matrices for the vowel classification problem in which predicted values were obtained from the I-probit models. The maximum value for any cell is 42 (seven speakers delivered six frames of speech per vowel). Blank cells indicate nil values.", fig.subcap=c("Canonical kernel", "fBm-0.5 kernel", "SE kernel"), fig.pos = "htb">>=
 @
 
 A good way to visualise the performance of model predictions is through a confusion matrix, as shown in \cref{fig:vowel.confusion.matrix}.

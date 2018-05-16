@@ -70,7 +70,7 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 
-\section{Examples}  % remove this
+% \section{Examples}  % remove this
 
 We present analyses of real-data examples using the I-probit model for a variety of applicaitons, namely binary and multiclass classification, meta-analysis, and spatio-temporal modelling of point processes.
 Examples in this section have been analysed using the \proglang{R} package \pkg{iprobit} developed by us.
@@ -306,9 +306,6 @@ For the overall log odds ratio, the probabilities that are used are the averaged
 This has been calculated as $0.51 = \log 1.66$, slightly lower than both the raw log odds ratio and the log odds ratio estimated by the logistic random-effects model.
 This can perhaps be attributed to some shrinkage of the estimated probabilities due to placing a prior with zero mean on the regression functions.
 
-The credibility intervals for the log odds ratios in the forest plot of \cref{fig:smoke.forest.plot} are also noticeably narrower under an I-prior compared to the fitted multilevel model.
-One explanation is that empirical Bayes estimates, such as the I-probit estimates under a variational EM framework, tend to underestimate the variability in the estimates because the variability in the parameters are ignored when point estimates are used, compared to distributions in a true Bayesian estimation framework.
-
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[p]
 
@@ -321,6 +318,9 @@ One explanation is that empirical Bayes estimates, such as the I-probit estimate
 
 
 \end{knitrout}
+
+The credibility intervals for the log odds ratios in the forest plot of \cref{fig:smoke.forest.plot} are also noticeably narrower under an I-prior compared to the fitted multilevel model.
+One explanation is that empirical Bayes estimates, such as the I-probit estimates under a variational EM framework, tend to underestimate the variability in the estimates because the variability in the parameters are ignored when point estimates are used, compared to distributions in a true Bayesian estimation framework.
 
 \subsection{Multiclass classification: Vowel recognition data set}
 
@@ -374,7 +374,7 @@ This alleviates any concerns that the model might have converged to different mu
 
 }
 
-\caption[Confusion matrices for the vowel classification problem in which predicted values were obtained from the I-probit models]{Confusion matrices for the vowel classification problem in which predicted values were obtained from the I-probit models. The maximum value for any one cell is 42. Blank cells indicate nil values.}\label{fig:vowel.confusion.matrix}
+\caption[Confusion matrices for the vowel classification problem in which predicted values were obtained from the I-probit models]{Confusion matrices for the vowel classification problem in which predicted values were obtained from the I-probit models. The maximum value for any cell is 42 (seven speakers delivered six frames of speech per vowel). Blank cells indicate nil values.}\label{fig:vowel.confusion.matrix}
 \end{figure}
 
 
@@ -585,7 +585,7 @@ Note that there is no issue with using the continuous time model---we have produ
 
 }
 
-\caption[Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium Mycobacterium bovis over four different time periods using model $M_3$]{Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium Mycobacterium bovis over four different time periods using model $M_3$.}\label{fig:plot.temporal.btb}
+\caption[Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium \emph{Mycobacterium bovis} over four different time periods using model $M_3$]{Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium \emph{Mycobacterium bovis} over four different time periods using model $M_3$.}\label{fig:plot.temporal.btb}
 \end{figure}
 
 
@@ -598,9 +598,6 @@ In addition, coloured dotted lines are displayed to indicate the ``decision boun
 The most evident change is seen to the spatial distribution of spoligotype 12, with the decision boundary giving it a large area in years 1996 and earlier, but this steadily shrunk over the years.
 Spoligotype 9, which is most commonly seen in the east of Cornwall, seems to have made its way down to the south-west over the years.
 The other two spoligotypes seem to be rather constant over the years.
-
-
-
 
 \end{document}
 

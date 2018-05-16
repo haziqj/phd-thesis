@@ -101,7 +101,7 @@ The main motivation behind this work is to overcome the drawbacks of modelling p
 We assumed latent variables that represent `class propensities' exist, modelled these using a normal I-prior, and simply transformed them via a probit link function.
 In this way, all of the advantages of the I-prior methodology seen for the normal model are preserved for binary and multinomial regression as well.
 
-The core of this work explores ways in which to overcome the intractable integral presented by the I-probit model in \cref{eq:intractablelikelihood}.
+The core of this work explores ways in which to overcome the intractable integral presented by the I-probit model in \cref{eq:iprobitlik}.
 Techniques such as quadrature methods, Laplace approximation and MCMC tend to fail, or are unsatisfactorily slow to accomplish.
 The main reason for this is the dimension of this integral, which is $nm$, and thus for large sample sizes and/or number of classes, is unfeasible with such methods.
 We turned to variational inference in the face of an intractable posterior density that hampers an EM algorithm, and the result is a sequential updating scheme, similar in time and storage requirements to the EM algorithm.
