@@ -75,6 +75,69 @@ A simulation study is conducted and several real-world examples presented to dem
 %While the description we have just given for model selection is a generic one applicable to most statistical models, variable selection is a special case of model selection to where the model at hand is defined by the inclusion or exclusion of a finite number of variables.
 %The linear regression model \cref{eq:linmod} is such an example. 
 
+\newpage
+new plan: variable selection via three methods: 1) model comparison via some criterion (frequentist and Bayes); 2) shrinkage to induce sparsity; 3) Bayesian model selection (probabilities on models).
+
+problem: on linear regression models, choice of which subset of variables should be included in the model.
+explaining response variable with large number of explanatory variables.
+select a small subset, as close as possible to the true generative data process, which explains most of the variation in the response.
+belief of sparseness, that not all variables need to be included.
+
+1) model selection criteria. methods described in \citep{miller2002subset}. broadly three types: prediction criteria (R2, MSEP, Mallow's Cp, CV), likelihood/information criteria (AIC,BIC). requires comparison of all $2^p$, so usually use stepwise procedures: forward-selection, backward-selection, etc. these are `heuristic methods to restrict attention to a smaller number of potential subsets' \citep{George1993}. as a rough rule, possible if predictors are less than 25 (order $10^7$).
+
+2) shrinkage. induce sparseness by adding a penalty term to the likelihood in ML estimation (Ridge regression, Lasso, elastic net, etc.). idea is to add additional information to the system to regularise it. pros and cons?
+
+Bayesian point of view is just to add priors.  term adaptive shrinkage has been thrown around, to give suitable shape to the prior: if important, then flat, if useful then sharp peak. requires tuning, affects mixing in MCMC chain \citep{OHara2009}. jeffreys' prior (no tuning), exponential prior (Bayesian Lasso \citep{park2008bayesian}).
+
+
+3) bayesian model selection. probabilistic approach to model selection: put priors on model space, then estimate posterior model probabilities from data. slightly related to likelihood based criterion of model selection (post. model prob = BF calculations = marginal likelihoods), so if $2^p$ is large then difficult. however, the advantage of bayesian framework is the ability to apply MCMC as a practical means of overcoming the intractability. stochastic approach to model selection were pioneered by \citep{George1993}, and revisited by others \citep{Kuo1998,dellaportas2002bayesian,Ntzoufras2008}
+
+advantages: bayesian model averaging. useful when several competing models have high posterior probabilities.
+
+criticisms: The topic of subset selection in regression is one that is viewed by many statisticians as ‘unclean’ or ‘distasteful’. Terms such as ‘fishing expeditions’, ‘torturing the data until they confess’, ‘data mining’, and others are used as descriptions of these practices. \citep{miller2002subset}
+in many studies variables are chosen because there is an expectation that they influence the response, and therefore regression model fitted is used to infer the strength of the influence.
+variable selection as an exploratory study. justified by many practical applications.
+arguably variable selection from a prescreening as part of data cleanup to remove problematic variables, such as those inducing a high degree of collinearity. how do we know we are deleting the correct variable?
+
+In addition to model selection, any quantity of interest, say regression coefficients, predicted values, and any others, may be obtained by way of Bayesian model averaging.
+Instead of conditioning on a single selected model, a quantity of interest $\Delta$ is averaged over a set of models to avoid underestimation of the uncertainty surrounding it \citep{madigan1994model}.
+In essence, the posterior distribution of $\Delta$ may be found by averaging the model specific posterior distributions weighted by its posterior model probabilities
+\begin{align}\label{eq:bma}
+  p(\Delta|y) = \sum_{k=1}^K p(\Delta|y,M_k)p(M_k|y).
+\end{align}
+Technically, the sum should be taken over the set of all possible models, but in practice this might not be achievable.
+Regardless, even if a smaller subset of models is used, it is well known that predictive accuracy of $\Delta$ is improved, as measured by a logarithmic scoring rule \citep{raftery1997bayesian}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
 \section{Motivation: model selection and a stochastic approach}\label{sec:bvs-iprior}
 
 The paradigm of model selection is as follows. 
@@ -128,14 +191,7 @@ In fact, models which are unpromising might never get sampled.
 MCMC methods might not list out all possible model probabilities, but it does not need to, because models which are never visited in the posterior state space are simply assigned probability zero.
 In the upcoming sections, we explain the Bayesian variable selection model that we use, and also the Gibbs sampling procedure employed to obtain the posterior model probabilities.
 
-In addition to model selection, any quantity of interest, say regression coefficients, predicted values, and any others, may be obtained by way of Bayesian model averaging.
-Instead of conditioning on a single selected model, a quantity of interest $\Delta$ is averaged over a set of models to avoid underestimation of the uncertainty surrounding it \citep{madigan1994model}.
-In essence, the posterior distribution of $\Delta$ may be found by averaging the model specific posterior distributions weighted by its posterior model probabilities
-\begin{align}\label{eq:bma}
-  p(\Delta|y) = \sum_{k=1}^K p(\Delta|y,M_k)p(M_k|y).
-\end{align}
-Technically, the sum should be taken over the set of all possible models, but in practice this might not be achievable.
-Regardless, even if a smaller subset of models is used, it is well known that predictive accuracy of $\Delta$ is improved, as measured by a logarithmic scoring rule \citep{raftery1997bayesian}.
+
 %, because
 %\[
 %  -\E\left[\log \sum_{m\in\cM'} p(\Delta|y,m)p(m|y)\right] \leq - \E\big[\log p(\Delta|y,m)p(m|y)\big]
@@ -603,13 +659,6 @@ Or perhaps, we could use a single $\gamma$ indicator for the dummy variables whi
 
 %\section{Miscellanea}
 %\input{06-misc}
-
-\ifstandalone
-  \section*{Appendix}
-  \input{06-apx-01-gibbs}
-  \input{06-apx-02-compnote}
-  \input{06-apx-02-data}
-\fi
 
 \hClosingStuffStandalone
 \end{document}

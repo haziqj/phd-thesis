@@ -20,14 +20,28 @@
 
 Wrap-up---what did I do? Summarise contributions. Raise questions.
 
-\section{Summary}
+\hltodo{Summary of I-priors, what it is, how it's used (regression, classification, variable selection) and how it's estimated.}
 
 The I-prior for the regression model \cref{eq:model1} subject to \cref{eq:model1ass} is seemingly data dependent, which violates Bayesian first principles.
 That is, an I-prior for $f$ as per \cref{eq:iprior2} makes use of the same data $\bx:=\{x_1,\dots,x_n\}$ in the covariance matrix for $f$ that appears in the model.
 However, the whole model is implicitly conditional on $\bx$.
 If the prior depended instead on the responses $\by$, then the state of knowledge a priori and a posteriori is exactly the same, and this violates Bayesian principles.
 
+\section{Summary of contributions}
+
+\begin{itemize}
+  \item extension of fisher information to infinite-dimensional parameters. the technology for derivatives applicable to other spaces like Banach spaces, could look at RKBS. infinite dimensional vectors e.g. for exponential family type distributions. 
+  \item efficient implementation of estimation methods, in particular EM algorithm. iprior package.
+  \item extension of iprior methodology to categorical responses. used variational EM
+  \item BVS. simple hands off approach. works well in multicollinearity.
+\end{itemize}
+
 \section{Questions}
+
+\begin{itemize}
+  \item starting values for EM or direct optimisation. what is the best approach?
+  \item variational approximation. asymptotic distribution of the parameters? any way to get SE from EM? do 
+\end{itemize}
 
 \section{Conclusion}
 
