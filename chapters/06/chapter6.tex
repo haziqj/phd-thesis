@@ -33,18 +33,63 @@ Furthermore, an I-prior on the regression coefficient entails prescribing the fo
 This follows from \cref{eq:ipriorcanonical} after a slight reparameterisation of the RKHS scale parameter $\kappa \mapsto \lambda^2/\sigma^4$. 
 Throughout this chapter, we assume that the columns of the design matrix $\bX = (X_1,\dots,X_p)$ have been standardised, so that a single RKHS scale parameter is sufficient for the $p$ covariates.
 
-The topic of interest for this chapter is variable selection, or more generally, model selection.
-Model selection entails searching the entire model space to find the ``best'' model according to some criterion. 
-There are many such criteria, from both frequentist and Bayesian perspectives, making model selection a huge topic to cover fully. 
-These include the (adjusted) $R^2$, Akaike's information criterion (AIC), Bayesian information criterion (BIC) and other similar information criteria, Mallow's $C_p$, ($k$-fold) cross-validation error, and so on. 
-Methods such as forward or backward selection provide heuristic approaches to model selection, but never truly explore the entire model space.
+The topic of interest for this chapter is model selection for linear regression models.
+That is, from a set of $p$ covariates or predictors $\{X_1,\dots,X_p\}$, the task is to determine the best choice of subset(s) of variables that should be included in a regression model used to explain the variation in the response variable.
+As such, the term \emph{variable selection} is synonymous to model selection for linear regression models.
+Fundamental to this notion of variable selection is an inherent belief in sparseness of the true data generative process surrounding the response variable, i.e., not all of the variables need be used to predict the response.
+Model selection is indeed a huge topic to cover fully.
+We broadly categorise variable selection into three: 1) (pairwise) model comparison via some criterion; 2) shrinkage to induce sparsity; and 3) Bayesian model selection.
+We understand that different categorisations and indeed categories of model selection exist in the literature, but our focus is on the discussion of the three types as mentioned.
 
-On the other hand, regularised least squares regression (ridge regression, Lasso, elastic nets, etc.) provides additional information to the linear model in order to provide a sparse solution to linear system of equations in $\bbeta$.
-These methods are proven to be popular and work well even in cases where $p > n$.
-From a Bayesian perspective, this is akin to placing priors on the $\beta_k$'s to shrink the effects of the $\beta_k$'s.
-Regularisation is fine when the ultimate goal is to `cut down the number of variables' or to obtain a particular quantity of interest, such as prediction.
-However, often times there is a genuine desire to know the most reasonable, parsimonious and interpretable model---a goal which is achieved through model selection.
-Through variable selection, we learn which covariates are important, and which are negligible.
+Model selection criteria, both from a frequentist and Bayesian standpoint, can either be of a predictive nature ($R^2$, mean squared error of prediction (MSEP), $C_p$ \citep{mallows1973some}, $k$-fold cross-validation MSEP, etc.), or a likelihood-based information criterion (likelihood ratios, Bayes factors, Akaike information criterion (AIC, \cite{akaike1973}), Bayesian information criterion (BIC, \cite{schwarz1978estimating}), etc.).
+Selecting a model based on either of these criteria requires comparison of all $2^p$ criteria, which is not feasible for large $p$.
+Typically, these criteria are used in conjunction with step-wise procedures such as forward-selection or backward-deletion to restrict attention to a smaller number of potential subsets \citep{George1993,miller2002subset}.
+
+On the other hand, regularised least squares regression (ridge regression \citep{hoerl1970ridge}, Lasso \citep{tibshirani1996regression}, or a convex combination of the two via elastic nets \citep{zou2005regularization}, etc.) provides additional information to the regression model in order to provide a sparse solution to linear system of equations in $\bbeta$.
+These methods are proven to be popular as they are fast and perform exceptionally well in many situations, even in cases where $p > n$.
+Additionally, the Lasso produces solutions for $\bbeta$ which are exactly zero, and is therefore seen as a proper variable selection procedure.
+However, the Lasso in general produces estimates which are biased towards zero, are inconsistent, and have no valid standard errors \citep{friedman2001elements,kyung2010penalized}.
+Further criticisms of the Lasso include its inability to select more than $n$ predictors in a $p>n$ situation, and poor performance when multicollinearity exists among the covariates.
+
+From a Bayesian perspective, regularisation is akin to placing priors on the $\beta_k$'s to shrink the effects of the $\beta_k$'s: the ridge regression has a Bayesian interpretation of placing normal priors on the regression coefficients, while the Lasso a Laplace or double exponential prior \citep{park2008bayesian}.
+The term adaptive shrinkage has been used for the method in which hyper-priors are placed on the scale parameter of the prior for the $\beta_k$'s.
+The idea is to adaptively shape the prior depending on the importance of the variable in the regression model.
+Bayesian shrinkage includes the task of specifying tuning parameters, which could potentially affect chain mixing in an MCMC procedure (which is often used).
+
+3) bayesian model selection. probabilistic approach to model selection: put priors on model space, then estimate posterior model probabilities from data. slightly related to likelihood based criterion of model selection (post. model prob = BF calculations = marginal likelihoods), so if $2^p$ is large then difficult. however, the advantage of bayesian framework is the ability to apply MCMC as a practical means of overcoming the intractability. stochastic approach to model selection were pioneered by \citep{George1993}, and revisited by others \citep{Kuo1998,dellaportas2002bayesian,Ntzoufras2008}
+
+advantages: bayesian model averaging. useful when several competing models have high posterior probabilities.
+
+criticisms: The topic of subset selection in regression is one that is viewed by many statisticians as ‘unclean’ or ‘distasteful’. Terms such as ‘fishing expeditions’, ‘torturing the data until they confess’, ‘data mining’, and others are used as descriptions of these practices. \citep{miller2002subset}
+in many studies variables are chosen because there is an expectation that they influence the response, and therefore regression model fitted is used to infer the strength of the influence.
+variable selection as an exploratory study. justified by many practical applications.
+arguably variable selection from a prescreening as part of data cleanup to remove problematic variables, such as those inducing a high degree of collinearity. how do we know we are deleting the correct variable?
+
+In addition to model selection, any quantity of interest, say regression coefficients, predicted values, and any others, may be obtained by way of Bayesian model averaging.
+Instead of conditioning on a single selected model, a quantity of interest $\Delta$ is averaged over a set of models to avoid underestimation of the uncertainty surrounding it \citep{madigan1994model}.
+In essence, the posterior distribution of $\Delta$ may be found by averaging the model specific posterior distributions weighted by its posterior model probabilities
+\begin{align}\label{eq:bma}
+  p(\Delta|y) = \sum_{k=1}^K p(\Delta|y,M_k)p(M_k|y).
+\end{align}
+Technically, the sum should be taken over the set of all possible models, but in practice this might not be achievable.
+Regardless, even if a smaller subset of models is used, it is well known that predictive accuracy of $\Delta$ is improved, as measured by a logarithmic scoring rule \citep{raftery1997bayesian}.
+
+
+
+
+\newpage
+
+
+
+
+
+
+
+
+
+%Regularisation is fine when the ultimate goal is to `cut down the number of variables' or to obtain a particular quantity of interest, such as prediction.
+%However, often times there is a genuine desire to know the most reasonable, parsimonious and interpretable model---a goal which is achieved through model selection.
+%Through variable selection, we learn which covariates are important, and which are negligible.
 
 There is a massive literature concerning Bayesian variable selection \citep{Chipman2001,OHara2009}.
 The approach that we take is a stochastic search of the model space due to \citet{George1993,Kuo1998} realised through a simple Gibbs sampling procedure.
@@ -76,37 +121,7 @@ A simulation study is conducted and several real-world examples presented to dem
 %The linear regression model \cref{eq:linmod} is such an example. 
 
 \newpage
-new plan: variable selection via three methods: 1) model comparison via some criterion (frequentist and Bayes); 2) shrinkage to induce sparsity; 3) Bayesian model selection (probabilities on models).
 
-problem: on linear regression models, choice of which subset of variables should be included in the model.
-explaining response variable with large number of explanatory variables.
-select a small subset, as close as possible to the true generative data process, which explains most of the variation in the response.
-belief of sparseness, that not all variables need to be included.
-
-1) model selection criteria. methods described in \citep{miller2002subset}. broadly three types: prediction criteria (R2, MSEP, Mallow's Cp, CV), likelihood/information criteria (AIC,BIC). requires comparison of all $2^p$, so usually use stepwise procedures: forward-selection, backward-selection, etc. these are `heuristic methods to restrict attention to a smaller number of potential subsets' \citep{George1993}. as a rough rule, possible if predictors are less than 25 (order $10^7$).
-
-2) shrinkage. induce sparseness by adding a penalty term to the likelihood in ML estimation (Ridge regression, Lasso, elastic net, etc.). idea is to add additional information to the system to regularise it. pros and cons?
-
-Bayesian point of view is just to add priors.  term adaptive shrinkage has been thrown around, to give suitable shape to the prior: if important, then flat, if useful then sharp peak. requires tuning, affects mixing in MCMC chain \citep{OHara2009}. jeffreys' prior (no tuning), exponential prior (Bayesian Lasso \citep{park2008bayesian}).
-
-
-3) bayesian model selection. probabilistic approach to model selection: put priors on model space, then estimate posterior model probabilities from data. slightly related to likelihood based criterion of model selection (post. model prob = BF calculations = marginal likelihoods), so if $2^p$ is large then difficult. however, the advantage of bayesian framework is the ability to apply MCMC as a practical means of overcoming the intractability. stochastic approach to model selection were pioneered by \citep{George1993}, and revisited by others \citep{Kuo1998,dellaportas2002bayesian,Ntzoufras2008}
-
-advantages: bayesian model averaging. useful when several competing models have high posterior probabilities.
-
-criticisms: The topic of subset selection in regression is one that is viewed by many statisticians as ‘unclean’ or ‘distasteful’. Terms such as ‘fishing expeditions’, ‘torturing the data until they confess’, ‘data mining’, and others are used as descriptions of these practices. \citep{miller2002subset}
-in many studies variables are chosen because there is an expectation that they influence the response, and therefore regression model fitted is used to infer the strength of the influence.
-variable selection as an exploratory study. justified by many practical applications.
-arguably variable selection from a prescreening as part of data cleanup to remove problematic variables, such as those inducing a high degree of collinearity. how do we know we are deleting the correct variable?
-
-In addition to model selection, any quantity of interest, say regression coefficients, predicted values, and any others, may be obtained by way of Bayesian model averaging.
-Instead of conditioning on a single selected model, a quantity of interest $\Delta$ is averaged over a set of models to avoid underestimation of the uncertainty surrounding it \citep{madigan1994model}.
-In essence, the posterior distribution of $\Delta$ may be found by averaging the model specific posterior distributions weighted by its posterior model probabilities
-\begin{align}\label{eq:bma}
-  p(\Delta|y) = \sum_{k=1}^K p(\Delta|y,M_k)p(M_k|y).
-\end{align}
-Technically, the sum should be taken over the set of all possible models, but in practice this might not be achievable.
-Regardless, even if a smaller subset of models is used, it is well known that predictive accuracy of $\Delta$ is improved, as measured by a logarithmic scoring rule \citep{raftery1997bayesian}.
 
 
 

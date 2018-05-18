@@ -124,6 +124,13 @@ res.gam10 <- list("0.90" = res.90[1:2],
                   "0.10" = res.10[1:2])
 save(res.gam10, file = "data/bvs-res-gam10")
 
+## ---- combine ----
+# Only if need to combine two or more saved results
+for (i in seq_along(res.gam10)) {
+  res.gam25[[i]] <- mapply(rbind, res.gam25[[i]], res.gam25.2[[i]],
+                           SIMPLIFY = FALSE)
+}
+
 ## ---- bvs.sims.res ----
 count_false_choices <- function(x) {
   x.0to2 <- mean(x <= 2)
