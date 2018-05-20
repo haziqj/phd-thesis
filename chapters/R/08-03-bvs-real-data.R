@@ -1,6 +1,7 @@
 # Chapter 8
 # Bayesian Variable Selection using I-priors simulation study
 source("00-prelim.R")
+chapter <- "06"
 
 # ---- bvs.ozone ----
 
@@ -95,5 +96,10 @@ mod <- ipriorBVS(cmedv ~ ., boston)
 
 # ---- bvs.aerobic ----
 data(aerobic, package = "ipriorBVS")
-(mod <- ipriorBVS(Oxygen ~ ., aerobic))
-(mod <- ipriorBVS(Oxygen ~ ., aerobic, two.stage = TRUE))
+colnames(aerobic)[-1] <- paste0("X", 1:6)
+(mod1 <- ipriorBVS(Oxygen ~ ., aerobic))
+plot_coef2(mod1)
+ggsave("figure/06-aerobic_coef.pdf", plot_coef2(mod1), "pdf",
+       width = 7, height = 7)
+move_fig_to_chapter()
+(mod2 <- ipriorBVS(Oxygen ~ ., aerobic, two.stage = TRUE))
