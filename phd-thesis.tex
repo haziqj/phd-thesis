@@ -1,4 +1,4 @@
-\documentclass[a4paper,showframe,11pt]{report}
+\documentclass[a4paper,showframe,11pt,openright]{report}  %twoside,openright
 \usepackage{haziq_thesis}
 \usepackage{haziq_maths}
 \usepackage{haziq_glossary}
@@ -27,13 +27,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage  % dedication
 \setcounter{page}{2}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.35\textwidth]{figure/bismillah}
-\end{figure}
-\begin{center}
-  \textit{To my parents.}
-\end{center}
+%\begin{figure}[H]
+%  \centering
+%  \includegraphics[width=0.35\textwidth]{figure/bismillah}
+%\end{figure}
+%\begin{center}
+%  \textit{To my parents.}
+%\end{center}
 
 \chapter*{Abstract} \input{chapters/frontmatter/abstract}
 \chapter*{Declaration} \input{chapters/frontmatter/declaration}
@@ -44,12 +44,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hTOCandLists
 \hltodo[Abbreviations and indices?]{}
+\hltodo[Clean up figure and table captions (no dots at end).]{}
 \clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% BODY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\hltodo[Clean up figure and table captions (no dots at end).]{}
 
 \chapter{Introduction} 
 \subimport{chapters/01/}{chapter1}
@@ -57,19 +57,23 @@
 \chapter{Vector space of functions}
 \subimport{chapters/02/}{chapter2}
 
+\afterpage{\blankpage}
 \chapter{Fisher information and the I-prior}
 \subimport{chapters/03/}{chapter3}
 
+\afterpage{\blankpage}
 \chapter{Modelling with I-priors}
 \subimport{chapters/04/}{chapter4}
 
+\afterpage{\blankpage}
 \chapter{I-priors for categorical responses}
 \subimport{chapters/05/}{chapter5}
 
+\afterpage{\blankpage}
 \chapter{Bayesian variable selection using I-priors}
 \subimport{chapters/06/}{chapter6}
 
-\chapter{Discussion}
+\chapter{Summary}
 \input{chapters/07/chapter7}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

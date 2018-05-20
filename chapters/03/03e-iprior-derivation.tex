@@ -105,7 +105,7 @@ We now state and prove the I-prior theorem.
   Denote by $\tilde p$ the density of the entropy maximising distribution among the class of distributions within $\cP_0$.
   Then, $\tilde p$ is Gaussian over $\cF$ with mean $f_0$ and covariance function equal to the reproducing kernel of $\cF_n$, i.e.
   \[
-    \Cov\big(f(x),f(x')\big) = h_n(x,x').
+    \Cov\big[f(x),f(x')\big] = h_n(x,x').
   \]
   We call $\tilde p$ the \emph{I-prior} for $f$.
 \end{theorem}
@@ -118,10 +118,12 @@ We now state and prove the I-prior theorem.
   The norm on $\cF_n$ induces the metric $D(f,f') = \norm{f - f'}_{\cF_n}$.
   For $f,f_0 \in \cF$, take the 
   \hltodo[Double check this proof.]{orthogonal projections} of these vectors onto $\cF_n$
+  \vspace{-0.5em}
   \[
     f = \sum_{i=1}^n h(\cdot,x_i)w_i + r_f
     \hspace{0.5cm}\text{and}\hspace{0.5cm}
     f_0 = \sum_{i=1}^n h(\cdot,x_i)w_{i0} + r_0
+    \vspace{-0.5em}
   \]
   and compute the squared distance between them:
   \begin{align*}
@@ -144,21 +146,21 @@ We now state and prove the I-prior theorem.
   \end{align*}
   is a sum of normal random variables, and therefore $\langle f,f' \rangle_{\cF}$ is normally distributed for any $f' \in \cF$.
   The mean $\mu\in\cF$ of this random vector $f$ satisfies $\E\ip{f,f'}_{\cF}  = \ip{\mu,f'}_{\cF}$ for all $f'\in\cF_n$, but
+  \vspace{-1.1em}
   \begin{align*}
     \E\ip{f,f'}_{\cF}  
     &= \E \left\langle \sum_{i=1}^n h(\cdot,x_i)w_i, f' \right\rangle_{\cF} \\
     &= \E \left[ \sum_{i=1}^n w_i \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF} \right] \\
-    &= \sum_{i=1}^n w_{i0} \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF} \\
-    &= \left\langle \sum_{i=1}^n h(\cdot,x_i)w_{i0}, f' \right\rangle_{\cF} \\
-    &= \langle f_0,f' \rangle_{\cF},
+    &= \sum_{i=1}^n w_{i0} \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF}  \\
+    &= \left\langle \sum_{i=1}^n h(\cdot,x_i)w_{i0}, f' \right\rangle_{\cF} = \langle f_0,f' \rangle_{\cF},
   \end{align*}
   so $\mu \equiv f_0 = \sum_{i=1}^n h(\cdot,x_i)w_{i0}$. 
   
   The covariance between two evaluation functionals of $f$ is shown to satisfy 
   \begin{align*}
-    \Cov\big(f(x),f(x')\big) 
-    &= \Cov\big(\ip{f,h(\cdot,x)}_{\cF}, \ip{f,h(\cdot,x')}_{\cF} \big) \\
-    &= \E\big(\ip{f-f_0,h(\cdot,x)}_{\cF}\ip{f-f_0,h(\cdot,x')}_{\cF} \big) \\
+    \Cov\big[f(x),f(x')\big] 
+    &= \Cov\big[\ip{f,h(\cdot,x)}_{\cF}, \ip{f,h(\cdot,x')}_{\cF} \big] \\
+    &= \E\big[\ip{f-f_0,h(\cdot,x)}_{\cF}\ip{f-f_0,h(\cdot,x')}_{\cF} \big] \\
     &= \left\langle C, h(\cdot,x) \otimes h(\cdot,x') \right\rangle_{\cF \otimes \cF},
   \end{align*}
   where $C \in \cF\otimes\cF$ is the covariance element of $f$.

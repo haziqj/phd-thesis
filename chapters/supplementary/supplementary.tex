@@ -32,8 +32,10 @@
 %\setcounter{subsection}{0}
 %\renewcommand{\thesubsection}{S\arabic{section}.\arabic{subsection}}% 
 
+\afterpage{\blankpage}
 \chapter{Basic estimation concepts}
 \input{s01-basic}
+
 
 \chapter{The EM algorithm}\label[supchap]{schap:em}
 \input{s02-emalg}
@@ -41,10 +43,12 @@
 \chapter{Variational inference}
 \input{s03-vi}
 
+\afterpage{\blankpage}
 \chapter{Hamiltonian Monte Carlo}
 \input{s04-hmc}
 
-\chapter{Component-wise derivative in infinite-dimensional vector spaces}\label{misc:comwiseder}
+\afterpage{\blankpage}
+\chapter{Component-wise derivative in infinite-dimensional vector spaces}\label[supchap]{misc:comwiseder}
 \input{s05-compwiseder}
 
 \hClosingStuffStandalone
