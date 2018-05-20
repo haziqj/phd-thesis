@@ -100,6 +100,6 @@ colnames(aerobic)[-1] <- paste0("X", 1:6)
 (mod1 <- ipriorBVS(Oxygen ~ ., aerobic))
 plot_coef2(mod1)
 ggsave("figure/06-aerobic_coef.pdf", plot_coef2(mod1), "pdf",
-       width = 7, height = 7)
+       width = 7, height = 6.4)
 move_fig_to_chapter()
 (mod2 <- ipriorBVS(Oxygen ~ ., aerobic, two.stage = TRUE))
