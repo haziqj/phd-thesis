@@ -1,0 +1,316 @@
+Consider a statistical model parameterised by $\btheta = (\theta_1,\dots,\theta_p)^\top$ for which we have observations $\by := \{y_1,\dots,y_n\}$, but also some latent variables $\bz$.
+Typically, in such models, there is a want to to evaluate the integral 
+\begin{equation}\label{eq:varint2} 
+  \cI = \int p(\by|\bz) p(\bz) \dint \bz,
+\end{equation}
+Marginalising out the latent variables in \cref{eq:varint2} is usually a precursor to obtaining a log-likelihood function to be maximised in a frequentist setting, whereby there is an implicit dependence on the model parameters in the evaluation of $\cI$.
+In Bayesian analysis, priors are specified on the model parameters $\theta\sim p(\theta)$.
+By concatenating the latent variables and model parameters to form $\bz$, the $\cI$ corresponds to the marginal density for $\by$, on which the posterior depends.
+
+In many instances, for one reason or another, evaluation of \cref{eq:varint2} or is difficult, in which case inference is halted unless a way of overcoming the intractability is found.
+In this chapter, we discus \emph{variational inference} (VI) as a means of approximating the integral.
+The literature on variational inference is typically presented in a Bayesian light \citep{jordan1999introduction,bishop2006pattern,blei2017variational}, and as such, it is commonly known as \emph{variational Bayes} method.
+The main attraction from a Bayesian point of view is that it provides a deterministic way of obtaining (approximate) posteriors, i.e. it does not involve sampling from posteriors.
+
+Variational inference can be used in conjunction with an EM algorithm, in which the E-step is replaced with a variational E-step.
+This \emph{variational EM algorithm} is used for maximum likelihood learning, but can modified to obtain maximum a posteriori estimates.
+In the works of \citep{beal2003variational,beal2003}, the authors realised that the EM algorithm can be extended easily to obtain posterior densities of the latent variables and parameters if the statistical model is conjugate exponential family.
+They refer to this as the \emph{variational Bayes EM algorithm}, but in fact this is really just variational inference in which the algorithm resembles an EM algorithm with clear E- and M-steps.
+
+We first briefly introduce variational methods for approximating the intractable integral, and this is usually considered a fully Bayesian treatment of the model.
+We then describe variational EM, and provide a comparison of the two methods.
+
+\section{A brief introduction to variational inference}
+\label{sec:varintro}
+
+
+
+
+
+
+The crux of variational inference is this: find a suitably close distribution function $q(\bz)$ that approximates the true posterior $p(\bz|\by)$, where closeness here is defined in the Kullback-Leibler divergence sense,
+\[
+  \KL(q\Vert p) = \int \log \frac{q(\bz)}{p(\bz|\by)} q(\bz) \dint \bz.
+\]
+Posterior inference is then conducted using $q(\bz)$ in lieu of $p(\bz|\by)$.
+Advantages of this method are that 1) it is fast to implement computationally (compared to MCMC); 2) convergence is assessed simply by monitoring a single convergence criterion; and 3) it works well in practice, as attested to by the many studies implementing VI.
+
+Briefly, we present the motivation behind variational inference and the minimisation of the KL divergence.
+Denote by $q(\cdot)$ some density function of $\bz$.
+One may show that log marginal density (the log of the intractable integral \cref{eq:varint}) holds the following bound:
+\begin{align}
+  \log p(y) &= \log p(\by,\bz) - \log p(\bz|\by) \mycomment{\footnotesize (Bayes' theorem)} \nonumber \\
+  &= \int \left\{ \log \frac{p(\by,\bz)}{q(\bz)} - \log \frac{p(\bz|\by)}{q(\bz)} \right\} q(\bz) \dint z \mycomment{\footnotesize (expectations both sides)} \hspace{0.7cm} \nonumber \\    
+  &=  \cL(q) +  \KL(q \Vert p) \nonumber \\
+  &\geq \cL(q) \label{eq:varbound}
+\end{align}
+since the KL divergence is a non-negative quantity.
+The functional $\cL(q)$ given by 
+\begin{align}
+  \cL(q) 
+  &= \int \log \frac{p(\by,\bz)}{q(\bz)} q(\bz) \dint \bz \nonumber \\
+%  &= \E_{\bz\sim q}[\log p(\by,\bz) - \log q(\bz)] \nonumber \\
+  &= \E_{\bz\sim q}[\log p(\by,\bz)] + H(q), \label{eq:elbo1}
+\end{align}
+where $H$ is the entropy functional, is known as the \emph{evidence lower bound} (ELBO).
+Evidently, the closer $q$ is to the true $p$, the better, and this is achieved by maximising $\cL$, or equivalently, minimising the KL divergence from $p$ to $q$.
+Note that the bound \cref{eq:varbound} achieves equality if and only if $q(\bz) \equiv p(\bz|\by)$, but of course the true form of the posterior is unknown to us---see \cref{sec:varEM} for a discussion.
+Maximising $\cL(q)$ or minimising $\KL(q\Vert p)$ with respect to the density $q$ is a problem of calculus of variations, which incidentally, is where variational inference takes its name.
+The astute reader will realise that $\KL(q||p)$ is impossible to compute, since one does not know the true distribution $p(\bz|\by)$. Efforts are concentrated on maximising the ELBO instead.
+
+Maximising $\cL$ over all possible density functions $q$ is not possible without considering certain constraints.
+Two such constraints are described. 
+The first, is to make a distributional assumption regarding $q$, for which it is parameterised by $\nu$.
+For instance, we might choose the closest normal distribution to the posterior $p(\bz|\by)$ in terms of KL divergence.
+In this case, the task is to find optimal mean and variance parameters of a normal distribution.
+
+\begin{figure}[htb]
+  \centering
+  \begin{tikzpicture}
+    \draw[ultra thick] (0,0) ellipse (4cm and 2.2cm);
+    \node at (-2.8,0.7) {$q(\bz;\nu)$};
+    \draw[thick,colred] (-0.8,-0.5) to [curve through={(-2,0) .. (-2,-0.8) .. (1,-0.8) .. (-1,1.5) .. (0,1.5) ..(0.3,0.1) .. (0.5,1.5) .. (2,0) .. (2.1,-0.1) .. (2.2,1.1) .. (3,0.9)}] (3.317,1.225);  % curve using hobby tikz
+    \draw[dashed, very thick,black!50] (3.317,1.225) -- (4.05,2.1);
+    \fill (-0.8,-0.5) circle (2.2pt) node[below] {$\nu^{\text{init}}$};
+    \fill (3.317,1.225) circle (2.2pt) node[left,yshift=-1] {$\nu^*$};
+    \fill (4.05,2.1) circle (2.2pt) node[right,yshift=1] {$p(\bz|\by)$};
+    \node[gray] at (4.5,1.4) {$\KL(q\Vert p)$};
+  \end{tikzpicture}
+  \vspace{-1em}
+  \caption[Schematic view of variational inference. The aim is to find the closest distribution $q$ (parameterised by a variational parameter $\nu$) to $p$ in terms of KL divergence within the set of variational distributions, represented by the ellipse.]{Schematic view of variational inference\footnotemark. The aim is to find the closest distribution $q$ (parameterised by a variational parameter $\nu$) to $p$ in terms of KL divergence within the set of variational distributions, represented by the ellipse.}
+\end{figure}
+\footnotetext{Reproduced from the talk by David Blei entitled `Variational Inference: Foundations and Innovations', 2017. URL: \url{https://simons.berkeley.edu/talks/david-blei-2017-5-1}.}
+
+The second type of constraint, and the one considered in this thesis, is simply an assumption that the approximate posterior $q$ factorises into $M$ disjoint factors.
+Partition $\bz$ into $M$ disjoint groups $\bz = (z_{[1]},\dots,z_{[M]})$.
+Note that each factor $z_{[k]}$ may be multidimensional.
+Then, the structure
+\[
+  q(\bz) = \prod_{k=1}^M q_k(z_{[k]})
+\]
+for $q$ is considered.
+This factorised form of variational inference is known in the statistical physics literature as the \emph{mean-field theory} \citep{itzykson1991statistical}.
+
+\begin{remark}
+The choice of factorisation is completely arbitrary, although forcing factorisation also induces independence between the factors in the posterior, and this may or may not be suitable for the problem at hand.
+Landing the correct choice of factorisation is rather experimental, as the aim is to balance tractability and model misspeficication.
+In a model with both latent variables and random parameters (in a Bayesian setting), then a good starting point would be to factorise the latent variables and parameters.
+\end{remark}
+
+Let us denote the distributions which minimise the Kullback-Leibler divergence (maximise the variational lower bound) by the use of tildes.
+The impact of the mean-field factorisation on the ELBO is inspected:
+\begin{align*}
+  \cL(q) 
+  &= \idotsint \log \frac{p(\by,\bz)}{\prod_{k=1}^M q_k(\bz)}  \prod_{k=1}^m \left\{ q_k(z_{[k]}) \dint z_{[k]} \right\} \\
+  &= \idotsint \left( \log p(\by,\bz) - \sum_{k=1}^M \log q_k(\bz)  \right) \prod_{k=1}^M \left\{ q_k(z_{[k]}) \dint z_{[k]} \right\} 
+\end{align*}
+and rearranging slightly for terms involving the $j$'th component only, we get
+\begin{align*}
+  \cL(q) 
+  &= \idotsint \left( \log p(\by,\bz)  - \log q_j(z_{[j]}) + \const \right) q_j(z_{[j]}) \dint z_{[j]} \prod_{k\neq j} \left\{ q_k(z_{[k]}) \dint z_{[k]} \right\} \\
+  &= \int \Bigg( 
+  \greyoverbrace{\idotsint \log p(\by,\bz)  \prod_{k\neq j} \left\{ q_k(z_{[k]}) \dint z_{[k]} \right\}}{\log \tilde p(\by,z_{[j]}) + \const}
+  \Bigg) q_j(z_{[j]}) \dint z_{[j]} \\
+  &\phantom{==} - \int  \log q_j(z_{[j]}) q_j(z_{[j]}) \dint z_{[j]} + \const \\
+  &= -\KL(q_{[j]} \Vert \tilde p) + \const
+\end{align*}
+The task of maximising $\cL$ is then equivalent to maximising $-\KL(q_{[j]} \Vert \tilde p)$, where $\tilde p$ is defined in the overbrace of the second line in the equation above.
+Thus, for each $z_{[k]}$, $k=1,\dots,M$, $\tilde q_k$ satisfies
+\begin{align}\label{eq:qtilde}
+  \log \tilde q_k(z_{[k]}) = \E_{-k} [ \log p(\by,\bz) ] + \const
+\end{align}
+where expectation of the joint log density of $\by$ and $\bz$ is taken with respect to all of the unknowns $\bz$, except the one currently in consideration $z_{[k]}$, under their respective $\tilde q_k$ densities. 
+For further details, refer to \citet[equation 10.9, p. 466]{bishop2006pattern}.
+
+In practice, rather than an explicit calculation of the normalising constant, one simply needs to inspect \cref{eq:qtilde} to recognise it as a known log-density function, which is the case when exponential family distributions are considered.
+That is, suppose that each complete conditional $p(z_{[k]}|\bz_{-k}, \by)$, where $\bz_{-k} = \{z_{[i]} | i \neq k\}$, follows an exponential family distribution
+\[
+  p(z_{[k]}| \bz_{-k}, \by ) 
+  = B(z_{[k]})\exp \big(\ip{\zeta_k(\bz_{-k}, \by) , z_{[k]}} - A(\zeta_k) \big).
+\]
+Then, from \cref{eq:qtilde},
+\begin{align*}
+  \tilde q(z_{[k]})
+  &\propto \exp\big(\E_{-k}\log p(z_{[k]}| \bz_{-k}, \by) \big) \\
+  &= \exp \Big(\log B(z_{[k]}) + \E \ip{\zeta_k(\bz_{-k}, \by) , z_{[k]}} - \E [ A(\zeta_k) ] \Big) \\
+  &\propto B(z_{[k]})\exp \E\ip{\zeta_\xi(\bz_{-k}, \by) , z_{[k]}}
+\end{align*}
+is also in the same exponential family.
+In situations where there is no closed form expression for $\tilde q$, then one resorts to sampling methods such as a Metropolis random walk to estimate quantities of interest.
+This stochastic step within a deterministic algorithm has been explored before in the context of a Monte Carlo EM algorithm---see \citet[§4, pp. 537--538]{meng1997algorithm} and references therein.
+
+One notices that the optimal mean-field variational densities for each component are coupled with one another, in the sense that the distribution $\tilde q_k$ depends on the moments of the rest of the components $\bz_{-k}$.
+For very simple problems, an exact solution for each $\tilde q_k$ can be found, but usually, the way around this is to employ an iterative procedure.
+The \emph{coordinate ascent mean-field variational inference} (CAVI) algorithm cycles through each of the distributions in turn, updating them in sequence starting with arbitrary distributions as initial values.
+
+\begin{algorithm}[H]
+\caption{The CAVI algorithm}\label{alg:cavi}
+  \begin{algorithmic}[1]
+    \State \textbf{initialise} Variational factors $q_k(z_{[k]})$
+    \While{ELBO $\cL(q)$ not converged}
+      \For{$k = 1,\dots,M$}
+        \State $\tilde q_k(z_{[k]}) \gets \const \times \exp \left( \E_{-k}\log p(\by,\bz) \right)$ \Comment{from \eqref{eq:qtilde}}
+      \EndFor
+      \State $\cL(q) \gets \E_{\bz \sim \prod_k\tilde q_k}\log p(\by, \bz) + \sum_{k=1}^m H\big[ q_k(z_{[k]})\big]$ \Comment{Update ELBO}
+    \EndWhile
+    \State \textbf{return} $\tilde q(\bz) = \prod_{k=1}^M \tilde q_j(z_{[k]})$ 
+  \end{algorithmic}
+\end{algorithm}
+
+Each iteration of the CAVI brings about an improvement in the ELBO (hence the name coordinate ascent).
+The algorithm terminates when there is no more significant improvement in the ELBO, indicating a convergence of the CAVI.
+\citet{blei2017variational} notes that the ELBO is typically a non-convex function, in which case convergence may be to (one of possibly many) local optima.
+A simple solution would be to restart the CAVI at multiple initial values, and the solution giving the highest ELBO is the distribution that is closest to the true posterior.
+
+\section{Variational EM algorithm}
+\label{sec:varEM}
+\input{energy}
+
+Consider again the latent variable setup described in \cref{schap:em}, in which the goal is to maximise the (marginal) log-likelihood of the parameters $\theta$ of the model, after integrating out the latent variables, as given by \cref{eq:varint}.
+We will see how the EM algorithm relates to minimising the KL divergence between a density $q(\bz)$ and the posterior of $\bz$, and connect this idea to variational methods.
+
+\begin{figure}[htb]
+  \centering
+  \energyem 
+  \caption[Illustration of the decomposition of the log likelihood.]{Illustration\footnotemark~of the decomposition of the log-likelihood into $\cL(q,\theta)$ and $\KL(q \Vert p)$. The quantity $\cL(q,\theta)$ is a lower bound for the log-likelihood.}
+  \label{fig:loglikdecomp}
+\end{figure}
+\footnotetext{Reproduced from \citet[Figure 9.11]{bishop2006pattern}.}
+
+As we did in deriving \cref{eq:varbound}, we decompose the (marginal) log-likelihood as
+\begin{align*}
+  \log p(\by|\theta) &= \log p(\by,\bz|\theta) - \log p(\bz|\by,\theta)  \\
+  &= \int \left\{ \log \frac{p(\by,\bz|\theta)}{q(\bz)} - \log \frac{p(\bz|\by,\theta)}{q(\bz)} \right\} q(\bz) \dint \bz  \\    
+  &= \myunderbrace{\E_{\bz\sim q} \left[\log \frac{p(\by,\bz|\theta)}{q(\bz)} \right]}{\cL(q,\theta)}
+  - \myunderbrace{\E_{\bz\sim q} \left[\log \frac{p(\bz|\by,\theta)}{q(\bz)} \right]}{-\KL(q \Vert p)},
+\end{align*}
+where $q(\bz)$ is any density function over the latent variables.
+This decomposition is shown in \cref{fig:loglikdecomp}.
+The interest is then to have a density function $q(\bz)$ which is as close as possible to the true posterior density $p(\by|\bz,\theta)$ in the KL divergence sense.
+Since the KL divergence is non-negative, minimising $\KL(q\Vert p)$ is equivalent to maximising $\cL(q,\theta)$.
+
+As a remark, the above line of thought should be familiar as it is the exact same one made for variational inference.
+The twist here is that we will peruse a distribution which tightens the lower bound $\cL(q,\theta)$ to the marginal log-likelihood, and this happens when $\KL(q\Vert p)$ is exactly zero, and this in turn happens when $q$ is exactly the true posterior density.
+That is, for some parameter value, $\theta = \theta^{(t)}$ say, the solution to
+\begin{equation}
+  \argmax_q \cL(q,\theta^{(t)})
+\end{equation}
+is $q^{(t+1)}(\bz) = p(\bz|\by,\theta^{(t)})$, because
+\begin{align*}
+  \KL(q \Vert p) = \E \left[\log \frac{p(\bz|\by,\theta^{(t)})}{p(\bz|\by,\theta^{(t)})} \right] = 0.
+\end{align*}
+At this stage, we have the equality
+\begin{align}
+  \log p(\by|\theta) 
+  &= \cL(q^{(t+1)},\theta) \\
+  &= \E_{\bz\sim q^{(t+1)}} \left[\log \frac{p(\by,\bz|\theta)}{p(\bz|\by,\theta^{(t)})}  \right]  \\
+  &= \myunderbrace{\E_{\bz\sim q^{(t+1)}} \big[\log p(\by,\bz|\theta)  \big]}{Q(\theta|\theta^{(t)})}
+  - \myunderbrace{\E_{\bz\sim q^{(t+1)}} \big[\log p(\bz|\by,\theta^{(t)})\big]}{-H(q^{(t+1)})},
+\end{align}
+%for which increasing the value of $\cL(q^{(t+1)},\theta)$ with respect to $\theta$ will bring about an increase in the log-likelihood.
+
+The term on the left is recognised as the $Q$ function of the E-step
+\[
+  Q(\theta) = Q(\theta|\theta^{(t)}) = \E_\bz\left[ \log p(\by,\bz|\theta) \,\big|\, \by,\theta^{(t)} \right],
+\]
+while the term on the left is an entropy term which does not depend on $\theta$.
+Thus, minimising the KL divergence, or maximising the lower bound $\cL$ with respect to $q$, corresponds to the E-step in the EM algorithm.
+
+Furthermore, since equality between the log-likelihood and the lower bound is achieved after the E-step, increasing $\cL(q^{(t+1)},\theta)$ with respect to $\theta$ is sure to bring about an increase in the log-likelihood.
+That is, for any $\theta$, we find that
+\begin{align*}
+  \log p(\by|\theta) - \log p(\by|\theta^{(t)}) 
+  &= Q(\theta|\theta^{(t)}) - Q(\theta^{(t)}|\theta^{(t)}) + \Delta \, \text{entropy} \\
+  &\geq Q(\theta|\theta^{(t)}) - Q(\theta^{(t)}|\theta^{(t)}).
+\end{align*}
+because entropy differences are positive by Gibbs' inequality.
+We see that maximising $Q$ with respect to $\theta$ (the M-step) brings about an improvement to the log-likelihood value.
+
+To summarise, given initial values $q^{(0)}$ for the distribution  and $\theta^{(0)}$ for the parameters, the EM algorithm is seen as iterating between
+\begin{itemize}
+  \item \textbf{E-step}: $q^{(t+1)} \gets \argmax_q \cL(q,\theta^{(t)})$, i.e., maximise $\cL(q,\theta)$ with respect to $q$, keeping $\theta$ fixed. This is equivalent to minimising the KL divergence $\KL(q\Vert p)$.
+  \item \textbf{M-step}. $\theta^{(t+1)} \gets \argmax_\theta \cL(q^{(t+1)},\theta)$, i.e., maximise $\cL(q,\theta)$ with respect to $\theta$, keeping $q(\bz)$ fixed.
+\end{itemize}
+
+When the true posterior distribution $p(\bz|\by)$ is not tractable, then the E-step becomes intractable as well.
+By constraining the maximisation in the E-step to consider $q$ belonging to a family of tractable densities, the E-step yields a variational approximation $\tilde q$ to the true posterior.
+In \cref{sec:varintro}, we saw that constraining $q$ to be of a factorised form, then $\tilde q$ is a mean-field density.
+After a variational E-step, the M-step proceeds as normal.
+This form of the EM is known as \emph{variational EM algorithm} (VEM) \citep{beal2003variational}.
+The variational EM algorithm can also be modified to obtain MAP estimates by including the log prior density to the maximisation objective in the M-step.
+
+\begin{figure}[p]\label{fig:emVSvem}
+  \centering
+  \energyemEstep \hspace{0.5cm}
+  \energyvbEstep
+  \energyemMstep \hspace{0.5cm}
+  \energyvbMstepa
+  \energyemMstepfade \hspace{0.5cm}
+  \energyvbMstepb
+  \energyemMstepfade \hspace{0.5cm}
+  \energyvbMstepc
+  \vspace{-1em} 
+  \caption{Illustration of EM vs VEM. Whereas the EM guarantees an increase in log-likelihood value (red shaded region), the VEM does not.}
+\end{figure}
+
+Due to an approximation to the true posterior being used in the E-step, there is no guarantee that the log-likelihood value will increase at each iteration.
+This is seen pictorially in \cref{fig:emVSvem}: since the bound on the log-likelihood is not tight, increasing this bound will not necessarily cause an increase in log-likelihood value (Scenario C), and even if it did, it may not give as much an increase as it would under the true posterior density (Scenario B).
+Scenario A depicts an ideal case whereby the increase in log-likelihood is as much as it would be if the true posterior density was used.
+
+On a practical note, if the posterior density is intractable, then so is the marginal likelihood, which means that we're unable to determine convergence of the EM using the log-likelihood.
+Instead, the lower bound $\cL(q,\theta)$ should be used, which monotonically increases to a local optima (as in the CAVI algorithm).
+
+\section{Comparing variational inference and variational EM}
+
+Variational inference is a fully Bayesian treatment of the model, for which the goal is to obtain approximate posterior densities for all latent variables and parameters.
+Variational EM algorithm on the other hand has the objective of obtaining ML or MAP estimates of the parameters using an EM algorithm in which the E-step is replaced with a variational E-step.
+In some cases, the CAVI algorithm can resemble an EM algorithm, especially when there is a distinction between latent variables and parameters, and a conjugate exponential family model is involved \citep{blei2017variational}.
+
+Variational inference can yield exactly similar point estimates as variational EM if the approximate posterior is symmetric, e.g. a normal distribution.
+Under a normal posterior, its mean is used as a point estimate, which coincides with the mode, which is a MAP estimate, or in the case of diffuse priors, a ML estimate.
+However, since the output of variational inference are posterior densities instead of a single point estimate, one is able to obtain posterior standard deviations or credibility intervals about the parameters, something which is not so straightforward under a variational EM or even EM framework.
+
+Derivation of the CAVI algorithm and ELBO for specific models is certainly more tedious than the derivation of the variational EM algorithm.
+Often, quantities that are required in the derivation include $\E[\theta]$, $\E[\theta^2]$, $\E[\theta^{-1}]$, $\E[\log \theta]$ or any other moment of some function of $\theta$, where expectations are taken under the approximating $q$ posterior density.
+For certain distributions $q(\theta)$ these quantities can be awkward to compute, and may need approximating themselves.
+
+The computational time and storage requirements of variational methods is virtually the same as EM algorithm \citep{beal2003variational,blei2017variational}.
+Consider the mean-field variational approximation.
+In variational inference or variational EM, the updating step for the factors involve
+\begin{equation}\label{eq:viEstep1}
+  \tilde q_k^{(t+1)}(z_{[k]}) \gets \const \times \exp \left( \E_{\bz_{-k}\sim\tilde q^{(t)}}[\log p(\by,\bz)]\right),
+\end{equation}
+for each of the factors of the approximate posterior $q(\bz) = \prod_{k=1}^M q_k(z_{[k]})$.
+In the EM algorithm E-step, one obtains the $Q$ function
+\begin{equation}\label{eq:emEstep1}
+  Q(\theta|\theta^{(t)}) = \E_{\bz}[\log p(\by,\bz)|\by,\theta^{(t)}].
+\end{equation}
+We can see that in both equations \cref{eq:viEstep1} and \cref{eq:emEstep1}, there is a need to compute the expectation of the joint log density, but the difference between the variational inference and EM or variational EM lies in the M-step.
+In variational inference one seeks a distribution, while in EM or variational EM one seeks a point estimate (posterior mode) of this distribution.
+
+{\renewcommand{\arraystretch}{1.5}
+\begin{table}[]
+\centering
+\caption{Comparison between variational inference and variational EM.}
+\label{tab:vivemcompare}
+\begin{tabular}{p{6.5cm}p{6.5cm}}
+\toprule
+Variational inference & Variational EM\\ 
+\midrule
+\textbf{GOAL}: Posterior densities for $(\bz, \theta)$                                                          
+& \textbf{GOAL}: ML/MAP estimates for $\theta$ \\
+Variational approximation for latent variables and parameters $q(\bz,\theta)\approx p(\bz,\theta|\by)$ 
+& Variational approximation for latent variables only $q(\bz)\approx p(\bz|\by)$ \\
+Priors required on $\theta$                                                                            
+& Priors not necessary for $\theta$ \\
+Derivation can be tedious 
+& Derivation less tedious \\
+Inference on $\theta$ through posterior density $q(\theta)$
+& Asymptotic distribution of $\theta$ not well studied; standard errors for $\theta$ not easily obtained \\
+Suited to conjugate exponential family models: posteriors will be easily recognisable
+& Suited to conjugate exponential family models, but not necessary \\
+\bottomrule
+\end{tabular}
+\end{table}
+}
+

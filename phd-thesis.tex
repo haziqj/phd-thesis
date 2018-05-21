@@ -1,4 +1,4 @@
-\documentclass[a4paper,showframe,11pt]{report}
+\documentclass[a4paper,showframe,11pt,openright]{report}  %twoside,openright
 \usepackage{haziq_thesis}
 \usepackage{haziq_maths}
 \usepackage{haziq_glossary}
@@ -27,13 +27,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage  % dedication
 \setcounter{page}{2}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.35\textwidth]{figure/bismillah}
-\end{figure}
-\begin{center}
-  \textit{To my parents.}
-\end{center}
+%\begin{figure}[H]
+%  \centering
+%  \includegraphics[width=0.35\textwidth]{figure/bismillah}
+%\end{figure}
+%\begin{center}
+%  \textit{To my parents.}
+%\end{center}
 
 \chapter*{Abstract} \input{chapters/frontmatter/abstract}
 \chapter*{Declaration} \input{chapters/frontmatter/declaration}
@@ -43,6 +43,8 @@
 %%% TOC & VARIOUS LISTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hTOCandLists
+\hltodo[Abbreviations and indices?]{}
+\hltodo[Clean up figure and table captions (no dots at end).]{}
 \clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -55,20 +57,29 @@
 \chapter{Vector space of functions}
 \subimport{chapters/02/}{chapter2}
 
+\afterpage{\blankpage}
 \chapter{Fisher information and the I-prior}
 \subimport{chapters/03/}{chapter3}
 
+\afterpage{\blankpage}
 \chapter{Modelling with I-priors}
 \subimport{chapters/04/}{chapter4}
 
+\afterpage{\blankpage}
 \chapter{I-priors for categorical responses}
 \subimport{chapters/05/}{chapter5}
 
+\afterpage{\blankpage}
 \chapter{Bayesian variable selection using I-priors}
 \subimport{chapters/06/}{chapter6}
 
-\chapter{Discussion}
+\chapter{Summary}
 \input{chapters/07/chapter7}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% SUPPLEMENTARY CHAPTERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subimport{chapters/supplementary/}{supplementary}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% REFERENCES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -80,22 +91,7 @@
 %%% APPENDIX %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
-\chapter{Regression modelling using I-priors}
-\subimport{chapters/04/}{04-apx-01-posterior}
-\subimport{chapters/04/}{04-apx-02-expem}
-\subimport{chapters/04/}{04-apx-03-postestimation}
-\subimport{chapters/04/}{04-apx-04-fishermultinormal}
-
-\chapter{I-priors for categorical responses}
-\subimport{chapters/05/}{05-apx-01-distributions}
-\subimport{chapters/05/}{05-apx-02-proofs}
-\subimport{chapters/05/}{05-apx-03-derivations1}
-\subimport{chapters/05/}{05-apx-04-derivations2}
-
-\chapter{Bayesian variable selection using I-priors}
-\subimport{chapters/06/}{06-apx-01-gibbs}
-\subimport{chapters/06/}{06-apx-02-compnote}
-\subimport{chapters/06/}{06-apx-02-data}
+\subimport{chapters/appendix/}{appendix}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \printindex

@@ -1,33 +1,33 @@
-Working within a variational Bayesian framework means that we are able to perform inferences on any quantity of interest using the (approximate) posterior distributions obtained.
-Any of the post estimation procedures explained in the previous chapter when dealing with normal I-prior models can be extended here.
+Post-estimation procedures such as obtaining predictions for a new data point, the credibility interval for such predictions, and model comparison, are of interest.
+These are performed in a empirical Bayes manner using the variational posterior density of the regression function obtained from the output of the variational EM algorithm.
 
-Prediction of a new data point $x_{\text{new}}$ is described.
+We first describe prediction of a new data point $x_{\text{new}}$.
 Step one is to determine the distribution of the posterior regression functions in each class, $\bff(x_{\text{new}}) = \bw^\top\bh_\eta(x_{\text{new}})$, given values for the parameters $\theta$ of the I-probit model.
-To this end, we use the posterior mean estimate for $\theta$, and denote them with tildes, as we have done so far in this chapter.
-As we know, $\vecc\bw$ is normally distributed with mean and variance according to \cref{eq:varipostw}.
-By writing $\vecc \tilde\bw = (\tilde \bw_{\bigcdot 1}, \dots, \tilde \bw_{\bigcdot m})^\top$ to separate out the I-prior random effects per class, we have that $\bw_{\bigcdot j}|\tilde\theta \sim \N_n(\tilde \bw_{\bigcdot 1}, \tilde\bV_w[j,j])$, and $\Cov(\bw_{\bigcdot j},\bw_{\bigcdot k}) = \tilde\bV_w[j,k]$, where the `$[\cdot,\cdot]$' indexes the $n\times n$ sub-block of the block matrix structured matrix $\bV_w$.
+To this end, we use the ELBO estimates for $\theta$, i.e. $\hat\theta = \argmax_\theta \cL_q(\theta)$, as obtained from the variational EM algorithm.
+As we know, the variational distribution of $\vecc\bw$ is normally distributed with mean and variance according to \cref{eq:varipostw}.
+By writing $\vecc \tilde\bw = (\tilde \bw_{\bigcdot 1}, \dots, \tilde \bw_{\bigcdot m})^\top$ to separate out the I-prior random effects per class, we have that $\bw_{\bigcdot j}|\hat\theta \sim \N_n(\tilde \bw_{\bigcdot j}, \tilde\bV_w[j,j])$, and $\Cov(\bw_{\bigcdot j},\bw_{\bigcdot k}) = \tilde\bV_w[j,k]$, where the `$[\cdot,\cdot]$' indexes the $n\times n$ sub-block of the block matrix structured matrix $\bV_w$.
 Thus, for each class $j=1,\dots,m$ and any $x \in \cX$,
 \[
-  f_j(x)|\by,\tilde\theta \sim \N\big(\,
-  \tilde\bh_\eta(x)^\top\bw_{\bigcdot j}, \,
-  \tilde\bh_\eta(x)^\top\tilde\bV_w[j,j]\tilde\bh_\eta(x)
+  f_j(x)|\by,\hat\theta \sim \N\big(\,
+  \bh_{\hat\eta}(x)^\top \tilde\bw_{\bigcdot j}, \,
+  \bh_{\hat\eta}(x)^\top\tilde\bV_w[j,j]\bh_{\hat\eta}(x)
   \big),
 \]
 and the covariance between the regression functions in two different classes is
 \[
-  \Cov\big[f_j(x),f_k(x)|\by,\tilde\theta \big] = 
-  \tilde\bh_\eta(x)^\top \tilde\bV_w[j,k] \tilde\bh_\eta(x).
+  \Cov\big[f_j(x),f_k(x)|\by,\hat\theta \big] = 
+  \bh_{\hat\eta}(x)^\top \tilde\bV_w[j,k] \tilde\bh_{\hat\eta}(x).
 \]
 Then, in step two, using the results obtained in the previous chapter in \cref{sec:ipriorpostest}, we have that the latent propensities $y_{\new,j}^*$ for each class are normally distributed with mean, variance, and covariances
 \begin{alignat*}{3}
-  \E[y_{\new,j}^*|\by,\tilde\theta]  
-  &= \tilde\alpha_j + \E \big[ f_j(x_\new) |\by,\tilde\theta \big] 
+  \E[y_{\new,j}^*|\by,\hat\theta]  
+  &= \hat\alpha_j + \E \big[ f_j(x_\new) |\by,\hat\theta \big] 
   &&=: \hat\mu_j(x_\text{new}) \\
-  \Var[y_{\new,j}^*|\by,\tilde\theta] 
-  &= \Var\big[f(x_\new)|\by,\tilde\theta \big] + \bPsi^{-1}_{jj}
+  \Var[y_{\new,j}^*|\by,\hat\theta] 
+  &= \Var\big[f(x_\new)|\by,\hat\theta \big] + \bPsi^{-1}_{jj}
   &&=: \hat\sigma_j^2(x_\text{new}) \\
-  \Cov[y_{\new,j}^*,y_{\new,k}^*|\by,\tilde\theta] 
-  &= \Cov\big[f_j(x),f_k(x)|\by,\tilde\theta \big] + \bPsi^{-1}_{jk}
+  \Cov[y_{\new,j}^*,y_{\new,k}^*|\by,\hat\theta] 
+  &= \Cov\big[f_j(x),f_k(x)|\by,\hat\theta \big] + \bPsi^{-1}_{jk}
   &&=: \hat\sigma_{jk}(x_\text{new}).
 \end{alignat*}
 
@@ -37,19 +37,19 @@ From here, step three would be to extract class information of data point $x_\te
   \hspace{0.5cm}\text{and}\hspace{0.5cm}
   \hat\bV_{\new,jk} = 
   \begin{cases}
-    \hat\sigma_j^2(x_\text{new}) & \text{if } i = j \\
-    \hat\sigma_{jk}(x_\text{new}) & \text{if } i \neq j. \\
+    \hat\sigma_j^2(x_\text{new}) & \text{if } j = k \\
+    \hat\sigma_{jk}(x_\text{new}) & \text{if } j \neq k. \\
   \end{cases}
 \end{equation*}
 The predicted class is inferred from the latent variables via
 \[
   \hat y_{\text{new}} = \argmax_k \hat\mu_k(x_\new), 
 \]
-while the probabilities for each class are obtained via integration of a multivariate normal density, as per \cref{eq:pij}, and restated here for convenience:
-\begin{align*}
+while the probabilities for each class are obtained via integration of a multivariate normal density, as per \cref{eq:pij}:
+\begin{align}
   \hat p_{\text{new},j} 
-  &=  \idotsint\displaylimits_{\intset} \phi(y_{i1}^*, \dots, y_{im}^*|\hat\bmu_\new, \hat\bV_{\new}) \dint y_{i1}^* \cdots \dint y_{im}^*.
-\end{align*}
+  &=  \idotsint\displaylimits_{\{y^*_j > y^*_k | \forall k \neq j \}} \phi(y_{1}^*, \dots, y_{m}^*|\hat\bmu_\new, \hat\bV_{\new}) \dint y_{1}^* \cdots \dint y_{m}^*.
+\end{align}
 For the independent I-probit model, class probabilities are obtained in a more compact manner via
 \[
   \hat p_{\text{new},j} 
@@ -57,19 +57,62 @@ For the independent I-probit model, class probabilities are obtained in a more c
   \Phi \left(\frac{\hat\sigma_j(x_\text{new})}{\hat\sigma_k(x_\text{new})} Z + \frac{\hat\mu_j(x_\new) - \hat\mu_k(x_\new)}{\hat\sigma_k^2(x_\text{new})} \right) \Bigg],
 \]
 as per \cref{eq:pij2}, since the $m$ components of $\bff(x_\new)$, and hence the $\by^*_{\new,j}$'s, are independent of each other ($\bPsi$ and $\hat\bV_\new$ are diagonal).
+Prediction of a single new data point takes $O(n^2m)$ time, because there are essentially $m$ I-prior posterior regression functions, and each take $O(n^2)$ to evaluate.
+This is assuming negligible time to compute the class probabilities.
 
-In this Bayesian setting, the analogue of standard errors for the parameters are their posterior standard deviations, which  explain the uncertainty surrounding parameters.
-For the most part, these are easy to come by, and their posterior densities are easy to sample from.
-This allows us to conduct inference on transformed parameters, such as log odds ratios, quite easily.
-The procedure would be like this: first obtain samples of $\theta^{(1)},\dots,\theta^{(T)}$ from their respective distributions, then sample $\bw^{(i)} \sim p(\bw|\theta^{(i)})$ for $i=1,\dots,T$, and finally obtain samples of class probabilities $\hat p_{xj}^{(1)},\dots,\hat p_{xj}^{(T)}$, $j=1,\dots,m$, for a given data point $x\in\cX$.
-To obtain a statistic of interest, say, a 95\% credibility interval of a function $r(p_{xj})$ of the probabilities, simply take the empirical lower 2.5th and upper 97.5th percentile of this transformed sample.
-In this manner, all aspects of uncertainty, from the parameters to the latent variables of the generative model, are accounted for.
+We are able to take advantage of the Bayesian machinery to obtain credibility intervals for probability estimates or any transformation of these probabilities (e.g. log odds or odds ratios).
+The procedure is as follows.
+First, obtain samples $\bw^{(1)},\dots,\bw^{(T)}$ by drawing from its variational posterior distribution $\vecc\bw^{(i)}|\hat\theta \sim \N_{nm}(\vecc \tilde\bw,\bV_w)$.
+Then, obtain samples of class probabilities $\{p_{xj}^{(1)},\dots, p_{xj}^{(T)} \}_{j=1}^m$, for a given data point $x\in\cX$ by evaluating
+\[
+  p_{xj}^{(t)} = \idotsint\displaylimits_{\{y^*_j > y^*_k | \forall k \neq j \}} \phi\big(y_{1}^*, \dots, y_{m}^*|\hat\bmu^{(t)}(x), \hat\bV(x)\big) \dint y_{1}^* \cdots \dint y_{m}^*,
+\]
+where $\hat\bmu^{(t)}(x) = \hat\balpha + \bw^{(t)\top}\bh_{\hat\eta}(x)$, and $\hat\bV(x)_{jk}$ equals $\hat\sigma^2_j(x)$ if $j = k$, and $\hat\sigma_{jk}(x)$ otherwise.
+To obtain a statistic of interest, say, a 95\% credibility interval of a function $r(p_{xj})$ of the probabilities, simply take the empirical lower 2.5th and upper 97.5th percentile of the transformed sample $\big\{ r(p_{xj}^{(1)}),\dots, r(p_{xj}^{(T)}) \big\}$.
+%In this manner, all aspects of uncertainty, from the parameters to the latent variables of the generative model, are accounted for.
 
-It is possible to perform model comparison by comparing the maximised ELBO quantity of several candidate models \citep{beal2003}, and the justification for this is that it supposedly gives a tight lower bound to the marginal likelihood (model evidence), especially if the variational density is close in the KL divergence sense to the true posterior density.
-This would allow model selection using Bayes factor as a model selection criterion.
-\citet{kass1995bayes} suggest the following interpretation of observed Bayes factor values for comparing model $M_1$ against model $M_0$.
+\begin{remark}
+  Unfortunately, with the variational EM algorithm, standard errors for the parameters $\theta$ are not so easy to obtain.  
+  We could not ascertain as to the availability of an unbiased estimate of the asymptotic covariance matrix for $\theta$ under a variational framework.
+  One strategy for obtaining standard errors is bootstrap \citep{chen2017use}:
+  \begin{enumerate}
+    \item Obtain $\hat\theta = \argmax_\theta \cL_q(\theta)$ using $\cS = \{(y_1,x_1),\dots, (y_n,x_n)\}$.
+    \item For $t=1,\dots,T$, do
+    \begin{enumerate}
+      \item Obtain $\cS^{(t)} = \{ (y_1^{(t)},x_1^{(t)}),\dots, (y_n^{(t)},x_n^{(t)})\}$ by sampling $n$ points with replacement from $\cS$.
+      \item Compute $\hat\theta^{(t)} = \argmax_\theta \cL_q(\theta)$ using the data $\cS^{(t)}$.
+    \end{enumerate}
+    \item For the $l$-th component of $\theta$, compute its variance estimator using
+    \[
+      \widehat\Var(\hat\theta_l) = \frac{1}{T} \sum_{t=1}^T (\hat\theta_l^{(t)} - \bar\theta_l)^2
+      \hspace{0.5cm}\text{where}\hspace{0.5cm}
+      \bar\theta_l = \frac{1}{T} \sum_{t=1}^T \hat\theta_l^{(t)}.
+    \]
+%    where
+%    \[
+%      \bar\theta_l = \frac{1}{T} \sum_{t=1}^T \hat\theta_l^{(t)}.
+%    \]
+  \end{enumerate}
+  The obvious downside to this is computational time.
+\end{remark}
 
-\begin{table}[H]
+Finally, a discussion on model comparison, which, in the variational inference literature, is achieved by comparing ELBO values of competing models \citep{beal2003}.
+The rationale is that the ELBO serves as a conservative estimate for the log marginal likelihood, which would allow model selection via (empirical) Bayes factors.
+This stems from the fact that 
+\begin{align*}
+  \log p(\by|\theta) 
+  &= \cL_q(\theta) + \KL(q \Vert p ) 
+  > \cL_q(\theta),
+\end{align*}
+since the Kullbeck-Leibler divergence from the true posterior density $p(\by^*,\bw|\by)$ to the variational density $q(\by^*,\bw)$ is strictly positive (it is zero if and only if the two densities are equivalent), and is minimised under a variational inference scheme.
+\citet{kass1995bayes} suggest \cref{tab:BF} as a way of interpreting  observed Bayes factor values $\BF(M_1,M_0)$ for comparing model $M_1$ against model $M_0$, where $\BF(M_1,M_0)$ is approximated by
+\[
+  \BF(M_1,M_0) \approx \frac{\cL_q(\theta|M_1)}{\cL_q(\theta|M_0)},
+\]
+and $\cL_q(\theta|M_k)$, $k=0,1$, is the ELBO for model $M_k$.
+It should be noted that while this works in practice, there is no theoretical basis for model comparison using the ELBO \citep{blei2017variational}.
+
+\begin{table}[t]\label{tab:BF}
   \centering
   \caption{Guidelines for interpreting Bayes factors.}
   \label{tab:bf}
@@ -83,6 +126,11 @@ This would allow model selection using Bayes factor as a model selection criteri
     >10   &>150    &Very strong \\ 
   \end{tabular}
 \end{table}
-\vspace{-1.4em}
-\noindent It should be noted that while this works in practice, there is no theoretical basis for model comparison using the ELBO \citep{blei2017variational}.
+
+\begin{remark}
+  In the previous chapter on normal I-prior models, the I-prior could be integrated out of the model completely, resulting in a normal  log-likelihood for the parameters.
+  Model comparison can be validly done using likelihood ratio tests and asymptotic chi-square distributions.
+  Here however, we only have a lower bound to the log-likelihood, and most likely the asymptotic results of likelihood ratio tests do not hold.
+  Then, the concept of approximate (empirical) Bayes factors seem most intuitive, even if not rooted in theory.
+\end{remark}
 

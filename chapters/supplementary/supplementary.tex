@@ -1,0 +1,55 @@
+\documentclass[a4paper,showframe,11pt]{report}
+\usepackage{standalone}
+\standalonetrue
+\ifstandalone
+  \usepackage{../../haziq_thesis}
+  \usepackage{../../haziq_maths}
+  \usepackage{../../haziq_glossary}
+  \addbibresource{../../bib/haziq.bib}
+  \externaldocument{../01/.texpadtmp/chapter1}
+  \externaldocument{../02/.texpadtmp/chapter2}
+  \externaldocument{../03/.texpadtmp/chapter3}
+  \externaldocument{../04/.texpadtmp/chapter4}
+  \externaldocument{../05/.texpadtmp/chapter5}
+  \externaldocument{../06/.texpadtmp/chapter6}
+\fi
+
+\begin{document}
+\hChapterStandalone[1]{Preceding chapters}
+
+%\addcontentsline{toc}{chapter}{Supplementary material}
+%\addtocontents{toc}{%
+%  \protect\contentsline{part}{And now for something completely different}{}}
+\renewcommand{\chaptername}{Supplementary}
+\setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}%
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}%
+\setcounter{chapter}{0}
+\renewcommand{\thechapter}{S\arabic{chapter}}%
+\setcounter{section}{0}
+%\renewcommand{\thesection}{S\arabic{section}}%
+%\setcounter{subsection}{0}
+%\renewcommand{\thesubsection}{S\arabic{section}.\arabic{subsection}}% 
+
+\afterpage{\blankpage}
+\chapter{Basic estimation concepts}
+\input{s01-basic}
+
+
+\chapter{The EM algorithm}\label[supchap]{schap:em}
+\input{s02-emalg}
+
+\chapter{Variational inference}
+\input{s03-vi}
+
+\afterpage{\blankpage}
+\chapter{Hamiltonian Monte Carlo}
+\input{s04-hmc}
+
+\afterpage{\blankpage}
+\chapter{Component-wise derivative in infinite-dimensional vector spaces}\label[supchap]{misc:comwiseder}
+\input{s05-compwiseder}
+
+\hClosingStuffStandalone
+\end{document}

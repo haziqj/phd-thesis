@@ -1,0 +1,137 @@
+These are additional details relating to discussion on various I-prior regression models in \cref{sec:various-regression} of \cref{chapter4}.
+These details relate to the standard linear multilevel model and the naïve classification model.
+
+\section{The I-prior for standard multilevel models}
+\label{misc:multilevelmodels}
+
+We show the corresponding I-prior for the regression coefficients of the standard linear multilevel model \cref{eq:standmultilevel}.
+Write $\alpha=\beta_0$, and for simplicity, assume iid errors, i.e.,  $\bPsi = \psi\bI_n$.
+The form of $f\in\cF$ is now $f(\bx_i^{(j)},j) = \sum_{i'=1}^{n_{j'}}\sum_{j'=1}^m h_\lambda\big((\bx_i^{(j)},j),(\bx_{i'}^{(j')},j')\big) w_{i'j'}$, where each $w_{i'j'}\sim\N(0,\psi^{-1})$.
+
+%We have seen from the previous section that $f_1(\bx_i^{(j)}) = \tilde\bx_i^{(j)\top}\boldsymbol{\beta}$, with $\boldsymbol{\beta} = \lambda_1\tilde\bX^\top\bw \sim \N_p(\bzero, \lambda_1^2\psi \tilde\bX^\top\tilde\bX )$.
+%Here, $\tilde\bX$ is the $(n_1+\cdots+n_m) \times p$ matrix containing centred entries $\tilde\bx_i^{(j)} := \bx_i^{(j)} - \frac{1}{n_j}\sum_{i=1}^{n_j}\bx_i^{(j)}$.
+Now, functions in the scaled RKHS $\cF_2$ have the form
+\begin{align*}
+  f_2(j) 
+  &= \sum_{i=1}^{n_{j'}}\sum_{j'=1}^m \lambda_2\left( \frac{\delta_{jj'}}{p_j} - 1 \right)w_{ij'} \\
+  &=  \lambda_2\left( \frac{w_{+j}}{p_j} - w_{++} \right),
+\end{align*}
+where a `$+$' in the index of $w_{ik}$ indicates a summation over that index, and $p_j$ is the empirical distribution over $\cM$, i.e. $p_j = n_j/n$.
+Clearly $f_2(j)$ is a variable depending on $j$, so write $f_2(j)=\beta_{0j}$.
+The distribution of $\beta_{0j}$ is normal with zero mean and variance
+\begin{align*}
+  \Var \beta_{0j} 
+  &= \lambda_2^2 \left( \frac{\cancel{n_j}\psi}{n_j^{\cancel{2}} / n^2} + n\psi \right)  \\
+  &= n\psi\lambda_2^2 \left( \frac{1}{p_j} + 1 \right).
+\end{align*}
+The covariance between any two random intercepts $\beta_{0j}$ and $\beta_{0j'}$ is
+\begin{align*}
+  \Cov(\beta_{0j},\beta_{0j'})
+  &= \Cov\left( \lambda_2\left( \frac{w_{+j}}{p_j} - w_{++} \right), \lambda_2\left( \frac{w_{+j'}}{p_{j'}} - w_{++} \right) \right)  \\
+  &= \frac{\lambda_2^2}{p_j p_{j'}} \cancelto{0}{\Cov(w_{+j},w_{+j'})} - \frac{\lambda_2^2}{p_j} \Cov(w_{+j},w_{++}) - \frac{\lambda_2^2}{p_{j'}} \Cov(w_{++},w_{+j'}) \\
+  &\phantom{==} + \lambda_2^2 \Cov(w_{++},w_{++}) \\
+  &= - \frac{\lambda_2^2}{\cancel{n_j}/n} \cancel{n_j}\psi - \frac{\lambda_2^2}{\cancel{n_{j'}}/n} \cancel{n_{j'}}\psi + \lambda_2^2 n\psi \\
+  &= -n\psi\lambda_2^2.
+\end{align*}
+
+Functions in $\cF_{12}$, on the other hand, have the form
+\begin{align*}
+  f_{12}(\bx_i, j)
+  &= \sum_{i'=1}^{n_{j'}}\sum_{j'=1}^m \lambda_1\lambda_2 \cdot \tilde \bx_i^{(j)\top} \tilde \bx_{i'}^{(j')} \cdot \left( \frac{\delta_{jj'}}{p_j} - 1 \right)  w_{i'j'} \\
+  &=  \tilde \bx_i^{(j)\top}   
+  {\color{gray}
+  \underbrace{\color{black}
+  \left( \frac{\lambda_1\lambda_2}{p_j} \sum_{i'=1}^{n_{j}}  \tilde \bx_{i'}^{(j)} w_{i'j} - \lambda_1\lambda_2\sum_{i'=1}^{n_{j'}}\sum_{j'=1}^m  \tilde \bx_{i'}^{(j')}  w_{i'j'} \right)
+  }_{\boldsymbol\beta_{1j}}},
+\end{align*}
+and this is, as expected, a linear form dependent on cluster $j$.
+We can calculate the variance for $\beta_{1j}$ to be
+\begin{align*}
+  \Var \boldsymbol{\beta}_{1j}
+  &= \lambda_1^2\lambda_2^2 \Var\left( \frac{1}{p_j} \tilde\bX_j^\top \bw_j - \tilde\bX^\top \bw \right) \\
+  &= \lambda_1^2\lambda_2^2 \left( \frac{\psi}{n_j^2/n^2} \tilde\bX_j^\top\tilde\bX_j + \psi \tilde\bX^\top  \tilde\bX - \frac{1}{p_j} \tilde\bX_j^\top \Cov( \bw_j,\bw) \tilde\bX^\top  \right) \\
+  &= n\psi\lambda_1^2\lambda_2^2 \left( \frac{1}{p_j}\bS_j +  \bS - \bS_{j} \right) \\
+  &= n\psi\lambda_1^2\lambda_2^2 \left( \left(\frac{1}{p_j}-1\right)\bS_j +  \bS  \right)
+\end{align*}
+where $\bS_j = \frac{1}{n_j} \sum_{i=1}^{n_j} (\bx_i^{(j)} - \bar \bx)^\top(\bx_i^{(j)} - \bar \bx)$, $\bS = \frac{1}{n} \sum_{i=1}^{n_j} \sum_{j=1}^{m} (\bx_i^{(j)} -  \bar \bx)^\top(\bx_i^{(j)} - \bar \bx)$, and $\bar \bx = \frac{1}{n} \sum_{i=1}^{n_j} \sum_{j=1}^{m} \bx_i^{(j)}$.
+The covariance between two vectors of the random slopes is
+\begin{align*}
+  \Cov(\boldsymbol{\beta}_{1j},\boldsymbol{\beta}_{1j'}) 
+  &= \lambda_1^2\lambda_2^2  \Cov \left( \frac{1}{p_j} \tilde\bX_j^\top \bw_j - \tilde\bX^\top \bw, \frac{1}{p_{j'}} \tilde\bX_{j'}^\top \bw_{j'} - \tilde\bX^\top \bw  \right) \\
+  &= \psi\lambda_1^2\lambda_2^2 \left( \tilde\bX^\top\tilde\bX - \frac{1}{p_j}\tilde\bX_j^\top\tilde\bX_j  - \frac{1}{p_{j'}}\tilde\bX_{j'}^\top\tilde\bX_{j'} \right) \\
+  &= n\psi\lambda_1^2\lambda_2^2 \left( \bS - \bS_j - \bS_{j'}  \right).
+\end{align*}
+
+Another quantity of interest is the covariance between the random intercepts and random slopes:
+\begin{align*}
+  \Cov(\beta_{0j}, \boldsymbol{\beta}_{1j}) 
+  &= \lambda_1\lambda_2^2  \Cov\left( \frac{1}{p_{j}} \bone_{n_j}^\top \bw_{j} - \bone_n^\top \bw, \frac{1}{p_{j}} \tilde\bX_{j}^\top \bw_{j} - \tilde\bX^\top \bw   \right) \\
+  &= \psi\lambda_1\lambda_2^2  \left( \cancelto{0}{\bone_{n}^\top \tilde\bX} + \frac{1}{p_{j}^2} \bone_{n_j}^\top \tilde\bX_j  - \frac{2}{p_{j}} \bone_{n_{j}}^\top \tilde\bX_{j} \right) \\
+  &= n\psi\lambda_1\lambda_2^2  \left(  \left(\frac{1}{p_j} - 2 \right) \frac{1}{n_{j}} \sum_{i=1}^{n_j}(\bx_i^{(j)} - \bar \bx)  \right) \\
+  &= n\psi\lambda_1\lambda_2^2 \left(\frac{1}{p_j} - 2 \right) ( \bar\bx^{(j)}   -\bar \bx  ) 
+\end{align*}
+and
+\begin{align*}
+  \Cov(\beta_{0j}, \boldsymbol{\beta}_{1j'}) 
+  &= \lambda_1\lambda_2^2  \Cov\left( \frac{1}{p_{j}} \bone_{n_j}^\top \bw_{j} - \bone_n^\top \bw, \frac{1}{p_{j'}} \tilde\bX_{j'}^\top \bw_{j'} - \tilde\bX^\top \bw   \right) \\
+  &= \psi\lambda_1\lambda_2^2  \left( \cancelto{0}{\bone_{n}^\top \tilde\bX} + \frac{1}{p_{j}p_{j'}} \bone_{n_j}^\top \cancelto{0}{\Cov(\bw_j,\bw_{j'})} \tilde\bX_{j'} - \frac{1}{p_{j}} \bone_{n_j}^\top \tilde\bX_j  - \frac{1}{p_{j'}} \bone_{n_{j'}}^\top \tilde\bX_{j'} \right) \\
+  &= n\psi\lambda_1\lambda_2^2  \left(  - \frac{1}{n_{j}} \sum_{i=1}^{n_j}(\bx_i^{(j)} - \bar \bx)  - \frac{1}{n_{j'}} \sum_{i=1}^{n_{j'}}(\bx_i^{(j')} - \bar \bx) \right) \\
+  &= n\psi\lambda_1\lambda_2^2  \left(  2\bar \bx -  \bar\bx^{(j)}  -  \bar \bx^{(j')}  \right).
+\end{align*}
+
+%In other words, the ML estimate for $\btheta$ satisfies $\{ \btheta | \bT(\bz) = \E \bT(\bz) \} $
+%Assume the inverse mapping $\bfeta^{-1}$ exists, then the ML estimates $\hat\btheta$ can be obtained as $\bfeta^{-1}(\hat\btheta)$ due to the invariance property of ML estimates.
+
+\section{The I-prior for naïve classification}
+
+For the naïve I-prior classification model \cref{eq:naiveclassiprior}, the I-prior is derived as follows.
+Firstly, the functions in $\cF_\cM$ and $\cF_\cX$ need necessarily be zero-mean functions (as per the functional ANOVA definition in \cref{def:anovarkks}, but also, as per the definition of the Pearson RKHS and centred identity kernel RKHS).
+What this means is that $\sum_{j=1}^m \alpha_j = 0$, $\sum_{j=1}^m f_j(x_i) = 0$, and $\sum_{i=1}^n f_j(x_i) = 0$.
+In particular,
+\begin{align*}
+  \E \bigg[ \sum_{j=1}^m y_{ij} \bigg]
+  &= \sum_{j=1}^m \left(\alpha + \alpha_j + f_j(x_i) \right) \\
+  &= m\alpha + \cancelto{0}{\sum_{j=1}^m \alpha_j \hphantom{aaa}} 
+  \hspace{-2em} + \hspace{0.3em} \cancelto{0}{\sum_{j=1}^m f_j(x_i)}
+\end{align*}
+and since $\sum_{j=1}^m y_{ij} = 1$, we get the ML estimate $\hat\alpha = 1/m$, and thus the grand intercept can be fixed to resolve identification.
+
+
+It is much more  convenient to work in vector and matrix form, so let us introduce some notation.
+Let $\bw$ (c.f. $\by$, $\bff$ and $\bepsilon$) be an $n \times m$ matrix whose $(i,j)$  entries contain $w_{ij}$ (c.f. $y_{ij}$, $f(x_i,j)$, and $\epsilon_{ij}$).
+The row-wise entries of $\bw$ are independent of each other (independence assumption of the $n$ observations), while any two of their columns have covariance as specified in $\bPsi$.
+This means that $\bw$ follows a matrix normal distribution $\MN_{n,m}(\bzero, \bI_n,\bPsi)$, which implies $\vecc \bw \sim \N_{nm}(\bzero, \bPsi \otimes \bI_n)$, and similarly, $\bepsilon \sim \N_{nm}(\bzero, \bPsi^{-1} \otimes \bI_n)$.
+Denote by $\bB_\eta$ the $n\times n$ kernel matrix with entries supplied by kernel $1 + b_\eta$ over $\cX \times \cX$, and $\bA$ the $m\times m$ matrix with entries supplied by $a$ over $\cM \times \cM$.
+From \cref{eq:naiveclassiprior}, we have that 
+\[
+  \bff = \bB_\eta \bw \bA \in \bbR^{n \times m},
+\]
+and thus $\vecc \bff \sim \N_{nm}(\bzero, \bA\bPsi\bA \otimes \bB_\eta^2)$.
+As $\by = \bone_n\balpha^\top + \bff + \bepsilon$, where $\balpha \in \bbR^{m}$ with $j$'th component $\alpha + \alpha_j = 1/m + \alpha_j$, by linearity we have that 
+\begin{equation}
+  \vecc \by \sim \N_{nm}\big(\vecc \balpha, \bA\bPsi\bA \otimes \bB_\eta^2 + \bPsi^{-1} \otimes \bI_n \big)
+\end{equation}
+and
+\begin{equation}
+  \vecc \by| \bw \sim \N_{nm}\big(\vecc (\balpha  + \bB_\eta \bw \bA), \bPsi^{-1} \otimes \bI_n \big).
+\end{equation}
+By the results of \cref{chapter4}, the posterior distribution of the I-prior random effects is $\vecc \bw|\by \sim \N(\vecc \wtilde, \tilde\bV_w)$, where
+\begin{gather}\label{eq:naiveclasspostw}
+   \vecc \tilde\bw = \tilde\bV_w 
+    (\bPsi \otimes \bH_\eta) \vecc (\by - \bone_n\balpha^\top)
+  \hspace{0.5cm}\text{and}\hspace{0.5cm} 
+  \tilde \bV_w^{-1} = \bA\bPsi\bA \otimes \bB_\eta^2 + \bPsi^{-1} \otimes \bI_n = \bV_{y}.
+\end{gather}
+
+Suppose hypothetically, one uses the uncentered identity kernel $a(j,j') = \delta_{jj'}$, in which case centring of the intercepts $\alpha_j$ must be handled separately.
+In conjunction with an assumption of iid errors ($\bPsi = \psi\bI_n$), the above distributions simplify further.
+Specifically, the variance in the marginal distribution becomes 
+\begin{align*}
+  \Var(\vecc \by) 
+  &= (\psi\bI_m \otimes \bB_\eta^2) + (\psi^{-1}\bI_m \otimes \bI_n) \\
+  &= (\bI_m \otimes \psi\bB_\eta^2) + (\bI_m \otimes \psi^{-1}\bI_n) \\
+  &= \bI_m \otimes (\myoverbrace{\psi\bB_\eta^2 + \psi^{-1}\bI_n}{\tilde\bV_y}).
+\end{align*}
+which implies independence and identical variances $\tilde\bV_y$ for the vectors $(y_{1j},\dots,y_{nj})^\top$ for each class $j=1,\dots,m$.
+%, i.e. a block diagonal matrix structure $\Var(\vecc \by)  = \diag(\bV_y,\dots,\bV_y)$.
+Evidently, this stems from the implied independence structure of the prior on $f$ too, since now $\Var (\vecc \bff) = \diag(\psi\bB_\eta^2,\dots, \psi\bB_\eta^2)$, which could be interpreted as having independent and identical I-priors on the regression functions for each class $\bff_{\bigcdot j} = \big(f(x_1,j),\dots,f(x_n,j)\big)^\top$.

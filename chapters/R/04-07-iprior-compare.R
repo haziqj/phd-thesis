@@ -147,9 +147,9 @@ b.rmse <- sqrt(mean((ynew - f(x)) ^ 2))
 b.dens <- postmean[grep("lp__", names(postmean))] - (N / 2) * log(2 * pi)
 
 ## ---- compare ----
-met1 <- c(get_intercept(mod1), NA,  get_lambda(mod1), get_se(mod1)[1], get_psi(mod1),
+met1 <- c(get_intercept(mod1), sd(dat$y) / sqrt(nrow(dat)),  get_lambda(mod1), get_se(mod1)[1], get_psi(mod1),
           get_se(mod1)[3], logLik(mod1), mod1$time$time, get_prederror(mod1)[2])
-met2 <- c(get_intercept(mod2), NA, get_lambda(mod2), get_se(mod2)[1], get_psi(mod2),
+met2 <- c(get_intercept(mod2), sd(dat$y) / sqrt(nrow(dat)), get_lambda(mod2), get_se(mod2)[1], get_psi(mod2),
           get_se(mod2)[3], logLik(mod2), mod2$time$time, get_prederror(mod2)[2])
 met3 <- c(b.alpha, b.alpha.se, b.lambda, b.lambda.se, b.psi, b.psi.se, b.dens,
           231.762, b.rmse)

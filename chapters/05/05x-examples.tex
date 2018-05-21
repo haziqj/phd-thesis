@@ -61,6 +61,7 @@
   \externaldocument{../03/.texpadtmp/chapter3}
   \externaldocument{../04/.texpadtmp/chapter4}
   \externaldocument{../05/.texpadtmp/chapter5}  % remove this
+  \externaldocument{../appendix/.texpadtmp/appendix}
 \fi
 
 
@@ -68,6 +69,8 @@
 
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
+
+% \section{Examples}  % remove this
 
 We present analyses of real-data examples using the I-probit model for a variety of applicaitons, namely binary and multiclass classification, meta-analysis, and spatio-temporal modelling of point processes.
 Examples in this section have been analysed using the \proglang{R} package \pkg{iprobit} developed by us.
@@ -198,8 +201,10 @@ Regardless of method, the approach of analysing study-level treatment effects in
 
 
 \end{knitrout}
-A summary of the data is displayed by the box-plot in Figure \ref{fig:plot.data.smoke}.
-On the whole, there are a total of 5908 patients, and they are distributed roughly equally among the control and treatment groups (46.33\% and 53.67\% respectively, on average).
+A summary of the data is displayed by the box-plot in \cref{fig:plot.data.smoke}.
+On the whole, there are a total of 5,908
+% study.size[length(study.size)]
+patients, and they are distributed roughly equally among the control and treatment groups (46.33\% and 53.67\% respectively, on average).
 From the box-plots, it is evident that there are more patients who quit smoking in the treatment group as compared to the placebo control group.
 There are various measures of treatment effect size, such as risk ratio or risk differences, but we shall concentrate on \emph{odds ratios} as defined by
 \[
@@ -208,7 +213,7 @@ There are various measures of treatment effect size, such as risk ratio or risk 
 \]
 The odds of quitting smoking in either group is defined as
 \[
-  \text{odds} = \frac{\Prob[\text{quit smoking}]}{1 - \Prob[\text{quit smoking}]},
+  \text{odds} = \frac{\Prob(\text{quit smoking})}{1 - \Prob(\text{quit smoking})},
 \]
 and these probabilities, odds and ultimately the odds ratio can be estimated from sample proportions.
 This raw odds ratio for all study groups is calculated as $1.66 = e^{0.50}$.
@@ -216,9 +221,9 @@ It is also common for the odds ratio to be reported on the log scale (usually as
 A value greater than one for the odds ratio (or equivalently, greater than zero for the log-odds ratio) indicates a significant treatment effect.
 
 A random-effects analysis using a multilevel logistic model has been considered by \citet{agresti2000tutorial}.
-Let $i=1,\dots,n_j$ index the patients in study group $j \in \{1,\dots,27\}$.
-For patient $i$ in study $j$, $p_{ij}$ denotes the probability that the patient has successfully quit smoking.
-Additionally, $x_{ij}$ is the centred dummy variable indicating patient $i$'s treatment group in study $j$.
+Let $i=1,\dots,n_k$ index the patients in study group $k \in \{1,\dots,27\}$.
+For patient $i$ in study $j$, $p_{ik}$ denotes the probability that the patient has successfully quit smoking.
+Additionally, $x_{ik}$ is the centred dummy variable indicating patient $i$'s treatment group in study $k$.
 These take on two values: 0.5 for treated patients and -0.5 for control patients.
 The logistic random-effects model is
 \begin{gather*}
@@ -230,18 +235,18 @@ The logistic random-effects model is
   \begin{pmatrix} \sigma_0^2 & \sigma_{01} \\ \sigma_{01} & \sigma_1^2 \\ \end{pmatrix}
   \right)
 \end{gather*}
-\citet{agresti2000tutorial} also made the additional assumption $\sigma_{01} = 0$, so that, coupled with the contrast coding used for $x_{ij}$, the total variance $\Var(\beta_{0j} + \beta_{1j}x_{ij})$ would be constant in both treatment groups.
+\citet{agresti2000tutorial} also made the additional assumption $\sigma_{01} = 0$, so that, coupled with the contrast coding used for $x_{ik}$, the total variance $\Var(\beta_{0k} + \beta_{1j}x_{ik})$ would be constant in both treatment groups.
 The overall log odds ratio is represented by $\beta_1$, and this is estimated as $0.57 = \log 1.76$.
 
-In an I-prior model, the Bernoulli probabilities $p_{ij}$ are regressed against the treatment group indicators $x_{ij}$ and also the patients' study group $j$ via the regression function $f$ and a probit link:
+In an I-prior model, the Bernoulli probabilities $p_{ik}$ are regressed against the treatment group indicators $x_{ik}$ and also the patients' study group $k$ via the regression function $f$ and a probit link:
 \begin{align*}
-  \Phi^{-1}(p_{ij})
-  &= f(x_{ij}, j) \\
-  &= f_1(x_{ij}) + f_2(j) + f_{12}(x_{ij}, j).
+  \Phi^{-1}(p_{ik})
+  &= f(x_{ik}, k) \\
+  &= f_1(x_{ik}) + f_2(k) + f_{12}(x_{ik}, j).
 \end{align*}
 We have decomposed our function $f$ into three parts: $f_1$ represents the treatment effect, $f_2$ represents the effect of the study groups, and $f_{12}$ represents the interaction effect between the treatment and study group on the modelled probabilities.
-As both $x_{ij}$ and $j$ are nominal variables, the functions $f_1$ and $f_2$ both lie in the Pearson RKHS of functions $\cF_1$ and $\cF_2$, each with RKHS scale parameters $\lambda_1$ and $\lambda_2$.
-As such, it does not matter how the $x_{ij}$ variables are coded (dummy coding 0, 1 vs. centred coding -0.5, 0.5) as the scaling of the function is determined by the RKHS scale parameters.
+As both $x_{ik}$ and $k$ are nominal variables, the functions $f_1$ and $f_2$ both lie in the Pearson RKHS of functions $\cF_1$ and $\cF_2$, each with RKHS scale parameters $\lambda_1$ and $\lambda_2$.
+As such, it does not matter how the $x_{ik}$ variables are coded (dummy coding 0, 1 vs. centred coding -0.5, 0.5) as the scaling of the function is determined by the RKHS scale parameters.
 The interaction effect $f_{12}$ lies in the RKHS tensor product $\cF_1 \otimes \cF_2$.
 In I-prior modelling, there are only two parameters to estimate, while in the standard logistic random-effects model, there are six.
 The results of the I-prior fit are summarised in the table below.
@@ -250,11 +255,11 @@ The results of the I-prior fit are summarised in the table below.
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
 \begin{table}[hbt]
   \centering
-  \caption{Results of the I-prior model fit for three models.}
+  \caption{Results of the I-probit model fit for three models.}
   \label{tab:mod.compare.smoke}
   \begin{tabular}{lrrrR{2cm}}
   \toprule
-  Model & Log-likelihood & Error rate (\%) & Brier score & No. of parameters \\
+  Model & ELBO & Error rate (\%) & Brier score & No. of parameters \\
   \midrule
   $f_1$
   &-3210.76
@@ -272,7 +277,7 @@ The results of the I-prior fit are summarised in the table below.
   \end{tabular}
 \end{table}
 
-The approximated marginal log-likelihood value for the I-prior model (i.e. variational lower bound), the Brier score for each model and the number of RKHS scale parameters estimated in the model are reported in Table \ref{tab:mod.compare.smoke}. Three models were fitted:
+The approximated marginal log-likelihood value for the I-prior model (i.e. variational lower bound), the Brier score for each model and the number of RKHS scale parameters estimated in the model are reported in \cref{tab:mod.compare.smoke}. Three models were fitted:
 1) A model with only the treatment effect;
 2) A model with a treatment effect and a study group effect; and
 3) Model 2 with the additional assumption that treatment effect varies across study groups.
@@ -285,18 +290,21 @@ A model comparison using the evidence lower bound indicates that Model 3 has the
 The misclassification rate and Brier score indicates good predictive performance of the models, and there is not much to distinguish between the three although Model 3 is the best out of the three models.
 
 Unlike in the logistic random-effects model, where the log odds ratio can be read off directly from the coefficients, with an I-prior probit model the log odds ratio needs to be calculated manually from the fitted probabilities.
-The probabilities of interest are the probabilities of quitting smoking under each treatment group for each study group $j$ - call these $p_j(\text{treatment})$ and $p_j(\text{control})$.
+The probabilities of interest are the probabilities of quitting smoking under each treatment group for each study group $k$---call these $p_k(\text{treatment})$ and $p_k(\text{control})$.
 That is,
 \begin{align*}
-  p_j(\text{treatment}) &= \Phi\big( \tilde\mu(\text{treatment}, j) \big) \\
-  p_j(\text{control})   &= \Phi\big( \tilde\mu(\text{control}, j) \big),
+  p_k(\text{treatment}) &= \Phi\big( \hat\nu(\text{treatment}, k) \big) \\
+  p_k(\text{control})   &= \Phi\big( \hat\nu(\text{control}, k) \big),
 \end{align*}
-where $\tilde \mu$ represents the posterior mean estimate for the regression function given in \hltodo{Which section?}.
-These log odds ratio for each study group can then be calculated as usual.
+where $\hat \nu$ represents the standardised posterior mean estimate for the regression functions which are distributed according to
+\[
+  f(x_{ik},k)|\by,\hat\theta \sim \N\big(\hat\mu(x_{ik}, k), \hat\sigma^2(x_{ij}, k) \big),
+\]
+with $x_{ik}\in\{\text{treatment}, \text{control} \}$ and $k \in \{1,\dots,27\}$  (see details in \cref{sec:iprobitpostest}).
+The log odds ratio for each study group can then be calculated as usual.
 For the overall log odds ratio, the probabilities that are used are the averaged probabilities weighted according to the sample sizes in each group.
-This has been calculated as $0.55 = \log 1.73$, slightly lower than both the raw log odds ratio and the log odds ratio estimated by the logistic random-effects model.
+This has been calculated as $0.51 = \log 1.66$, slightly lower than both the raw log odds ratio and the log odds ratio estimated by the logistic random-effects model.
 This can perhaps be attributed to some shrinkage of the estimated probabilities due to placing a prior with zero mean on the regression functions.
-The credibility intervals in \cref{fig:smoke.forest.plot} for the log odds ratios under an I-prior are also noticeably narrower compared to the multilevel model fitted.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[p]
@@ -311,6 +319,9 @@ The credibility intervals in \cref{fig:smoke.forest.plot} for the log odds ratio
 
 \end{knitrout}
 
+The credibility intervals for the log odds ratios in the forest plot of \cref{fig:smoke.forest.plot} are also noticeably narrower under an I-prior compared to the fitted multilevel model.
+One explanation is that empirical Bayes estimates, such as the I-probit estimates under a variational EM framework, tend to underestimate the variability in the estimates because the variability in the parameters are ignored when point estimates are used, compared to distributions in a true Bayesian estimation framework.
+
 \subsection{Multiclass classification: Vowel recognition data set}
 
 
@@ -319,7 +330,7 @@ The credibility intervals in \cref{fig:smoke.forest.plot} for the log odds ratio
 
 We illustrate multiclass classification using I-priors on a speech recognition data set\footnotemark~with $m = 11$ classes to be predicted from digitized low pass filtered signals generated from voice recordings.
 Each class corresponds to a vowel sound made when pronouncing a specific word.
-The words that make up the vowel sounds are shown in Table \ref{tab:vowel}. Each word was uttered once by multiple speakers, and the data are split into a training and a test set.
+The words that make up the vowel sounds are shown in \cref{tab:vowel}. Each word was uttered once by multiple speakers, and the data are split into a training and a test set.
 Four males and four female speakers contributed to the training set, while four male and three female speakers contributed to the test set.
 The recordings were manipulated using speech processing techniques, such that each speaker yielded six frames of speech from the eleven vowels, each with a corresponding 10-dimensional numerical input vector (the predictors).
 This means that the size of the training set is 528, while 462 data points are available for testing the predictive performance of the models.
@@ -363,19 +374,19 @@ This alleviates any concerns that the model might have converged to different mu
 
 }
 
-\caption[Confusion matrices for the vowel classification problem in which predicted values were obtained from the I-probit models]{Confusion matrices for the vowel classification problem in which predicted values were obtained from the I-probit models. The maximum value for any one cell is 42. Blank cells indicate nil values.}\label{fig:vowel.confusion.matrix}
+\caption[Confusion matrices for the vowel classification problem in which predicted values were obtained from the I-probit models]{Confusion matrices for the vowel classification problem in which predicted values were obtained from the I-probit models. The maximum value for any cell is 42 (seven speakers delivered six frames of speech per vowel). Blank cells indicate nil values.}\label{fig:vowel.confusion.matrix}
 \end{figure}
 
 
 \end{knitrout}
 
-A good way to visualise the performance of model predictions is through a confusion matrix, as shown in Figure \ref{fig:vowel.confusion.matrix}.
+A good way to visualise the performance of model predictions is through a confusion matrix, as shown in \cref{fig:vowel.confusion.matrix}.
 The numbers in each row indicate the instances of a predicted class, while the numbers in the column indicate instances of the actual classes, while nil values are indicated by blank cells.
 % A quick glance of the plots seem to favour the fBm-0.5 kernel as having better predictions.
 % There are a lot more misclassifications when using the canonical kernel.
 % Under the fBm-0.5 model, the model makes understandable mistakes - confusing very similar words, especially `hod' and `hud'.
 
-Comparisons to other methods that had been used to analyse this data set is given in Table \ref{tab:vowel.tab}.
+Comparisons to other methods that had been used to analyse this data set is given in \cref{tab:vowel.tab}.
 In particular, the I-probit model is compared against 1) linear regression; 2) logistic linear regression; 3) linear and quadratic discriminant analysis; 4) decision trees; 5) neural networks; 6) $k$-nearest neighbours; and 7) flexible discriminant analysis.
 All of these methods are described in further detail in \citet[Ch.4 \& 12, Table 12.3]{friedman2001elements}.
 The I-probit model using both the fBm-0.5 and SE kernel offers one of the best out-of-sample classification error rates (34.4\%) of all the methods compared.
@@ -426,10 +437,10 @@ It also provides significant improvement over multiple linear regression.
 
 Data containing the number of breakdows of bovine tubercolosis (BTB) in Cornwall, the locations of the infected animals, and the year of occurence is analysed.
 The interest, as motivated by veterinary epidimiology, is to understand whether or not there is spatial segregation between the herds, and whether there is a time-element to presence or absence of this spatial segregation.
-There have been previous work done to analyse this data set: \cite{diggle2005nonparametric} developed a non-parametric method to estimate spatial segregation using a multivariate point process.
+There have been previous work done to analyse this data set: \citet{diggle2005nonparametric} developed a non-parametric method to estimate spatial segregation using a multivariate point process.
 The occurrences are modelled as Poisson point processes, and spatial segregation is said to have occured if the model-estimated type-specific breakdown probabilities at any given location are not significantly different from the sample proportions.
 The authors estimated the probabilities via kernel regression, and the test statistic of interest had to be estimated via Monte Carlo methods.
-Other work includes \citet{diggle2013spatial}, who used a fully Bayes scheme for spatio-temporal multivariate log-Gaussian Cox processes, and implemented in the \proglang{R} package \pkg{lgcp} \citep{taylor2013lgcp}.
+Other work includes \citet{diggle2013spatial}, who used a fully Bayesian approach for spatio-temporal multivariate log-Gaussian Cox processes, and implemented in the \proglang{R} package \pkg{lgcp} \citep{taylor2013lgcp}.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[htb]
@@ -466,9 +477,11 @@ We are able to investigate any spatio-temporal patterns of infection using I-pri
 Let $p_{ij}$ denote the probability that a particular farm $i$ is infected with a BTB disease with spoligotype $j \in \{1,\dots,5\}$.
 We model the transformed probabilities $g(p_{ij})$ (as described in the categorical response chapter) as following a smooth function $f$ which takes two covariates: the spatial data $x_1 \in \bbR^2$, and the temporal data $x_2$ (year of infection):
 \begin{align*}
-  g(p_{ij}) &= f_j(x_1, x_2) \\
-  &= f_{1j}(x_1) + f_{2j}(x_2) + f_{12j}(x_1, x_2)
+  p_{ij}
+  &= g_j^{-1} \big( f_k(x_1, x_2) \big)_{k=1}^m \\
+  &= g_j^{-1} \big( f_{1k}(x_1) + f_{2k}(x_2) + f_{12k}(x_1, x_2) \big)_{k=1}^m,
 \end{align*}
+where the function $g_j^{-1}:\bbR^m \to [0,1]$ is the same squashing function used in equation \cref{eq:intractablelikelihood2}.
 We assume a smooth effect of space and time on the probabilities, and appropriate RKHSs for the functions $f_1 \in \cF_1$ and $f_2 \in \cF_2$ are the fBm-0.5 RKHS.
 Alternatively, as per \citet{diggle2005nonparametric}, divide the data into four distinct time periods:
 1) 1996 and earlier;
@@ -496,14 +509,14 @@ Intercept (Others) & -0.676 & 0.033 &  & -0.134 & 0.033 &  & -0.091 & 0.033 &  &
 Scale (spatial) &  &  &  & 0.194 & 0.003 &  & -0.176 & 0.003 &  & 0.172 & 0.003\\
 Scale (temporal) &  &  &  &  &  &  & -0.006 & 0.000 &  & -0.004 & 0.000\\
 \\
-Log-likelihood & -1187.47 &  &  & -564.33 &  &  & -537.23 &  &  & -543.94 & \\
+ELBO & -1187.47 &  &  & -564.33 &  &  & -537.23 &  &  & -543.94 & \\
 Error rate (\%) & 46.25 &  &  & 19.26 &  &  & 18.06 &  &  & 18.50 & \\
 Brier score & 0.249 &  &  & 0.143 &  &  & 0.136 &  &  & 0.138 & \\
 \bottomrule
 \end{tabular}
 \end{sidewaystable}
 
-We fitted four different models:
+We fitted four different models: \hltodo[Need to rerun this with bootstrap]{}
 \begin{itemize}
   \item \textbf{\boldmath$M_0$: Intercept only}.
   \[
@@ -525,32 +538,31 @@ We fitted four different models:
   \]
   $f_{1k} \in \cF_1$ Pearson RKHS, $f_{2k} \in \cF_2$ Pearson RKHS, and $f_{12k} \in \cF_1\otimes\cF_2$
 \end{itemize}
-where $g^{-1}$ is the link function described earlier.
 Model $M_0$ corresponds to a model which ignores any spatial or temporal effects (the baseline intercept only model).
 Model $M_1$ takes into account only spatial effects.
 Both models $M_2$ and $M_3$ account for spatio-temporal effects, but $M_2$ assumes a smooth effect of time, while $M_3$ segregates the points into four distinct time periods for analysis.
 Model comparison is easily done, and \cref{tab:table.btb} indicates that model $M_2$ has the highest log-likelihood of the four models, making it the preferable model.
 
-Alternatively, spatio-temporal effects of the BTB breakdowns can easily be inferred through the RKHS scale parameters.
-Let $h_k$, $k \in \{1,2\}$ denote the reproducing kernel of the spatial and temporal RKHSs respectively.
-Then, an I-prior on $f_j = f_{1j} + f_{2j} + f_{12j}$, $j=1,\dots,5$, takes the form
-\[
-  f_j(x_1,x_2) = \sum_{i=1}^n \big(
-  \lambda_1 h_1(x_1, x_{i1}) + \lambda_2 h_2(x_2, x_{i2}) +
-  \lambda_1\lambda_2 h_1(x_1, x_{i1}) h_2(x_2, x_{i2})
-  \big)w_{ij}
-\]
-where it is assumed $(w_{i1},\dots,w_{i5})^\top \iid \N(\bzero,\bI_5)$.
-The hypothesis of temporal significance is the same as testing the significance of the $\lambda_2$ parameter, while the test of both spatial and temporal effects are conducted on $\lambda_1$ and $\lambda_2$ simultaneously.
-From \hltodo{Chapter X}, we know that these scale parameters follow a normal posterior distribution, so we can calculate the $Z$-scores by dividing the mean by its corresponding standard deviation.
-Absolute values greater than three would satisfy a Bayesian hypothesis test of significance at the 0.01 level.
-The conclusion from \cref{tab:table.btb} is that the data supports a hypothesis for a spatio-temporal or spatio-period model.
+% Alternatively, spatio-temporal effects of the BTB breakdowns can easily be inferred through the RKHS scale parameters.
+% Let $h_k$, $k \in \{1,2\}$ denote the reproducing kernel of the spatial and temporal RKHSs respectively.
+% Then, an I-prior on $f_j = f_{1j} + f_{2j} + f_{12j}$, $j=1,\dots,5$, takes the form
+% \[
+%   f_j(x_1,x_2) = \sum_{i=1}^n \big(
+%   \lambda_1 h_1(x_1, x_{i1}) + \lambda_2 h_2(x_2, x_{i2}) +
+%   \lambda_1\lambda_2 h_1(x_1, x_{i1}) h_2(x_2, x_{i2})
+%   \big)w_{ij}
+% \]
+% where it is assumed $(w_{i1},\dots,w_{i5})^\top \iid \N(\bzero,\bI_5)$.
+% The hypothesis of temporal significance is the same as testing the significance of the $\lambda_2$ parameter, while the test of both spatial and temporal effects are conducted on $\lambda_1$ and $\lambda_2$ simultaneously.
+% From \hltodo{Chapter X}, we know that these scale parameters follow a normal posterior distribution, so we can calculate the $Z$-scores by dividing the mean by its corresponding standard deviation.
+% Absolute values greater than three would satisfy a Bayesian hypothesis test of significance at the 0.01 level.
+% The conclusion from \cref{tab:table.btb} is that the data supports a hypothesis for a spatio-temporal or spatio-period model.
 
 For a more visual approach, we can look at the plots of the surface probabilities.
 To obtain these probabilities, we first determined the spatial points (Northings and Eastings) which fall inside the polygon which makes up Cornwall.
 We then obtained predicted probabilities for each class of disease at each location.
-Figure \ref{fig:plot.btb} was obtained using the model with spatial covariates only, thus ignoring any temporal effects.
-In the case of the spatio-temporal model, we used the model which had the period formulation for time (Model 3).
+\cref{fig:plot.btb} was obtained using the model with spatial covariates only, thus ignoring any temporal effects.
+In the case of the spatio-temporal model, we used the model which had the period formulation for time (model $M_3$).
 This way, we can display the surface probabilities of the time periods in four plots only, which is more economical to exhibit within the margins of this thesis.
 Note that there is no issue with using the continuous time model---we have produced an animated gif image at \url{http://phd.haziqj.ml/examples/}, showing the evolution of the surface probabilities over time.
 
@@ -561,7 +573,7 @@ Note that there is no issue with using the continuous time model---we have produ
 
 }
 
-\caption[Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium Mycobacterium bovis over the entire time period using model $M_1$]{Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium Mycobacterium bovis over the entire time period using model $M_1$.}\label{fig:plot.btb}
+\caption[Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium \emph{Mycobacterium bovis} over the entire time period using model $M_1$]{Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium \emph{Mycobacterium bovis} over the entire time period using model $M_1$.}\label{fig:plot.btb}
 \end{figure}
 
 
@@ -573,22 +585,19 @@ Note that there is no issue with using the continuous time model---we have produ
 
 }
 
-\caption[Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium Mycobacterium bovis over four different time periods using model $M_3$]{Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium Mycobacterium bovis over four different time periods using model $M_3$.}\label{fig:plot.temporal.btb}
+\caption[Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium \emph{Mycobacterium bovis} over four different time periods using model $M_3$]{Predicted probability surfaces for BTB contraction in Cornwall for the four largest spoligotypes of the bacterium \emph{Mycobacterium bovis} over four different time periods using model $M_3$.}\label{fig:plot.temporal.btb}
 \end{figure}
 
 
 \end{knitrout}
-\vspace{-1em}
-As the model suggests, there is indeed spatial segregation for the four most common spoligotypes, and this is also very prominently seen from \cref{fig:plot.btb}.
-In comparing the distribution of the spoligotypes over the years, we may refer to \cref{fig:plot.temporal.btb}.
-For each time period, we superimpose the actual observations onto the predicted surface probabilities.
+
+As the plots suggests, there is indeed spatial segregation for the four most common spoligotypes, and this is also very prominently seen from \cref{fig:plot.btb}.
+In comparing the distribution of the spoligotypes over the years, we may refer to \cref{fig:plot.temporal.btb}, a series of predicted probability surface plots over the four time periods obtained from model $M_3$.
+For each time period, we also superimposed the actual observations onto the predicted surface probabilities.
 In addition, coloured dotted lines are displayed to indicate the ``decision boundaries'' for each of the four spoligotypes.
 The most evident change is seen to the spatial distribution of spoligotype 12, with the decision boundary giving it a large area in years 1996 and earlier, but this steadily shrunk over the years.
 Spoligotype 9, which is most commonly seen in the east of Cornwall, seems to have made its way down to the south-west over the years.
 The other two spoligotypes seem to be rather constant over the years.
-This is supported also by the spatio-period model results in \cref{tab:table.btb}, where the test of nullity for the scale parameters of these two spoligotypes are not rejected.
-
-
 
 \end{document}
 

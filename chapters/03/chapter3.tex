@@ -53,7 +53,7 @@ The I-prior has a simple, intuitive appeal: much information about $f$ correspon
 
 \section{Conclusion}
 
-In estimating the regression function $f$ of the normal model in \cref{eq:model1} subject to \cref{eq:model1ass}, and $f$ belonging to an RKHS $\cF$, we established that the entropy maximising prior distribution for $f$ is Gaussian with some prior mean $f_0$ that needs to be chosen, and covariance function proportional\footnote{Proportionality, rather than equality, is a consequence of RKHS scale parameters that $\cF$ may have.} to the Fisher information for $f$.
+In estimating the regression function $f$ of the normal model in \cref{eq:model1} subject to \cref{eq:model1ass} and $f$ belonging to an RKHS $\cF$, we established that the entropy maximising prior distribution for $f$ is Gaussian with some chosen prior mean $f_0$, and covariance function proportional\footnote{Proportionality, rather than equality, is a consequence of any RKHS scale parameters that $\cF$ may have.} to the Fisher information for $f$.
 We call this the I-prior for $f$.
 
 The dimension of the function space $\cF$ could be huge, infinite-dimensional even, while the task of estimating $f\in\cF$ only relies on a finite amount of data point.
@@ -64,9 +64,6 @@ In other words, it would be futile to consider functions in a space larger than 
 By equipping the subspace $\cF_n$ with the inner product \cref{eq:Fninnerprod}, $\cF_n$ is revealed to be a RKHS with reproducing kernel equal to the Fisher information for $f$.
 Importantly, functions in the subspace $\cF_n$ are structurally similar to the functions in the parent space $\cF$.
 The problem at hand then boils down to a Gaussian process regression using the kernel of the RKHS $\cF_n$, which is the Fisher information for $f$.
-
-\section{Miscellanea}
-\input{03-misc}
 
 \hClosingStuffStandalone
 \end{document}

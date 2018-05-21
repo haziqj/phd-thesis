@@ -1,0 +1,54 @@
+\documentclass[a4paper,showframe,11pt]{report}
+\usepackage{standalone}
+\standalonetrue
+\ifstandalone
+  \usepackage{../../haziq_thesis}
+  \usepackage{../../haziq_maths}
+  \usepackage{../../haziq_glossary}
+  \addbibresource{../../bib/haziq.bib}
+  \externaldocument{../01/.texpadtmp/chapter1}
+  \externaldocument{../02/.texpadtmp/chapter2}
+  \externaldocument{../03/.texpadtmp/chapter3}
+  \externaldocument{../04/.texpadtmp/chapter4}
+  \externaldocument{../05/.texpadtmp/chapter5}
+  \externaldocument{../06/.texpadtmp/chapter6}
+\fi
+
+\begin{document}
+\hChapterStandalone[1]{Preceding chapters}
+
+\appendix
+
+\chapter{Functional derivatives}
+\input{apx-A-funcder}
+
+\chapter{Kronecker product and vectorisation}
+\input{apx-B-kronecker}
+
+\chapter{Statistical distributions and their properties}
+\input{apx-C-distributions}
+
+\chapter{Proofs related to the conically truncated independent multivariate normal distribution}\label{apx:contrunproof}
+\input{apx-D-proofs}
+
+\chapter{I-prior interpretation of the $g$-prior}\label{misc:gprior}
+\input{apx-E-gprior}
+
+\chapter{Additional details for various I-prior regression models}
+\input{apx-F-multilevel}
+
+\afterpage{\blankpage}
+\chapter{Posterior distribution of the I-prior regression function}
+\input{apx-G-ipriorpost}
+
+\chapter{Variational EM algorithm for I-probit models}
+\input{apx-H-vemiprobit}
+
+\chapter{The Gibbs sampler for the I-prior Bayesian variable selection model}\label{apx:gibbsbvs}
+\input{apx-I-gibbsipriorbvs}
+ 
+%\chapter{Data sets}
+%\input{apx-I-data}
+
+\hClosingStuffStandalone
+\end{document}

@@ -100,7 +100,7 @@
   \newcommand{\subfloat}[2][need a sub-caption]{\subcaptionbox{#1}{#2}}  % knitr
 \usepackage{rotfloat}	
 \usepackage{tikz}
-\usetikzlibrary{fit,positioning,calc,decorations.pathreplacing,shapes.geometric}
+\usetikzlibrary{fit,positioning,calc,decorations.pathreplacing,shapes.geometric,arrows,backgrounds}
 \usepackage{forest}
 \usetikzlibrary{shapes.callouts}
 \usetikzlibrary{patterns,hobby}
@@ -216,7 +216,7 @@
   \ifstandalone
     \begingroup
     \let\clearpage\relax  % Don't allow page break
-    \pagenumbering{roman}
+%    \pagenumbering{roman}
     {\hypersetup{allcolors=.} %pdfborder=0 0 0
       \listoftodos[\vspace{-3.03cm}To-do list]
       \vspace{-1em}
@@ -224,7 +224,7 @@
     }
     \endgroup
 
-    \pagenumbering{arabic}
+%    \pagenumbering{arabic}
     \setcounter{chapter}{#1-1}
     \chapter{#2}
     
@@ -280,6 +280,7 @@
 % Cleverref needs to be loaded last
 \usepackage[capitalise,noabbrev,nameinlink]{cleveref}
 \Crefname{misc}{Miscellanea}{Miscellanea}
+\Crefname{supchap}{Supplementary Chapter}{Supplementary Chapter}
 \Crefname{equation}{}{}
 \hypersetup{
   colorlinks=true,
@@ -287,3 +288,29 @@
   citecolor=colblu
 }
 
+% Page intentionally left blank
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside%
+    \ifodd\c@page\else
+%    \vspace*{\fill}
+    \vspace{3cm}
+    \hfill
+%    \begin{center}
+%    \emph{This page intentionally left blank.}
+%    \end{center}
+%    \vspace{\fill}
+    \thispagestyle{empty}
+    \newpage
+    \if@twocolumn\hbox{}\newpage\fi\fi\fi
+}
+\makeatother
+% https://tex.stackexchange.com/questions/290802/page-intentionally-left-blank-with-twoside-openright/308522
+
+\usepackage{afterpage}
+\newcommand\blankpage{%
+    \vspace*{\fill}
+    \hfill
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+% https://tex.stackexchange.com/questions/36880/insert-a-blank-page-after-current-page

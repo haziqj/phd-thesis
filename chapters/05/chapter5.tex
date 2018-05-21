@@ -12,24 +12,25 @@
   \externaldocument{../02/.texpadtmp/chapter2}
   \externaldocument{../03/.texpadtmp/chapter3}
   \externaldocument{../04/.texpadtmp/chapter4}
+  \externaldocument{../appendix/.texpadtmp/appendix}
 \fi
 
 \begin{document}
 \hChapterStandalone[5]{I-priors for categorical responses}
 \label{chapter5}
 
-In a regression setting such as \cref{eq:model1}, consider polytomous response variables $y_1,\dots,y_n$, where each $y_i$ takes on exactly one of the values from the set of $m$ possible choices $\cM = \{1,\dots,m\}$.
+Consider polytomous response variables $\by = \{y_1,\dots,y_n\}$, where each $y_i$ takes on exactly one of the values from the set of $m$ possible choices $\{1,\dots,m\}$.
 Modelling categorical response variables is of profound interest in statistics, econometrics and machine learning, with applications aplenty. 
 In the social sciences, categorical variables often arise from survey responses, and one may be interested in studying correlations between  explanatory variables and the categorical response of interest.
 Economists are often interested in discrete choice models to explain and predict choices between several alternatives, such as consumer choice of goods or modes of transport.
 In this age of big data, machine learning algorithms are used for classification of observations based on what is usually a large set of variables or features.
 
-The normality assumption \cref{eq:model1ass} is not entirely appropriate anymore.
+The model \cref{eq:model1} subject to normality assumptions \cref{eq:model1ass} is not entirely appropriate for polytomous variables $\by$.
 As an extension to the I-prior methodology, we propose a flexible modelling framework suitable for regression of categorical response variables.
 In the spirit of generalised linear models \citep{mccullagh1989}, we relate class probabilities of the observations to a normal I-prior regression model via a link function.
 Perhaps though, it is more intuitive to view it as machine learners do: since the regression function is ranged on the entire real line, it is necessary to ``squash'' it through some sigmoid function to conform it to the interval $[0,1]$ suitable for probability ranges.
 
-Expanding on this idea further, assume that the $y_i$'s follow a categorical distribution, denoted by
+Expanding on this idea further, assume that the $y_i$'s follow a categorical distribution, $i=1,\dots,n$, denoted by
 \[
   y_i \sim \Cat(p_{i1},\dots,p_{im}),
 \]
@@ -44,7 +45,7 @@ The dependence of the class probabilities on the covariates is specified through
   g(p_{i1},\dots,p_{im}) = \big(\alpha_1 + f_1(x_i), \dots, \alpha_m + f_m(x_i)\big)
 \]
 where $g:[0,1]^m\to\bbR^m$ is some specified link function.
-As we will see later, a normal regression model as in \cref{eq:model1} subject to \cref{eq:model1ass} naturally implies a \emph{probit} link function.
+As we will see later, an underlying normal regression model as in \cref{eq:model1} subject to \cref{eq:model1ass} naturally implies a \emph{probit} link function.
 %, that is, $g$ is the inverse cumulative distribution function (cdf) of a standard normal distribution (or more precisely, a function that \emph{involves} the standard normal cdf).
 With an I-prior assumed on the $f_j$'s, we call this method of probit regression using I-priors the \emph{I-probit} regression model.
 
@@ -54,17 +55,22 @@ With an I-prior assumed on the $f_j$'s, we call this method of probit regression
 
 Due to the nature of the model, unfortunately, the posterior distribution of the regression functions cannot be found in closed form.
 In particular, marginalising the I-prior from the joint likelihood involves a high-dimensional intractable integral.
-We explore a fully Bayesian approach to estimate I-probit models using \emph{variational inference}.
-The main idea is to replace the difficult posterior distribution with an approximation that is tractable.
-Working in a Bayesian setting together with variational inference allows us to estimate the model much faster than traditional MCMC sampling methods, yet provides us with the conveniences that come with Bayesian machinery.
-For example, inferences around log-odds is usually cumbersome for probit models, but a credibility interval can easily be obtained by resampling methods from the relevant posteriors, which are typically made up of densities which are familiar and readily available in software.
+Similar problems are encountered in mixed logistic or probit multinomial models \citep{breslow1993approximate,mcculloch2000bayesian} and also Gaussian process classification \citep{neal1999,rasmussen2006gaussian} .
+In these models, Laplace approximation for maximum likelihood estimation or Markov chain Monte Carlo (MCMC) methods for Bayesian estimation are used. 
+We instead explore a \emph{variational approximation} to the marginal log-likelihood, and thus, to the posterior density of the regression function.
+The main idea is to replace the difficult posterior distribution with an approximation that is tractable to be used within an EM framework.
+As such, the computational work derived in the previous section is applicable for estimation of I-probit models as well.
+
+As in the normal I-prior model, the I-probit model estimated using a \emph{variational EM} algorithm is seen as an empirical Bayes method of estimation, since the model parameters are replaced with their ML estimates.
+It is emphasised again, that working in such a semi-Bayesian framework allows fast estimation of the model in comparison to traditional MCMC, yet provides us with the conveniences that come with Bayesian machinery.
+For example, inferences around log-odds is usually cumbersome for probit models, but a credibility interval can easily be obtained by resampling methods from the posterior distribution of the regression function, which as we shall see, is approximated to be normally distributed.
 
 By choosing appropriate RKHSs/RKKSs for the regression functions, we are able to fit a multitude of binary and multinomial models, including multilevel or random-effects models, linear and non-linear classification models, and even spatio-temporal models.
 Examples of these models applied to real-world data is shown in  \cref{sec:iprobiteg}.
 We find that the many advantages of the normal I-prior methodology  transfer over quite well to the I-probit model for binary and multinomial regression.
 
-\section{A naïve model}\label{sec:iprobitnaive}
-\input{05a-naive}
+%\section{A naïve model}\label{sec:iprobitnaive}
+%\input{05a-naive}
 
 \section{A latent variable motivation: the I-probit model}
 \input{05b-iprobit}
@@ -75,13 +81,13 @@ We find that the many advantages of the normal I-prior methodology  transfer ove
 \section{Estimation}
 \input{05d-iprobit_est}
 
-\section{A variational algorithm}\label{sec:iprobitvar}
+\section{The variational EM algorithm for I-probit models}\label{sec:iprobitvar}
 \input{05e-variational}
 
-\section{Post-estimation}
+\section{Post-estimation}\label{sec:iprobitpostest}
 \input{05f-post_est}
 
-\section{Computational consideration}
+\section{Computational considerations}
 \input{05g-iprobit_comp_cons}
 
 \section{Examples}
@@ -95,7 +101,7 @@ The main motivation behind this work is to overcome the drawbacks of modelling p
 We assumed latent variables that represent `class propensities' exist, modelled these using a normal I-prior, and simply transformed them via a probit link function.
 In this way, all of the advantages of the I-prior methodology seen for the normal model are preserved for binary and multinomial regression as well.
 
-The core of this work explores ways in which to overcome the intractable integral presented by the I-probit model in \cref{eq:intractablelikelihood}.
+The core of this work explores ways in which to overcome the intractable integral presented by the I-probit model in \cref{eq:iprobitlik}.
 Techniques such as quadrature methods, Laplace approximation and MCMC tend to fail, or are unsatisfactorily slow to accomplish.
 The main reason for this is the dimension of this integral, which is $nm$, and thus for large sample sizes and/or number of classes, is unfeasible with such methods.
 We turned to variational inference in the face of an intractable posterior density that hampers an EM algorithm, and the result is a sequential updating scheme, similar in time and storage requirements to the EM algorithm.
@@ -111,20 +117,20 @@ Suggestions for future work include:
 \begin{enumerate}
   \item \textbf{Estimation of $\bPsi$}. 
   A limitation we had to face in this work was to treat $\bPsi$ as fixed.
-  This limitation was in part due to the non-conjugate nature of the variational density for $\bPsi$.
-  We believe the variational Bayes EM algorithm, which estimates maximum a posteriori values for the parameters, could alleviate this issue.
-  This would bring the estimation procedure on par with the frequentist objective of maximum likelihood via the EM algorithm, albeit with the use of approximate posterior densities (see \cref{sec:varEM,sec:vbemiprobit} for further discussions).
+  The discussion in \cref{sec:difficultPsi} shows that estimation of $\bPsi$ is possible, however, the specific nature of implementing this in computer code could not be explored in time.
+  In particular, for the full I-probit model, the best method of imposing positive-definite constraints for $\bPsi$ in the M-step has not been fully researched.
   
   \item \textbf{Inclusion of class-specific covariates}. 
   Throughout the chapter, we assumed that covariates were unit-specific, rather than class-specific. 
   One such example is modelling the choice of travel mode between two destinations (car, coach, train or aeroplane) as a function of travel time. 
   Clearly, travel time depends on the mode of transport. 
-  This would require a careful rethink of the appropriate RKHS/RKKS to which the regression function belongs: the regression on the latent propensities could be extended as such:
+  This would require a careful rethink of the appropriate RKHS/RKKS to which the regression function belongs.
+  The regression on the latent propensities could be extended as such:
   \[
-    y_{ij}^* = \alpha_j + f_j(x_i) + e(z_{ij})
+    y_{ij}^* = \alpha_j + f_j(x_i) + e(z_{ij}) + \epsilon_{ij}
   \]
-  and $f_j\in \cF_\cX$, the RKHS with kernel $h:(\cX \times \cM)^2\to\bbR$ defined by $\delta_{jj'}h(x,x')$, and $e \in \cF_\cZ$, the RKHS of functions of the form $e:\{z_{ij}|i=1,\dots,n, \ j=1,\dots,m \}\to\bbR$.
-  An I-prior would then be applied as usual, but the implications on the estimation would need to be considered as well.
+  and $f_j\in \cF_\cX$, the RKHS with kernel $h:(\cX \times \{1,\dots,m \})^2\to\bbR$ defined by $\delta_{jj'}h(x,x')$, and $e \in \cF_\cZ$, the RKHS of functions of the form $e:\{z_{ij}|i=1,\dots,n, \ j=1,\dots,m \}\to\bbR$.
+%  An I-prior would then be applied as usual, but the implications on the estimation would need to be considered as well.
   
   \item \textbf{Improving computational efficiency}. 
   The $O(n^3m)$ time requirement for estimating I-probit models hinder its use towards large-data applications.
@@ -139,17 +145,28 @@ Suggestions for future work include:
   \caption[Time taken to complete a single variational inference iteration]{Time taken to complete a single variational inference iteration for varying sample sizes and number of classes $m$. The solid line represents actual timings, while the dotted lines are linear extrapolations.}
 \end{figure}
 
+As a final remark, we note that variational Bayes, which entails a fully Bayesian treatment of the model (setting priors on model parameters $\theta$), is a viable alternative to variational EM.
+The output of such a variational inference algorithm would be approximate posterior densities for $\theta$, in addition to $q(\by^*)$ and $q(\bw)$, instead of point estimates for $\theta$.
+Posterior inferences surrounding the parameters would then be possible, such as obtaining posterior standard deviations, credibility intervals, and so on.
+However, a variational Bayes route has its cons:
+\begin{enumerate}
+  \item \textbf{Tedious derivations}. As the parameters now have a distribution $\theta = \{\balpha,\eta,\bPsi\} \sim q(\balpha,\eta,\bPsi)$, quantities such as
+  \begin{itemize}
+    \item $\E[\log \vert \bPsi \vert]$;
+    \item $\E[\bH_\eta^2]$; and
+    \item $\tr \E[(\by^*-\bone_n\balpha^\top - \bH_\eta\bw)\bPsi (\by^*-\bone_n\balpha^\top - \bH_\eta\bw)^\top ]$,
+  \end{itemize}
+  among others, will need to be derived for the variational inference algorithm, and these can be tricky to compute.
+  
+  \item \textbf{Suited only to conjugate exponential family models}. When conjugate exponential family models are considered, the approximate variational densities (under a mean-field assumption) are easily recognised, as they themselves belong to the same exponential family as the model/prior. However, I-prior does not always admit conjugacy for the kernel parameters $\eta$ (only for ANOVA RKKSs scale parameters), and most certainly not for $\bPsi$ (at least not in the current parameterisation). When this happens, techniques such as importance sampling or Metropolis algorithms need to be employed to obtain the posterior means required for the variational algorithm to proceed.
+  
+  \item \textbf{Prior specification and sensitivity}. It is not clear how best to specify prior information (from a subjectivist's standpoint) for the RKHS scale parameters, intercepts, and perhaps the error precision, because these are parameters relating to the latent propensities which are not very meaningful or interpretable. Of course, one could easily specify vague or even diffuse priors. The concern is that the model could be sensitive to prior choices.
+\end{enumerate}
 
-\section{Miscellanea}
-\input{05-misc}
-
-\ifstandalone
-  \section*{Appendix}
-  \input{05-apx-01-distributions}
-  \input{05-apx-02-proofs}
-  \input{05-apx-03-derivations1}
-  \input{05-apx-04-derivations2}
-\fi
+In consideration of the above, we opted to employ a variational EM algorithm for estimation of I-probit models, instead of a full variational Bayes estimation.
+In any case, computational complexity is expected to be the same between the two methods.
+An interesting point to note is that the RKHS scale parameters and intercept would admit a normal posterior under a variational Bayes scheme. 
+This means that the posterior mode and the posterior mean coincide, so point estimates under a variational EM algorithm are exactly the same as the posterior mean estimates under a variational Bayes framework when a diffuse prior is used.
 
 \hClosingStuffStandalone
 \end{document}

@@ -6,6 +6,7 @@ source("00-prelim.R")
 data(cattle, package = "jmcm")
 names(cattle) <- c("id", "time", "group", "weight")
 cattle$id <- as.factor(cattle$id)  # convert to factors
+levels(cattle$group) <- c("Treatment A", "Treatment B")
 str(cattle)
 
 ## ---- cows.first ----
@@ -53,4 +54,5 @@ knitr::kable(tab, col.names = c(
 ))
 
 ## ---- cows.plot ----
-plot_fitted_multilevel(mod5, show.legend = FALSE, cred.bands = FALSE)
+plot_fitted_multilevel(mod5, show.legend = FALSE, cred.bands = FALSE) +
+  labs(x = "Time", y = "Weight")

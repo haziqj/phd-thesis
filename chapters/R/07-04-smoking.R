@@ -111,50 +111,50 @@ as.tibble(dat.smoke) %>%
 # lambda[2,]   0.00087   0.00087
 
 # ## ---- fit.smoke ----
-load("data/smoking-mod1"); l1 <- logLik(mod1); e1 <- get_error_rate(mod1)
-load("data/smoking-mod2"); l2 <- logLik(mod2); e2 <- get_error_rate(mod2)
-load("data/smoking-mod3"); l3 <- logLik(mod3); e3 <- get_error_rate(mod3)
-calc_odds <- function(n.samp = 100) {
-  studies <- levels(dat.smoke$Study)
-  as.tibble(dat.smoke) %>%
-    mutate(tmp = paste0(Study, Group)) -> tmp
-  unq.i <- match(unique(tmp$tmp), tmp$tmp)
-  quants <- predict(mod3, dat.smoke[unq.i, ], quantiles = TRUE, raw = TRUE,
-                    n.samp = n.samp)[[1]][[2]]  # prob quit
-
-  res <- quants[seq_len(length(studies) + 1), ]; res[] <- NA
-  for (i in seq_along(studies)) {
-    prob.treated <- quants[2 * i - 1, ]
-    prob.control <- quants[2 * i, ]
-    a <- prob.treated; b <- 1 - a  # probs in treatment groups
-    c <- prob.control; d <- 1 - c  # probs in control groups
-    # OR.quit = (a / b) / (c / d) = (a * d) / (c * b)
-    res[i, ] <- log(a * d) - log(b * c)
-  }
-
-  unq.i <- match(unique(dat.smoke$Group), dat.smoke$Group)
-  quants <- predict(mod1, dat.smoke[unq.i, ], quantiles = TRUE, raw = TRUE,
-                    n.samp = n.samp)[[1]][[2]]
-  prob.treated <- quants[1, ]
-  prob.control <- quants[2, ]
-  a <- prob.treated; b <- 1 - a
-  c <- prob.control; d <- 1 - c
-  res[nrow(res), ] <- log(a * d) - log(b * c)
-
-  tab <- data.frame(
-    Study = c(studies, "Summary measure"),
-    t(apply(res, 1, function(x) c(logodds = mean(x),
-                                  quantile(x, probs = c(0.05, 0.95))))),
-    n = study.size,
-    method = "I-probit"
-  )
-  names(tab)[3:4] <- c("lower", "upper")
-  tab
-}
-l <- c(l1, l2, l3)
-err <- c(e1, e2, e3)
-b <- c(get_brier_score(mod1), get_brier_score(mod2), get_brier_score(mod3))
-smoke.ip.res <- calc_odds(100)
+# load("data/smoking-mod1"); l1 <- logLik(mod1); e1 <- get_error_rate(mod1)
+# load("data/smoking-mod2"); l2 <- logLik(mod2); e2 <- get_error_rate(mod2)
+# load("data/smoking-mod3"); l3 <- logLik(mod3); e3 <- get_error_rate(mod3)
+# calc_odds <- function(n.samp = 100) {
+#   studies <- levels(dat.smoke$Study)
+#   as.tibble(dat.smoke) %>%
+#     mutate(tmp = paste0(Study, Group)) -> tmp
+#   unq.i <- match(unique(tmp$tmp), tmp$tmp)
+#   quants <- predict(mod3, dat.smoke[unq.i, ], quantiles = TRUE, raw = TRUE,
+#                     n.samp = n.samp)[[1]][[2]]  # prob quit
+#
+#   res <- quants[seq_len(length(studies) + 1), ]; res[] <- NA
+#   for (i in seq_along(studies)) {
+#     prob.treated <- quants[2 * i - 1, ]
+#     prob.control <- quants[2 * i, ]
+#     a <- prob.treated; b <- 1 - a  # probs in treatment groups
+#     c <- prob.control; d <- 1 - c  # probs in control groups
+#     # OR.quit = (a / b) / (c / d) = (a * d) / (c * b)
+#     res[i, ] <- log(a * d) - log(b * c)
+#   }
+#
+#   unq.i <- match(unique(dat.smoke$Group), dat.smoke$Group)
+#   quants <- predict(mod1, dat.smoke[unq.i, ], quantiles = TRUE, raw = TRUE,
+#                     n.samp = n.samp)[[1]][[2]]
+#   prob.treated <- quants[1, ]
+#   prob.control <- quants[2, ]
+#   a <- prob.treated; b <- 1 - a
+#   c <- prob.control; d <- 1 - c
+#   res[nrow(res), ] <- log(a * d) - log(b * c)
+#
+#   tab <- data.frame(
+#     Study = c(studies, "Summary measure"),
+#     t(apply(res, 1, function(x) c(logodds = mean(x),
+#                                   quantile(x, probs = c(0.05, 0.95))))),
+#     n = study.size,
+#     method = "I-probit"
+#   )
+#   names(tab)[3:4] <- c("lower", "upper")
+#   tab
+# }
+# l <- c(l1, l2, l3)
+# err <- c(e1, e2, e3)
+# b <- c(get_brier_score(mod1), get_brier_score(mod2), get_brier_score(mod3))
+# smoke.ip.res <- calc_odds(100)
 # save(smoke.ip.res, file = "data/smoking-res")
 # save(l, file = "data/smoking-lb")
 # save(b, file = "data/smoking-brier")

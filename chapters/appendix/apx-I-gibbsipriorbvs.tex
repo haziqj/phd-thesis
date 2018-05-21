@@ -1,0 +1,118 @@
+The I-prior Bayesian variable selection model has the following hierarchical form:
+\begin{align*}
+  \begin{gathered}
+    \by|\alpha,\bbeta,\gamma,\sigma^2,\kappa \sim \N_n(\alpha\bone_n + \bX\btheta, \sigma^2 I_n) \\
+    \btheta = (\gamma_1\beta_1,\dots,\gamma_p\beta_p)^\top \\
+    \bbeta|\sigma^2,\kappa \sim \N_p(\bzero,\sigma^2\kappa \XTX) \\
+    \alpha|\sigma^2 \sim \N(0,\sigma^2 A) \\
+    \sigma^2,\kappa \sim \Gamma^{-1}(c,d) \\
+    \gamma_j \sim \Bern(\pi_j) \hspace{0.5cm} j=1,\dots,p
+  \end{gathered}
+\end{align*}
+In the simulations and real-data examples, we used $\pi_j=0.5, \forall j$, $A=100$, and $c=d=0.001$, and the columns of the matrix $\bX$ are standardised.
+
+The first line of the set of equations above is the likelihood, while the joint prior density is given by
+\[
+  p(\alpha,\beta,\gamma,\sigma^2,\kappa) = p(\beta|\sigma^2)p(\alpha|\sigma^2)p(\sigma^2)p(\kappa)p(\gamma_1)\cdots p(\gamma_p).
+\]    
+For simplicity, in the following subsections we shall denote by $\Theta$ the entire set of parameters, while $\Theta_{-\xi}$ implies the set of parameters excluding the parameter $\xi$.
+
+\section{Conditional posterior for \texorpdfstring{$\bbeta$}{$beta$}}
+
+\begin{align*}
+  \log p(\bbeta|\by,\Theta_{-\bbeta}) 
+  &= \const + \log p(\by|\Theta) + \log p(\bbeta|\sigma^2) \\
+  &= \const - \frac{1}{2\sigma^2} \Vert \by - \alpha \bone_n - \bX_\gamma\bbeta \Vert^2  
+  - \frac{1}{2\sigma^2}\bbeta^\top (\kappa \XTX)^{-1} \bbeta \\
+  &= \const - \frac{1}{2\sigma^2} \left( \bbeta^\top (\bX_\gamma^\top \bX_\gamma + (\kappa \XTX)^{-1}) \bbeta - 2(\by - \alpha \bone_n)^\top \bX_\gamma\bbeta \right) \\
+  &= \const - \frac{1}{2\sigma^2} \big(\bbeta - \tilde \bB(\by - \alpha \bone_n)\big)^\top \tilde \bB^{-1} \big(\bbeta - \tilde \bB(\by - \alpha \bone_n)\big) 
+\end{align*}
+where $\tilde \bB = \bX_\gamma^\top \bX_\gamma + (\kappa \XTX)^{-1}$, and $\bX_\gamma = (\gamma_1X_1 \cdots \gamma_pX_p)$ is the $n \times p$ design matrix $\bX$ with each of the $p$ columns multiplied by the indicator variable $\gamma$.
+This is of course recognised as the log density of a $p$-variate normal distribution with mean and variance
+\[
+  \E[\bbeta|\Theta_{-\bbeta}] = \tilde \bB(y - \alpha \bone_n) \text{ and } \Var[\bbeta|\Theta_{-\bbeta}] = \sigma^2\tilde \bB.
+ \]
+
+\section{Conditional posterior for $\gamma$}
+
+Consider each $\gamma_j$ in turn. For $j\in\{1,\dots,p\}$,
+\begin{align*}
+  p(\gamma_j|\by,\Theta_{-\gamma_j}) 
+  &\propto p(\by|\Theta)p(\gamma_j) \\
+  &\propto \exp\left( - \frac{1}{2\sigma^2} \Vert \by - \alpha \bone_n - \bX\btheta \Vert^2 \right)
+  \pi_j^{\gamma_j}(1-\pi_j)^{1-\gamma_j}
+\end{align*}
+Since the support of $\gamma_j$ is $\{0,1\}$, the above is a probability mass function which can be normalised easily.
+When $\gamma_j=1$, we have 
+\[
+  p(\gamma_j|\by,\Theta_{-\gamma_j}) 
+  \propto \pi_j \exp\left( - \frac{1}{2\sigma^2} \Vert \by - \alpha \bone_n - \bX\btheta_j^{[1]} \Vert^2 \right) := u_j
+\]
+while for $\gamma_j=0$, we have
+\[
+  p(\gamma_j|\by,\Theta_{-\gamma_j}) \propto (1-\pi_j) \exp\left( - \frac{1}{2\sigma^2} \Vert \by - \alpha \bone_n - \bX\btheta_j^{[0]} \Vert^2 \right) := v_j.
+\]
+For $j=1,\dots,p$, we have used the notation $\theta_j^{[\omega]}$ to mean
+\[
+  \btheta_j^{[\omega]} = 
+  \begin{cases}
+    (\theta_1,\dots,\theta_{j-1},\beta_j,\theta_{j+1},\dots,\theta_p) &\omega = 1 \\
+    (\theta_1,\dots,\theta_{j-1},0,\theta_{j+1},\dots,\theta_p) &\omega = 0.
+  \end{cases}
+\]
+Therefore, the conditions distribution for $\gamma_j$ is Bernoulli with success probability 
+\[
+  \tilde \pi_j = \frac{u_j}{u_j + v_j}.
+\]
+
+\section{Conditional posterior for $\alpha$}
+
+We can obtain the conditional posterior for $\alpha$ in a similar fashion we obtained the conditional posterior for $\bbeta$. 
+That is,
+\begin{align*}
+  \log p(\alpha|\by,\Theta_{-\alpha}) 
+  &= \const + \log p(\by|\Theta) + \log p(\alpha|\sigma^2) \\
+  &= \const - \frac{1}{2\sigma^2} \Vert \by - \alpha \bone_n - \bX\btheta \Vert^2  
+  - \frac{\alpha^2}{2\sigma^2A} \\
+  &= \const - \frac{1}{2\sigma^2} \left( (n+A^{-1})\alpha^2 - 2\alpha\sum_{i=1}^n(y_i - \bx_i^\top\btheta) \right) \\
+  &= \const - \frac{1}{2\sigma^2(n+A^{-1})} \left( \alpha - \frac{\sum_{i=1}^n(y_i - \bx_i^\top\btheta)}{n+A^{-1}}  \right)^2.
+\end{align*}
+Thus, the conditional posterior for $\alpha$ is normal with mean and variance which can be easily read off the final line above.
+
+\section{Conditional posterior for $\sigma^2$}
+
+The conditional density for $\sigma^2$ is
+\begin{align*}
+  \log p(\sigma^2|\by,\Theta_{-\sigma^2}) 
+  &= \const + \log p(\by|\Theta) + \log p(\sigma^2) \\
+  &= \const - \half[n]\log\sigma^2 - \frac{1}{2\sigma^2} \Vert \by - \alpha \bone_n - \bX\btheta \Vert^2 - (c+1)\log\sigma^2 - d / \sigma^2 \\
+  &= \const - (n/2 + c + 1)\log\sigma^2 - \frac{\Vert \by - \alpha \bone_n - \bX\btheta \Vert^2/2 + d}{\sigma^2}
+\end{align*}
+which is an inverse gamma distribution with shape $\tilde c = n/2 + c + 1$ and scale $\tilde d = \Vert \by - \alpha \bone_n - \bX\btheta \Vert^2/2 + d$.
+
+\section{Conditional posterior for $\kappa$}
+
+Interestingly, since $\kappa$ is a hyperparameter to be estimated, it does not actually make use of any data, apart from the appearance of $\bX$ in the covariance matrix for $\bbeta$.
+\begin{align*}
+  \log p(\kappa|\by,\Theta_{-\kappa}) &= \const + \log p(\beta|\sigma^2,\kappa) + \log p(\kappa) \\
+  &= \const - \half[p]\log\kappa - \frac{1}{\kappa}\cdot\frac{1}{2\sigma^2} \bbeta^\top(\XTX)^{-1}\bbeta - (c+1)\log\kappa - d / \kappa \\
+  &= \const - (p/2+c+1)\log\kappa - \frac{\bbeta^\top(\XTX)^{-1}\bbeta/\sigma^2+d}{\kappa}
+\end{align*}
+This is an inverse gamma distribution with shape $\tilde c = p/2 + c + 1$ and scale $\tilde d = \bbeta^\top(\XTX)^{-1}\bbeta/\sigma^2+d$.
+
+\section{Computational note}
+
+From the above, we see that all of the Gibbs conditionals are of recognisable form, making Gibbs sampling a straightforward MCMC method to implement.
+We built an \proglang{R} \hltodo[Cite this with correct version.]{package} \pkg{ipriorBVS} that uses \proglang{JAGS} \citep{plummer2003jags}, a variation of \proglang{WinBUGS}, internally for the Gibbs sampling, and wrote a wrapper function which takes formula based inputs for convenience.
+The \pkg{ipriorBVS} also performs two-stage BVS, and supported priors are the I-prior, $g$-prior, and independent prior, as used in this thesis.
+Although a Gibbs sampler could be coded from scratch, \proglang{JAGS} has the advantage of being tried and tested and has simple controls for tuning (burn-in, adaptation, thinning, etc.).
+Furthermore, the output from \proglang{JAGS} can be inspected using a myriad of multipurpose MCMC tools to diagnose convergence problems.
+The \pkg{ipriorBVS} package is available at \url{https://github.com/haziqj/ipriorBVS}.
+
+In all examples, a default setting of 4,000 burn-in samples, 1,000 adaptation size, and 10,000 samples with no thinning seemed adequate.
+There were no major convergence issues encountered.
+
+Computational complexity is dominated by the inversion of a $p \times p$ matrix, and matrix multiplications of order $O(np^2)$.
+These occur in the conditional posterior for $\bbeta$.
+Overall, if $n \gg p$, then time complexity is $O(np^2)$.
+Storage requirements are $O(np)$.

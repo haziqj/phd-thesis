@@ -8,7 +8,7 @@ mod <- iprior(y ~ X, gen_smooth(), kernel = "fbm")
 
 no.points <- 50
 x <- log(get_lambda(mod))
-x <- seq(x - 10, x + 15, length = no.points)  # lambda
+x <- seq(x - 20, x + 15, length = no.points)  # lambda
 x <- sort(c(x, log(get_lambda(mod))))
 y <- log(get_psi(mod))
 y <- seq(y - 10, y + 15, length = no.points)  # psi

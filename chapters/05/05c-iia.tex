@@ -1,33 +1,84 @@
-The parameters in a linear multinomial probit model is well known to be unidentified \citep{Keane1992,train2009discrete}, and the reason for this is two-fold.
-Firstly, an addition of a constant to the latent variables $y_{ij}^*$'s in \cref{eq:latentmodel} will not change which latent variable is maximal, and therefore leaves the model unchanged.
-Secondly, all latent variables can be scaled by some positive constant without changing which latent variable is largest.
-Therefore, a \emph{linear parameterisation} for the multinomial probit model is not identified as there can be more than one set of parameters for which the class probabilities are the same.
-To fix this issue, constraints are imposed on location and scale of the latent variables.
+The parameters in the standard linear multinomial probit model is well known to be unidentified \citep{Keane1992,train2009discrete}, and we find this to be the case in the I-probit model as well.
+Unrestricted probit models are not identified for two reasons.
+Firstly, an addition of a non-zero constant $a\in\bbR$ to the latent variables $y_{ij}^*$'s in \cref{eq:latentmodel} will not change which latent variable is maximal, and therefore leaves the model unchanged.
+It is for this reason assumptions \ref{ass:A4} and \ref{ass:A5} are imposed.
+Secondly, all latent variables can be scaled by some positive constant $c\in\bbR_{>0}$ without changing which latent variable is largest.
+This means that $m$-variate normal distribution $\N_m\big(\bmu(x_i), \bPsi^{-1}\big)$ of the underlying latent variables $\by_{i\bigcdot}^*$ would yield the same class probabilities as the multivariate normal distribution $\N_m\big( a\bone_m + c\bmu(x_i), c^2\bPsi^{-1} \big)$, according to \cref{eq:pij}.
+Therefore, the multinomial probit model is not identified as there exists more than one set of parameters for which the categorical likelihood $\prod_{i,j} p_{ij}$ is the same.
 
-However, for the I-probit model, this is not the case, because the model is not related to the parameters $\theta = \{\alpha_1,\dots,\alpha_m,\eta, \bPsi \}$ linearly.
-One cannot simply add to or multiply $\theta$ by a constant and expect the model to be left unchanged.
-Thus, the I-probit model is identified in the parameter set $\theta$ without having to impose any restrictions, particularly on the precision matrix $\bPsi$ (if this is to be estimated).
+Identification for the probit model is resolved by setting one restriction on the intercepts $\alpha_1,\dots,\alpha_m$ (location) and $m+1$ restrictions on the precision matrix $\bPsi$ (scale).
+Restrictions on the intercepts include $\sum_{j=1}^m \alpha_j = 0$ or setting one of the intercepts to zero.
+In our work, we apply the former restriction to the I-probit model, as this is analogous to the requirement of zero-mean functions in the functional ANOVA decomposition.
+If \ref{ass:A6} holds, then location identification is all that is needed to achieve identification.
+However, if $\bPsi$ is a free parameter to be estimated, only $m(m-1)/2-1$ parameters are identified.
+Many possible specifications of the restriction on $\bPsi$ is possible, depending on the number of alternatives $m$ and the intended effect of $\bPsi$, for example:
+\begin{itemize}
+  \item \textbf{Case {\boldmath $m=2$}} (minimum number of restrictions = 3).
+  \[
+    \bPsi = 
+    \begin{pmatrix}
+    1 & \\
+    0 &0 \\  
+    \end{pmatrix},
+    \text{ or }
+    \bPsi = 
+    \begin{pmatrix}
+    1 & \\
+    0 &1 \\  
+    \end{pmatrix}
+  \]
+  \item \textbf{Case {\boldmath $m=3$}} (minimum number of restrictions = 4).
+  \[
+    \bPsi = 
+    \begin{pmatrix}
+    1 & \\
+    \psi_{12} &\psi_{22} \\  
+    0 &0 &0
+    \end{pmatrix},
+    \text{ or }
+    \bPsi = 
+    \begin{pmatrix}
+    1 & \\
+    0 &\psi_{22}  \\  
+    0 &0 &\psi_{33}  
+    \end{pmatrix}
+  \]
+    \item \textbf{Case {\boldmath $m\geq 4$}} (minimum number of restrictions = $m+1$).
+  \[
+    \bPsi = 
+    \begin{pmatrix}
+    1                    \\
+    \psi_{12} &\psi_{22}  \\  
+    \vdots    &\vdots    &\ddots \\
+    \psi_{1,m-1}         &\psi_{2,m-1} &\cdots &\psi_{m-1,m-1} \\
+    0         &0         &\cdots &0 &0
+    \end{pmatrix},
+    \text{ or }
+    \bPsi = 
+    \begin{pmatrix}
+    \psi_{11} & \\
+     &\psi_{22}  \\  
+     & &\ddots \\
+     & &    &\psi_{mm} \\
+    \end{pmatrix}
+  \]
+\end{itemize}
 
-To see how the I-probit model is location identified, suppose assumptions \ref{ass:A4} and \ref{ass:A5} hold, and consider a constant $a$ added to the latent propensities.
-This would then imply the relationship
-\[
-  a + y_{ij}^* = 
-  \greyoverbrace{a + \alpha_j}{\alpha_j^*}  + f_j(x_i) + \epsilon_{ij},
-\]
-which is similar to adding the constant $a$ to all of the intercept parameters $\alpha_j$---denote these new intercepts by $\alpha_j^*$.
-As a requirement of the functional ANOVA decomposition, the $\alpha_j^*$'s need to sum to zero, but we already have that $\sum_{j=1}^m \alpha_j=0$, so it must be that $a =0$.
-This also highlights the reason behind assumption \ref{ass:A4} and \ref{ass:A5} for fixing the grand intercept $\alpha$ to zero.
-
-As for identification in scale, consider multiplying the latent variables by $c>0$.
-Denote by $\bV_y^*(\omega) \in \bbR^{nm \times nm}$ the marginal covariance matrix of the latent propensities, which depends on the scale parameters $\omega = \{\eta, \bPsi\}$.
-The scaled latent variables $\{c^{1/2}y^*_{ij} \,|\, \forall i,j = 1,\dots \}$, which collectively has (marginal) variance and covariances given by the matrix $c \bV_y^*(\omega)$, is expected to have been generated from the model with parameters $c\omega$.
-However, we have that 
-\begin{align*}
-  c\bV_y^*(\omega)
-  &= c (\bPsi \otimes \bH_\eta^2) + c (\bPsi^{-1} \otimes \bI_n) \\
-  &= (c \bPsi \otimes \bH_\eta^2) + (c \bPsi^{-1} \otimes \bI_n) \\
-  &\neq \bV_y^*(c\omega).
-\end{align*}
+\begin{remark}
+  Identification is most commonly achieved by fixing the latent propensities of one of the classes to zero and fixing one element the covariance matrix \citep{dansie1985parameter,bunch1991estimability}.
+  Fixing the last class, say, to zero, i.e. $y_{im}^* = 0,\forall i=1,\dots,n$ has the effect of shrinking $\bPsi$ to $(m-1)\times(m-1)$ in size, and thus one more restriction needs to be made (typically, the first element $\bPsi_{11}$ is set to one).
+  This speaks to the fact that the absolute values of the latent propensities themselves do not matter, but their relative differences do.   
+  We also remark that for the binary case ($m=2$), setting the latent propensities for the second class to zero and fixing the remaining variance parameter to one yields, for $i=1,\dots,n$,
+  \begin{align}
+    p_{i1} 
+    &= \Prob(y_{i1}^* > y_{i2}^* = 0) \nonumber \\
+    &= \Prob\big(\alpha_1 + f_1(x_i) + \epsilon_{i1} > 0 \,|\, \epsilon_{i1} \iid \N(0,1) \big) \nonumber \\
+    &= \Phi\big( \alpha_1 + f_1(x_i) \big) \label{eq:iprobitbin}
+  \end{align}
+  and $p_{i2} = 1 - \Phi\big( \alpha_1 + f_1(x_i) \big)$, the familiar binary probit model.
+  Note that in the binary case only one set of latent propensities need to be estimated, so we can drop the subscript `1' in the above equations.
+  In fact, for $m$ classes, only $m-1$ sets of regression functions need to be estimated (since one of them needs to be fixed), but in the multinomial presentation of this thesis we define regression functions for each class.
+\end{remark}
 
 Now, we turn to a discussion of the role of $\bPsi$ in the model.
 In decision theory, the independence axiom states that an agent's choice between a set of alternatives should not be affected by the introduction or elimination of a choice option.
@@ -42,6 +93,7 @@ To put it simply, the model is IIA if choice probabilities depend only on the ch
 In the I-probit model, or rather, in probit models in general, choice dependency is controlled by the error precision matrix $\bPsi$.
 Specifically, the off-diagonal elements $\bPsi_{jk}$ capture the correlation between alternatives $j$ and $k$.
 Allowing all $m(m+1)/2$ covariance elements of $\bPsi$ to be non-zero leads to the \emph{full I-probit model}, and would not assume an IIA position.
+\cref{fig:iprobcovstr} illustrates the covariance structure for the marginal distribution of the latent propensities, $\bV_{y^*} = \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n$, and of the I-prior $\bV_f = \bPsi \otimes \bH_\eta^2$.
 
 \begin{figure}[hbt]
 \centering\hspace{-13pt}
@@ -114,24 +166,23 @@ Allowing all $m(m+1)/2$ covariance elements of $\bPsi$ to be non-zero leads to t
 
 While it is an advantage to be able to model the correlations across choices (unlike in logistic models), there are applications where the IIA assumption would not adversely affect the analysis, such as classification tasks.
 Some analyses might also be indifferent as to whether or not choice dependency exists.
-In these situations, it would be beneficial, algorithmically speaking, to reduce the I-probit model to a simpler version by assuming $\bPsi = \diag(\psi_1,\dots,\psi_m)$, which would trigger the IIA assumption in the I-probit model.
+In these situations, it would be beneficial, algorithmically speaking, to reduce the I-probit model to a simpler version by assuming $\bPsi = \diag(\psi_1,\dots,\psi_m)$, which would trigger an IIA assumption in the I-probit model.
 We refer to this model as the \emph{independent I-probit model}.
-
-The independence assumption causes the distribution of the latent variables to be $y_{ij}^* \sim \N(\mu_k(x_i), \sigma_j^2)$ for $j=1,\dots,m$, where $\sigma_j^2 = \psi_j^{-1}$.
-As a continuation of line \cref{eq:pij}, we can show the class probability $p_{ij}$ to be
+The independence structure causes the distribution of the latent variables to be $y_{ij}^* \sim \N(\mu_k(x_i), \sigma_j^2)$ for $j=1,\dots,m$, where $\sigma_j^2 = \psi_j^{-1}$.
+As a continuation of line \cref{eq:pij}, we can show the class probabilities $p_{ij}$ to be
 \begin{align}
   p_{ij} 
   &= \idotsint\displaylimits_{\{y_{ij}^* > y_{ik}^* | \forall k \neq j\}} 
   \prod_{k=1}^m \Big\{ \phi(y_{ik}^*|\mu_k(x_i), \sigma_k^2) \dint y_{ik}^* \Big\} \nonumber \\
   &= \int \mathop{\prod_{k=1}^m}_{k\neq j} 
-  \Phi \left( \frac{y_{ij}^* - \mu_k(x_i)}{\sigma_k} \right) \cdot
+  \Phi \left( \frac{y_{ij}^* - \mu_k(x_i)}{\sigma_k} \right) \,
    \phi(y_{ij}^*|\mu_j(x_i), \sigma_j^2)  \dint y_{ij}^* \nonumber \\
   &= \E_Z \Bigg[ \mathop{\prod_{k=1}^m}_{k\neq j} 
   \Phi \left(\frac{\sigma_j}{\sigma_k} Z + \frac{\mu_j(x_i) - \mu_k(x_i)}{\sigma_k} \right) \Bigg] \label{eq:pij2}
 \end{align}
 where $Z\sim\N(0,1)$, $\Phi(\cdot)$ its cdf, and $\phi(\cdot|\mu,\sigma^2)$ is the pdf of $X\sim\N(\mu,\sigma^2)$.
 The equation \cref{eq:pij} is thus simplified to a unidimensional integral involving the Gaussian pdf and cdf, which can be computed fairly efficiently using quadrature methods.
-The probit link function is evidently seen in the above equation.
+%The probit link function is evidently seen in the above equation.
 %Moreover, in the binary case where $m=2$ and fixed error precision $\psi_1 = \psi_2 = 1/2$, we get
 %\[
 %  p_{i1} = 1 - \Phi\big(\mu_1(x_i) - \mu_2(x_i)\big) \ \text{ and } \ p_{i2} =  \Phi\big(\mu_1(x_i) - \mu_2(x_i)\big),

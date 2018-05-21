@@ -35,6 +35,14 @@ Elements of the vector space of real functions over a set $\cX$ are denoted $f(\
 This distinguishes them from the actual evaluation of the function at an input point $x \in \cX$, denoted $f(x) \in \bbR$.
 For a much cleaner read, we dispense with boldface notation for vectors and matrices when talking about them, without ambiguity, in the abstract sense. 
 
+%A vector space... of `functions'?
+%
+%At first glance, this may seem strange, that the notion of functions (as mappings from input to output space) and vector spaces are somehow equatable.
+%Upon further thought, one realises that firstly, two functions of a similar, particular form may be added together (in some meaningful way) resulting in a function in that same form. 
+%Secondly, multiplication of a function by a scalar $c$ can be thought of as $c$ times the output of that function.
+%Indeed, running through the checklist of what constitutes a vector space, we find that a ``space of functions'' satisfies them all.
+%In modern linear algebra texts, this checklist is the eight axioms of vector spaces over a field $\bbF$: The vectors forms an abelian group under addition, and this group has an $\bbF$-module structure.
+
 \section{Some functional analysis}
 \input{02a-functional-analysis}
 
@@ -69,9 +77,6 @@ An annotated collection of bibliographical references used for this chapter is a
 %  What is interesting is that several authors who simply set out to obtain a suitable functional decomposition, all ended up somewhat independently recovering the ANOVA decomposition as being ``optimal'' in some sense.
 %  This speaks largely to this classical idea that is ANOVA.
 \end{itemize}
-
-\section{Miscellanea}
-\input{02-misc}
 
 \hClosingStuffStandalone
 \end{document}

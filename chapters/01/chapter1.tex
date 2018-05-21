@@ -11,6 +11,7 @@
   \externaldocument{../03/.texpadtmp/chapter3}
   \externaldocument{../04/.texpadtmp/chapter4}
   \externaldocument{../05/.texpadtmp/chapter5}
+  \externaldocument{../06/.texpadtmp/chapter6}
 \fi
 
 \begin{document}
@@ -303,6 +304,63 @@ This thesis is structured as follows:
 
 %\cref{chapter4,chapter5,chapter6} 
 Chapters 4--6 contain computer implementations of the statistical methodologies described therein, and the code for replication are made available at \url{http://myphdcode.haziqj.ml}.
+Familiarity with basic estimation concepts (maximum likelihood, Bayes, empirical Bayes) and their corresponding estimation methods (gradient-based methods, Newton/ quasi-Newton methods, MCMC, EM algorithm) are assumed throughout.
+
+Brief supplementary chapters are attached for readers who wish to familiarise themselves with topics such as variational inference and Hamiltonian Monte Carlo, which are used in Chapters 4 and 5.
+These brief readings are designed to be supplementary in nature, and are not strictly essential for the chapters.
+Additionally, Appendices A--I contain references to several statistical distributions and their properties, derivations, and proofs of the algorithms described in this thesis.
+
+\tikzstyle{block} = [draw, rectangle, text width=2.6cm, text centered, minimum height=1.5cm, minimum width=2.8cm, node distance=3.6cm,fill=white]
+\tikzstyle{container} = [draw, rectangle, inner sep=0.4cm, fill=black!10]
+\def\bottom#1#2{\hbox{\vbox to #1{\vfill\hbox{#2}}}}
+\tikzset{
+  mybackground/.style={execute at end picture={
+      \begin{scope}[on background layer]
+        \node[] at (current bounding box.north){\bottom{1cm} #1};
+        \end{scope}
+    }},
+}
+\begin{figure}[]
+  \centering
+
+\begin{tikzpicture}
+
+  \node [block, name=ch1] {\small \textbf{Chapter 1}\\Introduction};
+  \node [block, below=1.2cm of ch1] (ch2) {\small \textbf{Chapter 2}\\Vector space of functions};
+  \node [block, right of=ch2] (ch3) {\small \textbf{Chapter 3}\\The I-prior};
+  \node[draw=none,above=0.38cm of ch3] (title) {\small\textbf{Main chapters}}; 
+  \node [block, below=1cm of ch3] (ch4) {\small \textbf{Chapter 4}\\Regression with I-priors};
+  \node [block, right of=ch4] (ch5) {\small \textbf{Chapter 5}\\Categorical responses};     
+  \node [block, text width = 2.5cm, left of=ch4]  (ch6) {\small \textbf{Chapter 6}\\Bayesian vari-\\able selection};   
+  \node [block, right=1.3cm of ch5]  (ch7) {\small \textbf{Chapter 7}\\Summary};  
+\node [block, above=1.3cm of ch7]  (apx) {\scriptsize \textbf{Appendices A--I}\\ References, derivations and proofs};              
+  \node [block, below=1.3cm of ch6]  (s1) {\small \textbf{Supp. 1}\\Estimation concepts};
+  \node [block, below=1.3cm of ch4]  (s2) {\small \textbf{Supp. 2}\\EM algorithm};   
+  \node [block, below=1.3cm of ch5]  (s4) {\small \textbf{Supp. 4}\\Hamiltonian Monte Carlo};         
+  \node [block, right of=s4]  (s3) {\small \textbf{Supp. 3}\\Variational inference};
+  \begin{scope}[on background layer]
+    \node [container,fit=(ch2) (ch3) (ch4) (ch5) (ch6) ] (container) {};
+  \end{scope}
+    
+  \path (ch1) edge [-latex, thick, shorten >=0.365cm] (ch2)
+        (ch2) edge [-latex, thick] (ch3)
+        (ch3) edge [-latex, thick] (ch4)
+        (ch4) edge [-latex, thick] (ch5)
+        (ch4) edge [-latex, thick] (ch6)
+        (ch5) edge [-latex, thick, shorten <=0.4cm] (ch7)
+        (s1)  edge [-latex, thick, dashed] (ch6)
+        (s2)  edge [-latex, thick, dashed] (ch4)
+        (s2)  edge [-latex, thick, dashed] (ch5)
+        (s4)  edge [-latex, thick, dashed] (ch4)
+        (s4)  edge [-latex, thick, dashed] (ch5)
+        (s3)  edge [-latex, thick, dashed] (ch5)
+        (apx)  edge [-latex, thick, dashed, shorten >=4cm] ($(ch3.east) + (0,0.45cm)$);
+
+\end{tikzpicture}
+
+  \caption[Schematic representation of the organisation of the chapters and supplementary chapters of this thesis]{Schematic representation of the organisation of the chapters and supplementary chapters of this thesis. Solid lines indicate requisite relevances, while dashed lines indicate supporting and supplementary relevances.}
+\end{figure}
+
 
 \hClosingStuffStandalone
 \end{document}

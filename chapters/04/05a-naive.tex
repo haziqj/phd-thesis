@@ -1,0 +1,97 @@
+We describe a naïve classification model using I-priors.
+Here, the responses are categorical $y_i \in \{ 1,\dots,m \} =: \cM$, and additionally, write $\by_{i \bigcdot} = (y_{i1},\dots,y_{im})^\top$ where the class responses $y_{ij}$ equal one if individual $i$'s response category is $y_i = j$, and zero otherwise.
+In other words, there is exactly a single `1' at the $j$'th position in the vector $\by_{i \bigcdot}$, and zeroes everywhere else.
+For $j=1,\dots,m$, we model 
+\begin{equation}\label{eq:naiveclassmod}
+  \begin{gathered}
+    y_{ij} = \alpha + 
+    \myoverbrace{\alpha_j + f_j(x_i)}{f(x_i,j)}
+    + \epsilon_{ij}  \\
+    (\epsilon_{i1},\dots,\epsilon_{im})^\top \iid \N_m(\bzero,\bPsi^{-1}).
+  \end{gathered}
+\end{equation}
+The idea here being that we attempt to model the class responses $y_{ij}$ using class-specific regression functions $f_j$, and the class responses are assumed to be independent among individuals, but may or may not be correlated among classes for each individual.
+The class correlations are manifest themselves in the variance of the errors $\bPsi^{-1}$, which is an $m\times m$ matrix.
+
+Denote the regression function $f$ in \cref{eq:naiveclassmod} on the set $\cX\times\cM$ as $f(x_i,j) = \alpha_j + f_j(x_i)$.
+This regression function corresponds to an ANOVA decomposition of the spaces $\cF_\cM$ and $\cF_\cX$ of functions over $\cM$ and $\cX$ respectively. 
+That is, $\cF = \cF_\cM \oplus (\cF_\cM \otimes \cF_\cX)$ is a decomposition into the main effects of `class', and an interaction effect of the covariates for each class.
+Let $\cF_\cM$ and $\cF_\cX$ be RKHSs respectively with kernels $a:\cM\times\cM\to\bbR$ and $b_\eta:\cX\times\cX\to\bbR$.
+Then, the ANOVA RKKS $\cF$ possesses the reproducing kernel $h_\eta:(\cX \times \cM)^2 \to \bbR$ as defined by
+\begin{align}\label{eq:anovaclass}
+  h_\eta\big( (x,j), (x',j') \big) = a(j,j') + a(j,j')b_\eta(x,x').  
+\end{align}
+The kernel $b_\eta$ may be any of the kernels described in this thesis, ranging from the linear kernel, to the fBm kernel, or even an ANOVA kernel.
+Choices for $a:\cM \times \cM \to \bbR$ include 
+\begin{enumerate}
+  \item \textbf{The Pearson kernel} (as defined in \cref{def:pearson}). With $J\sim\Prob$, a probability measure over $\cM$,
+  \[
+    a(j,j') = \frac{\delta_{jj'}}{\Prob(J=j)} - 1.
+  \]
+  \item \textbf{The centred identity kernel}. With $\delta$ denoting the Kronecker delta function,
+  \[
+    a(j,j') = \delta_{jj'} - 1 / m.
+  \]
+\end{enumerate}
+The purpose of either of these kernels is to contribute to the class intercepts $\alpha_j$, and to associate a regression function in each class.
+The only difference between the two is the inverse probability weighting per class that is applied in the Pearson kernel, but not in the identity kernel.
+
+
+With $f \in \cF$ (the RKKS with kernel $h_\eta$), it is straightforward to assign an I-prior on $f$. 
+It is in fact
+\begin{align}\label{eq:naiveclassiprior}
+  \begin{gathered}
+    f(x_i,j) = \sum_{j'=1}^m\sum_{i'=1}^n a(j,j')\big(1 + b_\eta(x_i,x_{i'})\big) w_{i'j'} \\
+    (w_{i'1},\dots,w_{i'm})^\top \iid \N_m(\bzero,\bPsi)
+  \end{gathered}
+\end{align}
+assuming a zero prior mean $f_0(x,j) = 0$.
+The model then classifies the $i$'th data point to class $j$ if $\hat y_{ij} = \max(\hat y_{i1},\dots,\hat y_{im})$, where $\hat y_{ik} = \hat\alpha + \hat f(x_i,k)$, the prediction for the $k$'th component of $y_i$.
+
+There are several downfalls to using the model described above.
+Unlike in the case of continuous response variables, the normal I-prior model is highly inappropriate for categorical responses.
+For one, it violates the normality and homoscedasticity assumptions of the errors.
+For another, predicted values may be out of the range $[0,m]$ and thus poorly calibrated.
+Furthermore, it would be more suitable if the class probabilities---the probability of an observation belonging to a particular class---were also part of the model.
+In \cref{chapter5}, we propose an improvement to this naïve I-prior classification model by considering a probit-like transformation of the regression functions.
+
+%\begin{proof}
+%  \[
+%    f(x_i,j) = \sum_{j'=1}^m\sum_{i'=1}^n a(j,j')\big(1 + b_\eta(x_i,x_{i'})\big) w_{i'j'}
+%  \]
+%  
+%  \[
+%    \alpha_j = \sum_{j'=1}^m\sum_{i'=1}^n a(j,j') w_{i'j'}
+%  \]
+%  
+%  \begin{align*}
+%    \sum_{j=1}^m \alpha_j
+%    &= \sum_{j=1}^m \sum_{j'=1}^m\sum_{i'=1}^n a(j,j') w_{i'j'} \\
+%    &= \sum_{j=1}^m \sum_{j'=1}^m\sum_{i'=1}^n \delta_{jj'} w_{i'j'} \\
+%    &= \sum_{j=1}^m\sum_{i'=1}^n  w_{i'j}
+%  \end{align*}
+%  
+%  \begin{align*}
+%    \sum_{j=1}^m f_j(x_i)
+%    &= \sum_{j=1}^m \sum_{j'=1}^m\sum_{i'=1}^n a(j,j')b_\eta(x_i,x_{i'}) w_{i'j'} \\
+%    &= \sum_{j=1}^m \sum_{j'=1}^m\sum_{i'=1}^n \delta_{jj'} b_\eta(x_i,x_{i'}) w_{i'j'} \\
+%    &= \sum_{j=1}^m\sum_{i'=1}^n b_\eta(x_i,x_{i'}) w_{i'j}
+%  \end{align*}
+%  
+%  \begin{align*}
+%    \sum_{i=1}^n f_j(x_i)
+%    &= \sum_{i=1}^n \sum_{j'=1}^m\sum_{i'=1}^n a(j,j')b_\eta(x_i,x_{i'}) w_{i'j'} \\
+%    &= \sum_{i=1}^n \sum_{j'=1}^m\sum_{i'=1}^n \delta_{jj'} b_\eta(x_i,x_{i'}) w_{i'j'} 
+%  \end{align*}
+%\end{proof}
+
+
+%Rearrange the $n$ observations per class.
+%Let $\bff_j = \big(f_j(x_1),\dots,f_j(x_n)\big)^\top \in \bbR^n$.
+%We can write the I-prior as $\bff_j = \bA_{jj} \cdot \bH\bw_j$
+%Therefore, $\bff_j \sim \N_n(\bzero, \bPsi_{jj}\bA_{jj} \bH^2)$, and
+%\begin{align*}
+%  \Cov(\bff_j,\bff_k) &= \Cov(\bA_{jj} \cdot \bH\bw_j, \bA_{kk} \cdot \bH\bw_k) \\
+%  &= \bA_{jj}\bA_{kk} \cdot \bH \Cov(\bw_j,\bw_k) \bH \\
+%  &= \bA_{jj}\bA_{kk}\bPsi_{jk} \bH^2.
+%\end{align*}
