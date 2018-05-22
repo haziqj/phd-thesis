@@ -4,6 +4,7 @@
 
 % Structure
 \usepackage[a4paper, centering]{geometry}
+\usepackage[fontsize=10pt]{scrextend}
 \usepackage{standalone}
 \usepackage{subfiles}
 \usepackage{import}
@@ -293,8 +294,8 @@
 \makeatletter
 \def\cleardoublepage{\clearpage\if@twoside%
     \ifodd\c@page\else
-%    \vspace*{\fill}
-    \vspace{3cm}
+    \vspace*{\fill}
+%    \vspace{3cm}
     \hfill
 %    \begin{center}
 %    \emph{This page intentionally left blank.}
@@ -307,11 +308,17 @@
 \makeatother
 % https://tex.stackexchange.com/questions/290802/page-intentionally-left-blank-with-twoside-openright/308522
 
-\usepackage{afterpage}
-\newcommand\blankpage{%
+% Opens chapters on the right side (odd page)
+\newif\ifhopenright
+\let\stdchapter\chapter
+\renewcommand*\chapter{
+  \clearpage
+  \ifhopenright
+  \ifodd\thepage\else
     \vspace*{\fill}
     \hfill
-    \thispagestyle{empty}%
-    \addtocounter{page}{-1}%
-    \newpage}
-% https://tex.stackexchange.com/questions/36880/insert-a-blank-page-after-current-page
+    \thispagestyle{empty}
+    \newpage
+  \fi\fi
+  \stdchapter
+}

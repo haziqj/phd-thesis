@@ -1,10 +1,9 @@
-\documentclass[a4paper,showframe,11pt,openright]{report}  %twoside,openright
-\usepackage{haziq_thesis}
+\documentclass[a4paper,showframe]{report}
+\usepackage{haziq_thesis}  %\hopenrighttrue
 \usepackage{haziq_maths}
 \usepackage{haziq_glossary}
 \usepackage{knitr}
 \usepackage{matrix_fig}
-%\graphicspath{{figure/}{../figure/}}
 \addbibresource{bib/haziq.bib}
 \begin{document}
 
@@ -35,10 +34,12 @@
 %  \textit{To my parents.}
 %\end{center}
 
-\chapter*{Abstract} \input{chapters/frontmatter/abstract}
-\chapter*{Declaration} \input{chapters/frontmatter/declaration}
-%\chapter*{Acknowledgements} \input{chapters/frontmatter/acknowledgments}
-
+%\begingroup
+%\let\chapter\stdchapter
+  \chapter*{Abstract} \input{chapters/frontmatter/abstract}
+  \chapter*{Declaration} \input{chapters/frontmatter/declaration}
+  %\chapter*{Acknowledgements} \input{chapters/frontmatter/acknowledgments}
+%\endgroup
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% TOC & VARIOUS LISTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -57,19 +58,15 @@
 \chapter{Vector space of functions}
 \subimport{chapters/02/}{chapter2}
 
-\afterpage{\blankpage}
 \chapter{Fisher information and the I-prior}
 \subimport{chapters/03/}{chapter3}
 
-\afterpage{\blankpage}
 \chapter{Modelling with I-priors}
 \subimport{chapters/04/}{chapter4}
 
-\afterpage{\blankpage}
 \chapter{I-priors for categorical responses}
 \subimport{chapters/05/}{chapter5}
 
-\afterpage{\blankpage}
 \chapter{Bayesian variable selection using I-priors}
 \subimport{chapters/06/}{chapter6}
 
@@ -84,7 +81,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% REFERENCES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\nocite{*}
 \hPrintBibliography
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
