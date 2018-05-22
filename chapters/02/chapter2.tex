@@ -1,4 +1,4 @@
-\documentclass[a4paper,showframe,11pt]{report}
+\documentclass[a4paper,showframe]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
@@ -7,6 +7,7 @@
   \usepackage{../../haziq_glossary}
   \addbibresource{../../bib/haziq.bib}
   \externaldocument{../01/.texpadtmp/chapter1}
+  \externaldocument{../03/.texpadtmp/chapter3}
 \fi
 \usepackage{fontspec}  % phonetics and Krein, needs XeLaTeX or LuaLaTeX
 
@@ -17,7 +18,7 @@
 One of the main assumptions for regression modelling with I-priors is that the regression functions lie in some vector space of functions.
 The purpose of this chapter is to provide a concise review of functional analysis leading up to the theory of reproducing kernel Hilbert and Kreĭn spaces (RKHS/RKKS).
 The interest with these RKHS and RKKS is that these spaces have well-established mathematical structure and offer desirable topologies.
-In particular, it allows the possibility of deriving the Fisher information for regression functions---this will be covered in Chapter 3.
+In particular, it allows the possibility of deriving the Fisher information for regression functions---this will be covered in \cref{chapter3}.
 As we shall see, RKHS are also extremely convenient in that they may be specified completely via their reproducing kernels.
 Several of these function spaces are of interest to us, for example, spaces of linear functions, smoothing functions, and functions whose inputs are nominal values and even functions themselves.
 RKHS are widely studied in the applied statistical and machine learning literature, but perhaps RKKS are less so.
