@@ -35,7 +35,7 @@ btb.summary <- btb %>%
   arrange(year) %>%
   tally() %>%
   complete(sp, year, fill = list(n = 0)) %>%
-  dcast(year ~ sp)
+  reshape2::dcast(year ~ sp)
 
 # Group the years into 4 categories: 1) < 1997; 2) 1997-1998; 3) 1999-2000; 4)
 # 2001-02
@@ -52,7 +52,7 @@ as.tibble(btb) %>%
 
 ## ---- plot.cow ----
 as.tibble(btb.summary) %>%
-  melt(id.vars = "year") %>%
+  reshape2::melt(id.vars = "year") %>%
   ggplot(aes(year, value, col = variable)) +
   geom_segment(aes(xend = year, yend = 0), size = 12) +
   scale_x_continuous(breaks = seq(1989, 2002, by = 1),
@@ -400,3 +400,53 @@ cowplot::plot_grid(p1a, p2a, p3a, p4a, ncol = 2,
 # }
 # animation::saveGIF(makeplot(), interval = 1, ani.width = 600, ani.height = 550)
 
+## ---- bootstrap.se ----
+B <- 30
+snow.options.list <- list(progress = function(i) setTxtProgressBar(pb, i))
+pb <- txtProgressBar(min = 0, max = B, style = 1)
+cl <- parallel::makeCluster(parallel::detectCores())
+doSNOW::registerDoSNOW(cl)
+res <- foreach::`%dopar%`(
+  foreach::foreach(
+    i = seq_len(B),
+    .packages = c("iprior", "iprobit"),
+    .options.snow = snow.options.list
+  ), {
+    ts <- sample(seq_len(length(Spoligotype)), replace = TRUE)
+    # # Constant only model
+    # iprobit(y = Spoligotype, X, control = list(int.only = TRUE,
+    #                                            theta0 = -100))$param.full
+    # Spatial model
+    # iprobit(y = Spoligotype, X, kernel = "fbm",
+    #         control = list(maxit = 200))$param.full
+    # # Spatio-period model (period is categorical)
+    # iprobit(y = Spoligotype, X, period, kernel = "fbm", interactions = "1:2",
+    #         control = list(maxit = 200))$param.full
+    # # Spatio-temporal model (year is continuous)
+    iprobit(y = Spoligotype, X, year, kernel = "fbm", interactions = "1:2",
+            control = list(maxit = 200))$param.full
+  }
+)
+parallel::stopCluster(cl)
+apply(simplify2array(res), 1:2, sd)
+# Constant only model
+# Class = 1    Class = 2    Class = 3    Class = 4    Class = 5
+# Intercept 3.586072e-06 8.977898e-06 4.442164e-06 6.223305e-06 2.249207e-05
+# Results
+
+# Spatial model
+# Class = 1   Class = 2   Class = 3   Class = 4   Class = 5
+# Intercept 0.015435270 0.012863046 0.010767069 0.050717491 0.016291391
+# lambda    0.007665175 0.007665175 0.007665175 0.007665175 0.007665175
+
+# Spatio-period model (period is categorical)
+# Class = 1   Class = 2   Class = 3   Class = 4   Class = 5
+# Intercept  0.078678908 0.017499099 0.058655806 0.223046636 0.076504935
+# lambda[1,] 0.177852562 0.177852562 0.177852562 0.177852562 0.177852562
+# lambda[2,] 0.003255623 0.003255623 0.003255623 0.003255623 0.003255623
+
+# Spatio-temporal model (year is continuous)
+# Class = 1   Class = 2   Class = 3   Class = 4   Class = 5
+# Intercept  0.102691018 0.044845305 0.094308547 0.342756767 0.103588851
+# lambda[1,] 0.169258375 0.169258375 0.169258375 0.169258375 0.169258375
+# lambda[2,] 0.005947068 0.005947068 0.005947068 0.005947068 0.005947068

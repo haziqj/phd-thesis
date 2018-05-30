@@ -150,88 +150,92 @@ It is sometimes known as the bias term.
 
 \subsection{The ANOVA RKKS}
 
-We find it useful to begin this subsection by spending some time to elaborate on the classical \gls*{anova} decomposition, and the associated notions of main effects and interactions.
-This will go a long way in understanding the thinking behind constructing an ANOVA-like RKKS of functions.
+%We find it useful to begin this subsection by spending some time to elaborate on the classical \gls*{anova} decomposition, and the associated notions of main effects and interactions.
+%This will go a long way in understanding the thinking behind constructing an ANOVA-like RKKS of functions.
+%
+%\subsubsection{The classical ANOVA decomposition}
+%
+%The standard one-way ANOVA is essentially a linear regression model which allows comparison of means from two or more samples.
+%Given sets of observations $y_j = \{y_{1j},\dots,y_{n_jj}\}$, $j=1,\dots,m$, we consider the linear model $y_{ij} = \mu_j + \epsilon_{ij}$, where $\epsilon_{ij}$ are independent, univariate normal random variables with a common variance.
+%%One would like to test whether the hypothesis $\text{H}_0:\alpha_1=\cdots=\alpha_m$ stands.
+%%However, obtaining a suitable and significant test statistic to reject the null hypothesis merely tells us that the means are indeed not the same, but does not tell us \emph{where exactly} the difference lies.
+%%Enter the ANOVA decomposition.
+%This covariate-less model is used to make inferences about the  \emph{treatment means} $\mu_j$.
+%Often, the model is written in the \emph{overparameterised} form by substituting $\mu_j = \mu + \tau_j$.
+%This gives a different, arguably better, interpretability to the model: the $\tau_j$'s, referred to as the \emph{treatment effects}, now represent the amount of deviation from the grand, \emph{overall mean} $\mu$.
+%Estimating all $\tau_j$'s and $\mu$ separately is not possible because there is one degree of freedom that needs to be addressed in the model: there are $p+1$ mean parameters to estimate but only information from $p$ means.
+%%Knowledge of the overall mean $\mu$ would only allow us to freely ``choose'' only $m-1$ of the treatment effects $\mu_j$, since necessarily $\sum_{j=1}^m n_j\mu = \sum_{j=1}^m n_j\mu_j$.
+%A common fix to this identification issue is to set one of the $\mu_j$'s, say the first one $\mu_1$, to zero, or impose the restriction $\sum_{j=1}^m \mu_j = 0$.
+%The former treats one of the $m$ levels as the control, while the latter treats all treatment effects symmetrically.
+%
+%%The imposition of these restriction corresponds to a particular hypothesis test regarding the group means.
+%%For instance, to test $\text{H}_0:\mu=\alpha_1=\cdots=\alpha_m$.
+%
+%Now write the ANOVA model slightly differently, as $y_{i} = f(x_i) + \epsilon_{i}$, where $f$ is defined on the discrete domain $\cX = \{1,\dots,m\}$, and $i$ indexes all of the $n := \sum_{j=1}^m n_j$ observations.
+%Here, $f$ represents the group-level mean, returning $\mu_j$ for some $j\in\cX$.
+%In a similar manner, we can perform the ANOVA decomposition on $f$ as
+%\[
+%%  f = \greyoverbrace{Af}{f_0} +  \greyoverbrace{(I - A)f}{f_1},
+%  f = Af + (I-A)f = f_o + f_t,
+%\]
+%where $A$ is an averaging operator that ``averages out'' its argument $x$ and returns a constant, and $I$ is the identity operator.
+%$f_o = Af$ is a constant function representing the \textit{\underline{o}verall mean}, whereas $f_t = (I - A)f$ is a function representing the \textit{\underline{t}reatment effects} $\tau_j$.
+%Here are two choices of $A$:
+%\begin{itemize}
+%  \item {\boldmath$Af(x) = f(1) = \mu_1$}. This implies $f(x) = f(1) + \big(f(x) - f(1)\big)$. The overall mean $\mu$ is the group mean $\mu_1$, which corresponds to setting the restriction $\mu_1=0$.
+%  \item {\boldmath$Af(x) = \sum_{x=1}^m f(x) / m =: \bar \alpha$}. This implies $f(x) = \bar \alpha + \big( f(x) - \bar \alpha \big)$. The overall mean is $\mu = \sum_{j=1}^m \alpha_j/m$, which corresponds to the restriction $\sum_{j=1}^m \mu_j = 0$.
+%\end{itemize}
+%By definition, $AAf = A^2f = Af$, because averaging a constant returns that constant
+%%Side note: this idempotent property of the linear operator $A$ on $f$ speaks to the possibility of it being an \emph{orthogonal projection}, and indeed this is so---we shall return to this point later when we describe functional ANOVA decomposition.
+%We must have that $Af_t = A(I - A)f = Af - A^2f = 0$.
+%The choice of A is arbitrary, as is the choice of restriction, so long as it satisfies the condition that $Af_c = 0$.
+%
+%The multiway ANOVA can be motivated in a similar fashion. 
+%Let $x = (x_1,\dots,x_p) \in \prod_{k=1}^p \cX_k$, and consider functions that map $\prod_{k=1}^p \cX_j$ to $\bbR$.
+%Let $A_j$ be an averaging operator on $\cX_k$ that averages the $k$th component of $x$ from the active argument list, i.e. $A_kf$ is constant on the $\cX_k$ axis but not necessarily an overall constant function.
+%An ANOVA decomposition of $f$ is
+%\[
+%  f = \left( \prod_{k=1}^p (A_k + I - A_k) \right)f = \sum_{\cK\in\cP_p} \left( \prod_{k\in\cK} (I - A_k) \prod_{k\notin\cK} A_k \right)f = \sum_{\cK\in\cP_p} f_\cK
+%\]
+%where we had denoted $\cP_p = \cP(\{1,\dots,p\})$ to be the power set of $\{1,\dots,p\}$ whose cardinality is $2^p$.
+%The summands $f_\cK$ will compose of the overall effect, main effects, two-way interaction terms, and so on.
+%Each of the terms will satisfy the condition $A_kf_\cK = 0, \forall k \in \cK \in \cP_p$.
+%
+%\begin{example}[Two-way ANOVA decomposition]
+%  Let $p=2$, $\cX_1=\{1,\dots,m_1\}$, and $\cX_2=\{1,\dots,m_2\}$.
+%  The power set $\cP_2$ is $\big\{ \{\}, \{1\}, \{2\}, \{1,2\} \big\}$.
+%  The ANOVA decomposition of $f$ is
+%  \[
+%    f = f_0 + f_1 + f_2 + f_{12}.
+%  \]
+%  Here are two choices for the averaging operator $A_k$ analogous to the previous illustration in the one-way ANOVA.
+%  \begin{itemize}
+%    \item Let $A_1f(x) = f(1,x_2)$ and $A_2f(x) = f(x_1,1)$. Then,
+%    \begin{alignat*}{2}
+%      f_0 &= A_1A_2 f          &&= f(1,1) \\
+%      f_1 &= (I-A_1)A_2f       &&= f(x_1,1) - f(1,1) \\
+%      f_2 &= A_1(I-A2)f        &&= f(1,x_2) - f(1,1) \\
+%      f_{12} &= (I-A_1)(I-A2)f &&= f(x_1,x_2) - f(x_1,1) - f(1,x_2) + f(1,1).
+%    \end{alignat*}
+%    \item Let $A_kf(x) = \sum_{x_k=1}^{m_k} f(x_1,x_2) / m_k, k=1,2$. Then,
+%    \begin{alignat*}{2}
+%      f_0 &= A_1A_2 f          &&= f_{\bigcdot\bigcdot} \\
+%      f_1 &= (I-A_1)A_2f       &&= f_{x_1\bigcdot} - f_{\bigcdot\bigcdot} \\
+%      f_2 &= A_1(I-A_2)f        &&= f_{\bigcdot x_2} - f_{\bigcdot\bigcdot} \\
+%      f_{12} &= (I-A_1)(I-A_2)f &&= f - f_{x_1\bigcdot} - f_{\bigcdot x_2} + f_{\bigcdot\bigcdot},
+%    \end{alignat*}
+%    where $f_{\bigcdot\bigcdot} = \sum_{x_1,x_2} f(x_1,x_2) / m_1m_2$, $ f_{x_1\bigcdot} = \sum_{x_2} f(x_1,x_2)/m_2$, and \newline $f_{\bigcdot x_1} = \sum_{x_1} f(x_1,x_2)/m_1$.
+%  \end{itemize}
+%\end{example}
 
-\subsubsection{The classical ANOVA decomposition}
-
-The standard one-way ANOVA is essentially a linear regression model which allows comparison of means from two or more samples.
-Given sets of observations $y_j = \{y_{1j},\dots,y_{n_jj}\}$, $j=1,\dots,m$, we consider the linear model $y_{ij} = \mu_j + \epsilon_{ij}$, where $\epsilon_{ij}$ are independent, univariate normal random variables with a common variance.
-%One would like to test whether the hypothesis $\text{H}_0:\alpha_1=\cdots=\alpha_m$ stands.
-%However, obtaining a suitable and significant test statistic to reject the null hypothesis merely tells us that the means are indeed not the same, but does not tell us \emph{where exactly} the difference lies.
-%Enter the ANOVA decomposition.
-This covariate-less model is used to make inferences about the  \emph{treatment means} $\mu_j$.
-Often, the model is written in the \emph{overparameterised} form by substituting $\mu_j = \mu + \tau_j$.
-This gives a different, arguably better, interpretability to the model: the $\tau_j$'s, referred to as the \emph{treatment effects}, now represent the amount of deviation from the grand, \emph{overall mean} $\mu$.
-Estimating all $\tau_j$'s and $\mu$ separately is not possible because there is one degree of freedom that needs to be addressed in the model: there are $p+1$ mean parameters to estimate but only information from $p$ means.
-%Knowledge of the overall mean $\mu$ would only allow us to freely ``choose'' only $m-1$ of the treatment effects $\mu_j$, since necessarily $\sum_{j=1}^m n_j\mu = \sum_{j=1}^m n_j\mu_j$.
-A common fix to this identification issue is to set one of the $\mu_j$'s, say the first one $\mu_1$, to zero, or impose the restriction $\sum_{j=1}^m \mu_j = 0$.
-The former treats one of the $m$ levels as the control, while the latter treats all treatment effects symmetrically.
-
-%The imposition of these restriction corresponds to a particular hypothesis test regarding the group means.
-%For instance, to test $\text{H}_0:\mu=\alpha_1=\cdots=\alpha_m$.
-
-Now write the ANOVA model slightly differently, as $y_{i} = f(x_i) + \epsilon_{i}$, where $f$ is defined on the discrete domain $\cX = \{1,\dots,m\}$, and $i$ indexes all of the $n := \sum_{j=1}^m n_j$ observations.
-Here, $f$ represents the group-level mean, returning $\mu_j$ for some $j\in\cX$.
-In a similar manner, we can perform the ANOVA decomposition on $f$ as
-\[
-%  f = \greyoverbrace{Af}{f_0} +  \greyoverbrace{(I - A)f}{f_1},
-  f = Af + (I-A)f = f_o + f_t,
-\]
-where $A$ is an averaging operator that ``averages out'' its argument $x$ and returns a constant, and $I$ is the identity operator.
-$f_o = Af$ is a constant function representing the \textit{\underline{o}verall mean}, whereas $f_t = (I - A)f$ is a function representing the \textit{\underline{t}reatment effects} $\tau_j$.
-Here are two choices of $A$:
-\begin{itemize}
-  \item {\boldmath$Af(x) = f(1) = \mu_1$}. This implies $f(x) = f(1) + \big(f(x) - f(1)\big)$. The overall mean $\mu$ is the group mean $\mu_1$, which corresponds to setting the restriction $\mu_1=0$.
-  \item {\boldmath$Af(x) = \sum_{x=1}^m f(x) / m =: \bar \alpha$}. This implies $f(x) = \bar \alpha + \big( f(x) - \bar \alpha \big)$. The overall mean is $\mu = \sum_{j=1}^m \alpha_j/m$, which corresponds to the restriction $\sum_{j=1}^m \mu_j = 0$.
-\end{itemize}
-By definition, $AAf = A^2f = Af$, because averaging a constant returns that constant
-%Side note: this idempotent property of the linear operator $A$ on $f$ speaks to the possibility of it being an \emph{orthogonal projection}, and indeed this is so---we shall return to this point later when we describe functional ANOVA decomposition.
-We must have that $Af_t = A(I - A)f = Af - A^2f = 0$.
-The choice of A is arbitrary, as is the choice of restriction, so long as it satisfies the condition that $Af_c = 0$.
-
-The multiway ANOVA can be motivated in a similar fashion. 
-Let $x = (x_1,\dots,x_p) \in \prod_{k=1}^p \cX_k$, and consider functions that map $\prod_{k=1}^p \cX_j$ to $\bbR$.
-Let $A_j$ be an averaging operator on $\cX_k$ that averages the $k$th component of $x$ from the active argument list, i.e. $A_kf$ is constant on the $\cX_k$ axis but not necessarily an overall constant function.
-An ANOVA decomposition of $f$ is
-\[
-  f = \left( \prod_{k=1}^p (A_k + I - A_k) \right)f = \sum_{\cK\in\cP_p} \left( \prod_{k\in\cK} (I - A_k) \prod_{k\notin\cK} A_k \right)f = \sum_{\cK\in\cP_p} f_\cK
-\]
-where we had denoted $\cP_p = \cP(\{1,\dots,p\})$ to be the power set of $\{1,\dots,p\}$ whose cardinality is $2^p$.
-The summands $f_\cK$ will compose of the overall effect, main effects, two-way interaction terms, and so on.
-Each of the terms will satisfy the condition $A_kf_\cK = 0, \forall k \in \cK \in \cP_p$.
-
-\begin{example}[Two-way ANOVA decomposition]
-  Let $p=2$, $\cX_1=\{1,\dots,m_1\}$, and $\cX_2=\{1,\dots,m_2\}$.
-  The power set $\cP_2$ is $\big\{ \{\}, \{1\}, \{2\}, \{1,2\} \big\}$.
-  The ANOVA decomposition of $f$ is
-  \[
-    f = f_0 + f_1 + f_2 + f_{12}.
-  \]
-  Here are two choices for the averaging operator $A_k$ analogous to the previous illustration in the one-way ANOVA.
-  \begin{itemize}
-    \item Let $A_1f(x) = f(1,x_2)$ and $A_2f(x) = f(x_1,1)$. Then,
-    \begin{alignat*}{2}
-      f_0 &= A_1A_2 f          &&= f(1,1) \\
-      f_1 &= (I-A_1)A_2f       &&= f(x_1,1) - f(1,1) \\
-      f_2 &= A_1(I-A2)f        &&= f(1,x_2) - f(1,1) \\
-      f_{12} &= (I-A_1)(I-A2)f &&= f(x_1,x_2) - f(x_1,1) - f(1,x_2) + f(1,1).
-    \end{alignat*}
-    \item Let $A_kf(x) = \sum_{x_k=1}^{m_k} f(x_1,x_2) / m_k, k=1,2$. Then,
-    \begin{alignat*}{2}
-      f_0 &= A_1A_2 f          &&= f_{\bigcdot\bigcdot} \\
-      f_1 &= (I-A_1)A_2f       &&= f_{x_1\bigcdot} - f_{\bigcdot\bigcdot} \\
-      f_2 &= A_1(I-A_2)f        &&= f_{\bigcdot x_2} - f_{\bigcdot\bigcdot} \\
-      f_{12} &= (I-A_1)(I-A_2)f &&= f - f_{x_1\bigcdot} - f_{\bigcdot x_2} + f_{\bigcdot\bigcdot},
-    \end{alignat*}
-    where $f_{\bigcdot\bigcdot} = \sum_{x_1,x_2} f(x_1,x_2) / m_1m_2$, $ f_{x_1\bigcdot} = \sum_{x_2} f(x_1,x_2)/m_2$, and \newline $f_{\bigcdot x_1} = \sum_{x_1} f(x_1,x_2)/m_1$.
-  \end{itemize}
-\end{example}
+To describe the ANOVA RKKS, we first need to discuss \emph{functional ANOVA decompositions}, which stems from the classical multiway ANOVA of separating the source of variation into main effects, interaction effects, and so on.
 
 \subsubsection{Functional ANOVA decomposition}
 
-Let us now extend the ANOVA decomposition idea to a general function $f:\cX\to\bbR$ in some vector space $\cF$.
-We shall jump straight into the multiway ANOVA analogue for functional decomposition, and to that end, consider $x=(x_1,\dots,x_p) \in \prod_{k=1}^p \cX_k =: \cX$ a measurable space, where each of the spaces $\cX_k$ has measure $\nu_k$, and $\nu=\nu_1\times\cdots\times\nu_d$ is the product measure on $\cX$.
+%Let us now extend the ANOVA decomposition idea to a general function $f:\cX\to\bbR$ in some vector space $\cF$.
+%We shall jump straight into the multiway ANOVA analogue for functional decomposition, and to that end, 
+
+Consider $p$-dimensional covariates $x=(x_1,\dots,x_p) \in \prod_{k=1}^p \cX_k =: \cX$ a measurable space, where each of the spaces $\cX_k$ has measure $\nu_k$, and $\nu=\nu_1\times\cdots\times\nu_d$ is the product measure on $\cX$.
 In the following, denote by $\cF_k$ the vector space of functions over the set $\cX_k$, $k=1,\dots,p$, and $\cF_0$ the vector space of constant functions.
 
 As $\cX$ need not necessarily be a collection of finite sets, we need to figure out a suitable linear operator that performs an ``averaging'' of some sort.
@@ -376,7 +380,7 @@ Indeed, the requirement \cref{eq:funcanovaorth} ensures orthogonality of the sum
 
 \subsubsection{The ANOVA kernel}
 
-At last, we come to the section of deriving the ANOVA RKKS, and, rest assured, the preceding long build-up will prove to be not in vain.
+%At last, we come to the section of deriving the ANOVA RKKS, and, rest assured, the preceding long build-up will prove to be not in vain.
 The main idea is to construct an RKKS such that the functions that lie in them will have the ANOVA representation in \cref{eq:functionalanova2}.
 The bulk of the work has been done, and in fact we know exactly how this ANOVA RKKS should be structured---it is the space as specified in \cref{eq:funcanovaspace}. 
 The ANOVA RKKS will be constructed by a similar manipulation of the individual kernels representing the RKHS building blocks.

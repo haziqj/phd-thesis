@@ -125,17 +125,17 @@ An interesting property of these operators to look at, besides linearity, is whe
 
 Continuity in the sense of linear operators here means that a convergent sequence in $\cF$ can be mapped to a convergent sequence in $\cG$.
 For a special case of linear operator, the evaluation functional, this means that a function in $\cF$ is continuous if the evaluation functional is continuous---more on this later in  \cref{sec:rkhstheory}.
-There is an even stronger notion of continuity called the \emph{Lipschitz continuity}.
-
-\begin{definition}[Lipschitz continuity]
-  Let $\cF$ and $\cG$ be two Hilbert spaces.  
-  A function $A:\cF\to\cG$ is \emph{Lipschitz continuous} if $\exists M >0$ such that $\forall f,f'\in\cF$,
-  \[
-    \norm{Af - Af'}_\cG \leq M \norm{f - f'}_\cF.
-  \]
-\end{definition}
-
-Clearly, Lipschitz continuity implies uniform continuity: choose $\delta = \delta(\epsilon) := \epsilon/M$ and replace this in  \cref{def:continuity}.
+%There is an even stronger notion of continuity called the \emph{Lipschitz continuity}.
+%
+%\begin{definition}[Lipschitz continuity]
+%  Let $\cF$ and $\cG$ be two Hilbert spaces.  
+%  A function $A:\cF\to\cG$ is \emph{Lipschitz continuous} if $\exists M >0$ such that $\forall f,f'\in\cF$,
+%  \[
+%    \norm{Af - Af'}_\cG \leq M \norm{f - f'}_\cF.
+%  \]
+%\end{definition}
+%
+%Clearly, Lipschitz continuity implies uniform continuity: choose $\delta = \delta(\epsilon) := \epsilon/M$ and replace this in  \cref{def:continuity}.
 A continuous, linear operator is also one that is bounded:
 
 \begin{definition}[Bounded operator]\label{def:boundedop}
@@ -224,27 +224,15 @@ In infinite-dimensional Hilbert spaces, some subspaces are not closed, but all o
 In such spaces, the orthogonal complement of the orthogonal complement of $\cG$ is the closure of $\cG$, i.e. $(\cG^\bot)^\bot =: \overline \cG$, and we say that $\cG$ is dense in $\overline \cG$.
 Another interesting fact regarding the orthogonal complement is that $\cG \cap \cG^\bot = \{ 0 \}$, since any $g\in \cG \cap \cG^\bot$ must be orthogonal to itself, i.e. $\ip{g,g}_\cG = 0$ implying that $g=0$.
 
-\begin{corollary}\label{thm:orthdecomp2}
-  Let $\cG$ be a subspace of a Hilbert space $\cF$. 
-  Then, $\cG^\bot = \{0\}$ if and only if $\cG$ is dense in $\cF$.
-\end{corollary}
-
-\begin{proof}
-  If $\cG^\bot=\{0\}$ then $(\cG^\bot)^\bot = \overline \cG = \cF$.
-  Conversely, since $\cG$ is dense in $\cF$, we have $\cG^\bot = \overline\cG^\bot = \cF^\bot = \{0\}$.
-%  Conversely, suppose that there exists a non-zero element $h \in \cG^\bot$.
-%  Because $\cG$ is dense, we can construct a sequence $\{h_n\}_{n=1}^\infty\in\cG$ converging to $h$.
-%  We have
-%  \begin{align*}
-%    \norm{h}_\cG^2 
-%    &= \ip{h,h}_\cG \\
-%    &= \ip{h,h}_\cG - \ip{h_n,h}_\cG \hspace{1em} \rlap{\color{gray} since $h$ is in $\cG^\bot$} \\
-%    &= \ip{h-h_n,h}_\cG \\
-%    &\leq \norm{h-h_n}_\cG \cdot \norm{h}_\cG,
-%  \end{align*}
-%  but the final term tends to zero since $h_n$ converges to $h$.
-%  So $h=0$, a contradiction.
-\end{proof}
+%\begin{corollary}\label{thm:orthdecomp2}
+%  Let $\cG$ be a subspace of a Hilbert space $\cF$. 
+%  Then, $\cG^\bot = \{0\}$ if and only if $\cG$ is dense in $\cF$.
+%\end{corollary}
+%
+%\begin{proof}
+%  If $\cG^\bot=\{0\}$ then $(\cG^\bot)^\bot = \overline \cG = \cF$.
+%  Conversely, since $\cG$ is dense in $\cF$, we have $\cG^\bot = \overline\cG^\bot = \cF^\bot = \{0\}$.
+%\end{proof}
 
 %https://en.wikibooks.org/wiki/Functional_Analysis/Hilbert_spaces
 
