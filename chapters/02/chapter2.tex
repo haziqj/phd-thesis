@@ -1,4 +1,4 @@
-\documentclass[a4paper,showframe]{report}
+\documentclass[a4paper,showframe,11pt]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
@@ -8,6 +8,10 @@
   \addbibresource{../../bib/haziq.bib}
   \externaldocument{../01/.texpadtmp/chapter1}
   \externaldocument{../03/.texpadtmp/chapter3}
+  \externaldocument{../04/.texpadtmp/chapter4}
+  \externaldocument{../05/.texpadtmp/chapter5}
+  \externaldocument{../06/.texpadtmp/chapter6}
+  \externaldocument{../07/.texpadtmp/chapter7}
 \fi
 \usepackage{fontspec}  % phonetics and Krein, needs XeLaTeX or LuaLaTeX
 
@@ -47,6 +51,7 @@ For a much cleaner read, we dispense with boldface notation for vectors and matr
 \section{Some functional analysis}
 \input{02a-functional-analysis}
 
+\newpage
 \section{Reproducing kernel Hilbert space theory}\label{sec:rkhstheory}
 \input{02b-rkhs}
 
@@ -75,7 +80,10 @@ An annotated collection of bibliographical references used for this chapter is a
   \item \textbf{ANOVA and functional ANOVA}. 
   Classical ANOVA is pretty much existent in every fundamental statistical textbook. These texts have extremely well written introductions to this very important concept: \citet[Ch. 11]{casella2002statistical}, \citet[Ch. 3]{dean1999design}. 
   On the relation between classical ANOVA and functional ANOVA decomposition, \citet{gu2013smoothing} offers novel insights. There is diverse literature concerning functional ANOVA, namely from the fields of statistical learning (e.g. \cite{wahba1990spline}), applied mathematics (e.g. \cite{kuo2010decompositions}), and sensitivity analysis (e.g. \cite{sobol2001global,durrande2013anova}). 
+%  What is interesting is that several authors who simply set out to obtain a suitable functional decomposition, all ended up somewhat independently recovering the ANOVA decomposition as being ``optimal'' in some sense.
+%  This speaks largely to this classical idea that is ANOVA.
 \end{itemize}
+
 
 \hClosingStuffStandalone
 \end{document}

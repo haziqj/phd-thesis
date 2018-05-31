@@ -125,17 +125,17 @@ An interesting property of these operators to look at, besides linearity, is whe
 
 Continuity in the sense of linear operators here means that a convergent sequence in $\cF$ can be mapped to a convergent sequence in $\cG$.
 For a special case of linear operator, the evaluation functional, this means that a function in $\cF$ is continuous if the evaluation functional is continuous---more on this later in  \cref{sec:rkhstheory}.
-%There is an even stronger notion of continuity called the \emph{Lipschitz continuity}.
-%
-%\begin{definition}[Lipschitz continuity]
-%  Let $\cF$ and $\cG$ be two Hilbert spaces.  
-%  A function $A:\cF\to\cG$ is \emph{Lipschitz continuous} if $\exists M >0$ such that $\forall f,f'\in\cF$,
-%  \[
-%    \norm{Af - Af'}_\cG \leq M \norm{f - f'}_\cF.
-%  \]
-%\end{definition}
-%
-%Clearly, Lipschitz continuity implies uniform continuity: choose $\delta = \delta(\epsilon) := \epsilon/M$ and replace this in  \cref{def:continuity}.
+There is an even stronger notion of continuity called the \emph{Lipschitz continuity}.
+
+\begin{definition}[Lipschitz continuity]
+  Let $\cF$ and $\cG$ be two Hilbert spaces.  
+  A function $A:\cF\to\cG$ is \emph{Lipschitz continuous} if $\exists M >0$ such that $\forall f,f'\in\cF$,
+  \[
+    \norm{Af - Af'}_\cG \leq M \norm{f - f'}_\cF.
+  \]
+\end{definition}
+
+Clearly, Lipschitz continuity implies uniform continuity: choose $\delta = \delta(\epsilon) := \epsilon/M$ and replace this in  \cref{def:continuity}.
 A continuous, linear operator is also one that is bounded:
 
 \begin{definition}[Bounded operator]\label{def:boundedop}
@@ -224,21 +224,33 @@ In infinite-dimensional Hilbert spaces, some subspaces are not closed, but all o
 In such spaces, the orthogonal complement of the orthogonal complement of $\cG$ is the closure of $\cG$, i.e. $(\cG^\bot)^\bot =: \overline \cG$, and we say that $\cG$ is dense in $\overline \cG$.
 Another interesting fact regarding the orthogonal complement is that $\cG \cap \cG^\bot = \{ 0 \}$, since any $g\in \cG \cap \cG^\bot$ must be orthogonal to itself, i.e. $\ip{g,g}_\cG = 0$ implying that $g=0$.
 
-%\begin{corollary}\label{thm:orthdecomp2}
-%  Let $\cG$ be a subspace of a Hilbert space $\cF$. 
-%  Then, $\cG^\bot = \{0\}$ if and only if $\cG$ is dense in $\cF$.
-%\end{corollary}
-%
-%\begin{proof}
-%  If $\cG^\bot=\{0\}$ then $(\cG^\bot)^\bot = \overline \cG = \cF$.
-%  Conversely, since $\cG$ is dense in $\cF$, we have $\cG^\bot = \overline\cG^\bot = \cF^\bot = \{0\}$.
-%\end{proof}
+\begin{corollary}\label{thm:orthdecomp2}
+  Let $\cG$ be a subspace of a Hilbert space $\cF$. 
+  Then, $\cG^\bot = \{0\}$ if and only if $\cG$ is dense in $\cF$.
+\end{corollary}
+
+\begin{proof}
+  If $\cG^\bot=\{0\}$ then $(\cG^\bot)^\bot = \overline \cG = \cF$.
+  Conversely, since $\cG$ is dense in $\cF$, we have $\cG^\bot = \overline\cG^\bot = \cF^\bot = \{0\}$.
+%  Conversely, suppose that there exists a non-zero element $h \in \cG^\bot$.
+%  Because $\cG$ is dense, we can construct a sequence $\{h_n\}_{n=1}^\infty\in\cG$ converging to $h$.
+%  We have
+%  \begin{align*}
+%    \norm{h}_\cG^2 
+%    &= \ip{h,h}_\cG \\
+%    &= \ip{h,h}_\cG - \ip{h_n,h}_\cG \hspace{1em} \rlap{\color{gray} since $h$ is in $\cG^\bot$} \\
+%    &= \ip{h-h_n,h}_\cG \\
+%    &\leq \norm{h-h_n}_\cG \cdot \norm{h}_\cG,
+%  \end{align*}
+%  but the final term tends to zero since $h_n$ converges to $h$.
+%  So $h=0$, a contradiction.
+\end{proof}
 
 %https://en.wikibooks.org/wiki/Functional_Analysis/Hilbert_spaces
 
 Besides tensor sums, of importance is the concept of \emph{tensor products}, which can be thought of as a generalisation of the outer product in Euclidean space.
 
-\begin{definition}[Tensor products]
+\begin{definition}[Tensor products]\label{def:tensorprod}
   Let $x_1\in\cH_1$ and $x_2\in\cH_2$ be two elements of two real Hilbert spaces.
   Then, the tensor product $x_1 \otimes x_2:\cH_1\times\cH_2\to\bbR$, is a bilinear form defined as
   \[
@@ -261,40 +273,51 @@ Correspondingly, we may also define the \emph{tensor product space}.
 \end{definition}
 
 Interestingly, the tensor product can be viewed as an operator between two Hilbert spaces.
-That is, for each pair of elements $(x_1,x_2) \in \cH_1\times\cH_2$, we define the operator $A:\cH_1\to\cH_2$ in the following way:
+That is, for each pair of elements $(x_1,x_2) \in \cH_1\times\cH_2$, we define the operator $A_{x_1,x_2}:\cH_1\to\cH_2$ in the following way:
 \begin{align*}
   A_{x_1,x_2}:\cH_1&\to\cH_2 \\
-  y_1&\mapsto \ip{x_1,y_1}_{\cH_1}x_2
+  y_1&\mapsto \ip{x_1,y_1}_{\cH_1}x_2.
 \end{align*}
-For some $y_1\in\cH_1$ and $y_2\in\cH_2$, we have that
+An operator defined in such a way is called a \emph{rank one} operator.
+Indeed, for some $y_1\in\cH_1$ and $y_2\in\cH_2$, we have that
 \begin{align*}
   \ip{A_{x_1,x_2}(y_1),y_2}_{\cH_2} 
   &= \big\langle \ip{x_1,y_1}_{\cH_1}x_2 , y_2 \big\rangle_{\cH_2} \\
   &= \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2} \\
   &= (x_1\otimes x_2)(y_1,y_2).
 \end{align*}
-It is seen that the tensor product $x_1\otimes x_2$ is is associated with the rank one operator $B:\cH_1'\to\cH_2$ defined by $z \mapsto z(x_1)x_2$ with $z = \ip{x_1,\cdot}_{\cH_1}$.
-We write $B = x_1 \otimes x_2$.
-\hltodo[From Wikipedia. But don't really get it, although it might explain the Fisher information between linear functionals.]{Therefore, this extends a linear identification between $\cH_1\otimes\cH_2$ and the space of finite-rank operators from $\cH_1'$ to $\cH_2$.}
-We now have three distinct interpretations of the tensor product:
+%Thus, it is seen that the tensor product $x_1\otimes x_2$ is associated with the rank one operator $B:\cH_1'\to\cH_2$ from the continuous dual space $\cH_1'$ to $\cH_2$ defined by $z \mapsto z(x_1)x_2$ with $z = \ip{x_1,\cdot}_{\cH_1}$.
+%We can write $B = x_1 \otimes x_2$.
+%\hltodo[From Wikipedia. But don't really get it, although it might explain the Fisher information between linear functionals.]{Therefore, this extends a linear identification between $\cH_1\otimes\cH_2$ and the space of finite-rank operators from $\cH_1'$ to $\cH_2$.}
+We now have three distinct interpretations of the tensor product.
+For $x_1,y_1\in\cH_1$ and $x_2,y_2\in\cH_2$, these are:
 \begin{itemize}
-  \item \textbf{Bilinear form} (as defined in Definition 3.5). 
-  \begin{align*}
-    x_1 \otimes x_2:\cH_1 \times \cH_2 &\to \bbR \\
-    (y_1,y_2) &\mapsto \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2}
-  \end{align*}
-  for $x_1,y_1\in\cH_1$ and $x_2,y_2\in\cH_2$.
+  \item \textbf{General form} (as an element in the tensor product space).
+  \[
+    x_1 \otimes x_2 \in \cH_1 \otimes \cH_2.
+  \]
   \item \textbf{Operator}.
   \begin{align*}
     x_1 \otimes x_2:\cH_1 &\to \cH_2 \\
     y_1 &\mapsto \ip{x_1,y_1}_{\cH_1}x_2
   \end{align*}  
-  \item \textbf{General form} (as an element in the tensor space).
-  \[
-    x_1 \otimes x_2 \in \cH_1 \otimes \cH_2.
-  \]
+  \item \textbf{Bilinear form} (as per \cref{def:tensorprod}). 
+  \begin{align*}
+    x_1 \otimes x_2:\cH_1 \times \cH_2 &\to \bbR \\
+    (y_1,y_2) &\mapsto \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2}
+  \end{align*}
 \end{itemize}
 
+\vspace{1em}
+\begin{remark}
+  As explained by \citet[§10.5, p. 227]{kokoszka2017introduction}, tensors are often thought of as generalisations of matrices.
+  For example, in Euclidean space, a matrix $\bA \in \bbR^{n\times m}$, formed by two vectors $x_1\in\bbR^n$ and $x_2\in\bbR^m$ via $\bA = x_1x_2^\top =: x_1 \otimes x_2$, can be viewed in at least three ways: 
+  1) as a traditional matrix in the space $\bbR^n \otimes \bbR^m = \bbR^{n\times m}$; 
+  2) as a linear transformation in Euclidean space $\bA:\bbR^n\to\bbR^m$ (or the reverse) by multiplying $\bA$ from the left or right by a vector; or
+  3) as a bilinear mapping $\bA:\bbR^n \times \bbR^m \to \bbR$ in the form of $\bA(y_1,y_2) = y_1^\top\bA y_2 = y_1^\top x_1 x_2^\top y_2 = (y_1^\top x_1)(y_2^\top x_2)$, for some $y_1\in\bbR^n$ and $y_2\in\bbR^m$, arising often in the study of quadratic forms.
+\end{remark}
+
+\newpage
 For the last part of this introductory section on functional analysis, we discuss measures on Hilbert spaces, and in particular, a probability measure.
 Let $\cH$ be a real Hilbert space. 
 As discussed earlier, we can define a metric on $\cH$ using $D(x,x') = \norm{x-x'}_\cH$, where the norm on $\cH$ is the norm induced by the inner product.
