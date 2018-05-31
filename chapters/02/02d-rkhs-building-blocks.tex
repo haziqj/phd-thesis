@@ -1,5 +1,5 @@
 This section describes what we refer to as the ``building block'' RKHS of functions.
-In the context of regression modelling, we may assume that the regression function lies in any one of these single RKHS, although it may be more appropriate to consider function spaces built upon these RKHS for more complex models.
+In the context of regression modelling using I-priors, we may assume that the regression function lies in any one of these single RKHS, although it may be more appropriate to consider function spaces built upon these RKHS for more complex models.
 Construction of new function spaces from these building block RKHS will be discussed in the next section.
 
 \subsection{The RKHS of constant functions}
@@ -28,13 +28,14 @@ The space $\cF$ can be equipped with a norm to form an RKHS, as shown in the fol
   Hence, $\norm{f}_\cF = \sqrt{\ip{f,f}_\cF} = \vert c_f \vert$.
 \end{proof}
 
-%In I-prior modelling, one need not consider any scale parameter on reproducing kernel, as the scale parameter would not be identified otherwise.
-%See later chapter for details.
-%\hltodo{I think the scale parameter $\lambda$ would just be absorbed by the norm, which is a single value of interest and that is what is ``observed'', and the decomposition $\lambda\cdot c_f$ is not so interesting.}
+\begin{remark}
+  In I-prior modelling, it is simpler to consider the intercept of a regression model as a parameter to be estimated, rather than a separate function within an RKHS of constant functions for which its posterior is to be estimated.
+  See \cref{sec:intercept} in \cref{chapter4} for further details.  
+\end{remark}
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.6\textwidth]{figure/02-kernel_path_const}
+  \includegraphics[width=0.54\textwidth]{figure/02-kernel_path_const}
   \caption{Sample paths from the RKHS of constant functions.}
 \end{figure}
 
@@ -109,7 +110,7 @@ We define the centred canonical RKHS as follows.
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.6\textwidth]{figure/02-kernel_path_canonical}
+  \includegraphics[width=0.53\textwidth]{figure/02-kernel_path_canonical}
   \caption{Sample paths from the canonical RKHS.}
 \end{figure}
 
@@ -179,9 +180,9 @@ Unlike realisations of actual fBm paths with Hurst index $\gamma$, which are wel
 %  \end{enumerate}
 %\end{claim}
 
-\begin{claim}
+\begin{proposition}
   The fBm-$\gamma$ RKHS $\cF$ of functions over $(\cX, \norm{\cdot}_\cX)$ are Hölder continuous of order $\gamma$.
-\end{claim}
+\end{proposition}
 
 \begin{proof}
   For some $f \in \cF$ we have $f(x) = \ip{f,h(\cdot,x)}_\cF$ by the reproducing property of the kernel $h$ of $\cF$.
@@ -199,10 +200,10 @@ Unlike realisations of actual fBm paths with Hurst index $\gamma$, which are wel
     &= h(x,x) + h(x',x') - 2 h(x,x') \\
     &= \norm{x-x'}_\cX^{2\gamma},
   \end{align*}  
-  and thus proving the claim.
+  and thus proving the proposition.
 \end{proof}
 
-\hltodo[This is the same for any RKHS?]{The fBm-$\gamma$ RKHS is spanned by the functions $h(\cdot,x)$, which means that $f(0)=0$ for all $f \in \cF$, which may be undesirable}.
+The fBm-$\gamma$ RKHS is spanned by the functions $h(\cdot,x)$, which means that $f(0)=0$ for all $f \in \cF$, which may be undesirable.
 We define the centred fBm RKHS as follows.
 
 \begin{definition}[Centred fBm RKHS]
@@ -235,7 +236,7 @@ We define the centred fBm RKHS as follows.
   \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_3}
   \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_5}
   \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_7}
-  \caption{Sample paths from the fBm RKHS with varying Hurst coefficients.}
+  \caption[Sample I-prior paths from the fBm RKHS with varying Hurst coefficients.]{Sample I-prior paths from the fBm RKHS with varying Hurst coefficients. Note that the fBm-$\gamma$ RKHS contains functions that are rougher than these I-prior paths.}
 \end{figure}
 
 \subsection{The squared exponential RKHS}
@@ -270,7 +271,7 @@ SE kernels are known to be ``universal''. That is, it satisfies the following de
 \end{definition}
 
 The consequence of this universal property vis-à-vis regression modelling is that any (continuous) regression function $f$ may be approximated very well by a function $\hat f$ belonging to the SE RKHS, and these two functions can get arbitrarily close to each other in the max norm sense.
-This, together with some very convenient computational advantages that the SE kernel brings (more on this in a later chapter), is a testament to the popularity of SE kernels.
+This, together with some very convenient computational advantages that the SE kernel brings, is a testament to the popularity of SE kernels.
 
 In a similar manner to the two previous subsections, we may also derive the \emph{centred} SE RKHS. 
 
@@ -281,7 +282,7 @@ In a similar manner to the two previous subsections, we may also derive the \emp
     h(x,x') = e^{-\frac{\norm{x-x'}_2^2}{2l^2}} - \E e^{-\frac{\norm{x-X'}_2^2}{2l^2}} - \E e^{-\frac{\norm{X-x'}_2^2}{2l^2}} + \E e^{-\frac{\norm{X-X'}_2^2}{2l^2}},
   \]
   where $X,X'\sim\Prob$ are two independent random elements of $\cX$. 
-  This ensures that $\E f(X) = 0$ for any $f$ in this RKHS.
+  This ensures that $\E[ f(X) ] = 0$ for any $f$ in this RKHS.
 \end{definition}
 
 %\begin{proof}
@@ -333,13 +334,13 @@ The Pearson RKHS contains functions which are centred, and has the desirable pro
 \begin{proof}
   Write $p_x = \Prob(X=x)$.
   The set of functions $\{h(\cdot,x) | x \in \cX\}$ form a basis for $\cF$, and thus each $f \in \cF$ can be written as $f(x) = \sum_{x'\in\cX} w_{x'}h(x,x')$ for some scalars $w_i\in\bbR$, $i\in\cX$.
-  But $\E h(X,x') = \E [\delta_{Xx'}] / p_{x'} - 1 = p_{x'} / p_{x'} - 1 = 0$, and thus $\E f(X) = 0$.
+  But $\E[ h(X,x')] = \E [\delta_{Xx'}] / p_{x'} - 1 = p_{x'} / p_{x'} - 1 = 0$, and thus $\E f(X) = 0$.
   Conversely, suppose $f:\cX\to\bbR$ is such that $\E f(X) = 0$.
   Taking $w_x = p_xf(x)$, we see that
   \begin{align*}
     \sum_{x'\in\cX} w_{x'}h(x,x') 
     &= \frac{w_x}{p_x} - \sum_{x'\in\cX} w_{x'} \\
-    &= \frac{f(x)\cancel{p_x}}{\cancel{p_x}} - \cancelto{\E f(X) = 0}{\sum_{x'\in\cX} p_{x'}f(x')} = f(x)
+    &= \frac{f(x)\cancel{p_x}}{\cancel{p_x}} - \cancelto{\E [f(X)] = 0}{\sum_{x'\in\cX} p_{x'}f(x')} = f(x)
   \end{align*}
   and thus $h(\cdot,x)$ spans $\cF$ so $f\in\cF$.
   To provide the second part, noting that with the choice $w_x = p_xf(x)$ and due to the reproducing property of $h$ for the RKHS $\cF$, the squared norm is 
@@ -357,7 +358,7 @@ The Pearson RKHS contains functions which are centred, and has the desirable pro
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.6\textwidth]{figure/02-kernel_path_pearson}
+  \includegraphics[width=0.53\textwidth]{figure/02-kernel_path_pearson}
   \caption{Sample ``paths'' from the Pearson RKHS. These are represented as points over a finite set.}
 \end{figure}
 

@@ -169,7 +169,7 @@ conv_in_norm <- function(n = 1000, seed = 343, cen = TRUE,
 }; conv_in_norm()
 
 ggsave("figure/02-kernel_path_const.pdf", kernel_path_constant(),
-       width = 6.5 * 0.65, height = 4.5 * 0.65)
+       width = 6.5 * 0.65 * 0.6 * 0.49, height = 4.5 * 0.65 * 0.6 * 0.49)
 
 ggsave("figure/02-kernel_path_canonical.pdf", kernel_path_canonical(),
        width = 6.5 * 0.65, height = 4.5 * 0.65)

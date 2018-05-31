@@ -125,10 +125,10 @@ That is, $\forall a_1, \dots, a_n \in \mathbb R$ and $\forall x_1, \dots, x_n \i
   \sum_{i=1}^n\sum_{j=1}^n a_i a_j h(x_i, x_j) \geq 0.
 \]
 
-\begin{claim}[Reproducing kernels of RKHS are positive-definite]\label{thm:posdef}
+\begin{proposition}[Reproducing kernels of RKHS are positive-definite]\label{thm:posdef}
   Let $\hXXR$ be a reproducing kernel for a Hilbert space $\cF$.
   Then $h$ is a symmetric and positive definite function.
-\end{claim}
+\end{proposition}
 
 \begin{proof}
   \begin{align*}
@@ -161,10 +161,33 @@ So far, we have seen that reproducing kernels of a RKHS are positive-definite fu
 %there are several questions we might like the answer to: What is the relationship between a reproducing kernel and an RKHS? Can we speak to its existence and uniqueness? What other properties does it have?
 We assert the following:
 \begin{itemize}
-  \item \textbf{RKHS $\Leftrightarrow$ reproducing kernel} (\cref{{thm:rkhsunique}}). For every RKHS $\cF$ of functions over a set $\cX$, there corresponds a unique, positive-definite reproducing kernel $\hXXR$, and vice-versa. That is, a Hilbert space is a RKHS if it possesses a unique, reproducing kernel.
-  \item \textbf{P.d. function $\Rightarrow$ RKHS} (\cref{{thm:moorea}}). For every positive-definite function $\hXXR$, there corresponds a unique RKHS $\cF$ that has $h$ as its reproducing kernel.
+  \item For every RKHS $\cF$ of functions over a set $\cX$, there corresponds a unique, positive-definite reproducing kernel $\hXXR$, and vice-versa. That is, a Hilbert space is a RKHS if it possesses a unique, reproducing kernel.
+  \item For every positive-definite function $\hXXR$, there corresponds a unique RKHS $\cF$ that has $h$ as its reproducing kernel.
 \end{itemize}
-In essence, the notion of positive-definite functions and reproducing kernels of a RKHS are equivalent, and that there is a bijection between the set of positive-definite kernels and the set of RKHSs.
+Pictorially, the following relationships are established:
+
+\tikzstyle{block} = [rectangle, draw, text width=6em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{singlearrow} = [draw,-implies,double distance=4pt, shorten >=0.5cm, shorten <=0.5cm]
+\tikzstyle{doublearrow} = [draw,implies-implies,double distance=4pt, shorten >=0.5cm, shorten <=0.5cm]
+
+\vspace{0.5em}
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[node distance=1cm, auto]
+    \node (init) {};
+    \node [block] (repkern) {Reproducing kernels};
+    \node [block, below=1cm of repkern, xshift=-3cm] (pd) {P.d. functions};
+    \node [block, below=1cm of repkern, xshift=3cm] (rkhs) {RKHS};    
+    
+    \path [singlearrow] (pd) -- node [text width=2.5cm,midway,above,align=center,yshift=0.2cm] {\cref{thm:moorea}} (rkhs);
+    \path [doublearrow] (repkern.east) -- node [text width=2.5cm,midway,above,align=left,xshift=1.5cm] {\cref{thm:rkhsunique}} (rkhs.north);
+    \path [doublearrow] (repkern.west) -- node [text width=2.5cm,midway,above,align=right,xshift=-1.5cm] {\cref{thm:posdef}} (pd.north);
+  \end{tikzpicture}  
+  \caption{Relationships between positive definite functions, reproducing kernels, and RKHSs.}
+\end{figure}
+\vspace{-0.5em}
+
+In essence, the notion of positive-definite functions and reproducing kernels of RKHSs are equivalent, and that there is a bijection between the set of positive-definite kernels and the set of RKHSs.
 The rest of this section is a consideration of these assertions, addressed by the two theorems that follow.
 
 \begin{theorem}[RKHS uniqueness]\label{thm:rkhsunique}
@@ -180,7 +203,7 @@ The rest of this section is a consideration of these assertions, addressed by th
     \vert \delta_x (f) - \delta_x (g) \vert 
     &= \vert (f-g)(x) \vert \\
     &= |\ip{f-g,h(\cdot,x)}_\cF| \mycomment{(reproducing property)} \\
-    &\leq \norm{h(\cdot,x)}_\cF \cdot \norm{f-g}_\cF \mycomment{(Cauchy-Schwarz)} \\
+    &\leq \norm{h(\cdot,x)}_\cF \, \norm{f-g}_\cF \mycomment{(Cauchy-Schwarz)} \\
     &= \epsilon.
   \end{align*}
   Thus, the evaluation functional is (uniformly) continuous on $\cF$, and by definition, $\cF$ is a RKHS.
