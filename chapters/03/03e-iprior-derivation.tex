@@ -94,15 +94,15 @@ A prior for $f$ therefore need not have support $\cF$, instead it is sufficient 
 We now state and prove the I-prior theorem.
 
 \begin{theorem}[The I-prior]
-  Let $\cF$ be an RKHS with kernel $h$, and consider the finite dimensional subspace $\cF_n$ of $\cF$ equipped with an inner product as in \cref{thm:Fninnerprod}.
+  Let $\cF$ be a RKHS with kernel $h$, and consider the finite dimensional subspace $\cF_n$ of $\cF$ equipped with an inner product as per \cref{eq:Fninnerprod}.
 %  Suppose $\Theta$ is a finite dimensional affine subspace of a Hilbert space with norm $\norm{\cdot}_\Theta$. 
 %  We have a metric space $(\cF_n,d)$, where $d(f,f')^2 = \ip{f-f',f-f'}$.
   Let $\nu$ be a volume measure induced by the norm $\norm{\cdot}_{\cF_n} = \sqrt{\ip{\cdot,\cdot}_{\cF_n}}$.
-  With $f_0 \in \cF$, let $\cP_0$ be the class of distributions $p$ such that 
+  With $f_0 \in \cF$, let $\cD_0$ be the class of distributions $p$ such that 
   \[
     \E\big[\norm{f-f_0}^2_{\cF_n}\big] = \int_{\cF_n} \norm{f-f_0}^2_{\cF_n} \, p(f) \dint \nu(f) = \const
   \]
-  Denote by $\tilde p$ the density of the entropy maximising distribution among the class of distributions within $\cP_0$.
+  Denote by $\tilde p$ the density of the entropy maximising distribution among the class of distributions within $\cD_0$.
   Then, $\tilde p$ is Gaussian over $\cF$ with mean $f_0$ and covariance function equal to the reproducing kernel of $\cF_n$, i.e.
   \[
     \Cov\big[f(x),f(x')\big] = h_n(x,x').
@@ -116,84 +116,61 @@ We now state and prove the I-prior theorem.
   Therefore, $p(r) = 0$, and one needs only consider distributions over $\cF_n$ when building distributions over $\cF$.
   
   The norm on $\cF_n$ induces the metric $D(f,f') = \norm{f - f'}_{\cF_n}$.
-  For $f,f_0 \in \cF$, take the 
-  \hltodo[Double check this proof.]{orthogonal projections} of these vectors onto $\cF_n$
-  \vspace{-0.5em}
+  For $f,f_0 \in \cF$ such that 
   \[
-    f = \sum_{i=1}^n h(\cdot,x_i)w_i + r_f
-    \hspace{0.5cm}\text{and}\hspace{0.5cm}
-    f_0 = \sum_{i=1}^n h(\cdot,x_i)w_{i0} + r_0
-    \vspace{-0.5em}
+    f = f_0 + \sum_{i=1}^n h(\cdot,x_i)w_i,
   \]
-  and compute the squared distance between them:
+  (which implies $(f - f_0) \in \cF_n$), compute the squared distance between them:
   \begin{align*}
     D(f,f_0)^2 
     &= \norm{f - f_0}_{\cF_n}^2 \\
-    &= \left\Vert \sum_{i=1}^n h(\cdot,x_i)w_i - \sum_{i=1}^n h(\cdot,x_i)w_{i0} \right\Vert_{\cF_n}^2 \\
-    &= \left\Vert \sum_{i=1}^n h(\cdot,x_i)(w_i - w_{i0}) \right\Vert_{\cF_n}^2 \\
-    &= (\bw - \bw_0)^\top\bPsi^{-1} (\bw - \bw_0).
-%    &= \bw^\top\bPsi^{-1}\bw - 2\bw^\top\bPsi^{-1}\bw' + \bw'^\top\bPsi^{-1}\bw'j
+    &= \left\Vert \sum_{i=1}^n h(\cdot,x_i)w_i \right\Vert_{\cF_n}^2 \\
+    &= \bw ^\top\bPsi^{-1} \bw.
   \end{align*}
-  Thus, by \cref{thm:maxentr}, the maximum entropy distribution for $f = \sum_{i=1}^n h(\cdot,x_i)w_i$ is
+  Thus, by \cref{thm:maxentr}, the maximum entropy distribution for $f - f_0 = \sum_{i=1}^n h(\cdot,x_i)w_i$ is
   \[
-    (w_1,\dots,w_n)^\top \sim \N_n(\bw_0,\bPsi).
+    (w_1,\dots,w_n)^\top \sim \N_n(\bzero,\bPsi).
   \]
   This implies that $f$ is Gaussian, since
   \begin{align*}
     \langle f,f' \rangle_{\cF}
-    = \left\langle \sum_{i=1}^n h(\cdot,x_i)w_i, f' \right\rangle_{\cF} 
-    = \sum_{i=1}^n w_i \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF}  
+    = \left\langle f_0 + \sum_{i=1}^n h(\cdot,x_i)w_i, f' \right\rangle_{\cF} 
+    = \ip{f_0,f'}_\cF +  \sum_{i=1}^n w_i \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF}  
   \end{align*}
   is a sum of normal random variables, and therefore $\langle f,f' \rangle_{\cF}$ is normally distributed for any $f' \in \cF$.
   The mean $\mu\in\cF$ of this random vector $f$ satisfies $\E\ip{f,f'}_{\cF}  = \ip{\mu,f'}_{\cF}$ for all $f'\in\cF_n$, but
   \vspace{-1.1em}
   \begin{align*}
     \E\ip{f,f'}_{\cF}  
-    &= \E \left\langle \sum_{i=1}^n h(\cdot,x_i)w_i, f' \right\rangle_{\cF} \\
-    &= \E \left[ \sum_{i=1}^n w_i \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF} \right] \\
-    &= \sum_{i=1}^n w_{i0} \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF}  \\
-    &= \left\langle \sum_{i=1}^n h(\cdot,x_i)w_{i0}, f' \right\rangle_{\cF} = \langle f_0,f' \rangle_{\cF},
+    &= \E \left\langle f_0 + \sum_{i=1}^n h(\cdot,x_i)w_i, f' \right\rangle_{\cF} \\
+    &= \langle f_0,f' \rangle_{\cF} + 
+    \E \left[ \sum_{i=1}^n w_i \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF} \right] \\
+    &= \langle f_0,f' \rangle_{\cF} + 
+     \sum_{i=1}^n \cancelto{0}{\E [w_i]} \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF} \\
+    &= \langle f_0,f' \rangle_{\cF},
   \end{align*}
-  so $\mu \equiv f_0 = \sum_{i=1}^n h(\cdot,x_i)w_{i0}$. 
+  so $\mu = f_0$. 
   
-  The covariance between two evaluation functionals of $f$ is shown to satisfy 
+  Following \hltodo{Definition 2.17}, the covariance between two evaluation functionals of $f$ is shown to satisfy 
   \begin{align*}
     \Cov\big[f(x),f(x')\big] 
     &= \Cov\big[\ip{f,h(\cdot,x)}_{\cF}, \ip{f,h(\cdot,x')}_{\cF} \big] \\
-    &= \E\big[\ip{f-f_0,h(\cdot,x)}_{\cF}\ip{f-f_0,h(\cdot,x')}_{\cF} \big] \\
-    &= \left\langle C, h(\cdot,x) \otimes h(\cdot,x') \right\rangle_{\cF \otimes \cF},
+    &= \E\big[\ip{f-f_0,h(\cdot,x)}_{\cF}\ip{f-f_0,h(\cdot,x')}_{\cF} \big].
   \end{align*}
-  where $C \in \cF\otimes\cF$ is the covariance element of $f$.
-  Write $h_{x} := \langle h(\cdot,x),f \rangle_{\cF}$. 
-  Then, by the usual definition of covariances, we have that 
+  Then, making use of the reproducing property of $h$ for $\cF$, we have that
   \begin{align*}
-    \Cov(h_x,h_{x'}) = \E[h_xh_{x'}] - \E[h_x]\E[h_{x'}],
-  \end{align*}
-  where, making use of the reproducing property of $h$ for $\cF$, the first term on the right-hand side is
-  \begin{align*}
-    \E[h_xh_{x'}] 
+    \Cov\big[f(x),f(x')\big]
     &= \E \left[ 
-    \left\langle h(\cdot,x), \sum_{i=1}^n h(\cdot,x_i)w_i \right\rangle_{\cF} 
-    \left\langle h(\cdot,x'), \sum_{j=1}^n h(\cdot,x_j)w_j \right\rangle_{\cF} 
+    \left\langle \sum_{i=1}^n h(\cdot,x_i)w_i, h(\cdot,x) \right\rangle_{\cF} 
+    \left\langle \sum_{j=1}^n h(\cdot,x_j)w_j, h(\cdot,x') \right\rangle_{\cF} 
     \right] \\
     &= \E \left[ 
     \sum_{i=1}^n\sum_{j=1}^n w_iw_j \left\langle  h(\cdot,x), h(\cdot,x_i) \right\rangle_{\cF} 
      \left\langle h(\cdot,x'), h(\cdot,x_j)\right\rangle_{\cF} 
     \right] \\
-    &= \sum_{i=1}^n\sum_{j=1}^n (\psi_{ij} + w_{i0}w_{j0}) h(x,x_i) h(x',x_j),
+    &= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(x,x_i) h(x',x_j),
   \end{align*}
-  while the second term on the right-hand side is
-  \begin{align*}
-    \E[h_x]\E[h_{x'}]
-    &= \left( \sum_{i=1}^n w_{i0} \left\langle  h(\cdot,x), h(\cdot,x_i)  \right\rangle_{\cF} \right)
-    \left( \sum_{j=1}^n w_{j0} \left\langle  h(\cdot,x'), h(\cdot,x_j)  \right\rangle_{\cF} \right) \\
-    &= \sum_{i=1}^n \sum_{j=1}^n w_{i0}w_{j0} h(x,x_i)h(x',x_j).
-  \end{align*}  
-  Thus,
-  \[
-    \Cov\big( f(x),f(x') \big) = \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(x,x_i) h(x',x_j),
-  \]
-  the reproducing kernel for $\cF_n$.
+  which is the reproducing kernel for $\cF_n$.
 \end{proof}
 
 In closing, we reiterate the fact that the I-prior for $f$ in the normal regression model subject to $f$ belonging to some RKHS $\cF$ has the simple representation
