@@ -4,25 +4,7 @@
 %\allowdisplaybreaks[1]
 \usepackage{amssymb}
 \usepackage{amsthm}
-%  \begingroup
-%    \makeatletter
-%    \@for\theoremstyle:=definition,remark,plain\do{%
-%      \expandafter\g@addto@macro\csname th@\theoremstyle\endcsname{%
-%        \addtolength\thm@preskip\parskip
-%      }%
-%   	}
-%  \endgroup
-%  \newtheorem{thm}{Theorem}
-%  \newtheorem{theorem}{Theorem}
-%%  \theoremstyle{definition}
-%  \newtheorem{defn}{Definition}
-%  \newtheorem{definition}[defn]{Definition}
-%  \newtheorem{lem}{Lemma}%[section]
-%  \newtheorem{lemma}[lem]{Lemma}%[section]
-%  \newtheorem{corr}{Corollary}%[section]
-%  \newtheorem{corrolary}[corr]{Corollary}%[section]
-%  \newtheorem{remark}{Remark}
-%\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}} 
+\renewcommand\qedsymbol{$\blacksquare$}
 
 \usepackage{thmtools}
 \usepackage{thm-restate}
@@ -48,9 +30,8 @@
 \usepackage{dsfont}  % for indicator variables \mathsds{1}
 \usepackage{bm}  % for better bold script
 \usepackage[makeroom]{cancel}
-	\renewcommand{\CancelColor}{\color{gray}}
+  \renewcommand{\CancelColor}{\color{gray}}
 \usepackage{mathtools}
-\usepackage{dsfont}
 %\usepackage{kbordermatrix}  % https://tex.stackexchange.com/questions/59517/label-rows-of-a-matrix-by-characters
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

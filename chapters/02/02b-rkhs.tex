@@ -3,39 +3,33 @@ This is a subset of Hilbert spaces for which its evaluation functionals are cont
 The majority of this section, apart from defining RKHS, is an exercise in convincing ourselves that each and every RKHS of functions can be specified solely through its reproducing kernel.
 To begin, we consider a fundamental linear functional on a Hilbert space of functions $\cF$, that assigns a value to $f \in \mathcal F$ for each $x \in \mathcal X$, called the \emph{evaluation functional}.
 
-%\begin{figure}[htb]
-%  \centering
-%  \includegraphics[width=0.75\textwidth]{figure/02-hierarchy-spaces.png}
-%  \caption[A hierarchy of vector spaces]{A hierarchy of vector spaces\footnotemark.}
-%\end{figure}
-%\footnotetext{Reproduced from the lecture slides of Dino Sejdinovic and Arthur Gretton entitled `Foundations of Reproducing Kernel Hilbert Spaces: Advanced Topics in Machine Learning', 2014. URL: \url{http://www.stats.ox.ac.uk/~sejdinov/teaching/atml14/Theory_slides2_2014.pdf}.}
-
+\definecolor{AUROMETALSAURUS}{HTML}{6A8482}
 \definecolor{DOLLARBILL}{HTML}{89C168}
 \definecolor{IGUANA}{HTML}{6AC38C}
-\definecolor{AUROMETALSAURUS}{HTML}{6A8482}
 \definecolor{FLAME}{HTML}{ED5324}
 \definecolor{PASTELBROWN}{HTML}{836A54}
 \definecolor{CHINESERED}{HTML}{9A3D23}
 \definecolor{MYWHITE}{HTML}{F5EDEB}
+\definecolor{TEAGREEN}{HTML}{C1EDCC}
 
 \begin{figure}
   \centering
   \begin{tikzpicture}
   
-    \draw[rounded corners,fill=AUROMETALSAURUS,opacity=0.4] (0,0) rectangle (9.8,6.7);  % metric
-    \draw[rounded corners,fill=DOLLARBILL,opacity=0.4] (0.7,0.7) rectangle (11,7.3);  % vector
-    \draw[rounded corners,fill=IGUANA,opacity=0.4] (1.2,1.1) rectangle (8.1,5.2);  % normed
-    \draw[rounded corners,fill=FLAME,opacity=0.4] (2.4,2) rectangle (7,4.5);  % inner product
-    \draw[rounded corners,fill=PASTELBROWN,opacity=0.4] (4.9,3) rectangle (6.7,4.2);  % RKHS
-    \draw[rounded corners,fill=CHINESERED,opacity=0.4] (4.6,0.3) rectangle (9.3,6.4);  % complete
+    \draw[rounded corners,fill=lselgr,opacity=0.5] (0,0) rectangle (9.8,6.7);  % metric
+    \draw[rounded corners,fill=TEAGREEN,opacity=0.4] (0.7,0.7) rectangle (11,7.3);  % vector
+    \draw[rounded corners,fill=lsepur,opacity=0.25] (1.2,1.1) rectangle (8.1,5.2);  % normed
+    \draw[rounded corners,fill=lsecya,opacity=0.4] (2.4,2) rectangle (7,4.5);  % inner product
+    \draw[rounded corners,fill=lsered,opacity=0.4] (4.9,3) rectangle (6.7,4.2);  % RKHS
+    \draw[rounded corners,fill=black!50,opacity=0.4] (4.6,0.3) rectangle (9.3,6.4);  % complete
     
-    \node[draw=none,text=MYWHITE,align=center] at (5.8,3.6) {\footnotesize RKHS};
+    \node[draw=none,text=black,align=center] at (5.8,3.6) {\footnotesize RKHS};
     \node[draw=none,text=black] at (0.6,0.3) {\footnotesize metric};
     \node[draw=none,text=black] at (1.95,1.45) {\footnotesize normed};
-    \node[draw=none,text=MYWHITE] at (7.35,1.45) {\footnotesize Banach};
+    \node[draw=none,text=black] at (7.35,1.45) {\footnotesize Banach};
     \node[draw=none,text=black] at (3.53,2.32) {\footnotesize inner product};
-    \node[draw=none,text=MYWHITE] at (6.3,2.35) {\footnotesize Hilbert};
-    \node[draw=none,text=MYWHITE] at (7,6.05) {\footnotesize complete};
+    \node[draw=none,text=black] at (6.3,2.35) {\footnotesize Hilbert};
+    \node[draw=none,text=black] at (7,6.05) {\footnotesize complete};
     \node[draw=none,text=black] at (9.9,6.98) {\footnotesize linear/vector};
     
   \end{tikzpicture}
@@ -50,7 +44,7 @@ To begin, we consider a fundamental linear functional on a Hilbert space of func
 \end{definition}
 
 It is easy to see that evaluation functionals are always linear: $\delta_x(\lambda f + g) = (\lambda f + g)(x) = \lambda f(x) + g(x) = \lambda\delta_x(f) + \delta_x(g)$ for $\lambda\in\bbR$, $f,g\in\cF$ real functions over $\cX$.
-Humble as they may seem, the entirety of the evaluation functionals over the domain $\cX$ determines $f$ uniquely and thus are of great importance in understanding the space $\cF$.
+Humble as they may seem, the entirety of the evaluation functionals over the domain $\cX$ determines $f$ uniquely, and thus are of great importance in understanding the space $\cF$.
 Core topological properties like convergence are hinged on continuity, and it is therefore important that evaluation functionals are continuous.
 As it turns out, RKHSs by definition provide exactly this.
 
