@@ -90,10 +90,13 @@
 %\usepackage[longnamesfirst]{natbib}
 %  \bibpunct{(}{)}{;}{a}{,}{,~}
 %  \addto\captionsenglish{\renewcommand{\bibname}{References}}  % change the name of Bibliography section
-\usepackage[style=authoryear, firstinits=false, giveninits=false, maxcitenames=2,
+\usepackage[style=authoryear-comp, firstinits=false, giveninits=false, maxcitenames=2,
   minnames=1, maxbibnames=99, backend=biber, natbib]{biblatex}
 \setlength\bibitemsep{1.5\itemsep}
 \AtEveryCite{\color{lsedpr}}
+\makeatletter
+\AtEveryCitekey{\global\undef\cbx@lastyear}  % https://tex.stackexchange.com/questions/309697/multiple-citations-same-author-same-year-using-biblatex-list-year
+\makeatother
     
 % Paragraph settings
 \usepackage{parskip}  
@@ -261,27 +264,29 @@
 % List of figures, tables, symbols, and abbreviations
 \newcommand{\hLists}{
   \newpage
+  \renewcommand{\listfigurename}{Figures}
   \listoffigures
-  \addcontentsline{toc}{chapter}{List of Figures}
+  \addcontentsline{toc}{chapter}{Figures}
   
   \newpage
+  \renewcommand{\listtablename}{Tables}  
   \listoftables
-  \addcontentsline{toc}{chapter}{List of Tables}
+  \addcontentsline{toc}{chapter}{Tables}
   
   \newpage
+  \renewcommand{\listtheoremname}{Theorems}  
   \listoftheorems[ignoreall,onlynamed={theorem,lemma,corollary, proposition},numwidth=2.7em]
-  \addcontentsline{toc}{chapter}{List of Theorems}
+  \addcontentsline{toc}{chapter}{Theorems}
   
   \newpage
-  \renewcommand{\listtheoremname}{List of Definitions}
+  \renewcommand{\listtheoremname}{Definitions}
   \listoftheorems[ignoreall,show={definition}, numwidth=2.7em]
-  \addcontentsline{toc}{chapter}{List of Definitions}   
+  \addcontentsline{toc}{chapter}{Definitions}   
         
   \begingroup
     \singlespacing
-%    \glsaddall[types=symbols]
-%    \printsymbols[title={Nomenclature},style=long,nogroupskip,nonumberlist]
     \hnomenclature
+    \addcontentsline{toc}{chapter}{Nomenclature}   
     \printabbreviations[title={Abbreviations},style=long,nogroupskip, nonumberlist,nopostdot]
     \glsaddall[types=abbreviations]
   \endgroup

@@ -6,38 +6,39 @@
   \usepackage{../../haziq_maths}
   \usepackage{../../haziq_glossary}
   \addbibresource{../../bib/haziq.bib}
-  \externaldocument{../01/.texpadtmp/chapter1}
+%  \externaldocument{../01/.texpadtmp/chapter1}
   \externaldocument{../02/.texpadtmp/chapter2}
   \externaldocument{../03/.texpadtmp/chapter3}
   \externaldocument{../04/.texpadtmp/chapter4}
   \externaldocument{../05/.texpadtmp/chapter5}
   \externaldocument{../06/.texpadtmp/chapter6}
+  \externaldocument{../07/.texpadtmp/chapter7}  
 \fi
 
 \begin{document}
 \hChapterStandalone[1]{Introduction}
 
 Regression\index{regression} analysis is undoubtedly one of the most important tools available at a practitioner's disposal to understand the relationship between one or more explanatory variables $x$, and the independent variable of interest, $y$.
-This relationship is usually expressed as $y \approx f(x;\theta)$, where $f$ is called the \emph{regression function}, and this is   dependent on one or more parameters denoted by $\theta$.
-Regression analysis concerns the estimation of said regression function, and once a suitable estimate $\hat f$ has been found, post-estimation procedures such as prediction, and inference surrounding $f$ or $\theta$, may be performed.
+This relationship is usually expressed as $y \approx f(x|\theta)$, where $f$ is called the \emph{regression function}, and this is   dependent on one or more parameters denoted by $\theta$.
+Regression analysis concerns the estimation of said regression function, and once a suitable estimate $\hat f$ has been found, post-estimation procedures such as prediction and inference surrounding $f$ or $\theta$, may be performed.
 
 Estimation of the regression function may be done in many ways.
-This thesis concerns the use of \emph{I-priors} \citep{bergsma2017}, in a semi-Bayesian\index{Bayes} manner, for regression modelling.
+This thesis concerns the use of \emph{I-priors}\index{I-priors} \citep{bergsma2017}, in a semi-Bayesian\index{Bayes} manner, for regression modelling.
 The I-prior is an objective, entropy-maximising prior for the regression function which makes use of its Fisher information.
 The essence of regression modelling using I-priors is introduced briefly below, but as the development of I-priors is fairly recent, we dedicate two full chapters (\cref{chapter2,chapter3}) to describe the concept fully.
 
 This thesis has three main chapters which we hope to present as methodological innovations surrounding the use of I-priors for regression modelling.
-\cref{chapter4} describes computational methods relating to the estimation of I-prior models.
-\cref{chapter5} extends the I-prior methodology to fit discrete outcome models.
+\cref{chapter4} describes the I-prior modelling framework and computational methods relating to the estimation of I-prior models.
+\cref{chapter5} extends the I-prior methodology to fit categorical outcome models.
 \cref{chapter6} discusses the use of I-priors in variable selection for linear models. 
-In addition to introducing the statistical model of interest and  motivating the use of I-priors, this current chapter ultimately provides a summary outline of the thesis.
+In addition to introducing the statistical model of interest and  motivating the use of I-priors, this current introductory chapter ultimately provides a summary outline of the thesis.
 
 \section{Regression models}
 \label{sec:introregmod}
 
 For subject $i \in \{1,\dots,n\}$, assume a real-valued response $y_i$ has been observed, as well as a row vector of $p$ covariates $x_i = (x_{i1},\dots,x_{ip})$, where each $x_{ik}$ belongs to some set $\cX_k$, for $k = 1,\dots,p$.
 Let $\cS = \{(y_1, x_1), \dots, (y_n,x_n)\}$ denote this observed sample of size $n$.
-Consider then the following regression model, which stipulates the dependence of the $y_i$ on the $x_i$:
+Consider then the following regression\index{regression} model, which stipulates the dependence of the $y_i$ on the $x_i$:
 \begin{align}\label{eq:model1}
   y_i = \alpha + f(x_i) + \epsilon_i,
 \end{align}
@@ -47,31 +48,31 @@ Additionally, it is assumed that the errors $\epsilon_i$ are normally distribute
   (\epsilon_1, \dots, \epsilon_n)^\top \sim \N_n(0, \bPsi^{-1}).
 \end{align}
 where $\bPsi = (\psi_{ij})_{i,j=1}^n$ is the precision matrix.
-We shall often refer to model \cref{eq:model1} subject to \cref{eq:model1ass} as the \emph{normal regression model}.
-The choice of multivariate normal errors is not only a convenient one (as far as distributional assumptions go), but one that is motivated by the principle of maximum entropy.
+We shall often refer to model \cref{eq:model1} subject to \cref{eq:model1ass} as the \emph{normal regression model}\index{normal!regression model}.
+The choice of multivariate normal errors is not only a convenient one (as far as distributional assumptions go), but one that is motivated by the principle of maximum entropy \citep{jaynes1957a,jaynes1957b,jaynes2003probability}.
 
 Interestingly, a wide variety of statistical models can be captured by the seemingly humble normal regression model, simply by varying the form of the regression function $f$.
 For instance, when $f$ can be parameterised linearly as $f(x_i) = x_i^\top \beta$, $\beta \in \bbR^p$, we then have the ordinary linear regression---a staple problem in statistics and other quantitative fields.
 
-We might also have that the data is separated naturally into groups or levels by design, for example, data from stratified sampling, students within schools, or longitudinal measurements over time.
-In such a case, we might want to consider a regression function with additive components
+We might also have data that is separated naturally into groups or levels by design, for example, data from stratified\index{stratified} sampling, students within schools, or longitudinal\index{longitudinal!measurements} measurements over time.
+In such a case, we might want to consider a regression function with additive\index{additive} components
 %
 \[
   f(x_i^{(j)}, j) = f_1(x_i^{(j)}) + f_2(j) + f_{12}(x_i^{(j)}, j)
 \]
 %
-where $x_i^{(j)}$ denotes the $p$-dimensional $i$th observation for group $j\in\{1,\dots,m\}$.
-Again, assuming a linear parameterisation, this is recognisable as the multilevel or random-effects linear model, with $f_2$ representing the varying intercept via $f_2(j) = \alpha_{j}$, $f_{12}$ representing the varying slopes via $f_{12}(x_{ij},j) = x_{i}^\top \beta_{j}$, with $\beta_j \in \bbR^p$, and $f_1$ representing the fixed-effects linear component $x_i^\top\beta$ as above.
+where $x_i^{(j)}$ denotes the $p$-dimensional $i$'th observation for group $j\in\{1,\dots,m\}$.
+Again, assuming a linear parameterisation, this is recognisable as the standard multilevel\index{multilevel} or random-effects linear model \citep{skrondal2012multilevel}, with $f_2$ representing the varying intercept via $f_2(j) = \alpha_{j}$, $f_{12}$ representing the varying slopes via $f_{12}(x_{ij},j) = x_{i}^\top \beta_{j}$, with $\beta_j \in \bbR^p$, and $f_1$ representing the fixed-effects linear component $x_i^\top\beta$ as above.
 
 Moving on from linear models, smoothing models may be of interest as well.
-A myriad of models exist for this type of problem, with most classed as nonparametric regression, and the more popular ones include LOcal regrESSion (LOESS), kernel regression, and smoothing splines.
+A myriad of models exist for this type of problem, with most classed as nonparametric regression \citep{wassermann2006all}, and the more popular ones include LOcal regrESSion (LOESS), kernel regression, and smoothing splines.
 Semiparametric regression models, on the other hand, combines the linear component of a regression model with a non-parameteric component.
 
 Further, the regression problem is made more intriguing when the set of covariates $\cX$ is functional---in which case the linear regression model aims to estimate coefficient functions $\beta:\cT \to \bbR$ from the model
 \[
   y_i = \int_\cT x_i(t)\beta(t) \dint t + \epsilon_i.
 \]
-Nonparametric and semiparametric regression with functional covariates have also been widely explored.
+Nonparametric and semiparametric regression with functional covariates \citep{ramsay2005functional} have also been widely explored.
 Models of this nature still fall under the remit of the normal regression model by selecting a regression functional with domain over the functional covariates.
 
 \section{Vector space of functions}
