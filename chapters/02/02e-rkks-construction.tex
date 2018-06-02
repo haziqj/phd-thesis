@@ -151,11 +151,11 @@ It is sometimes known as the bias term.
 \subsection{The ANOVA RKKS}
 
 We find it useful to begin this subsection by spending some time to elaborate on the classical \gls*{anova} decomposition, and the associated notions of main effects and interactions.
-This will go a long way in understanding the thinking behind constructing an ANOVA-like RKKS of functions.
+This will go a long way in understanding the thinking behind constructing an \gls*{anova}-like RKKS of functions.
 
 \subsubsection{The classical ANOVA decomposition}
 
-The standard one-way ANOVA is essentially a linear regression model which allows comparison of means from two or more samples.
+The standard one-way \gls*{anova} is essentially a linear regression model which allows comparison of means from two or more samples.
 Given sets of observations $y_j = \{y_{1j},\dots,y_{n_jj}\}$, $j=1,\dots,m$, we consider the linear model $y_{ij} = \mu_j + \epsilon_{ij}$, where $\epsilon_{ij}$ are independent, univariate normal random variables with a common variance.
 %One would like to test whether the hypothesis $\text{H}_0:\alpha_1=\cdots=\alpha_m$ stands.
 %However, obtaining a suitable and significant test statistic to reject the null hypothesis merely tells us that the means are indeed not the same, but does not tell us \emph{where exactly} the difference lies.
@@ -171,9 +171,9 @@ The former treats one of the $m$ levels as the control, while the latter treats 
 %The imposition of these restriction corresponds to a particular hypothesis test regarding the group means.
 %For instance, to test $\text{H}_0:\mu=\alpha_1=\cdots=\alpha_m$.
 
-Now write the ANOVA model slightly differently, as $y_{i} = f(x_i) + \epsilon_{i}$, where $f$ is defined on the discrete domain $\cX = \{1,\dots,m\}$, and $i$ indexes all of the $n := \sum_{j=1}^m n_j$ observations.
+Now write the \gls*{anova} model slightly differently, as $y_{i} = f(x_i) + \epsilon_{i}$, where $f$ is defined on the discrete domain $\cX = \{1,\dots,m\}$, and $i$ indexes all of the $n := \sum_{j=1}^m n_j$ observations.
 Here, $f$ represents the group-level mean, returning $\mu_j$ for some $j\in\cX$.
-In a similar manner, we can perform the ANOVA decomposition on $f$ as
+In a similar manner, we can perform the \gls*{anova} decomposition on $f$ as
 \[
 %  f = \greyoverbrace{Af}{f_0} +  \greyoverbrace{(I - A)f}{f_1},
   f = Af + (I-A)f = f_o + f_t,
@@ -204,11 +204,11 @@ Each of the terms will satisfy the condition $A_kf_\cK = 0, \forall k \in \cK \i
 \begin{example}[Two-way ANOVA decomposition]
   Let $p=2$, $\cX_1=\{1,\dots,m_1\}$, and $\cX_2=\{1,\dots,m_2\}$.
   The power set $\cP_2$ is $\big\{ \{\}, \{1\}, \{2\}, \{1,2\} \big\}$.
-  The ANOVA decomposition of $f$ is
+  The \gls*{anova} decomposition of $f$ is
   \[
     f = f_0 + f_1 + f_2 + f_{12}.
   \]
-  Here are two choices for the averaging operator $A_k$ analogous to the previous illustration in the one-way ANOVA.
+  Here are two choices for the averaging operator $A_k$ analogous to the previous illustration in the one-way \gls*{anova}.
   \begin{itemize}
     \item Let $A_1f(x) = f(1,x_2)$ and $A_2f(x) = f(x_1,1)$. Then,
     \begin{alignat*}{2}

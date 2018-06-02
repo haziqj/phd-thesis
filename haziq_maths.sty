@@ -27,6 +27,33 @@
 \declaretheorem[numberwithin=chapter,style=hDefinitionStyle]{definition}
 \declaretheorem[numberwithin=chapter,style=hDefinitionStyle]{example}
 
+% To remove indentation in the list of theorems & definitions
+\renewcommand\listoftheorems[1][]{%
+  \bgroup
+  \setlisttheoremstyle{#1}%
+  \let\listfigurename\listtheoremname
+  \def\contentsline##1{%
+    \csname thmt@contentsline@##1\endcsname{##1}%
+  }%
+  \@for\thmt@envname:=\thmt@allenvs\do{%
+  \@xa\protected@edef\csname l@\thmt@envname\endcsname{% 
+    \@nx\@dottedtocline{1}{0pt}{\@nx\thmt@listnumwidth}% changed from 1.5em to 0pt
+  }%
+  }%
+  \let\thref@starttoc\@starttoc
+  \def\@starttoc##1{\thref@starttoc{loe}}%
+  \@fileswfalse
+  \AtEndDocument{%
+    \if@filesw
+      \@ifundefined{tf@loe}{%
+        \expandafter\newwrite\csname tf@loe\endcsname
+        \immediate\openout \csname tf@loe\endcsname \jobname.loe\relax
+      }{}%
+\fi }%
+  \listoffigures
+  \egroup
+}
+
 \usepackage{dsfont}  % for indicator variables \mathsds{1}
 \usepackage{bm}  % for better bold script
 \usepackage[makeroom]{cancel}

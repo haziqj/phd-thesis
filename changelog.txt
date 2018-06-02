@@ -1,0 +1,19 @@
+Changelog
+
+General 
+
+- New colour scheme (LSE colour palette)
+- QED symbols changed to `\blacksquare`
+- Added Nomenclature
+
+Chapter 2
+
+- Cleaned up tensor product definition and added remark.
+- Added new remarks regarding importance of RKHSs and continuity of evaluation functionals.
+- Removed corollary on norm convergence implies pointwise convergence, and the associated figure.
+- New pictorial on relationship between RKHS, p.d. functions and rep. kernels.
+- Adjusted graphics for RKHS building blocks.
+
+Chapter 3
+
+- Cleaned up proof I-prior theorem

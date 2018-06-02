@@ -16,6 +16,7 @@
 \usepackage{soul}  % for highlighting text
 \usepackage{url}
 \usepackage{hyperref}  % hyperref setup at the bottom
+\usepackage{footmisc}  % ability to reuse footnotes
 
 %\usepackage{fancyhdr}  % headers and footers
 %	\pagestyle{fancy}
@@ -146,6 +147,11 @@
 \usepackage{mparhack}  % these two packages provides some fixes to marginnote
 \usepackage{marginfix}
 
+% TOC
+\usepackage{tocloft}
+\setlength{\cftfigindent}{0pt}
+\setlength{\cfttabindent}{0pt}
+
 % Miscellaneous
 \usepackage{lipsum} 
 \usepackage{ifthen}
@@ -213,7 +219,7 @@
 %%% MY THESIS SPECIFIC MACROS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% For my thesis - adds a chapter heading, including to-do list and TOC (STANDALONE VERSION)
+% For my thesis---adds a chapter heading, including to-do list and TOC (STANDALONE VERSION)
 
 % Textbox freely placed on page. Adapted from https://tex.stackexchange.com/questions/24663/how-to-place-a-floating-text-box-at-a-specified-location-in-page-coordinates
 \newcommand{\placetextbox}[3]{% \placetextbox{<horizontal pos>}{<vertical pos>}{<stuff>}
@@ -254,26 +260,56 @@
 
 % List of figures, tables, symbols, and abbreviations
 \newcommand{\hLists}{
+  \newpage
   \listoffigures
   \addcontentsline{toc}{chapter}{List of Figures}
+  
+  \newpage
   \listoftables
   \addcontentsline{toc}{chapter}{List of Tables}
- \listoftheorems[ignoreall,onlynamed={theorem,lemma,corollary, proposition},numwidth=2.7em]
+  
+  \newpage
+  \listoftheorems[ignoreall,onlynamed={theorem,lemma,corollary, proposition},numwidth=2.7em]
   \addcontentsline{toc}{chapter}{List of Theorems}
+  
+  \newpage
   \renewcommand{\listtheoremname}{List of Definitions}
   \listoftheorems[ignoreall,show={definition}, numwidth=2.7em]
-  \addcontentsline{toc}{chapter}{List of Definitions}
-  \glsaddall[types=symbols]
-  \printabbreviations[title={List of Abbreviations},style=long,nogroupskip,nonumberlist]
-  \printsymbols[title={List of Symbols},style=long,nonumberlist]
+  \addcontentsline{toc}{chapter}{List of Definitions}   
+        
+  \begingroup
+    \singlespacing
+%    \glsaddall[types=symbols]
+%    \printsymbols[title={Nomenclature},style=long,nogroupskip,nonumberlist]
+    \hnomenclature
+    \printabbreviations[title={Abbreviations},style=long,nogroupskip, nonumberlist,nopostdot]
+    \glsaddall[types=abbreviations]
+  \endgroup
+}
+
+% Manual input of nomenclature, depending on individual tex files or main thesis
+\newcommand{\hnomenclature}{
+  \hypersetup{
+  colorlinks=true,
+  linkcolor=lsedpr,
+  citecolor=lsedpr,
+  urlcolor=lsepur
+}
+  \ifstandalone
+    \input{../../nomenclature}
+  \else 
+    \input{nomenclature}
+  \fi
 }
 
 % Adds the closing stuff (STANDALONE VERSION)
 \newcommand{\hClosingStuffStandalone}{
   \ifstandalone
-    \hPrintBibliography
-    \hLists
-    \printindex
+    {\hypersetup{allcolors=.} %pdfborder=0 0 0
+      \hPrintBibliography
+      \hLists
+      \printindex
+    }
   \fi
 }
 
@@ -283,6 +319,7 @@
     \listoftodos[To-do list]
     \tableofcontents
     \hLists
+    \input{nomenclature}
   }
 }
 

@@ -1,0 +1,161 @@
+\chapter*{Nomenclature}
+
+As much as possible, and unless otherwise stated, the following conventions are used throughout this thesis.
+
+\noindent\textbf{Conventions}
+
+\begin{longtable}{p{0.18\textwidth}p{0.79\textwidth}}
+  $\ba,\bb,\bc,\dots$  & Boldface lower case letters denote real vectors \\
+  $\bA,\bB,\bC,\dots$  & Boldface upper case letters denote real matrices \\
+  $\cA,\cB,\cC,\dots$  & Calligraphic upper case letters denote sets \\
+\end{longtable}
+
+\noindent\textbf{Indexing}
+
+\begin{longtable}{p{0.18\textwidth}p{0.79\textwidth}}
+  $\bA_{ij}$, $A_{ij}$, $a_{ij}$   & The $(i,j)$'th element of the matrix $\bA$ \\
+  $\bA_{i\bigcdot}$  & The $i$'th row of the matrix $\bA$ as a tall vector (transposed row vector)  \\
+  $\bA_{\bigcdot j}$  & The $j$'th column vector of the matrix $\bA$ \\
+\end{longtable}
+
+\noindent\textbf{Symbols}
+
+\begin{longtable}{p{0.18\textwidth}p{0.79\textwidth}}
+  $\bbN$   & The set of natural numbers (excluding zero) \\
+  $\bbZ$   & The set of integers \\
+  $\bbR$   & The set of real numbers \\
+  $\bbR^d$   & The $d$-dimensional Euclidean space \\  
+%  $\pi$   & The constant defined as the ratio of a circle's circumference to its diameter; approximately $3.14159$ \\  
+  $x'$   & Primes are used to distinguish elements, rather than to denote derivatives \\    
+  $\hat\theta$   & Hats are used to denote estimators of a parameter $\theta$ \\   
+%  $\cF$  & A vector space of functions, typically a RKKS \\
+%  $\cX$  & The set of regression covariates \\
+%  $h$ & The reproducing kernel of a RKHS/RKKS of functions over $\cX$ \\  
+  $\cA^c$  &  The complement of a set $\cA$ \\
+  $\cP(\cA)$  &  The power set of the set $\cA$ \\  
+  $\{ \}, \emptyset$  &  The empty set \\    
+%  $\cup$  &  The union (of sets) \\    
+%  $\cap $  &  The intersection (of sets) \\
+%  $\sum $  &  Summation \\          
+%  $\prod $  &  Product \\                      
+  $\bzero$  & A vector of zeroes \\
+  $\bone_n$  & A length $n$ vector of ones \\
+  $\bI_n$  & The $n \times n$ identity matrix \\
+  $\exists$  &  (short hand) There exists\\
+  $\forall$  &  (short hand) For all \\
+%  $\notin$  &  (short hand) Does not belongs to/is not an element of \\  
+  $\lim_{n \to \infty}$  &  The limit as $n$ tends to infinity \\  
+  $\xrightarrow{\text{dist.}}$ & Convergence in distribution \\
+%  $\to$   & Denotes mapping between two sets \\
+%  $\mapsto$   & Denotes outcome of mappings \\ 
+  $O(n)$ & Computational complexity (time or storage) \\
+  $\Delta x$ & A quantity representing a change in $x$    
+\end{longtable}
+
+\noindent\textbf{Relations}
+
+\begin{longtable}{p{0.18\textwidth}p{0.79\textwidth}}
+  $a \approx b$ & $a$ is approximately or almost equal to $b$ \\
+  $a \propto b$  & $a$ is equivalent to $b$ up to a constant of proportionality \\
+  $a \equiv b$  & $a$ is identical to $b$ \\  
+  $A \Rightarrow B$  & The statement $B$ being true is predicated on $A$ being true \\ 
+  $A \Leftrightarrow B$ & The statement $A$ is true if and only if $B$ is true \\  
+  $a \in \cA$ & $a$ is an element of the set $\cA$ \\ 
+  $\cA \subseteq \cB$ & $\cA$ is a subset of $\cB$ which may include itself \\      
+  $\cA \subset \cB$ & $\cA$ is a subset of $\cB$ which does not include itself \\      
+  $a := b$, $a \gets b$ & $a$ is assigned the value $b$ \\       
+  $X \sim p(X)$ & The random variable $X$ is distributed according to the pdf $p(X)$ \\
+  $X \sim D$ & The random variable $X$ is distributed according to the pdf specified by the distribution $D$, e.g. $D\equiv\N(0,1)$ \\
+  $X_1\!\;\!,\! . . .,\!X_n\!\!\iid\!\! D$ & Each random variable $X_i$, $i=1,\dots,n$ is independently and identically distributed according to the pdf specified by the distribution $D$ \\  
+  $X | Y$ & The (random) variable $X$ given/conditional on $Y$ \\  
+\end{longtable}
+
+\noindent\textbf{Functions}
+
+\begin{longtable}{p{0.18\textwidth}p{0.79\textwidth}}
+  $\inf \cA$ & The infimum of a set $\cA$ \\  
+  $\sup \cA$ & The supremum of a set $\cA$ \\  
+  $\min \cA$ & The minimum value of a set $\cA$ \\   
+  $\max \cA$ & The maximum value of a set $\cA$ \\   
+  $\argmin_x f(x)$ & The value of $x$ which minimises the function $f(x)$ \\  
+  $\argmax_x f(x)$ & The value of $x$ which maximises the function $f(x)$ \\              
+  $\vert a \vert$ with $a\in\bbR$ & The absolute value of $a$; $\vert a \vert = a$ if $a$ is positive, and $-a$ if $a$ is negative, and $\vert 0 \vert = 0$ \\  
+  $\delta_{xx'}$ & The Kronecker delta; $\delta_{xx'} = 1$ if $x = x'$, and 0 otherwise \\
+  $[A]$ & The Iverson bracket; $[A] = 1$ if the logical proposition $A$ is true, and 0 otherwise \\
+  $\ind_\cA(x)$ & The indicator function; $\ind_\cA(x) = 1$ if $x \in \cA$, and 0 otherwise \\  
+  $e^x$, $\exp(x)$ & The natural exponential function \\
+  $\log(x)$ & The natural logarithmic function \\
+  $\frac{\d}{\d x} f(x)$, $\dot f(x)$ & The derivative of $f$ with respect to $x$ \\  
+\end{longtable}
+
+\newpage
+\noindent\textbf{Abstract vector space operations and notations}
+
+\begin{longtable}{p{0.18\textwidth}p{0.79\textwidth}}
+  $\cV^\bot$ & The orthogonal complement of the space $\cV$  \\  
+  $\cV^*$ & The algebraic dual space of $\cV$ \\    
+  $\cV'$ & The continuous dual space of $\cV$ \\  
+  $\cB(\cV)$ & The Borel $\sigma$-algebra of $\cV$ \\    
+  $\text{L}^p(\cX,\nu)$ & The set of $p$-integrable functions over the measure space $\cX$ with measure $\nu$ \\   
+  $\text{L}(\cV;\cW)$ & The set of bounded, linear operators from $\cV$ to $\cW$ \\      
+  $\dim(\cV)$ & The dimensions of the vector space $\cV$ \\         
+  $\ip{x,y}_\cV$ & The inner product between $x$ and $y$ in the vector space $\cV$\\   
+  $\norm{x}_\cV$ & The norm of $x$ in the vector space $\cV$ \\    
+  $D(x,y)$ & The distance between $x$ and $y$ \\  
+  $x \otimes y$ & The tensor product of $x$ and $y$ which are elements of a vector space \\
+  $\cF \otimes \cG$ & The tensor product space of two vector spaces \\
+  $\cF \oplus \cG$ & The direct sum (or tensor sum) of two vector spaces \\
+  $\d f(x)$, $\d^2 f(x)$  & The first and second Fréchet differentials of $f$ at $x$ \\
+  $\partial_v f(x)$, $\partial_v^2 f(x)$  & The first and second Gâteaux differentials of $f$ at $x$ in the direction $v$ \\  
+  $\nabla f(x)$, $\nabla^2 f(x)$  & The gradient and Hessian of $f$ at $x$ in the direction $v$ ($f$ is a mapping of a Hilbert space)  \\    
+\end{longtable}
+
+\noindent\textbf{Matrix and vector operations}
+
+\begin{longtable}{p{0.18\textwidth}p{0.79\textwidth}}
+  $\ba^\top$, $\bA^\top$ & The transpose of a vector $\ba$ or matrix $\bA$ \\
+  $\bA^{-1}$ & The inverse of a square matrix $\bA$ \\
+  $\Vert \ba \Vert^2$ & The squared 2-norm the vector $\ba$, equivalent to $\ba^\top\ba$ \\  
+  $\vert \bA \vert$ & The determinant of a matrix $\bA$ \\  
+  $\tr(\bA)$ & The trace of a square matrix $\bA$ \\  
+  $\diag(\bA)$ & The diagonal elements of a square matrix $\bA$ \\  
+  $\rank(\bA)$ & The rank of a matrix $\bA$ \\    
+  $\vecc(\bA)$ & The column-wise vectorisation of a matrix $\bA$  \\      
+  $\ba \otimes \bb$ & The outer product of two vectors $\ba$ and $\bb$ \\
+  $\bA \otimes \bB$ & The Kronecker product of matrix $\bA$ with matrix $\bB$ \\
+\end{longtable}
+
+\noindent\textbf{Statistical functions}
+
+\begin{longtable}{p{0.18\textwidth}p{0.79\textwidth}}
+  $p(X|\theta)$ & The probability density function of $X$ given parameters $\theta$ \\
+  $L(\theta|X)$ & The log-likelihood of $\theta$ given data $X$, sometimes simply $L(\theta)$ or $L(\theta|M_k)$, the (marginal) log-likelihood under model assumptions $M_k$ \\
+  $\BF(M,M')$ & Bayes factor for comparing two models $M$ and $M'$ \\  
+  $\cI(\theta)$  & The Fisher information for $\theta$ \\
+  $\E[X]$  & The expectation\footnote{\label{foot:exp}When there is ambiguity as to which random element the expectation or variance is taken under or what its distribution is, this is explicated by means of subscripting, e.g. $\E_{X\sim\N(0,1)}[X]$ to denote the expectation of a standard normal random variable.} of the random element $X$ \\  
+  $\Var[X]$  & The variance\footref{foot:exp}~of the random element $X$ \\
+  $\Cov[X,Y]$ & The covariance\footref{foot:exp}~between two random elements $X$ and $Y$ \\
+  $H(p)$ & The entropy of the distribution $p(X)$ \\  
+  $\KL[q(x)\Vert p(x)]$ & The Kullbeck-Leibler divergence from $p(x)$ to $q(x)$, denoted also by $\KL(q\Vert p)$ \\    
+\end{longtable}
+
+
+\noindent\textbf{Statistical distributions}
+
+\begin{longtable}{p{0.18\textwidth}p{0.79\textwidth}}
+  $\N(\mu,\sigma^2)$ & Univariate normal distribution with mean $\mu$ and variance $\sigma^2$ \\
+  $\N_d(\bmu,\bSigma)$  & $d$-dimensional multivariate normal distribution with mean vector $\bmu$ and covariance matrix $\bSigma$ \\
+  $\phi(z)$  & The standard normal pdf \\  
+  $\Phi(z)$  & The standard normal cdf \\  
+  $\phi(x|\mu,\sigma^2)$  & The pdf of $\N(\mu,\sigma^2)$ \\  
+  $\phi(\bx|\bmu,\bSigma)$  & The  pdf of $\N_d(\bmu,\bSigma)$\\  
+  $\MN_{n,m}(\bmu,\bSigma,\bPsi)$  & Matrix normal distribution with mean $\bmu$ and row variances $\bSigma\in\bbR^{n\times n}$ and column variances $\bPsi\in\bbR^{m\times m}$ \\  
+  $\tN(\mu,\sigma^2,a,b)$ & Truncated univariate normal distribution with mean $\mu$ and variance $\sigma^2$ restricted to the interval $(a,b)$ \\
+  $\N_+(\mu,\sigma^2)$ & The half-normal distribution with mean $\mu$ and variance $\sigma^2$   \\  
+  $\tN_d(\bmu,\bSigma,\cA)$  & Truncated $d$-dimensional multivariate normal distribution with mean vector $\bmu$ and covariance matrix $\bSigma$ restricted to the set $\cA$ \\  
+  $\Gamma(s,r)$ & Gamma distribution with shape $s$ and rate $r$ parameters  \\  
+  $\Gamma^{-1}(s,\sigma)$ & Inverse gamma distribution with shape $s$ and scale $\sigma$ parameters  \\    
+  $\chi_d^2$  & Chi-squared distribution with $d$ degrees of freedom \\    
+  $\Bern(p)$ & Bernoulli distribution with probability of success $p$ \\
+  $\Cat(p_1,\dots,p_m)$ & Categorical distribution with $m$ categories, each category has probability of success $p_j$ \\  
+\end{longtable}
