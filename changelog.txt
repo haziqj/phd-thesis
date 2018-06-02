@@ -6,6 +6,13 @@ General
 - QED symbols changed to `\blacksquare`
 - Added Nomenclature
 
+Chapter 1
+
+- Cleaned up grammar and language, added some citations
+- Now explicitly mention RKKS instead of RKHS only
+- Updated graphic on thesis organisation
+- Rearranged points 1, 2 and 3 of the advantages of I-prior methodology
+
 Chapter 2
 
 - Cleaned up tensor product definition and added remark.
@@ -17,3 +24,5 @@ Chapter 2
 Chapter 3
 
 - Cleaned up proof I-prior theorem
+
+  \node [block, below=1.6cm of ch5]  (s4) {{\scriptsize \textbf{Supplementary 4}}\small\\Hamiltonian Monte Carlo};         

@@ -39,14 +39,18 @@ In addition to introducing the statistical model of interest and  motivating the
 For subject $i \in \{1,\dots,n\}$, assume a real-valued response $y_i$ has been observed, as well as a row vector of $p$ covariates $x_i = (x_{i1},\dots,x_{ip})$, where each $x_{ik}$ belongs to some set $\cX_k$, for $k = 1,\dots,p$.
 Let $\cS = \{(y_1, x_1), \dots, (y_n,x_n)\}$ denote this observed sample of size $n$.
 Consider then the following regression\index{regression} model, which stipulates the dependence of the $y_i$ on the $x_i$:
+%
 \begin{align}\label{eq:model1}
   y_i = \alpha + f(x_i) + \epsilon_i,
 \end{align}
+%
 where $f$ is some regression function to be estimated, and $\alpha$ is an intercept.
 Additionally, it is assumed that the errors $\epsilon_i$ are normally distributed according to
+%
 \begin{align}\label{eq:model1ass}
   (\epsilon_1, \dots, \epsilon_n)^\top \sim \N_n(0, \bPsi^{-1}).
 \end{align}
+%
 where $\bPsi = (\psi_{ij})_{i,j=1}^n$ is the precision matrix.
 We shall often refer to model \cref{eq:model1} subject to \cref{eq:model1ass} as the \emph{normal regression model}\index{normal!regression model}.
 The choice of multivariate normal errors is not only a convenient one (as far as distributional assumptions go), but one that is motivated by the principle of maximum entropy \citep{jaynes1957a,jaynes1957b,jaynes2003probability}.
@@ -65,40 +69,43 @@ where $x_i^{(j)}$ denotes the $p$-dimensional $i$'th observation for group $j\in
 Again, assuming a linear parameterisation, this is recognisable as the standard multilevel\index{multilevel} or random-effects linear model \citep{skrondal2012multilevel}, with $f_2$ representing the varying intercept via $f_2(j) = \alpha_{j}$, $f_{12}$ representing the varying slopes via $f_{12}(x_{ij},j) = x_{i}^\top \beta_{j}$, with $\beta_j \in \bbR^p$, and $f_1$ representing the fixed-effects linear component $x_i^\top\beta$ as above.
 
 Moving on from linear models, smoothing models may be of interest as well.
-A myriad of models exist for this type of problem, with most classed as nonparametric regression \citep{wassermann2006all}, and the more popular ones include LOcal regrESSion (LOESS), kernel regression, and smoothing splines.
+A myriad of models exist for this type of problem, with most classed as nonparametric regression \citep{wassermann2006all}, and the more popular ones include LOcal regrESSion (LOESS), kernel regression, and smoothing splines \citep{wahba1990spline}.
 Semiparametric regression models, on the other hand, combines the linear component of a regression model with a non-parameteric component.
 
 Further, the regression problem is made more intriguing when the set of covariates $\cX$ is functional---in which case the linear regression model aims to estimate coefficient functions $\beta:\cT \to \bbR$ from the model
+%
 \[
   y_i = \int_\cT x_i(t)\beta(t) \dint t + \epsilon_i.
 \]
+%
 Nonparametric and semiparametric regression with functional covariates \citep{ramsay2005functional} have also been widely explored.
 Models of this nature still fall under the remit of the normal regression model by selecting a regression functional with domain over the functional covariates.
 
 \section{Vector space of functions}
 
-It would be beneficial to prescribe some sort of structure for which 1) we may choose a regression function appropriately, and 2) this function will generalise well to unseen data (prediction). 
-This needed structure is given to us by assuming that our regression function for the normal model lies in some \gls*{rkhs} $\cF$ equipped with the reproducing kernel $h:\cX \times \cX \to \bbR$.
-Often, the reproducing kernel (or simply kernel, for short) is indexed by one or more parameters which we shall denote as $\eta$.
-Correspondingly, the kernel is rightfully denoted as $h_\eta$ to indicate the dependence of the parameters on the kernels, though where this is seemingly obvious, might be omitted.
-Throughout this thesis we shall make the assumption that our regression function lies in a reproducing kernel Hilbert space $\cF$.
+It would be beneficial to prescribe some sort of structure for which estimation of the regression function can be carried out easily and reliably. 
+This needed structure is given to us by assuming that our regression function $f$ for the normal model lies in some reproducing kernel Hilbert or Kreĭn space (RKHS/RKKS) $\cF$ equipped with the reproducing kernel $h:\cX \times \cX \to \bbR$.
+Often, the reproducing kernel (or simply kernel, for short) is shaped by one or more parameters which we shall denote by $\eta$.
+Correspondingly, the kernel is rightfully denoted $h_\eta$ to indicate the dependence of the parameters on the kernels, though where this is seemingly obvious, might be omitted.
+For I-prior modelling, which is the focus of this thesis, we make the assumption that our regression function lies in a RKKS $\cF$.
 
-RKHSs provides a geometrical advantage to learning algorithms: projections of the inputs to a richer and more informative (and higher dimensional) feature space, where learning is more likely to be successful, need not be figured out explicitly.
-Instead, the feature maps are implicitly calculated by the use of kernel functions. 
+RKKSs, and more popularly RKHSs, provide a geometrical advantage to learning algorithms: projections of the inputs to a richer and more informative (and usually higher dimensional) \emph{feature space}, where learning is more likely to be successful, need not be figured out explicitly.
+Instead, \emph{feature maps} are implicitly calculated by the use of kernel functions. 
 This is known as the ``kernel trick'' in the machine learning literature \citep{hofmann2008kernel}, and it has facilitated the success of kernel methods for learning, particularly in algorithms with inner products involving the transformed inputs. 
 
 Due to the one-to-one mapping between the set of kernel functions and the set of RKHSs, choosing the space in which the regression function lies is equivalent to choosing a particular kernel function, and this is chosen according to the desired effects of the covariates on the regression function.
-An in-depth discussion on kernels and RKHSs will be provided later in \cref{chapter2}, but for now, it suffices to say that kernels which invoke either a linear, smooth or categorical dependence, or any combinations thereof, are of interest.
-This would allow us to fit the various models described earlier within this RKHS framework.
+RKKSs on the other hand also possess unique kernels, but every (generalised) kernel\footnote{By generalised kernels, we mean kernels that are not necessarily positive definite in nature.} is associated to \emph{at least} one RKKS.
+An in-depth discussion (including the motivation for their use) on kernels, RKHSs and RKKSs will be provided later in \cref{chapter2}, but for now, it suffices to say that kernels which invoke either a linear, smooth or categorical dependence, or any combinations thereof, are of interest.
+This would allow us to fit the various models described earlier within this RKHS/RKKS framework.
 
 \section{Estimating the regression function}
 
-Having decided on a functional structure for $f$, we now turn to the task of choosing the best $f \in \cF$ that fits the data sample $\cS$.
+Having decided on a vector space $\cF$, we now turn to the task of choosing the best $f \in \cF$ that fits the data sample $\cS$.
 `Best' here could mean a great deal of things, such as choosing $f$ which minimises an empirical risk measure\footnotemark~defined by
 %
-\[
-  \text{ER}[f] = \frac{1}{n} \sum_{i=1}^n \Lambda\big( y_i, f(x_i) \big)
-\]
+\begin{equation*}
+  \hat{\text{R}}(f) = \frac{1}{n} \sum_{i=1}^n \Lambda\big( y_i, f(x_i) \big) 
+\end{equation*}
 %
 for some loss function $\Lambda:\bbR^2 \to [0,\infty)$.
 A common choice for the loss function is the \emph{squared loss function}
@@ -107,55 +114,53 @@ A common choice for the loss function is the \emph{squared loss function}
   \Lambda\big(y_i,f(x_i)\big) = \sum_{j=1}^n \psi_{ij} \big(y_i - f(x_i)\big)\big(y_j - f(x_j)\big),
 \]
 %
-and when used, defines the \emph{least squares regression}.
-For the normal model, the minimiser of the empirical risk measure under the squared loss function is also the maximum likelihood (ML) estimate of $f$, since $\text{ER}[f]$ would be twice the negative log-likelihood of $f$, up to a constant.
+and when used, defines the \emph{(generalised) least squares regression}.
+For the normal model, the minimiser of the empirical risk measure under the squared loss function is also the maximum likelihood (ML) estimate of $f$, since $ \hat{\text{R}}(f)$ would be twice the negative log-likelihood of $f$, up to a constant.
 
 \footnotetext{
-More appropriately, the risk functional $\text{R}[f] = \int \Lambda(y,f(x)) \dint \Prob(y,x)$, i.e., the expectation of the loss function under some probability measure of the observed sample, should be used.
+More appropriately, the risk functional $\text{R}(f) = \int \Lambda(y,f(x)) \dint \Prob(y,x)$, i.e. the expectation of the loss function under some probability measure of the observed sample, should be used.
 Often the true probability measure is not known, so the empirical risk measure is used instead.
 }
 
-The ML estimator of $f$ interpolates the data if the dimension of $\cF$ is at least $n$, so is of little use.
+The ML estimator of $f$ typically interpolates the data if the dimension of $\cF$ is at least $n$, so is of little use.
 The most common method to overcome this issue is \emph{Tikhonov regularisation}, whereby a regularisation term is added to the risk function, with the aim of imposing a penalty on the complexity of $f$. 
-In particular, smoothness assumptions on $f$ 
-%encoded by a suitable \gls{rkhs}% 
-can be represented by using its \gls{rkhs} norm $\norm{\cdot}_\cF:\cF \to \bbR$ as the regularisation term\footnotemark. 
-Therefore, the solution to the regularised least squares problem---call this $f_{\text{reg}}$---is the minimiser of the function from $\cF$ to $\bbR$ defined by the mapping
-\begin{align}\label{eq:penfunctional}
-  f \mapsto \frac{1}{n}\sum_{i=1}^n \sum_{j=1}^n \psi_{ij} \big(y_i - f(x_i)\big)\big(y_j - f(x_j)\big) + \lambda^{-1} \norm{f-f_0}^2_\cF,
-\end{align}
+In particular, smoothness assumptions on $f$ can be represented by using its \gls{rkhs} norm $\norm{\cdot}_\cF:\cF \to \bbR$ as the regularisation term\footnotemark. 
+Therefore, the solution to the regularised least squares problem---call this $f_{\text{reg}}$---is the minimiser of the mapping from $\cF$ to $\bbR$ defined by
+%
+\begin{equation}\label{eq:penfunctional}
+  f \mapsto 
+  \myoverbrace{\frac{1}{n}\sum_{i=1}^n \sum_{j=1}^n \psi_{ij} \big( y_i - f(x_i) \big) \big( y_j - f(x_j) \big)}{\text{data fit term}}
+  + \lambda^{-1} 
+  \myoverbrace{\vphantom{\sum_{i=1}^n} \norm{f-f_0}^2_\cF}{\text{penalty term}}
+  ,
+\end{equation}
+%
 which also happens to be the \emph{penalised maximum likelihood} solution. 
-Here $f_0 \in \cF$ can be thought of a prior `best guess' for the function $f$.
-The $\lambda^{-1} > 0$ parameter---known as the regularisation parameter---controls the trade-off between the data-fit term and the penalty term, and is not usually known a priori and must be estimated from the data.
+Here, $f_0 \in \cF$ can be thought of a prior `best guess' for the function $f$.
+The $\lambda^{-1} > 0$ parameter---known as the regularisation parameter---controls the trade-off between the data-fit term and the penalty term in \cref{eq:penfunctional}, and is not usually known a priori and must be estimated.
 
 An attractive consequence of the representer theorem \citep{kimeldorf1970correspondence} for Tikhonov regularisation implies that $f_\text{reg}$ admits the form
+%
 \begin{align}\label{eq:repform}
   f_\text{reg} = f_0 + \sum_{i=1}^n h(\cdot,x_i)w_i, \hspace{0.5cm} w_i \in \bbR, \ \forall i=1,\dots,n, 
 \end{align}
-even if $\cF$ is infinite-dimensional.
-This simplifies the original minimisation problem from a search for $f$ over a possibly infinite-dimensional domain to a search for the optimal coefficients $w_i$ in $n$ dimensions.
+%
+even if $\cF$ is infinite dimensional.
+This simplifies the original minimisation problem from a search for $f$ over a possibly infinite-dimensional domain, to a search for the optimal coefficients $w_i$ in $n$ dimensions.
 
 \footnotetext{
 Concrete notions of complexity penalties can be introduced if $\cF$ is a normed space, though RKHSs are typically used as it gives great conveniences (see Chapter 2).  
 }
 
-Tikhonov regularisation also has a well-known Bayesian interpretation, whereby the regularisation term encodes prior information about the function $f$. 
-For the normal regression model with $f \in \cF$, an RKHS, it can be shown that $f_{\text{reg}}$ is the posterior mean of $f$ given a \emph{Gaussian process prior} with mean $f_0$ and covariance kernel $\Cov\big(f(x_i),f(x_j)\big) = \lambda h(x_i, x_j)$. 
-The exact solution for the coefficients $\bw = (w_1,\dots,w_n)^\top$ are in fact $\bw = \big(\bH + \bPsi^{-1}\big)^{-1}(\by - \bff_0)$, where $\bH = \big(h(x_i,x_j) \big)_{i,j=1}^n$ (often referred to as the Gram matrix or kernel matrix) and $(\by - \bff_0) = (y_1 - f_0(x_1), \dots, y_n - f_0(x_n))^\top$.
+Tikhonov regularisation also has a well known Bayesian interpretation, whereby the regularisation term encodes prior information about the function $f$. 
+For the normal regression model with $f \in \cF$, an RKHS, it can be shown that $f_{\text{reg}}$ is the posterior mean of $f$ given a \emph{Gaussian process prior} \citep{rasmussen2006gaussian} with mean $f_0$ and covariance kernel $\Cov\big(f(x_i),f(x_j)\big) = \lambda h(x_i, x_j)$. 
+The exact solution for the coefficients $\bw := (w_1,\dots,w_n)^\top$ are in fact $\bw = \big(\bH + \bPsi^{-1}\big)^{-1}(\by - \bff_0)$, where $\bH = \big(h(x_i,x_j) \big)_{i,j=1}^n$ (often referred to as the Gram matrix or kernel matrix) and $(\by - \bff_0) = (y_1 - f_0(x_1), \dots, y_n - f_0(x_n))^\top$.
 
 \section{Regression using I-priors}
 \label{sec:introregiprior}
 
-Building upon the Bayesian interpretation of regularisation, \citet{bergsma2017} proposes a prior distribution for the regression function such that its realisations admit the form for the solution given in the representer theorem.
-%Denoting the I-prior by $\pi$, we say that the function $f$ follows an I-prior $f \sim \pi$.
-%The definition of an RKHS entails that any function in $\cF$ can be approximated arbitrarily well by functions of the form
-%%
-%\begin{align}\label{eq:ipriorre}
-%  f(x) = f_0(x) + \sum_{i=1}^n h_\eta(x,x_i)w_i
-%\end{align}
-%%
-%where $w_1,\dots,w_n$ are real-valued. %\footnotemark.
-The \emph{I-prior} for the regression function $f$ in \cref{eq:model1} subject to \cref{eq:model1ass} is defined as the distribution of a random function of the form \cref{eq:repform} when the $w_i$ are distributed according to 
+Building upon the Bayesian interpretation of regularisation, \citet{bergsma2017} proposes an original prior distribution for the regression function such that its realisations admit the form for the solution given in the representer theorem.
+The \emph{I-prior} for the regression function $f$ in \cref{eq:model1} subject to \cref{eq:model1ass} and $f\in\cF$, a RKKS with kernel $h_\eta$, is defined as the distribution of a random function of the form \cref{eq:repform} when the $w_i$ are distributed according to 
 %
 \[
   (w_1,\dots,w_n)^\top \sim \N_n(\bzero,\bPsi),
@@ -172,30 +177,23 @@ As a result, we may view the I-prior for $f$ as having the Gaussian process dist
 with $\bH_{\eta}$ an $n \times n$ matrix with $(i,j)$ entries equal to $h_\eta(x_i,x_j)$, and $\bff_0$ a vector containing the $f_0(x_i)$'s.
 The covariance matrix of this multivariate normal prior is related to the Fisher information for $f$, and hence the name I-prior---the `I' stands for information.
 Furthermore, the I-prior happens to be an entropy-maximising prior, subject to certain constraints.
-More on the I-prior in \cref{chapter3}.
+\cref{chapter3} contains details of the derivation of I-priors for the normal regression model.
 
-%\footnotetext{
-%That is to say, $\cF$ is spanned by the functions $h(\cdot,x)$. 
-%More precisely, $\cF$ is the completion of the space $\cG = \text{span}\{h(\cdot,x) | x \in \cX \}$ endowed with the squared norm $\norm{f}^2_\cG = \sum_{i=1}^n\sum_{i=1}^n w_i w_j h(x_i,x_j)$ for $f$ of the form \cref{eq:ipriorre}. 
-%See, for example, \cite{berlinet2011reproducing} for details.
-%}
-
-As with Gaussian process regression (GPR), the function $f$ is estimated by its posterior mean.
+As with \gls*{gpr}, the function $f$ is estimated by its posterior mean.
 For the normal model, the posterior distribution for the regression function conditional on the responses $\by = (y_1,\dots,y_n)$,
 %
-\begin{align}
-  p(\bff|\by) = \frac{p(\by|\bff)p(\bff)}{\int p(\by|\bff)p(\bff) \d \bff},
-\end{align}
+\begin{equation}
+  p(\bff|\by) = \frac{p(\by|\bff)p(\bff)}{\int p(\by|\bff)p(\bff) \d \bff} \, ,
+\end{equation}
 %
 can easily be found, and it is in fact normally distributed.
 The posterior mean for $f$ evaluated at a point $x \in \cX$ is given by
 %
-\begin{align}\label{eq:postmean}
-  \E\big[f(x)\big|\by\big] = f_0(x) + \bh_\eta^\top(x) \cdot
-  {\color{gray}
-  \overbrace{\color{black} \bPsi\bH_\eta \big(\bH_\eta\bPsi\bH_\eta + \bPsi^{-1}\big)^{-1} (\by -\bff_0 )}^{\tilde \bw}
-  }
-\end{align}
+\begin{equation}\label{eq:postmean}
+  \E\big[f(x)\big|\by\big] 
+  = f_0(x) + \bh_\eta^\top(x) \,
+  \myoverbrace{\bPsi\bH_\eta \big(\bH_\eta\bPsi\bH_\eta + \bPsi^{-1}\big)^{-1} (\by -\bff_0 )}{\tilde \bw}
+\end{equation}
 %
 where we have defined $\bh_\eta(x)$ to be the vector of length $n$ with entries $h_\eta(x,x_i)$ for $i=1,\dots,n$.
 Incidentally, the elements of the $n$-vector $\tilde \bw$ defined in \cref{eq:postmean} are the posterior means of the random variables $w_i$ in the formulation \cref{eq:repform}.
@@ -212,20 +210,21 @@ Prediction for a new data point $x_\new \in \cX$ then concerns obtaining the \em
 \]
 %
 where we had defined $f_\new := f(x_\new)$.
-This is again a normal distribution in the case of the normal model, with the same mean\footnotemark~as in \cref{eq:postmean}, but a slightly different variance.
-These are of course well-known results in Gaussian process literature---see, for example, \citet{rasmussen2006gaussian} for details.
+This is again a normal distribution in the case of the normal model, with similar mean and variance as in \cref{eq:postmean}. 
+For a derivation, see \cref{sec:ipriorestimation} in \cref{chapter4} for details.
+%These are of course well known results in Gaussian process literature---see, for example, the aforementioned text by \citet{rasmussen2006gaussian} for details.
 
-\footnotetext{
-The fact that it is the same is inconsequential.
-It happens to be that the mean of the predictive distribution $\E[y_\new|\by]$ for a normal model is the same as \emph{prediction of the mean at the posterior}, $\E[f(x_\new)|\by]$.
-\citet{rasmussen2006gaussian} points out that this is due to symmetries in the model and the posterior.
-}
+%\footnotetext{
+%The fact that it is similar is inconsequential.
+%It happens to be that the mean of the predictive distribution $\E[y_\new|\by]$ for a normal model is the same as \emph{prediction of the mean at the posterior}, $\E[f(x_\new)|\by]$.
+%\citet{rasmussen2006gaussian} points out that this is due to symmetries in the model and the posterior.
+%}
 
 There is also the matter of optimising model parameters $\theta$, which in our case, collectively refers to the kernel parameters $\eta$ and the precision matrix of the errors $\bPsi$.
-$\theta$ may be estimated in several ways, either by likelihood-based methods or fully Bayesian methods.
-The former includes methods such as direct maximisation of the (marginal) likelihood, $L(\theta) = \int p(\by|\theta,\bff)p(\bff)\dint \bff$, and the expectation-maximisation (EM) algorithm.
+Model parameters $\theta$ may be estimated in several ways, either by likelihood-based methods or fully Bayesian methods.
+The former includes methods such as direct maximisation of the (marginal) likelihood, $L(\theta) = \int p(\by|\theta,\bff)p(\bff)\dint \bff$, and the \gls*{em} algorithm.
 Both are seen as a form of \emph{empirical Bayes} estimation.
-In a fully Bayesian setting on the other hand, Markov chain Monte Carlo methods may be employed, assuming prior distributions on the model parameters.
+In a fully Bayesian setting on the other hand, \gls*{mcmc} may be employed, assuming prior distributions on the model parameters.
 
 \section{Advantages and limitations of I-priors}
 
@@ -234,29 +233,32 @@ The I-prior methodology has the following advantages:
 \begin{enumerate}
   \item \textbf{A unifying methodology for various regression models.}
   
-  The I-prior methodology has the ability to fit a multitude of regression models simply by choosing the RKHS to which the regression function belongs.
-  As such, it can be seen as a unifying methodology for various regression models. 
-  
+  The I-prior methodology has the ability to fit a multitude of regression models simply by choosing the RKKS to which the regression function belongs.
+  As such, it can be seen as a unifying methodology for various parametric and non-parametric regression models including additive models, multilevel models and models with one or more functional covariates. 
+
   \item \textbf{Simple estimation procedure.}
   
   Estimation of model parameters using the aforementioned methods are very simple to implement, barring any computational and numerical hurdles, which will be discussed.
-  This encourages parsimony, as the I-prior allows complex models to be specified by just a handful of model parameters.
+
+  \item \textbf{Parsimonious specification.}
+  
+  I-prior models are most typically specified using only  RKHS scale parameters and the error precision.
+  This encourages parsimony in model building; for example, smoothing models can be fitted using only two parameters, while linear multilevel models can be fitted with notably fewer parameters than the standard versions.
   
   \item \textbf{Prevents over-fitting and under-smoothing.}
   
-  As alluded to earlier, the process of inferring $f$ from data is an ``ill-posed'' problem.
-  In fact, any function $f$ that passes through the data points is a solution.
-  Regularising the problem with the use of I-priors prevents over-fitting, with the added advantage that the posterior solution under an I-prior does not tend to under-smooth as much as Tikhonov regularisation does (see \cref{chapter2} for details).
-  Under-smoothing can adversely impact the estimate of $f$, and in real terms might even show features and artefacts that are not really there.
+  As alluded to earlier, any function $f$ that passes through the data points is a least squares solution.
+  Regularising the problem with the use of I-priors prevents overfitting, with the added advantage that the posterior solution under an I-prior does not tend to under smooth as much as Tikhonov regularisation does \citep{bergsma2017}.
+  Under smoothing can adversely impact the estimate of $f$, and in real terms might even show features and artefacts that are not really there.
   
   \item \textbf{Better prediction.}
   
-  Empirical studies and real-data examples show that small and large sample predictive performance of I-priors are comparative to, and often better than, other leading state-of-the-art models, including the closely related Gaussian process regression.
+  Empirical studies and real-data examples show that predictive performance of I-priors are comparative to, and often better than, other leading state-of-the-art models, including the closely related \gls*{gpr}.
 
   \item \textbf{Straightforward inference.}
   
-  Marginal likelihoods after integrating out the I-prior are easily obtained, making model selection via comparison of likelihood a viable option.
-  This method of comparing marginal likelihood with maximum likelihood estimate plug-ins of the model parameters, is viewed as comparing empirical Bayes factors in the Bayesian literature.
+  Marginal likelihoods after integrating out the I-prior are easily obtained, making model selection via likelihood comparison a viable option.
+  This method of comparing marginal likelihood with maximum likelihood estimate plug-ins of the model parameters, is viewed as empirical Bayes factors comparison in the Bayesian literature.
   
 %  \item \textbf{Proper prior and posterior}
 %  
@@ -268,10 +270,10 @@ The main drawback of using I-prior models is computational in nature, namely, th
 Analysis of data sets that are not more than a few thousand in size can be considered feasible; anything more than this is debilitatingly slow to compute.
 In addition, care must be taken to avoid numerical instabilities when calculating the marginal log-likelihood during parameter estimation, which can affect gradient based optimisation or the EM algorithm.
 
-Another issue when performing likelihood based methods is that the optimisation objective may be non-convex such that multiple local optima may exist. 
-In such cases, multiple restarts from different initialisation may ultimately lead to a global maximum, although some difficulties may be faced when numerical instabilities occur.
+Another issue when performing likelihood-based methods is that the optimisation objective may be non-convex such that multiple local optima may exist. 
+In such cases, multiple restarts from different initialisations may ultimately lead to a global maximum, although difficulties may be faced if numerical instabilities occur.
 
-Lastly, a remark on model assumptions, which are twofold: 1) the assumption of $f \in \cF$ an RKHS; and 2) normality of errors.
+Lastly, a remark on model assumptions, which are twofold: 1) the assumption of $f \in \cF$ an RKKS; and 2) normality of errors.
 Of the two, the latter is more likely to be violated, especially when dealing with discrete responses, e.g. in classification.
 Deviating from the normality assumption would require approximation techniques to be implemented in order to obtain the posterior distributions of interest.
 
@@ -280,39 +282,36 @@ Deviating from the normality assumption would require approximation techniques t
 This thesis is structured as follows:
 
 \begin{itemize}
-  \item Following this introductory chapter, \textbf{Chapter 2} provides a brief overview of functional analysis, and in particular, descriptions of interesting function spaces for regression.
-  In \textbf{Chapter 3}, the concept of the Fisher information is extended to potentially infinite-dimensional parameters.
+  \item Following this introductory chapter, \textbf{\cref{chapter2}} provides a brief overview of functional analysis, and in particular, descriptions of interesting function spaces for regression.
+  In \textbf{\cref{chapter3}}, the concept of the Fisher information is extended to potentially infinite-dimensional parameters.
   This allows us to define the Fisher information for the regression function which parameterises the normal regression model, and we explain how this relates to the I-prior.
-%  This allows us to better explain and derive the I-prior for the normal regression model. 
-%  Note that the reader does not require any in-depth knowledge of RKHSs nor functional analysis to perform I-prior modelling.
   
-  \item The aforementioned computational methods relating to the estimation of I-prior models are explored in \textbf{Chapter 4}, namely the direct optimisation of the log-likelihood, the EM algorithm, and MCMC methods.
-  The goal is to describe a stable and efficient algorithm for estimating I-prior models.
-  The \proglang{R} package \pkg{iprior} is the culmination of the effort put in towards completing this chapter, which has been made publicly available on the Comprehensive \proglang{R} Archive Network (CRAN).
-%  \hltodo{This chapter has also been submitted for publication to Computational Statistics and Data Analysis.}
+  \item The aforementioned computational methods relating to the estimation of I-prior models are explored in \textbf{\cref{chapter4}}, namely the direct optimisation of the log-likelihood, the \gls*{em} algorithm, and \gls*{mcmc} methods.
+  The goal is to describe stable and efficient algorithms for estimating I-prior models.
+  The \proglang{R} package \pkg{iprior} \citep{jamil2017iprior} is the culmination of the effort put in towards completing this chapter, which has been made publicly available on the \gls*{cran}.
 
   \item Many models of interest involve response variables of a categorical nature.
-  A naïve implementation of the I-prior model is certainly possible, but there is  a more proper way to account for non-normality of errors.
-  \textbf{Chapter 5} extends the I-prior methodology to discrete outcomes.
+  A naïve implementation of the I-prior model is certainly possible, but proper ways do exist to handle non-normality of errors.
+  \textbf{\cref{chapter5}} extends the I-prior methodology to discrete outcomes.
   There, the non-Gaussian likelihood that arises in the posteriors are approximated by way of variational inference.
   The advantages of the I-prior in normal regression models carry over into categorical response models.
 
-  \item \textbf{Chapter 6} attempts to contribute to the area of variable selection.
-  The use of I-priors in the normal model, like Gaussian process priors, allow model comparison to be done easily.
+  \item \textbf{\cref{chapter6}} is a contribution to the area of variable selection.
   Specifically for linear models with $p$ variables to select from, model comparison requires elucidation of $2^p$ marginal likelihoods, and this becomes infeasible when $p$ is large.
-  We use a stochastic search method to choose models that have high posterior probabilities of occurring, equivalent to choosing models that have large Bayes factors.
+  To circumvent this issues, we use a stochastic search method to choose models that have high posterior probabilities of occurring, equivalent to choosing models that have large Bayes factors.
+  We experiment with the use of I-priors to improve false selections, especially in the presence of multicollinearity.
 \end{itemize}
 
-%\cref{chapter4,chapter5,chapter6} 
-Chapters 4--6 contain computer implementations of the statistical methodologies described therein, and the code for replication are made available at \url{http://myphdcode.haziqj.ml}.
-Familiarity with basic estimation concepts (maximum likelihood, Bayes, empirical Bayes) and their corresponding estimation methods (gradient-based methods, Newton/ quasi-Newton methods, MCMC, EM algorithm) are assumed throughout.
-
-Brief supplementary chapters are attached for readers who wish to familiarise themselves with topics such as variational inference and Hamiltonian Monte Carlo, which are used in Chapters 4 and 5.
-These brief readings are designed to be supplementary in nature, and are not strictly essential for the chapters.
-Additionally, Appendices A--I contain references to several statistical distributions and their properties, derivations, and proofs of the algorithms described in this thesis.
+\cref{chapter4,chapter5,chapter6} contain \proglang{R} computer implementations of the statistical methodologies described therein, and the code for replication are made available at \url{http://myphdcode.haziqj.ml}.
 
 \tikzstyle{block} = [draw, rectangle, text width=2.6cm, text centered, minimum height=1.5cm, minimum width=2.8cm, node distance=3.6cm,fill=white]
-\tikzstyle{container} = [draw, rectangle, inner sep=0.4cm, fill=black!10]
+\tikzstyle{method} = [draw=lsedpr, rectangle, text width=2.6cm, text centered, minimum height=1.5cm, minimum width=2.8cm, node distance=3.6cm,fill=lsedpr!20, thick]
+\tikzstyle{theory} = [draw=lseblu, rectangle, text width=2.6cm, text centered, minimum height=1.5cm, minimum width=2.8cm, node distance=3.6cm,fill=lseblu!20, thick]
+\tikzstyle{blockfake} = [draw=none, rectangle, minimum height=1.9cm, minimum width=0.4cm, node distance=3.6cm]
+\tikzstyle{container} = [draw, rectangle, inner sep=0.4cm, fill=lselgr!80]
+\tikzstyle{containertwo} = [draw, rectangle, inner sep=0.4cm,fill=lsegry!80]
+\tikzstyle{containerthree} = [draw=none, rectangle, inner sep=0.2cm,fill=lsedpr!50]
+
 \def\bottom#1#2{\hbox{\vbox to #1{\vfill\hbox{#2}}}}
 \tikzset{
   mybackground/.style={execute at end picture={
@@ -321,47 +320,75 @@ Additionally, Appendices A--I contain references to several statistical distribu
         \end{scope}
     }},
 }
-\begin{figure}[]
+
+\begin{figure}[hbtp]
   \centering
 
 \begin{tikzpicture}
 
   \node [block, name=ch1] {\small \textbf{Chapter 1}\\Introduction};
-  \node [block, below=1.2cm of ch1] (ch2) {\small \textbf{Chapter 2}\\Vector space of functions};
-  \node [block, right of=ch2] (ch3) {\small \textbf{Chapter 3}\\The I-prior};
-  \node[draw=none,above=0.38cm of ch3] (title) {\small\textbf{Main chapters}}; 
-  \node [block, below=1cm of ch3] (ch4) {\small \textbf{Chapter 4}\\Regression with I-priors};
-  \node [block, right of=ch4] (ch5) {\small \textbf{Chapter 5}\\Categorical responses};     
-  \node [block, text width = 2.5cm, left of=ch4]  (ch6) {\small \textbf{Chapter 6}\\Bayesian vari-\\able selection};   
-  \node [block, right=1.3cm of ch5]  (ch7) {\small \textbf{Chapter 7}\\Summary};  
-\node [block, above=1.3cm of ch7]  (apx) {\scriptsize \textbf{Appendices A--I}\\ References, derivations and proofs};              
-  \node [block, below=1.3cm of ch6]  (s1) {\small \textbf{Supp. 1}\\Estimation concepts};
-  \node [block, below=1.3cm of ch4]  (s2) {\small \textbf{Supp. 2}\\EM algorithm};   
-  \node [block, below=1.3cm of ch5]  (s4) {\small \textbf{Supp. 4}\\Hamiltonian Monte Carlo};         
-  \node [block, right of=s4]  (s3) {\small \textbf{Supp. 3}\\Variational inference};
+  
+  \node [theory, below=2cm of ch1,xshift=-1.85cm] (ch2a) {{\scriptsize \textbf{Sections 2.1--2.3}}\\ \small Functional analysis};
+  \node [theory, below=2cm of ch1,xshift=1.85cm] (ch2b) {{\scriptsize \textbf{Sections 2.4--2.6}}\\ \small Vector space of functions}; 
+  \node[blockfake,below=1.6cm of ch1] (ch2bump) {};
+  \node[blockfake,below=0.8cm of ch1] (ch2bumptwo) {};
+  \node[draw=none,below of=ch1,xshift=-4.05cm,yshift=-0.4cm] (titleone) {\small\textbf{Main chapters}};
+  \node[draw=none,below of=ch1,xshift=-0cm,yshift=-1.25cm] (titleone) {\small\textbf{Chapter 2}};  
+
+  \node [theory, below=4.55cm of ch1,xshift=-1.85cm] (ch3) {\small \textbf{Chapter 3}\\The I-prior};
+  
+  \node [method, below=0.7cm of ch3,xshift=+1.85cm] (ch4) {\small \textbf{Chapter 4}\\Regression with I-priors};
+  \node [method, right of=ch4] (ch5) {\small \textbf{Chapter 5}\\Categorical responses};     
+  \node [method, text width = 2.5cm, left of=ch4]  (ch6) {\small \textbf{Chapter 6}\\Bayesian vari-\\able selection};   
+  
+  \node [block, right=1.3cm of ch5]  (ch7) {\small \textbf{Chapter 7}\\Summary}; 
+   
+  \node [block, above=1.7cm of ch7]  (apx) {{\scriptsize \textbf{Appendices A--I}}\\ \small References, derivations and proofs};
+                
+  \node [block, below=1.5cm of ch6]  (s1) {{\scriptsize \textbf{Supplementary 1}}\small\\Estimation concepts};
+  \node [block, below=1.5cm of ch4]  (s2) {{\scriptsize \textbf{Supplementary 2}}\small\\EM\\ algorithm};   
+  \node [block, below=1.5cm of ch5]  (s4) {{\scriptsize \textbf{Supplementary 4}}\small\\Hamiltonian Monte Carlo};         
+  \node [block, right of=s4]  (s3) {{\scriptsize \textbf{Supplementary 3}}\small \\Variational inference};
+
+
   \begin{scope}[on background layer]
-    \node [container,fit=(ch2) (ch3) (ch4) (ch5) (ch6) ] (container) {};
+    \node [container,fit=(ch2a) (ch2b) (ch3) (ch4) (ch5) (ch6) (ch2bumptwo) ] (container) {};
+%    \node [containerthree, fit = (ch2a) (ch2b) (ch2bump) (ch2bumptwo) (ch3)] (theory) {};   
+    \node [containertwo,fit=(ch2a) (ch2b) (ch2bump)] (containertwo)   {}; 
+%    \node [containerthree, fit = (ch6) (ch4) (ch5)] (method) {};
   \end{scope}
-    
-  \path (ch1) edge [-latex, thick, shorten >=0.365cm] (ch2)
-        (ch2) edge [-latex, thick] (ch3)
-        (ch3) edge [-latex, thick] (ch4)
-        (ch4) edge [-latex, thick] (ch5)
+  \begin{scope}[on background layer]
+
+  \end{scope}
+
+  \draw [thick, shorten >=1cm] (ch2b) |- (ch3);
+  \draw [-latex, thick] (ch3)  -| ($(ch4.north) + (0.6,0cm)$);  
+
+  \path (ch1) edge [-latex, thick, shorten >=0.37cm] (ch2bump)
+        (ch2a) edge [-latex, thick, dashed] (ch2b)
+        (ch2a) edge [-latex, thick, dashed] (ch3)
         (ch4) edge [-latex, thick] (ch6)
+        (ch4) edge [-latex, thick] (ch5)        
         (ch5) edge [-latex, thick, shorten <=0.4cm] (ch7)
-        (s1)  edge [-latex, thick, dashed] (ch6)
+        (s1)  edge [-latex, thick, dashed, shorten >=0.4cm] (ch6)
         (s2)  edge [-latex, thick, dashed] (ch4)
         (s2)  edge [-latex, thick, dashed] (ch5)
         (s4)  edge [-latex, thick, dashed] (ch4)
         (s4)  edge [-latex, thick, dashed] (ch5)
         (s3)  edge [-latex, thick, dashed] (ch5)
-        (apx)  edge [-latex, thick, dashed, shorten >=4cm] ($(ch3.east) + (0,0.45cm)$);
+        (apx)  edge [-latex, thick, dashed, shorten >=5.85cm] ($(ch3.east) + (0,1.15cm)$);
 
 \end{tikzpicture}
-
-  \caption[Schematic representation of the organisation of the chapters and supplementary chapters of this thesis]{Schematic representation of the organisation of the chapters and supplementary chapters of this thesis. Solid lines indicate requisite relevances, while dashed lines indicate supporting and supplementary relevances.}
+  \vspace{0.5em}
+  \caption[Schematic representation of the organisation of the chapters of this thesis]{Schematic representation of the organisation of the chapters of this thesis. Solid lines indicate requisite relevances, while dashed lines indicate supporting and supplementary relevances. Chapters indicated by \textbf{\color{lseblu} blue} boxes are theoretical in nature, while those in \textbf{\color{lsedpr} purple} are methodological.}
 \end{figure}
 
+Familiarity with basic estimation concepts (maximum likelihood, Bayes, empirical Bayes) and their corresponding estimation methods (gradient-based methods, Newton/ quasi-Newton methods, MCMC, EM algorithm) are assumed throughout.
+Brief supplementary chapters are attached for readers who wish to familiarise themselves with topics such as variational inference and Hamiltonian Monte Carlo, which are used in \cref{chapter4,chapter5}.
+These brief readings are designed to be supplementary in nature, and are not strictly essential for the chapters.
+Additionally, Appendices A--I contain references to several statistical distributions and their properties, derivations, and proofs of the algorithms described in this thesis.
+
+On a closing note, a dedicated website for this PhD project has been created, and it can be viewed at \url{http://phd.haziqj.ml}.
 
 \hClosingStuffStandalone
 \end{document}
