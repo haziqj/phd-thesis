@@ -42,14 +42,14 @@
 \usepackage{xr}  % Cross-referencing between files
 
 % Show labels in margins. See https://tex.stackexchange.com/questions/45634/printing-labels-along-with-equation-numbers
-%\usepackage{seqsplit}
-%\usepackage{xstring}
-%\usepackage[notref,notcite]{showkeys}
-%\renewcommand*\showkeyslabelformat[1]{%
-%\noexpandarg%
-%\StrSubstitute{#1}{ }{~}[\TEMP]%
-%\parbox[c]{1.2\marginparwidth}{\raggedright\singlespacing\normalfont\small\ttfamily\expandafter\seqsplit\expandafter{\TEMP}}
-%}
+\usepackage{seqsplit}
+\usepackage{xstring}
+\usepackage[notref,notcite]{showkeys}
+\renewcommand*\showkeyslabelformat[1]{%
+\noexpandarg%
+\StrSubstitute{#1}{ }{~}[\TEMP]%
+\parbox[c]{0.95\marginparwidth}{\raggedright\singlespacing\normalfont\small\ttfamily\expandafter\seqsplit\expandafter{\TEMP}}
+}
 
 % Git info
 \usepackage[maxdepth=8,mark,raisemark=0.933\paperheight]{gitinfo2}
@@ -85,6 +85,7 @@
 \definecolor{lsepur}{RGB}{134,49,166}
 \definecolor{lsedpr}{RGB}{93,49,94}
 \definecolor{lseblu}{RGB}{85,172,238}
+\definecolor{lsegrn}{HTML}{C1EDCC}
 
 % Coding
 %\usepackage{verbatim}

@@ -1,23 +1,14 @@
 The introductory section sets us up nicely to discuss the coveted reproducing kernel Hilbert space.
 This is a subset of Hilbert spaces for which its evaluation functionals are continuous (by definition, in fact).
-The majority of this section, apart from defining RKHS, is an exercise in convincing ourselves that each and every RKHS of functions can be specified solely through its reproducing kernel.
+The majority of this section, apart from defining RKHSs, is an exercise in convincing ourselves that each and every RKHS of functions can be specified solely through its reproducing kernel.
 To begin, we consider a fundamental linear functional on a Hilbert space of functions $\cF$, that assigns a value to $f \in \mathcal F$ for each $x \in \mathcal X$, called the \emph{evaluation functional}.
 
-\definecolor{AUROMETALSAURUS}{HTML}{6A8482}
-\definecolor{DOLLARBILL}{HTML}{89C168}
-\definecolor{IGUANA}{HTML}{6AC38C}
-\definecolor{FLAME}{HTML}{ED5324}
-\definecolor{PASTELBROWN}{HTML}{836A54}
-\definecolor{CHINESERED}{HTML}{9A3D23}
-\definecolor{MYWHITE}{HTML}{F5EDEB}
-\definecolor{TEAGREEN}{HTML}{C1EDCC}
-
-\begin{figure}[htb]
+\begin{figure}[t]
   \centering
   \begin{tikzpicture}
   
     \draw[rounded corners,fill=lselgr,opacity=0.5] (0,0) rectangle (9.8,6.7);  % metric
-    \draw[rounded corners,fill=TEAGREEN,opacity=0.4] (0.7,0.7) rectangle (11,7.3);  % vector
+    \draw[rounded corners,fill=lsegrn,opacity=0.4] (0.7,0.7) rectangle (11,7.3);  % vector
     \draw[rounded corners,fill=lsepur,opacity=0.25] (1.2,1.1) rectangle (8.1,5.2);  % normed
     \draw[rounded corners,fill=lsecya,opacity=0.4] (2.4,2) rectangle (7,4.5);  % inner product
     \draw[rounded corners,fill=lsered,opacity=0.4] (4.9,3) rectangle (6.7,4.2);  % RKHS
@@ -86,6 +77,7 @@ RKHSs are particularly well behaved in this respect, compared to other Hilbert s
 %\end{figure}
 
 %The continuity condition also represents the weakest condition required for both the existence of an inner product and the evaluation of every function in $\cF$ at every point in the domain $\cX$.
+
 While the continuity condition by definition is what makes an RKHS, it is neither easy to check this condition in practice, nor is it intuitive as to the meaning of its name.
 In fact, there isn't even any mention of what a reproducing kernel actually is.
 In order to benefit from the desirable continuity property of RKHS, we should look at this from another, more intuitive, perspective. 
@@ -113,14 +105,14 @@ This leads us to the definition of a \emph{reproducing kernel} of an RKHS---the 
   \]
 \end{definition}
 
-An important property for reproducing kernels of a RKHS is that they are positive-definite functions.
+An important property for reproducing kernels of a RKHS is that they are positive definite functions.
 That is, $\forall a_1, \dots, a_n \in \mathbb R$ and $\forall x_1, \dots, x_n \in \mathcal X$,
 \[
   \sum_{i=1}^n\sum_{j=1}^n a_i a_j h(x_i, x_j) \geq 0.
 \]
 
 \begin{proposition}[Reproducing kernels of RKHS are positive-definite]\label{thm:posdef}
-  Let $\hXXR$ be a reproducing kernel for a Hilbert space $\cF$.
+  Let $h\!:\!\cX\times\cX\to\bbR$ be a reproducing kernel for a Hilbert space $\cF$.
   Then $h$ is a symmetric and positive definite function.
 \end{proposition}
 
@@ -144,15 +136,15 @@ That is, $\forall a_1, \dots, a_n \in \mathbb R$ and $\forall x_1, \dots, x_n \i
   The relevance of this generality will be appreciated when we discuss reproducing kernel Kreĭn spaces in \cref{sec:rkkstheory}.
 \end{remark}
 
+\vspace{-0.8em}
 Introducing the following definition of the \emph{kernel matrix} (also known as the \emph{Gram matrix}) is useful at this point.
 \begin{definition}[Kernel matrix]
   Let $\{x_1,\dots,x_n\}$ be a sample of points, where each $x_i\in\cX$, and $h$ a kernel over $\cX$.
   Define the \emph{kernel matrix} $\bH$ for $h$ as the $n \times n$ matrix with $(i,j)$ entries equal to $h(x_i,x_j)$.
 \end{definition}
-Obviously, $\bH$ is a positive-definite matrix if the kernel that defines it is positive-definite: $\ba^\top\bH\ba = \sum_{i=1}^n\sum_{j=1}^n a_ia_jh(x_i,x_j) \geq 0$ for any choice of $a_1,\dots,a_n\in\bbR$ and $x_1,\dots,x_n\in\cX$.
+Obviously, $\bH$ is a positive definite matrix if the kernel that defines it is positive definite: $\ba^\top\bH\ba = \sum_{i=1}^n\sum_{j=1}^n a_ia_jh(x_i,x_j) \geq 0$ for any choice of $a_1,\dots,a_n\in\bbR$ and $x_1,\dots,x_n\in\cX$.
 
 So far, we have seen that reproducing kernels of a RKHS are positive-definite functions, and that RKHSs are Hilbert spaces with continuous evaluation functionals, but one might wonder what exactly the relationship between a reproducing kernel and a RKHS is.
-%there are several questions we might like the answer to: What is the relationship between a reproducing kernel and an RKHS? Can we speak to its existence and uniqueness? What other properties does it have?
 We assert the following:
 \begin{itemize}
   \item For every RKHS $\cF$ of functions over a set $\cX$, there corresponds a unique, positive-definite reproducing kernel $\hXXR$, and vice-versa. That is, a Hilbert space is a RKHS if it possesses a unique, reproducing kernel.
@@ -190,7 +182,7 @@ The rest of this section is a consideration of these assertions, addressed by th
 \end{theorem}
 
 \begin{proof}
-  First we tackle existence, i.e., we prove that $\cF$ is a RKHS if and only if $\cF$ has a reproducing kernel.
+  First we tackle existence, i.e. we prove that $\cF$ is a RKHS if and only if $\cF$ has a reproducing kernel.
   Suppose $\cF$ is a Hilbert space of functions, and $\hXXR$ is a reproducing kernel for $\cF$.
   Then, choosing $\delta=\epsilon / \norm{h(\cdot,x)}_\cF$, for any $f \in \cF$ such that $\norm{f-g}_\cF < \delta$, we have
   \begin{align*}
@@ -218,8 +210,9 @@ The rest of this section is a consideration of these assertions, addressed by th
 \end{theorem}
 
 \begin{proof}[Sketch proof]
-  Most of the details here have been omitted, except for the parts which we feel are revealing as to the properties of an RKHS.
-  For a complete proof, see \citet{berlinet2011reproducing}. 
+  Most of the details here have been omitted, except for the parts which we feel are revealing as to the properties of a RKHS.
+  For a complete proof, see \citet[Theorem 2.3]{gu2013smoothing}.
+%  \citet[Theorem 3]{berlinet2011reproducing} 
   Start with the linear space
   \[
     \cF_0 = \left\{ f_n:\cX\to\bbR \, \Big| \, f_n = \sum_{i=1}^n w_i h(\cdot,x_i), x_i\in\cX, w_i\in\bbR, n\in\bbN \right\}
@@ -228,11 +221,11 @@ The rest of this section is a consideration of these assertions, addressed by th
   \[\label{eq:rkhsinnerprod}
     \left\langle \sum_{i=1}^n w_i h(\cdot,x_i), \sum_{j=1}^m w_j' h(\cdot,x_j') \right\rangle_{\cF_0} = \sum_{i=1}^n\sum_{j=1}^m w_i w_j' h(x_i,x_j').
   \]
-  It may be shown that this indeed a valid inner-product satisfying the conditions laid in \cref{def:innerprod}.
+  It may be shown that this is indeed a valid inner product satisfying the conditions laid in \cref{def:innerprod}.
   At this point, the reproducing property is already had:   \begin{align*}
     \big\langle f_n, h(\cdot,x) \big\rangle_{\cF_0} 
     &= \left\langle \sum_{i=1}^n w_i h(\cdot,x_i), h(\cdot,x) \right\rangle_{\cF_0} \\
-    &= \sum_{i=1}^n w_i h(x_i,x) \\
+    &= \sum_{i=1}^n w_i h(x,x_i) \\
     &= f_n(x),
   \end{align*}
   for any $f_n\in\cF_0$.
