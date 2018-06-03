@@ -44,14 +44,16 @@ Several important relationships between norms and inner products hold in linear 
 the \emph{parallelogram law}
 %
 \[
-  \norm{f+g}_\cF^2 - \norm{f+g}_\cF^2 = 2\norm{f}_\cF^2 + 2\norm{g}_\cF^2;
+  \norm{f+g}_\cF^2 + \norm{f-g}_\cF^2 = 2\norm{f}_\cF^2 + 2\norm{g}_\cF^2;
 \]
 %
-and the \emph{polarisation identity}
+and the \emph{polarisation identity} (in various forms)
 %
-\[
-  \norm{f+g}_\cF^2 + \norm{f+g}_\cF^2 = 4\ip{f,g}_\cF,
-\]
+\begin{align*}
+  \norm{f+g}_\cF^2 - \norm{f-g}_\cF^2 &= 4\ip{f,g}_\cF,  \\
+  \norm{f+g}_\cF^2 - \norm{f}_\cF^2 - \norm{g}_\cF^2 &= 2\ip{f,g}_\cF, \\
+  - \norm{f-g}_\cF^2 + \norm{f}_\cF^2 + \norm{g}_\cF^2  &= 2\ip{f,g}_\cF,
+\end{align*}
 %
 for any $f,g\in\cF$.
 
@@ -124,7 +126,6 @@ An interesting property of these operators to look at, besides linearity, is whe
 Continuity in the sense of linear operators here means that a convergent sequence in $\cF$ can be mapped to a convergent sequence in $\cG$.
 For a particular linear operator, the evaluation functional, this means that closeness in norm implies pointwise closeness---this relates to RKHSs, which is discussed in \cref{sec:rkhstheory}.
 
-
 There is an even stronger notion of continuity called  \emph{Lipschitz continuity}.
 
 \begin{definition}[Lipschitz continuity]
@@ -142,9 +143,11 @@ A continuous, linear operator is also one that is bounded.
 %
 \begin{definition}[Bounded operator]\label{def:boundedop}
   The linear operator $A:\mathcal F \rightarrow \mathcal G$ between two Hilbert spaces $\cF$ and $\cG$ is said to be \emph{bounded} if there exists some $M>0$ such that
+  %
   \[
     \norm{Af}_\cG \leq M \norm{f}_\cF.
-  \] 
+  \]
+  % 
   The smallest such $M$ is defined to be the \emph{operator norm}, denoted $\norm{A} := \sup_{f\in\cF} \frac{\norm{Af}_\cG}{\norm{f}_\cF}$.
 \end{definition}
 %
@@ -155,15 +158,17 @@ A continuous, linear operator is also one that is bounded.
 %
 \begin{proof}
   Suppose that $A$ is bounded.
-  Then, $\forall f,f' \in \cF$, $\exists M>0$ such that $\norm{A(f-g)}_\cG \leq M \norm{f-g}_\cG$, so $A$ is Lipschitz continuous.
+  Then, $\forall f,f' \in \cF$, $\exists M>0$ such that $\norm{A(f-f')}_\cG \leq M \norm{f-f'}_\cG$, so $A$ is Lipschitz continuous.
   Conversely, let $A$ be a continuous linear operator, especially at the zero vector.
   In other words, $\exists \delta > 0$ such that $\norm{A(f)}_\cG = \norm{A(f+0-0)}_\cG = \norm{A(f) - A(0)} \leq 1$, $\forall f\in\cF$ whenever $\norm{f}_\cF \leq \delta$.
   Thus, for all non-zero $f \in\cF$,
+  %
   \begin{align*}
     \norm{A(f)}_\cG &= \left\Vert \frac{\norm{f}_\cF}{\delta} A\left(\frac{\delta}{\norm{f}_\cF}f\right)\right\Vert_\cG \\
     &= \left\vert \frac{\norm{f}_\cF}{\delta}\right\vert \, \left\Vert A\left(\frac{\delta}{\norm{f}_\cF}f\right)\right\Vert_\cG \\    
     &\leq \frac{\norm{f}_\cF}{\delta} \cdot 1,
   \end{align*}
+  %
   and therefore $A$ is bounded.
 \end{proof}
 %
@@ -171,59 +176,77 @@ So important is the concept of linearity and continuity, that there are speciall
 %
 \begin{definition}[Dual spaces]
   Let $\cF$ be a Hilbert space. 
-  The space $\cF^*$ of \emph{linear functionals} is called the \emph{algebraic dual space} of $\cF$.
-  The space $\cF'$ of \emph{continuous linear functionals} is called the \emph{continuous dual space} or alternatively, the \emph{topological dual space}, of $\cF$.   
+  The space $\cF^\vee$ of \emph{linear functionals} is called the \emph{algebraic dual space} of $\cF$.
+  The space $\cF^*$ of \emph{continuous linear functionals} is called the \emph{continuous dual space} or alternatively, the \emph{topological dual space}, of $\cF$.   
 \end{definition}
 %
+\vspace{-0.5em}
 As it turns out, the algebraic dual space and continuous dual space coincide in finite-dimensional Hilbert spaces:
-take any $L\in\cF'$; since $L$ is finite-dimensional, it is bounded, and therefore continuous (see \cref{thm:boundcont}) so $L\in\cF'$ and $\cF^* \subseteq \cF'$; but $\cF' \subseteq \cF^*$ trivially, so $\cF^* \equiv \cF'$.
+take any $A\in\cF^\vee$; since $A$ is finite-dimensional, it is bounded, and therefore continuous (see \cref{thm:boundcont}), so $A\in\cF^*$ and $\cF^\vee \subseteq \cF^*$; but $\cF^* \subseteq \cF^\vee$ trivially, so $\cF^\vee \equiv \cF^*$.
 For infinite-dimensional Hilbert spaces, this is not so, but in any case, we will only be considering the continuous dual space in this thesis.
-The following result is an important one, which states that (continuous) linear functionals of an inner product space are nothing more than just inner products.
-
-\begin{theorem}[Riesz representation]
+The following result is an important one, which states that continuous linear functionals of an inner product space are nothing more than inner products.
+%
+\begin{theorem}[Riesz-Fréchet]
   Let $\cF$ be a Hilbert space.
-  Every element $L$ of the continuous dual space $\cF'$, i.e. all continuous linear functionals $L:\cF\to\bbR$, can be uniquely written in the form $L=\ip{\cdot,g}_\cF$, for some $g\in\cF$.
+  Every element $A$ of the continuous dual space $\cF^*$, i.e. all continuous linear functionals $A:\cF\to\bbR$, can be uniquely written in the form $\ip{\cdot,g}_\cF =: A_g \in \cF^*$, for some $g\in\cF$. 
+  Moroever, $\norm{g}_\cF = \norm{A_g}_{\cF^*}$.
 \end{theorem}
-
+%
 \begin{proof}
-  Omitted---see \citet[Theorem 4.12]{rudin1987real} for a proof.
+  Omitted---see \citet[Theorem 4.2.1]{yamamoto2012vector} for a proof.
+%  \citet[Theorem 4.12]{rudin1987real} 
 \end{proof}
-
-The notion of isometry (transformation that preserves distance) is usually associated with metric spaces---two metric spaces being isometric means that they identical in as far as their metric properties are concerned.
-For Hilbert spaces (or normed spaces in general), there is an analogous concept as well in \emph{isometric isomorphism} (a bijective isometry), such that two Hilbert spaces being isometrically isomorphic imply that they have exactly the same geometric structure, but may very well contain fundamentally different objects.
-
+%
+\begin{remark}
+  The Riesz-Fréchet theorem is also commonly referred to as the \emph{Riesz representation theorem} for Hilbert spaces.
+\end{remark}
+%
+The notion of isometry (transformation that preserves distance) is usually associated with metric spaces; two metric spaces being isometric means that they identical as far as their metric properties are concerned.
+For Hilbert spaces (and more generally, for normed spaces), there is an analogous concept as well in \emph{isometric isomorphism} (a bijective isometry), such that two Hilbert spaces being isometrically isomorphic imply that they have exactly the same geometric structure, but may very well contain fundamentally different objects.
+%
 \begin{definition}[Isometric isomorphism]
-  Two Hilbert spaces $\cF$ and $\cG$ are said to be \emph{isometrically isomorphic} if there is a linear bijective map $A:\cF\to\cG$ which preserves the inner product, i.e. 
+  Two Hilbert spaces $\cF$ and $\cG$ are said to be \emph{isometrically isomorphic}, symbolised $\cF \cong \cG$, if there is a linear bijective map $U:\cF\to\cG$ which preserves the inner product, i.e. for any $f,f'\in\cF$, \vspace{-0.2em}
+  %
   \[
-    \ip{f,f'}_\cF = \ip{Af,Af'}_\cG.
+    \ip{f,f'}_\cF = \ip{Uf,Uf'}_\cG.
   \]
-%  An isometry that preserves the norm is also known as \emph{linear isometry}.
+  %
 \end{definition}
-
-A consequence of the Riesz representation theorem is that it gives us a canonical isometric isomorphism $A:f\mapsto \ip{\cdot,f}_\cF$ between $\cF$ and its continuous dual $\cF'$, whereby $\norm{Af}_{\cF'} = \norm{f}_\cF$.
-Implicitly, this means that $\cF'$ is a Hilbert space as well.
+%
+A consequence of the Riesz-Fréchet theorem is that it gives us a canonical isometric isomorphism $U:g\mapsto \ip{\cdot,g}_\cF =: A_g$ between $\cF$ and its continuous dual $\cF^*$: 
+$A_g$ is obviously linear (bilinearity of inner products), and using the polarisation identity,
+\begin{align*}
+  2\ip{Ug,Ug'}_{\cF^*} 
+  &= \norm{U(g)}_{\cF^*}^2 + \norm{U(g')}_{\cF^*}^2 - \norm{U(g - g')}_{\cF^*}^2 \\
+  &= \norm{g}_{\cF}^2 + \norm{g'}_{\cF}^2 - \norm{g-g'}_{\cF}^2 \\
+  &= 2\ip{g,g'}_{\cF}.
+\end{align*}
+%An isometry that preserves the norm is known as \emph{linear isometry}.
+Implicitly, this means that $\cF^*$ is a Hilbert space as well.
 
 Another important type of mapping is the mapping $P$ of an element in $\cF$ onto a closed subspace $\cG\subset\cF$, such that $Pf \in \cG$ is closest to $f$.
-This mapping is called the \emph{orthogonal projection}, due to the fact that such projections yield perpendicularity in the sense that $\ip{f-Pf,g}_\cG = 0$ for any $g\in\cG$.
+This mapping is called the \emph{orthogonal projection}, due to the fact that such projections yield perpendicularity in the sense that $\ip{f-Pf,g}_\cF = 0$ for any $g\in\cG$.
 The remainder $f - Pf$ belongs to the \emph{orthogonal complement} of $\cG$.
-
+%The remainder $f - Pf = (I-P)f = Qf$, where $I$ is the identity map, belongs to the \emph{orthogonal complement} of $\cG$.
+%As a consequence, $\norm{f}_\cF^2 = \norm{Pf}_\cF^2 + \norm{Qf}_\cF^2$.
+%
 \begin{definition}[Orthogonal complement]
   Let $\cF$ be a Hilbert space and $\cG \subset \cF$ be a closed subspace.
-  The linear subspace $\cG^\bot = \{ f \,|\, \ip{f,g}_\cG = 0, \forall g \in \cG \}$ is called the orthogonal complement of $\cG$.
+  The linear subspace $\cG^\bot = \{ f \,|\, \ip{f,g}_\cF = 0, \forall g \in \cG \}$ is called the orthogonal complement of $\cG$ in $\cF$.
 \end{definition}
-
+%
 \begin{theorem}[Orthogonal decomposition]
   Let $\cF$ be a Hilbert space and $\cG \subset \cF$ be a closed subspace.
   For every $f \in \cF$, we can write $f = g + g^c$, where $g \in \cG$ and $g^c \in \cG^\bot$, and this decomposition is unique.
 \end{theorem}
-
+%
 \begin{proof}
   Omitted---see \citet[Theorem 4.11]{rudin1987real} for a proof.
 \end{proof}
-
+%
 We can write $\cF = \cG \oplus \cG^\bot$, where the $\oplus$ symbol denotes the \emph{direct sum}, and such a decomposition is called a \emph{tensor sum decomposition}.
 In infinite-dimensional Hilbert spaces, some subspaces are not closed, but all orthogonal complements are closed. 
-In such spaces, the orthogonal complement of the orthogonal complement of $\cG$ is the closure of $\cG$, i.e. $(\cG^\bot)^\bot =: \overline \cG$, and we say that $\cG$ is dense in $\overline \cG$.
+In such spaces, the orthogonal complement of the orthogonal complement of $\cG$ is the closure of $\cG$, i.e. $(\cG^\bot)^\bot =: \overline \cG$, and we say that $\cG$ is \emph{dense} in $\overline \cG$.
 Another interesting fact regarding the orthogonal complement is that $\cG \cap \cG^\bot = \{ 0 \}$, since any $g\in \cG \cap \cG^\bot$ must be orthogonal to itself, i.e. $\ip{g,g}_\cG = 0$ implying that $g=0$.
 
 \begin{corollary}\label{thm:orthdecomp2}
@@ -275,35 +298,40 @@ Correspondingly, we may also define the \emph{tensor product space}.
 \end{definition}
 
 Interestingly, the tensor product can be viewed as an operator between two Hilbert spaces.
-That is, for each pair of elements $(x_1,x_2) \in \cH_1\times\cH_2$, we define the operator $A_{x_1,x_2}:\cH_1\to\cH_2$ in the following way:
+That is, for each pair of elements $(x_1,x_2) \in \cH_1\times\cH_2$, we define the (rank one) operator $A_{x_1,x_2}:\cH_1\to\cH_2$ in the following way:
 \begin{align*}
   A_{x_1,x_2}:\cH_1&\to\cH_2 \\
   y_1&\mapsto \ip{x_1,y_1}_{\cH_1}x_2.
 \end{align*}
-An operator defined in such a way is called a \emph{rank one} operator.
+%An operator defined in such a way is called a \emph{rank one} operator.
 Indeed, for some $y_1\in\cH_1$ and $y_2\in\cH_2$, we have that
+\vspace{-0.5em}
 \begin{align*}
   \ip{A_{x_1,x_2}(y_1),y_2}_{\cH_2} 
   &= \big\langle \ip{x_1,y_1}_{\cH_1}x_2 , y_2 \big\rangle_{\cH_2} \\
   &= \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2} \\
-  &= (x_1\otimes x_2)(y_1,y_2).
+  &= (x_1\otimes x_2)(y_1,y_2). 
 \end{align*}
-%Thus, it is seen that the tensor product $x_1\otimes x_2$ is associated with the rank one operator $B:\cH_1'\to\cH_2$ from the continuous dual space $\cH_1'$ to $\cH_2$ defined by $z \mapsto z(x_1)x_2$ with $z = \ip{x_1,\cdot}_{\cH_1}$.
-%We can write $B = x_1 \otimes x_2$.
-%\hltodo[From Wikipedia. But don't really get it, although it might explain the Fisher information between linear functionals.]{Therefore, this extends a linear identification between $\cH_1\otimes\cH_2$ and the space of finite-rank operators from $\cH_1'$ to $\cH_2$.}
 We now have three distinct interpretations of the tensor product.
 For $x_1,y_1\in\cH_1$ and $x_2,y_2\in\cH_2$, these are:
-\begin{itemize}
+\begin{itemize}[noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt]
   \item \textbf{General form} (as an element in the tensor product space).
+  \vspace{-0.6em}
+  %
   \[
-    x_1 \otimes x_2 \in \cH_1 \otimes \cH_2.
+    x_1 \otimes x_2 \in \cH_1 \otimes \cH_2. \vspace{-0.6em}
   \]
+  %
   \item \textbf{Operator}.
+  \vspace{-1.2em}
+  %
   \begin{align*}
     x_1 \otimes x_2:\cH_1 &\to \cH_2 \\
-    y_1 &\mapsto \ip{x_1,y_1}_{\cH_1}x_2
+    y_1 &\mapsto \ip{x_1,y_1}_{\cH_1}x_2 \vspace{-1.2em}
   \end{align*}  
+  %
   \item \textbf{Bilinear form} (as per \cref{def:tensorprod}). 
+  \vspace{-1em}
   \begin{align*}
     x_1 \otimes x_2:\cH_1 \times \cH_2 &\to \bbR \\
     (y_1,y_2) &\mapsto \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2}
