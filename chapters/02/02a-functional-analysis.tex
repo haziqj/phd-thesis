@@ -2,22 +2,19 @@ The core study of functional analysis revolves around the treatment of functions
 Vector spaces, or linear spaces as they are sometimes known, may be endowed with some kind of structure so as to allow ideas such as closeness and limits to be conceived.
 Of particular interest to us is the structure brought about by \emph{inner products}\index{inner product}, which allow the rigorous mathematical study of various geometrical concepts such as lengths, directions, and orthogonality, among other things.
 We begin with the definition of an inner product. 
-
+%
 \begin{definition}[Inner products]\label{def:innerprod}
 	Let $\mathcal F$ be a vector space over $\mathbb R$. A function $\langle\cdot,\cdot\rangle_{\mathcal F}:\mathcal F \times \mathcal F \rightarrow \mathbb R$ is said to be an inner product on $\mathcal F$ if all of the following are satisfied:
 	\begin{itemize}
-	\item \textbf{Symmetry:} $\langle f, g\rangle_{\mathcal F} = \langle g, f	\rangle_{\mathcal F}$, $\forall f,g \in \mathcal F$.
-	\item \textbf{Linearity:} $\langle a f_1 + b f_2, g\rangle_{\mathcal F} = a\langle f_1,g \rangle_{\mathcal F} + b\langle f_2,g \rangle_{\mathcal F}$, $\forall f_1, f_2, g \in \mathcal F$ and $\forall a,b \in \mathbb R$.
-	\item \textbf{Non-degeneracy:} $\langle f, f\rangle_{\mathcal F} = 0 \Leftrightarrow f=0$.
-%	\item \textbf{Positive-definiteness:} $\langle f, f\rangle_{\mathcal F} \geq 0$, $\forall f \in \mathcal F$.
+	\item \textbf{Symmetry}. $\langle f, g\rangle_{\mathcal F} = \langle g, f	\rangle_{\mathcal F}$, $\forall f,g \in \mathcal F$.
+	\item \textbf{Linearity}. $\langle \lambda_1 f_1 + \lambda_2 f_2, g\rangle_{\mathcal F} = \lambda_1\langle f_1,g \rangle_{\mathcal F} + \lambda_2\langle f_2,g \rangle_{\mathcal F}$, $\forall f_1, f_2, g \in \mathcal F$, $\forall \lambda_1,\lambda_2 \in \mathbb R$.
+	\item \textbf{Non-degeneracy}. $\langle f, f\rangle_{\mathcal F} = 0 \Leftrightarrow f=0$.
 	\end{itemize}
-%	Conversely, an inner product is said to be \emph{negative definite} if $\langle f, f\rangle_{\mathcal F} \leq 0$, $\forall f \in \mathcal F$. 
-%	An inner product is said to be \emph{indefinite} it is neither positive nor negative definite.
 \end{definition}
-
+%
 Additionally, an inner product is said to be \emph{positive definite} if $\langle f, f\rangle_{\mathcal F} \geq 0$, $\forall f \in \mathcal F$.
-Inner products need not necessarily be positive definite, and we shall revisit this fact later when we cover Krein spaces.
-However, for the purposes of the discussion moving forward, the inner products that are referenced are the positive definite kind, unless otherwise stated.
+Inner products need not necessarily be positive definite, and we shall revisit this fact later when we cover Kreĭn spaces.
+However, for the purposes of the forthcoming discussion, the inner products that are referenced are the positive definite kind, unless otherwise stated.
 
 We can always define a \emph{norm} on $\cF$ using the inner product as 
 \begin{equation}\label{eq:normip}
@@ -25,119 +22,124 @@ We can always define a \emph{norm} on $\cF$ using the inner product as
 \end{equation}
 Norms are another form of structure that specifically captures the notion of length. 
 This is defined below.
-
+%
 \begin{definition}[Norms]
 	Let $\mathcal F$ be a vector space over $\mathbb R$. A non-negative function $||\cdot||_{\mathcal F}:\mathcal F \times \mathcal F \rightarrow \mathbb [0,\infty)$ is said to be a norm  on $\mathcal F$ if all of the following are satisfied:
 	\begin{itemize}
-	\item \textbf{Absolute homogeneity:} $||\lambda f||_{\mathcal F} = |\lambda| \cdot ||f||_{\mathcal F}$, $\forall \lambda \in \mathbb R$, $\forall f \in \mathcal F$
-	\item \textbf{Subadditivity:} $||f+g||_{\mathcal F} \leq ||f||_{\mathcal F} + ||g||_{\mathcal F}$, $\forall f,g \in \mathcal F$
-	\item \textbf{Point separating:} $||f||_{\mathcal F} = 0 \Leftrightarrow f=0$
+	\item \textbf{Absolute homogeneity}. $||\lambda f||_{\mathcal F} = |\lambda| \, ||f||_{\mathcal F}$, $\forall \lambda \in \mathbb R$, $\forall f \in \mathcal F$
+	\item \textbf{Subadditivity}. $||f+g||_{\mathcal F} \leq ||f||_{\mathcal F} + ||g||_{\mathcal F}$, $\forall f,g \in \mathcal F$
+	\item \textbf{Point separating}. $||f||_{\mathcal F} = 0 \Leftrightarrow f=0$
 	\end{itemize}
 \end{definition}
-
+%
 \index{subadditivity}\index{inequality!triangle}
 The subadditivity property is also known as the \emph{triangle inequality}.
 Also note that since $\norm{-f}_\cF = \norm{f}_\cF$, and by the triangle inequality and point separating property, we have that $\norm{f}_\cF = \half\norm{f}_\cF + \half\norm{-f}_\cF \geq \half\norm{f - f}_\cF = 0$, thus implying non-negativity of norms.
 Several important relationships between norms and inner products hold in linear spaces, namely, the \emph{Cauchy-Schwarz inequality}\index{inequality!Cauchy-Schwarz}
+%
 \[
-  |\ip{f,g}_\cF| \leq \norm{f}_\cF\cdot\norm{g}_\cF;
+  |\ip{f,g}_\cF| \leq \norm{f}_\cF \, \norm{g}_\cF;
 \]
+%
 the \emph{parallelogram law}
+%
 \[
   \norm{f+g}_\cF^2 - \norm{f+g}_\cF^2 = 2\norm{f}_\cF^2 + 2\norm{g}_\cF^2;
 \]
+%
 and the \emph{polarisation identity}
+%
 \[
   \norm{f+g}_\cF^2 + \norm{f+g}_\cF^2 = 4\ip{f,g}_\cF,
 \]
-for some $f,g\in\cF$.
+%
+for any $f,g\in\cF$.
 
 A vector space endowed with an inner product (c.f. norm) is called an inner product space (c.f. normed vector space).
 As a remark, inner product spaces can always be equipped with a norm using \cref{eq:normip}, but not always the other way around.
 A norm needs to satisfy the parallelogram law for an inner product to be properly defined.
 
-The norm $||\cdot||_{\mathcal F}$, in turn, induces a metric (a notion of distance) on $\mathcal F$: $D(f,g) = ||f-g||_{\mathcal F}$, for $f,g\in\cF$.
+\newpage
+The norm $||\cdot||_{\mathcal F}$, in turn, induces a metric (a notion of distance) on $\mathcal F$, i.e. $D(f,g) = ||f-g||_{\mathcal F}$, for $f,g\in\cF$.
 With these notions of distances, one may talk about sequences of functions in $\cF$ which are \emph{convergent}, and sequences whose elements become arbitrarily close to one another as the sequence progresses (\emph{Cauchy}).
-
+%
 \begin{definition}[Convergent sequence]
 	A sequence $\{f_n\}_{n=1}^\infty$ of elements of a normed vector space $(\mathcal F, ||\cdot ||_{\mathcal F})$ is said to \emph{converge} to some $f\in\cF$, if for every $\epsilon > 0$, $\exists N=N(\epsilon) \in \mathbb N$, such that $\forall n > N$, $||f_n - f||_{\mathcal F} < \epsilon$.
 \end{definition}
-
+%
 \begin{definition}[Cauchy sequence]
 	A sequence $\{f_n\}_{n=1}^\infty$ of elements of a normed vector space $(\mathcal F, ||\cdot ||_{\mathcal F})$ is said to be a Cauchy sequence if for every $\epsilon > 0$, $\exists N=N(\epsilon) \in \mathbb N$, such that $\forall n,m > N$, $||f_n - f_m||_{\mathcal F} < \epsilon$.
 \end{definition}
-
+%
 Every convergent sequence is Cauchy (from the triangle inequality), but the converse is not true.
 If the limit of the Cauchy sequence exists within the vector space, then the sequence converges to it.
-If the vector space contains the limits of all Cauchy sequences (or in other words, if every Cauchy sequence converges), then it is said to be \emph{complete}.
-
+A vector space is said to be \emph{complete} if it contains the limits of all Cauchy sequences, or in other words, if every Cauchy sequence converges.
 There are special names given to complete vector spaces.
 A complete inner product space is known as a \emph{Hilbert space}, while a complete normed space is called a \emph{Banach space}.
 Out of interest, an inner product space that is not complete is sometimes known as a \emph{pre-Hilbert space}, since its completion with respect to the norm induced by the inner product is a Hilbert space.
 
 A subset $\cG\subseteq\cF$ is a \emph{closed subspace} of $\cF$ if it is closed under addition and multiplication by a scalar.
-That is, for any $g,g'\in\cG$, $\lambda_1g + \lambda_2g'$ is also in $\cG$.
+That is, for any $g,g'\in\cG$, $\lambda_1 g + \lambda_2 g'$ is also in $\cG$, for $\lambda_1,\lambda_2\in\bbR$.
 For Hilbert spaces, each closed subspace is also complete, and thus a Hilbert space in its own right.
 Although, as a remark, not every Hilbert subspace need be closed, and therefore complete. 
 
-Being vectors in a vector space, we can discuss mapping the vectors onto a different space, or in essence, having a function acted upon them.
-To establish terminology, we define linear functionals, bilinear form, and linear operators.
-
-\begin{definition}[Linear functional]
-  Let $\cF$ be a Hilbert space.
-  A \emph{functional} $L$ is a map from $\cF$ to $\bbR$, and we denote its action on a function $f$ as $L(f)$. 
-  A functional is called \emph{linear} if it satisfies $L(f+g)=L(f)+L(g)$ and $L(\lambda f)=\lambda L(f)$, for all $f,g\in\cF$ and $\lambda\in\bbR$.
-\end{definition}
-
-\begin{definition}[Bilinear form]
-  Let $\cF$ be a Hilbert space.
-  A \emph{bilinear form} $B$ takes inputs $f,g\in\cF$ and returns a real value.
-  It is linear in each argument separately, i.e.
-  \begin{itemize}
-    \item $B(\lambda_1 f +\lambda_2 g, h) = \lambda_1 B(f,h) + \lambda_2 B(g,h)$; and
-    \item $B(f, \lambda_1 g +\lambda_2 h) = \alpha B(f,g) + \lambda_2 B(f,h)$,
-  \end{itemize} 
-  for all $f,g,h \in \cF$ and $\lambda_1,\lambda_2\in\bbR$.
-\end{definition}
-
-\begin{definition}[Linear operator]
+Being vectors in a vector space, we can discuss mapping of vectors onto a another space, or in essence, having a function acted upon them.
+To establish terminology, we define linear and bilinear maps (operators).
+%
+\begin{definition}[Linear map/operator]
   Let $\cF$ and $\cG$ be two Hilbert spaces over $\bbR$.
-  An operator $A$ is a map from $\cF$ to $\cG$, and we denote its action on a function $f \in\cF$ as $Af \in \cG$.
-  A \emph{linear operator} satisfies $A(f+g) = A(f) + A(g)$ and $A(\lambda f) = \lambda A(f)$, for all $f,g \in\cF$ and $\lambda\in\bbR$.
+  An operator $A$ is a map from $\cF$ to $\cG$, and we denote its action on a function $f \in\cF$ as $A(f) \in \cG$, or simply $Af \in \cG$.
+  A \emph{linear operator} satisfies $A(f+f') = A(f) + A(f')$ and $A(\lambda f) = \lambda A(f)$, for all $f,f' \in\cF$ and $\lambda\in\bbR$.
+  If $\cG$ is the base field ($\bbR$ in our case), then the linear operator $A$ is called a \emph{linear functional}.
 \end{definition}
-
-The term `functional' is classically used in calculus of variations to denote `a function of a function', i.e. a function having another function as its input, and outputs a real number.
-Really, from a function space perspective, it is simply a mapping of functions onto another vector space (the reals in this case).
-More generally, if the output space is another Hilbert space, then it is an operator.
+%
+\begin{definition}[Bilinear map/operator]
+  Let $\cF$, $\cG$ and $\cH$ be Hilbert spaces over $\bbR$.
+  A \emph{bilinear operator} $B:\cF\times\cG\to\cH$ is linear in each argument separately, i.e.
+  \begin{itemize}
+    \item $B(\lambda_1 f +\lambda_2 f', h) = \lambda_1 B(f,h) + \lambda_2 B(f',h)$; and
+    \item $B(f, \lambda_1 g +\lambda_2 g') = \lambda_1 B(f,g) + \lambda_2 B(f,g')$,
+  \end{itemize} 
+  for all $f,f' \in \cF$, $g,g' \in \cG$ and $\lambda_1,\lambda_2\in\bbR$.
+  In other words, the mappings $B_g: f \mapsto B(f,g)$ for any $g\in\cG$, and $B_f: g \mapsto B(f,g)$ for any $f\in\cF$, are both linear maps.
+  If $\cF\equiv\cG$, then the bilinear map is \emph{symmetric}.
+  If $\cH$ is the base field ($\bbR$ in our case), then $B$ is called a \emph{bilinear form}.
+\end{definition}
+%
 An interesting property of these operators to look at, besides linearity, is whether or not they are \emph{continuous}.
-
+%
 \index{continuous}
 \index{continuous!uniform}
 \begin{definition}[Continuity]\label{def:continuity}
   Let $\cF$ and $\cG$ be two Hilbert spaces.
   A function $A:\cF\to\cG$ is said to be \emph{continuous at $g\in\cF$}, if for every $\epsilon>0$, $\exists \delta=\delta(\epsilon,g)>0$ such that
+  %
   \[
     \norm{f-g}_\cF < \delta \ \ \Rightarrow \ \ \norm{Af - Ag}_\cG < \epsilon.
   \]
   A is \emph{continuous} on $\cF$, if it is continuous at every point $g \in\cF$.
   If, in addition, $\delta$ depends on $\epsilon$ only, $A$ is said to be \emph{uniformly continuous}.
 \end{definition}
-
+%
 Continuity in the sense of linear operators here means that a convergent sequence in $\cF$ can be mapped to a convergent sequence in $\cG$.
-For a special case of linear operator, the evaluation functional, this means that a function in $\cF$ is continuous if the evaluation functional is continuous---more on this later in  \cref{sec:rkhstheory}.
-There is an even stronger notion of continuity called the \emph{Lipschitz continuity}.
+For a particular linear operator, the evaluation functional, this means that closeness in norm implies pointwise closeness---this relates to RKHSs, which is discussed in \cref{sec:rkhstheory}.
+
+
+There is an even stronger notion of continuity called  \emph{Lipschitz continuity}.
 
 \begin{definition}[Lipschitz continuity]
   Let $\cF$ and $\cG$ be two Hilbert spaces.  
   A function $A:\cF\to\cG$ is \emph{Lipschitz continuous} if $\exists M >0$ such that $\forall f,f'\in\cF$,
+  %
   \[
     \norm{Af - Af'}_\cG \leq M \norm{f - f'}_\cF.
   \]
+  %
 \end{definition}
-
+%
 Clearly, Lipschitz continuity implies uniform continuity: choose $\delta = \delta(\epsilon) := \epsilon/M$ and replace this in  \cref{def:continuity}.
-A continuous, linear operator is also one that is bounded:
-
+A continuous, linear operator is also one that is bounded.
+%
 \begin{definition}[Bounded operator]\label{def:boundedop}
   The linear operator $A:\mathcal F \rightarrow \mathcal G$ between two Hilbert spaces $\cF$ and $\cG$ is said to be \emph{bounded} if there exists some $M>0$ such that
   \[
@@ -145,34 +147,34 @@ A continuous, linear operator is also one that is bounded:
   \] 
   The smallest such $M$ is defined to be the \emph{operator norm}, denoted $\norm{A} := \sup_{f\in\cF} \frac{\norm{Af}_\cG}{\norm{f}_\cF}$.
 \end{definition}
-
+%
 \begin{lemma}[Equivalence of boundedness and continuity]\label{thm:boundcont}
   Let $\cF$ and $\cG$ be two Hilbert spaces, and $A:\cF\to\cG$ a linear operator.
-  $A$ is a bounded if and only if it is continuous.
+  $A$ is bounded if and only if it is continuous.
 \end{lemma}
-
+%
 \begin{proof}
-  Suppose that $L$ is bounded.
-  Then, $\forall f,f' \in \cF$, there exists some $M>0$ such that $\norm{A(f-g)}_\cG \leq M \norm{f-g}_\cG.$
+  Suppose that $A$ is bounded.
+  Then, $\forall f,f' \in \cF$, $\exists M>0$ such that $\norm{A(f-g)}_\cG \leq M \norm{f-g}_\cG$, so $A$ is Lipschitz continuous.
   Conversely, let $A$ be a continuous linear operator, especially at the zero vector.
   In other words, $\exists \delta > 0$ such that $\norm{A(f)}_\cG = \norm{A(f+0-0)}_\cG = \norm{A(f) - A(0)} \leq 1$, $\forall f\in\cF$ whenever $\norm{f}_\cF \leq \delta$.
   Thus, for all non-zero $f \in\cF$,
   \begin{align*}
     \norm{A(f)}_\cG &= \left\Vert \frac{\norm{f}_\cF}{\delta} A\left(\frac{\delta}{\norm{f}_\cF}f\right)\right\Vert_\cG \\
-    &= \left\vert \frac{\norm{f}_\cF}{\delta}\right\vert \cdot \left\Vert A\left(\frac{\delta}{\norm{f}_\cF}f\right)\right\Vert_\cG \\    
+    &= \left\vert \frac{\norm{f}_\cF}{\delta}\right\vert \, \left\Vert A\left(\frac{\delta}{\norm{f}_\cF}f\right)\right\Vert_\cG \\    
     &\leq \frac{\norm{f}_\cF}{\delta} \cdot 1,
   \end{align*}
-  and thus $A$ is bounded.
+  and therefore $A$ is bounded.
 \end{proof}
-
+%
 So important is the concept of linearity and continuity, that there are specially named spaces which contain linear and continuous functionals.
-
+%
 \begin{definition}[Dual spaces]
   Let $\cF$ be a Hilbert space. 
   The space $\cF^*$ of \emph{linear functionals} is called the \emph{algebraic dual space} of $\cF$.
   The space $\cF'$ of \emph{continuous linear functionals} is called the \emph{continuous dual space} or alternatively, the \emph{topological dual space}, of $\cF$.   
 \end{definition}
-
+%
 As it turns out, the algebraic dual space and continuous dual space coincide in finite-dimensional Hilbert spaces:
 take any $L\in\cF'$; since $L$ is finite-dimensional, it is bounded, and therefore continuous (see \cref{thm:boundcont}) so $L\in\cF'$ and $\cF^* \subseteq \cF'$; but $\cF' \subseteq \cF^*$ trivially, so $\cF^* \equiv \cF'$.
 For infinite-dimensional Hilbert spaces, this is not so, but in any case, we will only be considering the continuous dual space in this thesis.
@@ -317,7 +319,6 @@ For $x_1,y_1\in\cH_1$ and $x_2,y_2\in\cH_2$, these are:
   3) as a bilinear mapping $\bA:\bbR^n \times \bbR^m \to \bbR$ in the form of $\bA(y_1,y_2) = y_1^\top\bA y_2 = y_1^\top x_1 x_2^\top y_2 = (y_1^\top x_1)(y_2^\top x_2)$, for some $y_1\in\bbR^n$ and $y_2\in\bbR^m$, arising often in the study of quadratic forms.
 \end{remark}
 
-\newpage
 For the last part of this introductory section on functional analysis, we discuss measures on Hilbert spaces, and in particular, a probability measure.
 Let $\cH$ be a real Hilbert space. 
 As discussed earlier, we can define a metric on $\cH$ using $D(x,x') = \norm{x-x'}_\cH$, where the norm on $\cH$ is the norm induced by the inner product.
