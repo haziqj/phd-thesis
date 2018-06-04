@@ -5,6 +5,7 @@ General
 - New colour scheme (LSE colour palette)
 - QED symbols changed to `\blacksquare`
 - Added Nomenclature
+- Corrected margins as per LSE requirement
 
 Chapter 1
 
@@ -20,9 +21,9 @@ Chapter 2
 - Removed corollary on norm convergence implies pointwise convergence, and the associated figure.
 - New pictorial on relationship between RKHS, p.d. functions and rep. kernels.
 - Adjusted graphics for RKHS building blocks.
+- Added remark on general centring of kernels.
+- Added remark on orthogonality at the end of ANOVA RKKS section.
 
 Chapter 3
 
 - Cleaned up proof I-prior theorem
-
-  \node [block, below=1.6cm of ch5]  (s4) {{\scriptsize \textbf{Supplementary 4}}\small\\Hamiltonian Monte Carlo};         
