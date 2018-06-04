@@ -41,7 +41,7 @@ More generally, if $\cX$ is a Hilbert space, then its continuous dual consists o
 We can show that the continuous dual space of $\cX$ is a RKHS which consists of these linear functions.
 
 \begin{proposition}[The canonical RKHS]
-  The continuous dual space a Hilbert space $\cX$, denoted by $\cX'$, is a RKHS of linear functions over $\cX$ of the form $\ip{\cdot,\beta}_\cX$, $\beta\in\cX$. Its reproducing kernel $h:\cX\times\cX\to\bbR$ is defined by
+  The continuous dual space a Hilbert space $\cX$, denoted by $\cX^*$, is a RKHS of linear functions over $\cX$ of the form $\ip{\cdot,\beta}_\cX$, $\beta\in\cX$. Its reproducing kernel $h:\cX\times\cX\to\bbR$ is defined by
   \[
     h(x,x') = \ip{x,x'}_{\cX}.
   \]
@@ -49,20 +49,21 @@ We can show that the continuous dual space of $\cX$ is a RKHS which consists of 
 
 \begin{proof}
   Define $f_\beta := \ip{\cdot,\beta}_\cX$ for some $\beta \in \cX$.
-  Clearly this is linear and continuous, so $f_\beta\in\cX'$, and so $\cX'$ is a Hilbert space containing functions $f:\cX\to\bbR$ of the form $f_\beta(x) = \ip{x,\beta}_\cX$.
-  By the Riesz representation theorem, every element of $\cX'$ has the form $f_\beta$.
+  Clearly this is linear and continuous, so $f_\beta\in\cX^*$, and so $\cX^*$ is a Hilbert space containing functions $f:\cX\to\bbR$ of the form $f_\beta(x) = \ip{x,\beta}_\cX$.
+  By the Riesz representation theorem, every element of $\cX^*$ has the form $f_\beta$.
   It also gives us a natural isometric isomorphism such that the following is true:
   \[
-    \ip{\beta,\beta'}_\cX = \ip{f_\beta,f_{\beta'}}_{\cX'}.
+    \ip{\beta,\beta'}_\cX = \ip{f_\beta,f_{\beta'}}_{\cX^*}.
   \]
-  Hence, for any $f_\beta\in\cX'$, 
+  Hence, for any $f_\beta\in\cX^*$, 
+  \vspace{-0.5em}
   \begin{align*}
     f_\beta(x) 
     &= \ip{x,\beta}_\cX \\
-    &= \ip{f_x,f_{\beta}}_{\cX'} \\
-    &= \big\langle \ip{\cdot,x}_\cX,f_{\beta} \big\rangle_{\cX'}.
+    &= \ip{f_x,f_{\beta}}_{\cX^*} \\
+    &= \big\langle \ip{\cdot,x}_\cX,f_{\beta} \big\rangle_{\cX^*}. \vspace{-0.5em}
   \end{align*}
-  Thus, $h:\cX\times\cX\to\bbR$ as defined by $h(x,x') = \ip{x,x'}_\cX$ is the reproducing kernel of $\cX'$.
+  Thus, $h:\cX\times\cX\to\bbR$ as defined by $h(x,x') = \ip{x,x'}_\cX$ is the reproducing kernel of $\cX^*$.
 \end{proof}
 
 In many other literature, the kernel $h(x,x') = \ip{x,x'}_\cX$ is also known as the \emph{linear kernel}.
@@ -73,6 +74,12 @@ Suppose both $\cX$ and $\cV$ are Hilbert spaces, then a kernel is defined as
   h(x,x') = \ip{\phi(x),\phi(x')}_\cV.
 \]
 Taking the feature map to be $\phi(x) = \ip{\cdot,x}_\cX$, we can prove the reproducing property to obtain $h(x,x') = \ip{x,x'}_\cX$, which implies $\phi(x) = h(\cdot,x)$, and thus $\phi$ is the \emph{canonical feature map} \citep[Lemma 4.19]{steinwart2008support}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.53\textwidth]{figure/02-kernel_path_canonical}
+  \caption{Sample paths from the canonical RKHS.}
+\end{figure}
 
 The origin of a Hilbert space may be arbitrary, in which case a centring may be appropriate.
 We define the centred canonical RKHS as follows.
@@ -89,22 +96,17 @@ We define the centred canonical RKHS as follows.
 \end{definition}
 
 That the centred canonical RKHS consists of zero mean function, $\E [f_\beta(X)] = 0$, consider the following argument:
+\vspace{-0.5em}
 \begin{align*}
   \E [f_\beta(X)] 
   &= \E \ip{X-\mu,\beta}_\cX \\
-  &= \E \ip{X,\beta}_\cX - \ip{\mu,\beta}_\cX,
+  &= \E \ip{X,\beta}_\cX - \ip{\mu,\beta}_\cX, \vspace{-0.5em}
 \end{align*}
 and since $\E \ip{X,\beta}_\cX = \ip{\mu,\beta}_\cX$ for any $\beta\in\cX$, the results follows.
 
-\begin{remark}
+\begin{remark}\label{rem:empircent}
   In practice, the probability measure $\Prob$ over $\cX$ is unknown, so we find it useful to use the empirical distribution over $\cX$ instead, so that $\cX$ is centred by the sample mean $\hat\mu = \frac{1}{n}\sum_{i=1}^n x_i$.  
 \end{remark}
-
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.53\textwidth]{figure/02-kernel_path_canonical}
-  \caption{Sample paths from the canonical RKHS.}
-\end{figure}
 
 \subsection{The fractional Brownian motion RKHS}
 
@@ -112,6 +114,7 @@ Brownian motion, which also goes by the name Wiener process, has been an inquisi
 
 Suppose $B_\gamma(t)$ is a continuous-time Gaussian process on $[0,T]$, i.e. for any finite set of indices $t_1,\dots,t_k$, where each $t_j \in [0,T]$, $\big(B_\gamma(t_1),\dots,B_\gamma(t_k)\big)$ is a multivariate normal random variable.
 $B_\gamma(t)$ is said to be a \emph{fractional Brownian motion} (fBm) if $\E [B_\gamma(t)] = 0$ for all $t \in [0,T]$ and 
+\vspace{-0.5em}
 \[
   \Cov\big[ B_\gamma(t),B_\gamma(s) \big] = \half\big( |t|^{2\gamma} + |s|^{2\gamma} - |t-s|^{2\gamma} \big) \hspace{1cm} \forall t,s \in [0,T],
 \]
@@ -194,7 +197,19 @@ Unlike realisations of actual fBm paths with Hurst index $\gamma$, which are wel
   \end{align*}  
   and thus proving the proposition.
 \end{proof}
+\pagebreak
 
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_1}
+  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_3}
+  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_5}
+  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_7}
+  \caption[Sample I-prior paths from the fBm RKHS with varying Hurst coefficients.]{Sample I-prior paths from the fBm RKHS with varying Hurst coefficients. Note that the fBm-$\gamma$ RKHS contains functions that are rougher than these I-prior paths.}
+\end{figure}
+
+\vspace{-0.5em}
 The fBm-$\gamma$ RKHS is spanned by the functions $h(\cdot,x)$, which means that $f(0)=0$ for all $f \in \cF$, which may be undesirable.
 We define the centred fBm RKHS as follows.
 
@@ -212,12 +227,13 @@ We define the centred fBm RKHS as follows.
 
 \begin{remark}
   Again, when $\gamma=1$, we get the reduction 
+  \vspace{-0.1em}
   \begin{align*}
     \bar h_{\gamma=1}(x,x') 
     &= \half \E \left[ \norm{x-X}_\cX^{2} + \norm{x'-X'}_\cX^{2} - \norm{x-x'}_\cX^{2} - \norm{X-X'}_\cX^{2} \right] \\
     &= \half \E \left[ \ip{X,X}_\cX + \ip{X',X'}_\cX + 2\ip{x,x'}_\cX - 2\ip{x,X}_\cX - 2\ip{x',X'}_\cX\right] \\
     &= \ip{\mu,\mu}_\cX + \ip{x,x'}_\cX - \ip{x,\mu}_\cX - \ip{\mu,x'}_\cX \\
-    &= \ip{x-\mu,x'-\mu}_\cX,
+    &= \ip{x-\mu,x'-\mu}_\cX, \vspace{-1em}
   \end{align*}
   which is the (reproducing) kernel of the centred canonical RKHS.
 \end{remark}
@@ -229,21 +245,12 @@ We define the centred fBm RKHS as follows.
   \]  
   where expectations are taken for the random elements $X,X'\iid\Prob$, a probability measure over $\cX$.
   This centred kernel gives rise to the centred RKHS $\bar\cF$ of centred functions $\E[f(X)]$, $f\in\bar\cF$.
+  As per \cref{rem:empircent}, the empirical distribution of $\Prob$ can be used to approximate the unknown, true $\Prob$.
 \end{remark}
-
-
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_1}
-  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_3}
-  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_5}
-  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_7}
-  \caption[Sample I-prior paths from the fBm RKHS with varying Hurst coefficients.]{Sample I-prior paths from the fBm RKHS with varying Hurst coefficients. Note that the fBm-$\gamma$ RKHS contains functions that are rougher than these I-prior paths.}
-\end{figure}
 
 \subsection{The squared exponential RKHS}
 
-The \gls{SE} kernel function is indeed known to be the default kernel used for Gaussian process regression in machine learning.
+The \gls*{SE} kernel function is indeed known to be the default kernel used for Gaussian process regression in machine learning.
 It is a positive definite function, and hence defines an RKHS.
 The definition of the \gls{SE} RKHS is as follows.
 
@@ -262,6 +269,14 @@ Especially in the machine learning literature, the term Gaussian radial basis fu
 Despite being used extensively for learning algorithms using kernels, an explicit study of the RKHS defined by the SE kernel was not done until recently by \citet{steinwart2006explicit}.
 In that work, the authors describe the nature of real-valued functions in the SE RKHS by considering a a real restriction on the SE RKHS of functions over complex values.
 Their derivation of an orthonormal basis of such an RKHS proved the SE kernel to be the reproducing kernel for the SE RKHS.
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_se_10}
+  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_se_05}
+  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_se_01}
+  \caption{Sample paths from the SE RKHS with varying values for the lengthscale.}
+\end{figure}
 
 SE kernels are known to be ``universal''. That is, it satisfies the following definition of universal kernels due to \citet{micchelli2006universal}.
 
@@ -288,17 +303,9 @@ In a similar manner to the two previous subsections, we may also derive the \emp
   This ensures that $\E[ f(X) ] = 0$ for any $f$ in this RKHS.
 \end{definition}
 
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_se_10}
-  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_se_05}
-  \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_se_01}
-  \caption{Sample paths from the SE RKHS with varying values for the lengthscale.}
-\end{figure}
-
 \subsection{The Pearson RKHS}
 
-In all of the previous RKHS of functions, the domain $\cX$ was taken to be some Euclidean space. 
+In all of the previous RKHSs of functions, the domain $\cX$ was taken to be some Euclidean space. 
 The Pearson RKHS is a vector space of functions whose domain $\cX$ is a finite set.
 Let $\Prob$ be a probability measure over the finite set $\cX$. 
 The Pearson RKHS is defined as follows.
@@ -311,25 +318,25 @@ The Pearson RKHS is defined as follows.
   where $X \sim \Prob$ and $\delta$ is the Kronecker delta.
 \end{definition}
 
-The Pearson RKHS contains functions which are centred, and has the desirable property that the contribution of $f(x)^2$ to the squared norm of $f$ is proportional to $\Prob(X=x)$.
+The Pearson RKHS contains functions which are centred, and has the desirable property that the contribution of $[f(x)]^2$ to the squared norm of $f$ is proportional to $\Prob(X=x)$.
 
-\begin{claim}
+\begin{proposition}
   Let $\cF$ be the Pearson RKHS of functions over a finite set $\cX$.
   Then,
   \[
-    \cF = \{f:\cX\to\bbR | \E f(X) = 0 \}
+    \cF = \{f:\cX\to\bbR \,|\, \E [f(X)] = 0 \}
   \]
   with
   \[
-    \norm{f}_\cF^2 = \Var f(X) = \sum_{x\in\cX} \Prob(X=x)f(x)^2, \ \forall f \in \cF.
+    \norm{f}_\cF^2 = \Var [f(X)] = \sum_{x\in\cX} \Prob(X=x)[f(x)]^2, \ \forall f \in \cF.
   \]
-\end{claim}
+\end{proposition}
 
 \begin{proof}
   Write $p_x = \Prob(X=x)$.
-  The set of functions $\{h(\cdot,x) | x \in \cX\}$ form a basis for $\cF$, and thus each $f \in \cF$ can be written as $f(x) = \sum_{x'\in\cX} w_{x'}h(x,x')$ for some scalars $w_i\in\bbR$, $i\in\cX$.
-  But $\E[ h(X,x')] = \E [\delta_{Xx'}] / p_{x'} - 1 = p_{x'} / p_{x'} - 1 = 0$, and thus $\E f(X) = 0$.
-  Conversely, suppose $f:\cX\to\bbR$ is such that $\E f(X) = 0$.
+  The set of functions $\{h(\cdot,x) \,|\, x \in \cX\}$ form a basis for $\cF$, and thus each $f \in \cF$ can be written as $f(x) = \sum_{x'\in\cX} w_{x'}h(x,x')$ for some scalars $w_i\in\bbR$, $i\in\cX$.
+  But $\E[ h(X,x')] = \E [\delta_{Xx'}] / p_{x'} - 1 = p_{x'} / p_{x'} - 1 = 0$, and thus $\E [f(X)] = 0$.
+  Conversely, suppose $f:\cX\to\bbR$ is such that $\E [f(X)] = 0$.
   Taking $w_x = p_xf(x)$, we see that
   \begin{align*}
     \sum_{x'\in\cX} w_{x'}h(x,x') 
@@ -337,7 +344,9 @@ The Pearson RKHS contains functions which are centred, and has the desirable pro
     &= \frac{f(x)\cancel{p_x}}{\cancel{p_x}} - \cancelto{\E [f(X)] = 0}{\sum_{x'\in\cX} p_{x'}f(x')} = f(x)
   \end{align*}
   and thus $h(\cdot,x)$ spans $\cF$ so $f\in\cF$.
-  To provide the second part, noting that with the choice $w_x = p_xf(x)$ and due to the reproducing property of $h$ for the RKHS $\cF$, the squared norm is 
+  
+  The second part is proved as follows.
+  Noting that with the choice $w_x = p_xf(x)$ and due to the reproducing property of $h$ for the RKHS $\cF$, the squared norm is 
   \begin{align*}
     \ip{f,f}_\cF 
     &= \left\langle \sum_{x\in\cX} w_{x}h(\cdot,x), \sum_{x'\in\cX} w_{x'}h(\cdot,x') \right\rangle_\cF \\
@@ -345,14 +354,15 @@ The Pearson RKHS contains functions which are centred, and has the desirable pro
 %    &= \sum_{x\in\cX} \sum_{x'\in\cX} w_{x} w_{x'} \left( \frac{\delta_{xx'}}{\Prob(X=x)} - 1 \right)
     &= \sum_{x\in\cX} \sum_{x'\in\cX} w_{x} w_{x'} h(x,x')  \\
     &= \sum_{x\in\cX} w_{x} f(x) \\
-    &= \sum_{x\in\cX} \Prob(X=x) f(x)^2,
+    &= \sum_{x\in\cX} \Prob(X=x) [f(x)]^2,
   \end{align*}
   which is also the variance of $f(X)$.
+  \vspace{-0.5em}
 \end{proof}
 
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.53\textwidth]{figure/02-kernel_path_pearson}
-  \caption[Sample I-prior ``paths'' from the Pearson RKHS]{Sample I-prior ``paths'' from the Pearson RKHS. These are represented as points over a finite set.}
+  \caption[Sample I-prior ``paths'' from the Pearson RKHS]{Sample I-prior ``paths'' from the Pearson RKHS. These are represented as points over a finite set. Similarly coloured points are from the same ``path'', and since they are zero-mean functions, they sum to zero.}
 \end{figure}
 

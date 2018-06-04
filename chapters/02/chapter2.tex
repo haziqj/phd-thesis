@@ -61,22 +61,31 @@ Secondly, on bibliography: references will be minimised throughout the presentat
 \section{RKHS building blocks}\label{sec:rkhsbuild}
 \input{02d-rkhs-building-blocks}
 
-\section{Constructing RKKS from existing RKHS}\label{sec:constructrkks}
+\section{Constructing RKKSs from existing RKHSs}\label{sec:constructrkks}
 \input{02e-rkks-construction}
 
 \section{Summary}\label{sec:summarychapter2}
 
-The brief notes on functional analysis allow us to describe the theory of reproducing kernel Hilbert and Kreĭn spaces.
-These are of great interest to us because the topology endowed on such spaces gives great assurances---in particular, all evaluation functionals are continuous in these spaces.
-Moreover, RKHS and RKKS can be specified completely through kernel functions, with new and complex function spaces built simply by manipulation of these kernel functions.
-Of particular importance is the ANOVA functional decomposition, for which we realise provides an objective way of constructing various statistical models (such models will be described later on in detail in Chapter 4).
+The review of functional analysis allows us to describe the theory of RKHSs and RKKSs, which are of interest to us because the topology endowed on such spaces gives appreciable assurances---in particular, all evaluation functionals are continuous in these spaces.
+Moreover, RKHSs and RKKSs can be specified completely through kernel functions, with new and complex function spaces built simply by manipulation of these kernel functions.
+Of particular importance is the ANOVA functional decomposition, for which we realise provides an objective way of constructing various function spaces for regression and modelling. 
+Such models will be described later on in detail in \cref{chapter4}.
 
 An annotated collection of bibliographical references used for this chapter is as follows.
 \begin{itemize}
-  \item \textbf{Functional analysis}. On the introductory material relating to functional analysis in Section 2.1, the lecture notes by \citet{sejdinovic2012} is recommended, and forms the basis for most of the material described. Additionally, \citet{rudin1987real} provides a complementary reading.
-  \item \textbf{RKHS theory}. There are certainly no shortages of introductory texts relating to the theory of RKHS: \citet{steinwart2008support}, \citet{berlinet2011reproducing}, and \citet{gu2013smoothing} to name a few. The concise sketch proof for the Moore-Aronszajn theorem was mostly inspired by \citet[Theorem 4]{hein2004kernels}
-  \item \textbf{RKKS theory}. The innovation of indefinite inner product spaces perhaps started in mathematical physics literature, for which the theory of special relativity depends. Four-dimensional space-time is an often cited example. In any case, we referred to mainly \citet{ong2004learning}, which gives an overview in the context of learning using indefinite kernels. \citet{alpay1991some} and \citet{zafeiriou2012subspace} were also useful for understanding the fundamental concepts of RKKS.
-  \item \textbf{RKHS building blocks}. The main building block RKHS, i.e. the canonical RKHS, the fBm RKHS and the Pearson RKHS are described in the manuscript of \citet{bergsma2017}.
+  \item \textbf{Functional analysis}. 
+  On the introductory material relating to functional analysis in \cref{sec:funcanalysis}, the lecture notes by \citet{sejdinovic2012} is recommended, and forms the basis for most of our material. 
+  Additionally, \citet{rudin1987real,yamamoto2012vector,kokoszka2017introduction} provides a complementary reading.
+  \item \textbf{RKHS theory}. 
+  There are certainly no shortages of introductory texts relating to the theory of RKHS: \citet{steinwart2008support}, \citet{berlinet2011reproducing}, and \citet{gu2013smoothing} to name a few. 
+  The concise sketch proof for the Moore-Aronszajn theorem was mostly inspired by \citet[Theorem 4]{hein2004kernels}.
+  \item \textbf{RKKS theory}. 
+  The innovation of indefinite inner product spaces perhaps started in mathematical physics literature, for which the theory of special relativity depends. 
+  Four-dimensional space-time is an often cited example. 
+  In any case, we referred to mainly \citet{ong2004learning}, which gives an overview in the context of learning using indefinite kernels. 
+  \citet{alpay1991some} and \citet{zafeiriou2012subspace} were also useful for understanding the fundamental concepts of RKKS.
+  \item \textbf{RKHS building blocks}. 
+  The main building block RKHS, i.e. the canonical RKHS, the fBm RKHS and the Pearson RKHS are described in the manuscript of \citet{bergsma2017}.
   \item \textbf{ANOVA and functional ANOVA}. 
   Classical ANOVA is pretty much existent in every fundamental statistical textbook. These texts have extremely well written introductions to this very important concept: \citet[Ch. 11]{casella2002statistical}, \citet[Ch. 3]{dean1999design}. 
   On the relation between classical ANOVA and functional ANOVA decomposition, \citet{gu2013smoothing} offers novel insights. There is diverse literature concerning functional ANOVA, namely from the fields of statistical learning (e.g. \cite{wahba1990spline}), applied mathematics (e.g. \cite{kuo2010decompositions}), and sensitivity analysis (e.g. \cite{sobol2001global,durrande2013anova}). 
