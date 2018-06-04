@@ -103,6 +103,7 @@ generated quantities {
   vector[n] muynew;
   matrix[n,n] Vynew;
   real rmse;
+  real logLik;
   Vw = inverse(Vy);
   w = psi * lambda * H * inverse(Vy) * (y - alpha);
   muynew = alpha + lambda * H * w;
@@ -111,6 +112,7 @@ generated quantities {
     Vynew[i, i] = Vynew[i, i] + 1 / psi;
   ynew = multi_normal_rng(muynew, Vynew);
   rmse = sqrt(mean(square(ynew - ytrue)));
+  logLik = multi_normal_lpdf(y|rep_vector(alpha, n), Vy);
 }
 "
 # Compile the Stan programme
@@ -119,9 +121,9 @@ m@model_name <- "iprior.fbm"
 
 # Fit stan model
 fit.stan <- sampling(m, data = stan.iprior.dat,
-                     pars = c("alpha", "lambda", "psi", "ynew", "rmse"),
+                     pars = c("alpha", "lambda", "psi", "ynew", "rmse", "logLik"),
                      iter = 2000, chains = 8, thin = 1)
-print(fit.stan, pars = c("alpha", "lambda", "psi", "rmse"))
+print(fit.stan, pars = c("alpha", "lambda", "psi", "rmse", "logLik"))
 
 # Check fit
 a <- stan2coda(fit.stan)
@@ -144,7 +146,8 @@ b.lambda.se <- postsd[grep("lambda", names(postsd))]
 b.psi.se <- postsd[grep("psi", names(postsd))]
 ynew <- postmean[grep("ynew", names(postmean))]
 b.rmse <- sqrt(mean((ynew - f(x)) ^ 2))
-b.dens <- postmean[grep("lp__", names(postmean))] - (N / 2) * log(2 * pi)
+# b.dens <- postmean[grep("lp__", names(postmean))] - (N / 2) * log(2 * pi)
+b.dens <- postmean[grep("logLik", names(postmean))]
 
 ## ---- compare ----
 met1 <- c(get_intercept(mod1), sd(dat$y) / sqrt(nrow(dat)),  get_lambda(mod1), get_se(mod1)[1], get_psi(mod1),
