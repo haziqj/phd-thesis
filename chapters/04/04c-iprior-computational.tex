@@ -72,7 +72,7 @@ Denoting $\bU_q$ as the diagonal matrix of eigenvalues $u_1^{(q)},\dots,u_m^{(q)
   .
 \]
 Unfortunately, it may be the case that $\bar\bV\bar\bV^\top \neq \bI_n$, while orthogonality is crucial in order to easily calculate the inverse of $\bSigma_\theta$.
-An additional step is required to obtain an orthogonal version of the Nyström decomposition, as studied by \citet{fowlkes2001efficient}.
+An additional step is required to obtain an orthogonal version of the Nyström decomposition, as studied by \citet{fowlkes2001efficient,fowlkes2004spectral}.
  Let $\bK = \bA + \bA^{-\half}\bB^\top\bB\bA^{-\half}$, where $\bA^{-\half} = \bV_m\bU_m^{-\half}\bV_m$, and obtain the eigendecomposition of this $m\times m$ matrix $\bK = \bR\hat\bU\bR^\top$.
  Defining
  \[
@@ -83,40 +83,15 @@ An additional step is required to obtain an orthogonal version of the Nyström d
    \end{pmatrix}
    \bA^{-\half}\bR\hat\bU^{-\half} \in \bbR^n \times \bbR^m,
  \]
- then 
- \hltodo[Attempt to prove this.]{we have that $\bH_\eta \approx \hat\bV\hat\bU\hat\bV^\top$ such that $\hat\bV\hat\bV^\top = \bI_n$}.
+ then we have that $\bH_\eta \approx \hat\bV\hat\bU\hat\bV^\top$ such that $\hat\bV\hat\bV^\top = \bI_n$ \citep[Appx. A]{fowlkes2004spectral}.
  Estimating I-prior models with the Nystr\"om method including the orthogonalisation step takes roughly $O(nm^2)$ time and $O(nm)$ storage.
- 
+  
 The issue of selecting the subset $\cQ$ remains.
 The simplest method, and that which is implemented in the \pkg{iprior} package, 
 would be to uniformly sample a subset of size $q$ from the $n$ points.
 Although this works well in practice, the quality of approximation might suffer if the points do not sufficiently represent the training set.
 In this light, greedy approximations have been suggested to select the $q$ points, so as to reduce some error criterion relating to the quality of approximation.
-For a brief review of more sophisticated methods of selecting $\cQ$, see \citet[§8.1, pp. 173--174]{rasmussen2006gaussian}.
-
-%\begin{align*}
-%  \bH_\eta 
-%  &\approx \sum_{i\in\cM} \tilde u_i \tilde\bv_i\tilde\bv_i^\top \\
-%  &= \cancel{\frac{n/m}{\sqrt{n/m \times n / m}}}
-%  \begin{pmatrix}
-%    (\bV_m\bU\bV_m^\top)\bV_m\bU^{-1} \\
-%    \bB^\top\bV_m\bU^{-1} \\
-%  \end{pmatrix} 
-%  \bU_m 
-%  \begin{pmatrix}
-%    (\bV_m\bU\bV_m^\top)\bV_m\bU^{-1} 
-%    & \bB^\top\bV_m\bU^{-1} 
-%  \end{pmatrix} \\
-%  &=   
-%  \begin{pmatrix}
-%    \bV_m \\
-%    \bB^\top\bV_m\bU_m^{-1}
-%  \end{pmatrix}
-%  \bU_m
-%  \begin{pmatrix}
-%    \bV_m^\top & \bU_m^{-1}\bV_m^\top\bB
-%  \end{pmatrix}
-%\end{align*}
+For a brief review of more sophisticated methods of selecting $\cQ$, see \citet[§8.1]{rasmussen2006gaussian}.
 
 \subsection{Front-loading kernel matrices for the EM algorithm}
 \label{sec:efficientEM1}
@@ -128,7 +103,6 @@ In this section, we describe an efficient method of evaluating $Q$ if the I-prio
 The premise is this: squaring an ANOVA kernel matrix can be made more efficient because it is a linear combination of several other kernel matrices, which can be pre-calculated and stored for multiple use throughout the EM algorithm.
 We now describe the procedure in detail.
 
-%Separate the RKHS scale parameters $\lambda$ from the other kernel parameters $\xi$ such as the Hurst index of the fBm RKHS, lengthscale of the SE RKHS, and offset parameter of the polynomial RKKS, and write $\theta = \{\lambda_1,\dots,\lambda_p,\psi,\xi \}$.
 Corresponding to $p$ building block RKHSs $\cF_1,\dots,\cF_p$ of functions over $\cX_1,\dots,\cX_p$, there are $p$ scale parameters $\lambda_1,\dots,\lambda_p$ and reproducing kernels $h_1,\dots,h_p$.
 Assume that only the scale parameters are to be estimated, and the rest of the kernel parameters (Hurst coefficient, lengthscale, or offset) are fixed.
 Write $\theta = \{\lambda_1,\dots,\lambda_p,\psi\}$.
@@ -192,19 +166,24 @@ Notice that
 Provided that we have the matrices $\bA_{jk} = \bA_j\bA_k$, $j,k=1,\dots,q$ in addition to $\bA_1,\dots,\bA_q$ pre-calculated and stored, then evaluating $\tr\big(\bA_{jk} \Wtilde^{(t)} \big) = \vecc(\bA_{jk})^\top \vecc(\Wtilde^{(t)} )$ is $O(n^2)$, although this  only need to be done once per EM iteration.
 Thus, with the kernels loaded, the overall time complexity to evaluate $Q$ is $O(n^2)$ at the beginning of each iteration, but roughly linear in $\xi$ thereafter.
 
-As a remark, we have achieved efficiency at the expense of storage and a potentially long initialisation phase of kernel loading.
+In conclusion, we have achieved efficiency at the expense of storage and a potentially long initialisation phase of kernel loading.
 In the \pkg{iprior} package, kernel loading is performed using the \code{kernL()} command.
 The storing of the kernel matrices can be very expensive, especially if the sample size is very large; \cref{fig:ipriorstorage} shows the storage cost of front-loading the kernel matrices for varying number of ANOVA components $p=1,\dots,5$ and sample sizes.
 On the bright side, once the kernel matrices are stored in hard memory, the \pkg{iprior} package allows them to be reused again and again.
 A practical situation where this might be useful is when we would like to repeat the EM at various initial values.
 Although front-loading of kernel matrices increase storage requirements, this is manageable in practice in modern computer systems for sample sizes of $n \leq 5,000$, and there is a clear advantage of doing so.
 
-\begin{figure}[hbt]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{figure/04-iprior_size}
   \caption[Storage cost of front-loading the kernel matrices.]{Storage cost of front-loading the kernel matrices for varying number of ANOVA components $p=1,\dots,5$ and sample sizes. Solid lines indicate actual values, while dotted lines represent (linear) predictions. Storage requirements increases exponentially, since for $p$ ANOVA components, there are $2^{p+1}$ kernel matrices to store in memory.}
   \label{fig:ipriorstorage}
 \end{figure}
+
+\begin{remark}
+  The sign of the scale parameters itself are not identified in the model (this is easily seen when having a single scale parameter in the model since the scale is squared when it appears in the likelihood) but \emph{relative signs of the scale parameters with respect to each other} is.
+\end{remark}
+
 
 \subsection{The exponential family EM algorithm}
 \label{sec:expfamEM}
@@ -252,7 +231,9 @@ Defining $\bR_k$ and $\bS_k$ as the kernel matrices with $(i,j)$ entries $r_k(x_
   \bH_\eta^2 = \lambda_k^2\bR_k^2 + \lambda_k \myoverbrace{\big(\bR_k\bS_k + (\bR_k\bS_k)^\top \big)}{\bU_k} + \bS_k^2.
 \]
 
+\vspace{-1em}
 Consider now the full data log-likelihood for $\lambda_k$, $k=1,\dots,p$, conditionally dependent on the rest of the unknown parameters $\lambda_{-k} = \{\lambda_1,\dots,\lambda_p\} \backslash \{ \lambda_k \}$ and $\psi$:
+\vspace{-0.15em}
 \begin{align}
   L(\lambda_k|\by,\bw,\lambda_{-k},\psi)
   &= \const 
@@ -264,13 +245,13 @@ Consider now the full data log-likelihood for $\lambda_k$, $k=1,\dots,p$, condit
   - \lambda_k^2 \, \half[\psi] \tr(\bR_k^2 \bw\bw^\top)
   + \lambda_k  \left( 
   \psi \tilde\by^\top \bR_k \bw - \half[\psi] \tr(\bU_k \bw\bw^\top)
-  \right). \nonumber
+  \right). \nonumber \vspace{-0.25em}
 \end{align}
 Notice that the above likelihood is an exponential family distribution with the natural parameterisation $\beta = (-\lambda_k^2, \lambda_k)$ and sufficient statistics $T_1$ and $T_2$ defined by
 \[
   T_1 = \half[\psi] \tr(\bR_k^2 \bw\bw^\top)
   \hspace{0.5cm}\text{and}\hspace{0.5cm}
-  T_2 =  \psi\tilde\by^\top \bR_k \bw - \half[\psi]\tr(\bU_k^2 \bw\bw^\top).
+  T_2 =  \psi\tilde\by^\top \bR_k \bw - \half[\psi]\tr(\bU_k^2 \bw\bw^\top).\vspace{-0.2em}
 \]
 This likelihood is maximised at $\hat\lambda_k = T_2/2T_1$, but of course, the variables $w_1,\dots,w_n$ are never observed.
 As per the exponential family EM routine, replace occurrences of $\bw$ and $\bw\bw^\top$ with their respective conditional expectations, i.e. $\bw\mapsto\E[\bw|\by] = \wtilde$ and $\bw\bw^\top\mapsto\E[\bw\bw^\top|\by] = \tilde\bV_w + \wtilde\wtilde^\top$ as defined in \cref{eq:posteriorw}.
@@ -312,32 +293,6 @@ As a remark, it is not necessary that $h_\lambda$ is the full ANOVA RKKS; any of
   \EndWhile
 \end{algorithmic}
 \end{algorithm}
-
-%\bPsi \bH_\eta \bV_y^{-1} (\by - \alpha\bone_n - \bff_0)
-%    \hspace{0.5cm}\text{and}\hspace{0.5cm}
-%    \tilde\bV_w = \big(\bH_\eta\bPsi\bH_\eta + \bPsi^{-1}\big)^{-1} = \bV_y^{-1},
-
-%For these three examples, the specific form of the matrices $\bR_k$ and $\bS_k$ are given below
-%\begin{enumerate}
-%  \item \textbf{Single scale parameter}.
-%  \[
-%    \bR_1 = \bH_1 
-%    \hspace{0.5cm}\text{and}\hspace{0.5cm}
-%    \bS_1 = \bzero
-%  \]
-%  \item \textbf{Multiple scale parameters}.
-%  \[
-%    \bR_k = \bH_k
-%    \hspace{0.5cm}\text{and}\hspace{0.5cm}
-%    \bS_k = \sum_{j\neq k} \lambda_j \bH_j
-%  \]
-%  \item \textbf{Multiple scale parameters with level-2 interactions}.
-%  \[
-%    \bR_k = \bH_k + \sum_{j\neq k} \lambda_j (\bH_j \circ \bH_k)
-%    \hspace{0.5cm}\text{and}\hspace{0.5cm}
-%    \bS_k = \sum_{j\neq k} \lambda_j \bH_j + \sum_{j<j', j,j' \neq k} \lambda_j\lambda_{j'} (\bH_j \circ \bH_{j'})
-%  \]
-%\end{enumerate}
 
 \begin{remark}
   Another compelling reason to use \cref{alg:EM2} is conjugacy of the exponential family of distributions.

@@ -131,7 +131,7 @@ It is sometimes known as the bias term.
 \end{proposition}
 
 \begin{proof}
-  By construction, $\cF = \cF_0 \oplus \bigoplus_{i=1}^d\bigotimes_{j=1}^i \cF_j$, where each $\cF_j, j \neq 0$ is the canonical RKHS, and $\cF_0$ is the RKHS of constant functions.
+  By construction, $\cF = \cF_\emptyset \oplus \bigoplus_{i=1}^d\bigotimes_{j=1}^i \cF_j$, where each $\cF_j, j \neq 0$ is the canonical RKHS, and $\cF_\emptyset$ is the RKHS of constant functions.
   Each $f \in \cF$ can therefore be written as $f = \beta_0 + \sum_{i=1}^d\prod_{j=1}^i f_j$, and $f_j(x)= b_j x$ as they are functions from the canonical RKHS, where $b_j$ is a constant.
   Therefore, $f(x) = \sum_{k=0}^d \beta_k x^k$.
 \end{proof}
@@ -143,6 +143,7 @@ It is sometimes known as the bias term.
 \end{remark}
 
 \subsection{The ANOVA RKKS}
+\label{sec:anovarkks}
 
 We find it useful to begin this subsection by spending some time to elaborate on the classical \gls*{anova} decomposition, and the associated notions of main effects and interactions.
 This will go a long way in understanding the thinking behind constructing an \gls*{anova}-like RKKS of functions.
@@ -262,7 +263,7 @@ This is highly suggestive as to what the ANOVA decomposition of the space $\cF$ 
 Starting with $p=1$, any $f \in \cF$ can be decomposed as a sum of a constant plus a zero mean function, so we have the
 %geometric --- initially it was orthogonal decomposition
 decomposition of the vector space $\cF = \cF_\emptyset \oplus \bar\cF_1$, where 
-%$\cF_0$ is a vector space of constant functions, and 
+%$\cF_\emptyset$ is a vector space of constant functions, and 
 a bar over $\cF_k$, $k=1,\dots,p$ will be used to denote the vector space of zero mean functions over $\cX_k$.
 For $p\geq 2$ we can argue something similar.
 Take the vector space space $\cF$ of functions over $\prod_{k=1}^p \cX_k$ to be the tensor product space $\cF = \cF_1 \otimes \cdots \otimes \cF_p$ whose elements are identified as being tensor product functions $f_1 \otimes\cdots\otimes f_p$, where each $f_k:\cX_k\to\bbR$ belongs to $\cF_k$.
@@ -285,7 +286,7 @@ Expanding out under the distributivity rule of tensor products and rearranging s
   \ \oplus \ 
   \Big( \bar\cF_1 \otimes \cdots \otimes \bar\cF_p \Big), \nonumber
 %  \\
-%  &= \cF_0 
+%  &= \cF_\emptyset 
 %  \mathop{\oplus}^\bot
 %  \bigoplus_{j=1}^p \bar\cF_j
 %  \mathop{\oplus}^\bot

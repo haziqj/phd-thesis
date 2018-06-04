@@ -1,4 +1,4 @@
-In the introductory chapter (\cref{sec:introregmod}), we described several interesting regression models.
+In the introductory chapter \colp{\cref{sec:introregmod}}, we described several interesting regression models.
 The goal of this section is to formulate the I-prior model that describes each of these models.
 This is done by carefully choosing the RKHS/RKKS $\cF$ of real functions over a set $\cX$ to which the regression function $f$ belongs.
 Without loss of generality and for simplicity, assume a prior mean of zero for the I-prior distribution.
@@ -20,16 +20,13 @@ This implies a multivariate normal prior distribution for the regression coeffic
 where $\bX$ is the $n \times p$ design matrix for the covariates, excluding the column of ones at the beginning typically reserved for the intercept. 
 As expected, the covariance matrix for $\boldsymbol\beta$ is recognised as the scaled Fisher information matrix for the regression coefficients.
 
-%Functions in the canonical RKHS are of the form $f(\bx) = \bx^\top\boldsymbol\beta$.
-\hltodo[Rethink]{If the covariates are not scaled similarly, then the values of $f$ are incoherent---if $x_1$  measures weight in kilograms and $x_2$ height in centimetres, what measurement does $\beta_1x_1 + \beta_2x_2$ represent?}
-To overcome this, one could decompose the regression function into
+If the covariates are not measured similarly, e.g. weights in kilograms, heights in metres, etc., then it makes sense to introduce scale parameters $\lambda_k$ to account for the difference in scale.
+One could decompose the regression function into
 \[
   f(\bx_i) = f_1(x_{i1}) + \cdots + f_p(x_{ip}) 
 \]
 for which $f \in \cF_\lambda \equiv \cF_{\lambda_1}\oplus\cdots\oplus\cF_{\lambda_p}$, and $\cF_{\lambda_k}$, $k=1,\dots,p$ are unidimensional canonical RKHSs with kernels $h_{\lambda_k}(x_{ik},x_{jk}) = \lambda_k x_{ik} x_{jk}$.
-%, where $\bar x_k = \sum_{i=1}^n x_{ik}/n$.
-In effect, we now have $p$ scale parameters, one for each of the RKKSs associated with the $p$ covariates.
-%Denote $\tilde x_{ik} = x_{ik}-\bar x_k$, the centred covariates.
+In effect, we now have $p$ scale parameters, one for each of the RKHSs associated with the $p$ covariates.
 The RKKS $\cF_\lambda$ therefore has kernel
 \[
   h(\bx_i,\bx_j) = \sum_{k=1}^p \lambda_k  x_{ik} x_{jk},
@@ -40,13 +37,12 @@ Thus, the corresponding I-prior for $\boldsymbol{\beta}$ is
   \boldsymbol{\beta} \sim \N_p(\bzero, \bX^\top\bLambda \bPsi \bLambda \bX),
 \]
 with $\bLambda = \diag(\lambda_1,\dots,\lambda_p)$.
-%Note that the overall effect $\beta_0$ can be treated in a number of ways, the simplest of which is as an intercept to be estimated.
 Note that $\cF_\lambda$ can be seen as a special case of the ANOVA RKKS, in which only the main effects are considered, in which case the \emph{centred canonical RKHSs} should be considered instead.
 This approach is disadvantageous when $p$ is large, in which case there would be numerous scale parameters to estimate.
 
-\begin{remark}\hltodo[Anything wrong with standardising?]{}
+\begin{remark}
   Of course, one could simply turn to standardisation of the $\bX$ variables, so as to make the variables measure on the same scale.
-  We feel this is a rather ad-hoc approach---how can one be sure that the variables are centred and scaled appropriately?
+  We feel this is a rather ad-hoc approach which creates meaningless units (they are standard deviations) for the covariates which are then fiddly to interpret.
   On the other hand, there is a balance to be made between elegance and feasibility.
   With large $p$, standardising is much simpler and computationally less burdensome than estimating $p$ individual scale parameters.
   In \cref{chapter6}, where we tackle the problem of  Bayesian variable selection using I-priors in linear models, standardisation of the variables is done for the sake of streamlining the Gibbs sampler.
@@ -98,7 +94,7 @@ While the estimation procedure for $\bPhi$ in the standard multilevel model can 
 
 As a remark, the following regression functions are nested 
 \begin{itemize}
-  \item $f(\bx_i^{(j)}, j) = \alpha + f_1(\bx_i^{(j)}) + f_2(j)$ (random intercept model);  %\cF_0 \oplus \lambda_1\cF_1 \oplus \lambda_2\cF_2
+  \item $f(\bx_i^{(j)}, j) = \alpha + f_1(\bx_i^{(j)}) + f_2(j)$ (random intercept model);  %\cF_\emptyset \oplus \lambda_1\cF_1 \oplus \lambda_2\cF_2
   \item $f(\bx_i^{(j)}, j) = \alpha + f_1(\bx_i^{(j)})$ (linear regression model);
   \item $f(\bx_i^{(j)}, j) = \alpha + f_2(j)$ (ANOVA model);
   \item $f(\bx_i^{(j)}, j) = \alpha$ (intercept only model),
@@ -113,7 +109,7 @@ In addition, one may add flexibility to the model in two possible ways:
       + f_{23}(j, k) + f_{123}(\bx_i^{(j,k)}, j, k).
     \end{gathered}
   \end{align*}
-  \item \textbf{Covariates not varying with levels}. Suppose now we would like to add covariates with a fixed effect to the model, i.e., covariates $\bz_i^{(j)}$ which are not assumed to affect the responses differently in each group. The regression function would be:
+  \item \textbf{Covariates not varying with levels}. Suppose now we would like to add covariates with a fixed effect to the model, i.e. covariates $\bz_i^{(j)}$ which are not assumed to affect the responses differently in each group. The regression function would be:
   \begin{align*}
     \begin{gathered}
       f(\bx_i^{(j)}, j, \bz_j) = \alpha + f_1(\bx_i^{(j)}) + f_2(j) + f_3(\bz_i^{(j)}) + f_{12}(\bx_i^{(j)}, j).
@@ -122,30 +118,29 @@ In addition, one may add flexibility to the model in two possible ways:
   This can be seen as a limited functional ANOVA decomposition of $f$.
 \end{enumerate}
 
-\begin{remark}
-  \setlength{\parindent}{0em}
-  Indexing can be tricky, but we find the following helpful.
-  Supposing $m=2$, and $n_1 = n_2 = 3$, then a typical panel data set looks like this:
-  \begin{table}[H]
-  \centering
-  \begin{tabular}{lllrrr}
-  \hline
-  $y$ & $x$  & $z$ & $i$ & $j$ & $k$ \\ 
-  \hline
-  $y_{11}$      & $x_{11}$    & $z_{1}$ &1&1& 1 \\
-  $y_{21}$      & $x_{21}$    & $z_{1}$ &2&1& 2 \\
-  $y_{31}$      & $x_{31}$    & $z_{1}$ &3&1& 3 \\
-  $y_{12}$      & $x_{12}$    & $z_{2}$ &1&2& 4 \\
-  $y_{22}$      & $x_{22}$    & $z_{2}$ &2&2& 5 \\
-  $y_{32}$      & $x_{32}$    & $z_{2}$ &3&2& 6 \\  
-  \hline
-  \end{tabular}
-  \end{table}
-  \vspace{-1.5em}
-  The $y$'s are the responses, $x$'s covariates, and $z$'s group-level covariates.
-  If $\iota:(i,j)\mapsto k$ is a function which maps the dual index set $(i,j)$ to the single index set $k\in\{1,\dots,n\}$, then the multilevel regression function can be expressed as the regression function in model \cref{eq:model1}.
-\end{remark}
-
+%\begin{remark}
+%  \setlength{\parindent}{0em}
+%  Indexing can be tricky, but we find the following helpful.
+%  Supposing $m=2$, and $n_1 = n_2 = 3$, then a typical panel data set looks like this:
+%  \begin{table}[H]
+%  \centering
+%  \begin{tabular}{lllrrr}
+%  \hline
+%  $y$ & $x$  & $z$ & $i$ & $j$ & $k$ \\ 
+%  \hline
+%  $y_{11}$      & $x_{11}$    & $z_{1}$ &1&1& 1 \\
+%  $y_{21}$      & $x_{21}$    & $z_{1}$ &2&1& 2 \\
+%  $y_{31}$      & $x_{31}$    & $z_{1}$ &3&1& 3 \\
+%  $y_{12}$      & $x_{12}$    & $z_{2}$ &1&2& 4 \\
+%  $y_{22}$      & $x_{22}$    & $z_{2}$ &2&2& 5 \\
+%  $y_{32}$      & $x_{32}$    & $z_{2}$ &3&2& 6 \\  
+%  \hline
+%  \end{tabular}
+%  \end{table}
+%  \vspace{-1.5em}
+%  The $y$'s are the responses, $x$'s covariates, and $z$'s group-level covariates.
+%  If $\iota:(i,j)\mapsto k$ is a function which maps the dual index set $(i,j)$ to the single index set $k\in\{1,\dots,n\}$, then the multilevel regression function can be expressed as the regression function in model \cref{eq:model1}.
+%\end{remark}
 
 \subsection{Longitudinal modelling}
 
@@ -155,7 +150,7 @@ It is also possible that covariate measurements vary across time too, so appropr
 For example, $x_i(t)$ could be repeated measurements of the variable $x_i$ at time point $t\in\cT_i$.
 The relationship between the response variables $y_i(t)$ at time $t\in\cT_i$ is captured through the equation
 \[
-  y_i(t) = f\big(x_i, t \big) + \epsilon_{i}(t)
+  y_i(t) = f\big(i, x_i, t \big) + \epsilon_{i}(t)
 \]
 where the distribution of $\bepsilon_i = \big(\epsilon_i(t_{i1}),\dots,\epsilon_i(t_{iT_i}) \big)^\top$ is Gaussian with mean zero and covariance matrix $\bPsi_i$.
 Assuming $\bPsi_i=\psi_i\bI_{T_i}$ or even $\bPsi_i=\psi\bI_{T_i}$ are perfectly valid choices, even though this seemingly ignores any time dependence between the observations.
@@ -165,13 +160,18 @@ Additionally, the random vectors $\bepsilon_i$ and $\bepsilon_{i'}$ are assumed 
 
 Motivated by a functional ANOVA decomposition, we obtain
 \begin{align}\label{eq:longitudinalanova}
-  f(x_i,t) = \alpha + f_1(i) + f_2(x_i) + f_3(t) + f_{13}(i,t) + f_{23}(x_i,t) + f_{123}(i,x_i,t),
+\begin{split}
+  f(i,x_i,t) 
+  ={}& \alpha + f_1(i) + f_2(x_i) + f_3(t) + f_{13}(i,t) + f_{23}(x_i,t) + f_{12}(i,x_i)  \\
+  &+ f_{123}(i,x_i,t)
+\end{split}
 \end{align}
-where $\alpha$ is an overall constant, $f_k\in\cF_k$, $k=1,2,3$,  $f_{j3}\in\cF_j\otimes\cF_3$, $j=1,2$, and $f_{123}\in\cF_1\otimes\cF_2\otimes\cF_3$.
+where $\alpha$ is an overall constant, and each of the ANOVA component functions belongs to the appropriate (tensor product) space as described in \cref{sec:anovarkks} \colp{\mypageref{{sec:anovarkks}}}.
 $\cF_1$ is the Pearson RKHS, but choices for $\cF_2$ and $\cF_3$ are plentiful.
 In fact, any of the RKHS/RKKS described in Chapter 3 can be used to either model a linear dependence (canonical RKHS), nominal dependence (Pearson RKHS), polynomial dependence (polynomial RKKS) or smooth dependence (fBm or SE RKHS) on the $x_i$'s and $t$'s on $f$.
 
-\subsection{Classification}\label{sec:naiveclass}
+\subsection{Classification}
+\label{sec:naiveclass}
 \input{05a-naive}
 
 \subsection{Smoothing models}
@@ -186,15 +186,17 @@ Thus, with a centring with respect to the empirical distribution $\Prob_n$ of $\
   h_\lambda(x,x') = \frac{\lambda}{2n^2} \sum_{i=1}^n\sum_{j=1}^n \big( \abs{x-x_i} + \abs{x'-x_j} - \abs{x-x'} - \abs{x_i-x_j} \big).
 \]
 As proven by \citet[Section 10]{van2008reproducing}, $\cF$ contains absolutely continuous functions possessing a square integrable weak derivative satisfying $f(0)=0$.
-The norm is given by $\norm{f}^2_\cF = \int \dot f^2 \d x$.
+The norm is given by $\norm{f}^2_\cF = \int \dot f^2 \dint x$.
 The posterior mean of $f$ based on an I-prior is then a (one-dimensional) smoother for the data.
-For $f$ of the form $f = \sum_{i=1}^n h(\cdot,x_i)w_i$, i.e., $f\in\cF_n$, the finite subspace of $\cF$ as in \cref{sec:inducedFisherRKHS}, then \citet{bergsma2017} shows that $f$ can be represented as 
+For $f$ of the form $f = \sum_{i=1}^n h(\cdot,x_i)w_i$, i.e. $f\in\cF_n$, the finite subspace of $\cF$ as in \cref{sec:inducedFisherRKHS} \colp{\mypageref{sec:inducedFisherRKHS}}, then \citet{bergsma2017} shows that $f$ can be represented as 
+\vspace{-0.5em}
 \begin{align}\label{eq:ipriorbrownianbridge}
-  f(x) = \int_{-\infty}^x \beta(t) \dint t
+  f(x) = \int_{-\infty}^x \beta(t) \dint t \vspace{-0.5em}
 \end{align}
 where 
+\vspace{-0.5em}
 \begin{align}
-  \beta(t) = \sum_{i:x_i \leq t} w_i =  \frac{f(x_{i_t + 1}) - f(x_{i_t})}{x_{i_t + 1} - x_{i_t}}
+  \beta(t) = \sum_{i:x_i \leq t} w_i =  \frac{f(x_{i_t + 1}) - f(x_{i_t})}{x_{i_t + 1} - x_{i_t}} \vspace{-0.1em}
 \end{align}
 with $i_t = \max_{x_i \leq t} i$.
 Under the I-prior with an iid assumption on the errors, the $w_i$'s are zero mean normal random variables with variance $\psi$, so that $\beta$ as defined above is an ordinary Brownian bridge with respect to the empirical distribution $\Prob_n$.
@@ -204,7 +206,7 @@ This is explained by the reduced Fisher information about the derivative of the 
 
 In \citet{bergsma2017}, it is shown that the covariance function for $\beta$ is 
 \[
-  \Cov\big[\beta(x),\beta(x') \big] = n \big( \min\{\Prob_n(X < x), \Prob_n(X_n < x') \} -  \Prob_n(X < x) \Prob_n(X_n < x') \big)
+  \Cov\big[\beta(x),\beta(x') \big] = n \big( \min\{\Prob_n(X < x), \Prob_n(X_n < x') \} -  \Prob_n(X < x) \Prob_n(X_n < x') \big) 
 \]
 From this, notice that $\Var [\beta(x)] = \Prob_n(X_n < x)\big(1 - \Prob_n(X_n < x) \big)$, which shows an automatic boundary correction: close to the boundary there is little Fisher information on the derivative of the regression function $\beta(x)$, so the prior variance is small.
 This will lead to more shrinkage of the posterior derivative of $f$ towards the derivative of the prior mean $f_0$.
@@ -235,7 +237,6 @@ This will lead to more shrinkage of the posterior derivative of $f$ towards the 
 Another advantage of the I-prior methodology is the ability to fit single or multidimensional smoothing models with just two parameters to be estimated: the RKHS scale parameter $\lambda$ and the error precision $\bPsi$.
 The Hurst parameter $\gamma \in (0,1)$ of the fBm RKHS can also be treated as a free parameter for added flexibility, but for most practical applications, we find that the default setting of $\gamma = 1/2$ performs sufficiently well.
 
-\newpage
 \begin{remark}
   From \cref{eq:ipriorbrownianbridge}, the prior process for $f$ is thus an integrated Brownian bridge. 
   This shows a close relation with cubic spline smoothers, which can be interpreted as the posterior mean when the prior is an integrated Wiener process \citep{wahba1990spline}.

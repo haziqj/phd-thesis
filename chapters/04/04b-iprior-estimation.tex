@@ -39,81 +39,52 @@ Henceforth, for simplicity, the following additional standing assumptions are im
 \begin{enumerate}[label=A\arabic*,ref=A\arabic*]
   \item \textbf{Centred responses}. Set $\alpha = 0$ and replace the responses by their centred versions $y_i \mapsto \tilde y_i = y_i - \frac{1}{n}\sum_{i=1}^n$. \label{ass:A1}  
   \item \textbf{Zero prior mean}. Assume a zero prior mean $f_0(x) = 0$ for all $x\in\cX$. \label{ass:A2} 
-  \item \textbf{Iid errors}. Assume identical and independent (iid) errors random variables, i.e., $\bPsi = \psi\bI_n$. \label{ass:A3} 
+  \item \textbf{Iid errors}. Assume identical and independent errors, i.e. $\bPsi = \psi\bI_n$. \label{ass:A3} 
 \end{enumerate}
 Assumptions \ref{ass:A1} and \ref{ass:A2} are motivated by the discussion in \cref{sec:intercept}.
 Although assumption \ref{ass:A3} is not strictly necessary, it is often a reasonable one and one that simplifies the estimation procedure greatly.
 
-%Recall that the ANOVA kernel can be viewed as a sum of $2^p$ terms consisting of products of kernels with increasing order of interactions.
-
-%With respect to scale parameters, possible cases for the structure of the kernel of $\cF$ are:
-%\begin{enumerate}
-%  \item \textbf{Single scale parameter}. 
-%  \[
-%    h_\eta = \lambda_1 h.
-%  \]
-%  \item \textbf{Multiple scale parameters}.
-%  \[
-%    h_\eta = \lambda_1 h_1 + \cdots + \lambda_p h_p
-%  \]
-%  \item \textbf{Multiple scale parameters with interactions}.
-%  \[
-%    h_\eta = \prod_{k=1}^p (1 + \lambda_k h_k) - 1
-%  \]
-%\end{enumerate}
-%In the simplest case, the kernel of $\cF$ may contain a single scale parameter $\lambda$
-%
-%After choosing an appropriate function space...
-%What are the kernel parameters? 
-%State the model $y = \alpha + \sum h w + e$.
-%Goal is to estimate posterior regression function.
-%
-%After imposing an I-prior on the regression function,
-%This has been described in Chapter 1, and repeated here for convenience.
-%In particular, the posterior distribution for the regression function of the form $f(x) = \sum_{i=1}^n h(x,x_i)w_i$ merely depends on the posterior distribution of $  \bw := (w_1,\dots,w_n)^\top$, which is 
-%
-%explain package
-
-
+\vspace{-0.25em}
 \subsection{The intercept and the prior mean}\label{sec:intercept}
-
+\vspace{-0.25em}
 In most statistical models, an intercept is a necessary inclusion which aids interpretation.
 In the context of the I-prior model \cref{eq:model2}, a lack of an intercept would fail to account for the correct locational shift of the regression function along the $y$-axis.
 Further, when zero-mean functions are considered, the intercept serves as being the `grand mean' value of the responses.
 
 The handling of an intercept to the regression model may be viewed in one of two ways.
-The first is to view it as a function belonging to the RKHS of constant functions $\cF_0$, and thereby tensor summing this space to $\cF$.
+The first is to view it as a function belonging to the RKHS of constant functions $\cF_\emptyset$, and thereby tensor summing this space to $\cF$.
 The second is to simply treat the intercept as a parameter of the model to be estimated.
 In the polynomial and ANOVA RKKSs, we saw that an intercept is naturally induced by the inclusion of a RKHS of constant functions in their construction.
 In any of the other RKHSs described in \cref{chapter2}, an intercept would need to be added separately.
 These two methods convey slightly different interpretations of the intercept: in the first method, the intercept is shrunk by an I-prior, while in the second, it is not.
 Estimation is also entirely different for the two methods.
 
-In the first method, the intercept-less RKHS/RKKS $\cF$ with kernel $h$ is made to include an intercept by modifying the kernel to be $h + 1$.
+In the first method, the intercept-less RKHS/RKKS $\cF$ with kernel $h$ is made to include an intercept by modifying the kernel to be $1 + h$.
 The intercept will then be implicitly taken care of without having dealt with it explicitly.
-However, it can be obtained by realising that for $\alpha\in\cF_0$ the RKHS of constant functions, then $\alpha = \sum_{i=1}^n w_i$.
+However, it can be obtained by realising that for $\alpha\in\cF_\emptyset$ the RKHS of constant functions, then $\alpha = \sum_{i=1}^n w_i$.
 
 On the other hand, consider the intercept as a parameter $\alpha$ to be estimated.
 Obtaining an estimate $\alpha$ using a likelihood-based argument is rather simple.
-From \cref{eq:model2}, $\E [y_i] = \alpha + f_0(x_i)$ for all $i=1,\dots,n$, so the maximum likelihood estimate for $\E y$ is its sample mean $\bar y = \frac{1}{n}\sum_{i=1} y_i$, and hence the ML estimate for $\alpha$ is $\hat\alpha = \bar y - \frac{1}{n} \sum_{i=1}^n f_0(x_i)$.
+From \cref{eq:model2}, $\E [y_i] = \alpha + f_0(x_i)$ for all $i=1,\dots,n$, so the maximum likelihood (ML) estimate for $\E[y]$ is its sample mean $\bar y = \frac{1}{n}\sum_{i=1} y_i$, and hence the ML estimate for $\alpha$ is $\hat\alpha = \bar y - \frac{1}{n} \sum_{i=1}^n f_0(x_i)$.
+Thus, assumption \ref{ass:A1} therefore implies that the ML estimate for the intercept is the sample mean of the responses.
 
-Finally, the estimation of $\alpha$ under a fully Bayesian treatment is possible by assuming an appropriate hyperprior on it, such as a conjugate normal prior $\N(a,A^{-1})$.
-If so, the conditional posterior of $\alpha$ given $\bw$, $\eta$, $\bPsi$ and $f_0$ is also normal with mean $\tilde a$ and variance $\tilde A$, where
-\[
-  \tilde A = \sum_{i,j=1}^n \psi_{ij} + A
-  \hspace{0.5cm}\text{and}\hspace{0.5cm}
-  \tilde a = \tilde A^{-1}\left( \sum_{i=1}^n [(\by-\bff_0-\bH_\eta \bw)\bPsi]_i + Aa \right).
-\]
-This fact can be used, say, in conjunction with a Gibbs sampling procedure treating the rest of the unknowns as random.
-Note that the posterior mean for $\alpha$ is
-\begin{align*}
-  \E [\alpha|\by] 
-  &= \E_\bw\big[ \E [\alpha|\by,\bw] \big] 
-  = \frac{\sum_{i,j=1}^n \psi_{ij}(y_i-f_0(x_i)) + Aa}{\sum_{i,j=1}^n \psi_{ij} + A},
-\end{align*}
-which, in the iid errors case, is seen to be a weighted sum of the ML estimate $\hat\alpha$ and the prior mean $a$.
-Unless there is a strong reason to add prior information to the intercept, the ML estimate seems to be the simplest approach.
-Assumption \ref{ass:A1} therefore implies a ML estimation of the intercept parameter.
+%Finally, the estimation of $\alpha$ under a fully Bayesian treatment is possible by assuming an appropriate hyperprior on it, such as a conjugate normal prior $\N(a,A^{-1})$.
+%If so, the conditional posterior of $\alpha$ given $\bw$, $\eta$, $\bPsi$ and $f_0$ is also normal with mean $\tilde a$ and variance $\tilde A$, where
+%\[
+%  \tilde A = \sum_{i,j=1}^n \psi_{ij} + A
+%  \hspace{0.5cm}\text{and}\hspace{0.5cm}
+%  \tilde a = \tilde A^{-1}\left( \sum_{i=1}^n [(\by-\bff_0-\bH_\eta \bw)\bPsi]_i + Aa \right).
+%\]
+%This fact can be used, say, in conjunction with a Gibbs sampling procedure treating the rest of the unknowns as random.
+%Note that the posterior mean for $\alpha$ is
+%\begin{align*}
+%  \E [\alpha|\by] 
+%  &= \E_\bw\big[ \E [\alpha|\by,\bw] \big] 
+%  = \frac{\sum_{i,j=1}^n \psi_{ij}(y_i-f_0(x_i)) + Aa}{\sum_{i,j=1}^n \psi_{ij} + A},
+%\end{align*}
+%which, in the iid errors case, is seen to be a weighted sum of the ML estimate $\hat\alpha$ and the prior mean $a$.
+%Unless there is a strong reason to add prior information to the intercept, the ML estimate seems to be the simplest approach.
+%Assumption \ref{ass:A1} therefore implies a ML estimation of the intercept parameter.
 
 \subsection{Direct optimisation}
 
@@ -151,20 +122,20 @@ To be explicit, the log-likelihood is given by
 This method is relatively robust to numerical instabilities and is better at ensuring positive definiteness of the covariance kernel.
 %The eigendecomposition is performed using the \pkg{Eigen} \proglang{C++} template library and linked to \pkg{iprior} using \pkg{Rcpp} \citep{eddelbuettel2011rcpp}.
 %The hyperparameters are transformed by the \pkg{iprior} package so that an unrestricted optimisation using the quasi-Newton L-BFGS algorithm provided by \code{optim()} in \proglang R.
-%Note that minimisation is done on the deviance scale, i.e., minus twice the log-likelihood.
+%Note that minimisation is done on the deviance scale, i.e. minus twice the log-likelihood.
 The direct optimisation method can be prone to local optima, in which case repeating the optimisation at different starting points and choosing the one which yields the highest likelihood is one way around this.
 On a practical note, parameters are best transformed so that optimisation of these parameters are done on an unrestricted scale (e.g. $\log \psi$).
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.725\textwidth]{figure/04-iprior-ridge-2}
+  \includegraphics[width=0.73\textwidth]{figure/04-iprior-ridge-2}
   \caption[A typical log-likelihood surface plot of I-prior models.]{A typical log-likelihood surface plot of I-prior models, in which there are two ridges. The maximum occurs along one of the two ridges, or sometimes at the intersection. Clearly, different initialisations can lead optimisation algorithms to either ridge and possibly converge to a local optima.}
   \label{fig:ipriorridge}
 \end{figure}
 
 
 Let $\bU$ be the Fisher information matrix for $\theta \in\bbR^q$.
-Standard calculations (\cref{apx:fishermultinormal}) show that under the marginal distribution $\tilde\by \sim \N_n\big(\bzero, \bSigma_\theta \big)$, the $(i,j)$'th coordinate of $\bU$ is 
+Standard calculations \colp{\cref{apx:fishermultinormal}} show that under the marginal distribution $\tilde\by \sim \N_n\big(\bzero, \bSigma_\theta \big)$, the $(i,j)$'th coordinate of $\bU$ is 
 \begin{equation}
   u_{ij} = 
   \half \tr\left(
@@ -284,7 +255,7 @@ A vague prior choice for $\lambda$ and $\psi$ are prescribed, namely
 \[
   \lambda,\psi \iid \N_+(0,100),
 \]
-where $\N_+(\mu,\sigma^2)$ represents the \emph{half-normal} distribution\footnote{The random variable $X \sim \N_+(\mu,\sigma^2)$ has the density $p(x) = \phi(x|\mu,\sigma^2)\ind(x \geq 0)$.}.
+where $\N_+(\mu,\sigma^2)$ represents the \emph{half-normal} distribution\footnote{The random variable $X \sim \N_+(\mu,\sigma^2)$ has the density $p(x) = \phi(x|\mu,\sigma^2)\ind(x \geq 0)$.}\footnote{Note that a single scale parameter $\lambda$ is not identified in sign, and is thus constrained to the positive reals. This is applicable in both likelihood-based and Bayesian methods.}.
 We have also set an improper prior density $p(\alpha) \propto \const$ for the intercept.
 The advantage of HMC is that efficiency is not dictated by conjugacy, so there is freedom to choose any appropriate prior choice on the parameters.
 

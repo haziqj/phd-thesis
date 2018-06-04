@@ -36,7 +36,6 @@ Choices for $a:\cM \times \cM \to \bbR$ include
 The purpose of either of these kernels is to contribute to the class intercepts $\alpha_j$, and to associate a regression function in each class.
 The only difference between the two is the inverse probability weighting per class that is applied in the Pearson kernel, but not in the identity kernel.
 
-
 With $f \in \cF$ (the RKKS with kernel $h_\eta$), it is straightforward to assign an I-prior on $f$. 
 It is in fact
 \begin{align}\label{eq:naiveclassiprior}
@@ -48,7 +47,7 @@ It is in fact
 assuming a zero prior mean $f_0(x,j) = 0$.
 The model then classifies the $i$'th data point to class $j$ if $\hat y_{ij} = \max(\hat y_{i1},\dots,\hat y_{im})$, where $\hat y_{ik} = \hat\alpha + \hat f(x_i,k)$, the prediction for the $k$'th component of $y_i$.
 
-There are several downfalls to using the model described above.
+There are several drawbacks to using the model described above.
 Unlike in the case of continuous response variables, the normal I-prior model is highly inappropriate for categorical responses.
 For one, it violates the normality and homoscedasticity assumptions of the errors.
 For another, predicted values may be out of the range $[0,m]$ and thus poorly calibrated.
@@ -84,7 +83,6 @@ In \cref{chapter5}, we propose an improvement to this naïve I-prior classificat
 %    &= \sum_{i=1}^n \sum_{j'=1}^m\sum_{i'=1}^n \delta_{jj'} b_\eta(x_i,x_{i'}) w_{i'j'} 
 %  \end{align*}
 %\end{proof}
-
 
 %Rearrange the $n$ observations per class.
 %Let $\bff_j = \big(f_j(x_1),\dots,f_j(x_n)\big)^\top \in \bbR^n$.

@@ -26,7 +26,18 @@
 \usepackage{soul}  % for highlighting text
 \usepackage{url}
 \usepackage{hyperref}  % hyperref setup at the bottom
-\usepackage{footmisc}  % ability to reuse footnotes
+\usepackage{footmisc}  % ability to reuse footnotes 
+% https://tex.stackexchange.com/questions/40072/incompatibility-between-footmisc-option-multiple-and-hyperref/62091#62091
+
+\let\oldFootnote\footnote
+\newcommand\nextToken\relax
+
+\renewcommand\footnote[1]{%
+    \oldFootnote{#1}\futurelet\nextToken\isFootnote}
+
+\newcommand\isFootnote{%
+    \ifx\footnote\nextToken\textsuperscript{,}\fi}
+    
 \usepackage[utf8]{inputenc}  % To get accents on letters
 \usepackage[T1]{fontenc}     % e.g. \"a
 \usepackage{ifxetex}
@@ -65,7 +76,6 @@
 }
 \makeatother
 
-
 % Colour-blind safe pallete
 \definecolor{colblu}{RGB}{0,114,178}
 \definecolor{colcya}{RGB}{86,180,233}
@@ -95,16 +105,17 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 %\usepackage{algorithmicx}
-\newcommand\code{\bgroup\@makeother\_\@makeother\~\@makeother\$\@codex}
-\def\@codex#1{{\normalfont\ttfamily\hyphenchar\font=-1 #1}\egroup}
+%\newcommand\code{\bgroup\@makeother\_\@makeother\~\@makeother\$\@codex}
+%\def\@codex#1{{\normalfont\ttfamily\hyphenchar\font=-1 #1}\egroup}
 \let\proglang=\textsf
 \newcommand{\pkg}[1]{{\fontseries{b}\selectfont #1}}
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
 
 % Bibliography
 %\usepackage[longnamesfirst]{natbib}
 %  \bibpunct{(}{)}{;}{a}{,}{,~}
 %  \addto\captionsenglish{\renewcommand{\bibname}{References}}  % change the name of Bibliography section
-\usepackage[style=authoryear-comp, firstinits=false, giveninits=false, maxcitenames=2,
+\usepackage[style=authoryear-comp, firstinits=false, giveninits=false, maxcitenames=2, uniquelist=false,
   minnames=1, maxbibnames=99, backend=biber, natbib]{biblatex}
 \setlength\bibitemsep{1.5\itemsep}
 \AtEveryCite{\color{lsedpr}}
@@ -166,7 +177,7 @@
 
 % TOC
 \usepackage{tocloft}
-\setlength{\cftfigindent}{0pt}
+\setlength{\cftfigindent}{0pt}  % indentations of fig and tab list
 \setlength{\cfttabindent}{0pt}
 
 % Miscellaneous

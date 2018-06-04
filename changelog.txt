@@ -27,3 +27,6 @@ Chapter 2
 Chapter 3
 
 - Cleaned up proof I-prior theorem
+- Changed notation for Fisher information (calligraphic I -> regular I), and (f -> \rho) for definitions in Fréchet and Gâteaux, so as to not confuse f with the regression function (parameter)
+- Replaced all instances of RKHS with RKKS (nothing changes otherwise, because the derivatives depend on Hilbertian topology and the I-prior derivation depends on reproducing property)
+- Remarked that the induced Fisher information RKHS is indeed a RKHS, since the kernel is positive definite (squared kernel)

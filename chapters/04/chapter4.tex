@@ -1,18 +1,20 @@
-\documentclass[a4paper,showframe,11pt]{report}
+\documentclass[showframe,11pt]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
-  \usepackage{../../haziq_thesis}  
+  \usepackage{../../haziq_thesis}
   \usepackage{../../haziq_maths}
   \usepackage{../../haziq_glossary}
   \usepackage{../../knitr}
   \addbibresource{../../bib/haziq.bib}
   \externaldocument{../01/.texpadtmp/chapter1}
-  \externaldocument{../02/.texpadtmp/chapter2}
+  \externaldocument{../02/.texpadtmp/chapter2}  
   \externaldocument{../03/.texpadtmp/chapter3}
+%  \externaldocument{../04/.texpadtmp/chapter4}
   \externaldocument{../05/.texpadtmp/chapter5}
   \externaldocument{../06/.texpadtmp/chapter6}
-  \externaldocument{../appendix/.texpadtmp/appendix}
+  \externaldocument{../07/.texpadtmp/chapter7}
+  \externaldocument{../appendix/.texpadtmp/appendix}  
 \fi
 
 \begin{document}
@@ -20,36 +22,40 @@
 \label{chapter4}
 
 In the previous chapter, we defined an I-prior for the normal regression model \cref{eq:model1} subject to \cref{eq:model1ass} and $f$ belonging to a reproducing kernel Hilbert or Krein space of functions $\cF$, as a Gaussian distribution on $f$ with covariance function proportional to the Fisher information for $f$.
-We also saw how new function spaces can be constructed via the polynomial and ANOVA RKKS.
+We also saw how new function spaces can be constructed via the polynomial and ANOVA reproducing kernel Kreĭn spaces (RKKSs).
 In this chapter, we shall describe various regression models, and identify them with appropriate RKKSs, so that an I-prior may be defined on it.
 
 Methods for estimating I-prior models are described in \cref{sec:ipriorestimation}.
 Estimation here refers to obtaining the posterior distribution of the regression function under an I-prior, while optimising the kernel parameters of $\cF$ and the error precision $\bPsi$.
 Likelihood based methods, namely direct optimisation of the likelihood and the expectation-maximisation (EM) algorithm, are the preferred estimation methods of choice.
 Having said this, it is also possible to estimate I-prior models under a full Bayesian paradigm by employing Markov chain Monte Carlo methods to sample from the relevant posterior densities.
+Once estimation is completed, post-estimation procedures such as inference and prediction for a new data point can be done.
+This is described in \cref{sec:ipriorpostest}.
 
 Careful considerations of the computational aspects are required to ensure efficient estimation of I-prior models, and these are discussed in \cref{sec:ipriorcompcons}.
-The culmination of the computational work on I-prior estimation is the \pkg{iprior} package \citep{jamil2017}, which is a publicly available \proglang{R} package that has been published to CRAN.
+The culmination of the computational work on I-prior estimation is the \pkg{iprior} package \citep{jamil2017iprior}, which is a publicly available \proglang{R} package that has been published to the Comprehensive \proglang{R} Archive Network (CRAN).
 
 Finally, several examples of I-prior modelling are presented in  \cref{sec:ipriorexamples}: in particular, a multilevel data set, a longitudinal data set, and a data set involving a functional covariate, are analysed using the I-prior methodology.
+Code for replication is available at \url{http://myphdcode.haziqj.ml}.
 
-\section{Various regression models}\label{sec:various-regression}
+\section{Various regression models}
+\label{sec:various-regression}
 \input{04a-various-regression.tex}
 
-\newpage
-\section{Estimation}\label{sec:ipriorestimation}
+\section{Estimation}
+\label{sec:ipriorestimation}
 \input{04b-iprior-estimation}
 
-\section{Computational considerations}\label{sec:ipriorcompcons}
+\section{Computational considerations and implementation}
+\label{sec:ipriorcompcons}
 \input{04c-iprior-computational}
 
-\section{Post-estimation}\label{sec:ipriorpostest}
+\section{Post-estimation}
+\label{sec:ipriorpostest}
 \input{04d-iprior-post-estimation}
 
 \section{Examples}\label{sec:ipriorexamples}
-\input{04e-examples}
-
-\newpage
+\input{04x-examples}
 \section{Conclusion}
 
 The steps for I-prior modelling are essentially three-fold:
@@ -80,8 +86,8 @@ However, most efficient computational solutions exploit the nature of the SE ker
 Nonetheless, we suggest the following as considerations for future work:
 \begin{enumerate}
   \item \textbf{Sparse variational approximations}. Variational methods have seen an active development in recent times. By using inducing points \citep{titsias2009variational} or stochastic variational inference \citep{hensman2013gaussian}, such methods can greatly reduce computational storage and speed requirements. A recent paper by \citet{cheng2017variational} also suggests a variational algorithm with linear complexity for GPR-type models.
-  \item \textbf{Accelerating the EM algorithm}. Two methods can be explored. The first is called parameter-expansion EM algorithm (PXEM) by \citep{liu1998parameter}, which has been shown to be promising for random-effects type models. It involves correcting the M-step by a `covariance adjustment', so that extra information can be capitalised on to improve convergence rates. The second is a quasi-Newton acceleration of the EM algorithm as proposed by \citet{lange1995quasi}. A slight change to the EM gradient algorithm in the M-step steers the EM algorithm to the Newton-Raphson algorithm, thus exploiting the benefits of the EM algorithm in the early stages (monotonic increase in likelihood) and avoiding the pitfalls of Newton-Raphson (getting stuck in local optima). Both algorithms require an in-depth reassessment of the EM algorithm to be tailored to I-prior models.
+  \item \textbf{Accelerating the EM algorithm}. Two methods can be explored. The first is called parameter-expansion EM algorithm (PXEM) by \citet{liu1998parameter}, which has been shown to be promising for random-effects type models. It involves correcting the M-step by a `covariance adjustment', so that extra information can be capitalised on to improve convergence rates. The second is a quasi-Newton acceleration of the EM algorithm as proposed by \citet{lange1995quasi}. A slight change to the EM gradient algorithm in the M-step steers the EM algorithm to the Newton-Raphson algorithm, thus exploiting the benefits of the EM algorithm in the early stages (monotonic increase in likelihood) and avoiding the pitfalls of Newton-Raphson (getting stuck in local optima). Both algorithms require an in-depth reassessment of the EM algorithm to be tailored to I-prior models.
 \end{enumerate}
 
-\hClosingStuffStandalone
+%\hClosingStuffStandalone
 \end{document}
