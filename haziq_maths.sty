@@ -61,6 +61,9 @@
 \usepackage{mathtools}
 %\usepackage{kbordermatrix}  % https://tex.stackexchange.com/questions/59517/label-rows-of-a-matrix-by-characters
 
+% Retag equations
+\newcommand{\retag}[1]{\tag{from \color{black}\ref{#1}}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% MATHS SYMBOLS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -219,7 +222,7 @@
 \newcommand{\cF}{{\mathcal F}}
 \newcommand{\cG}{{\mathcal G}}
 \newcommand{\cH}{{\mathcal H}}
-\newcommand{\cI}{{\mathcal I}}
+\newcommand{\cI}{{I}} % !!! decided to change F.I. symbol
 \newcommand{\cJ}{{\mathcal J}}
 \newcommand{\cK}{{\mathcal K}}
 \newcommand{\cL}{{\mathcal L}}

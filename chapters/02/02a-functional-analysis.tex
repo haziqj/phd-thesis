@@ -215,21 +215,21 @@ Consequently, we see that $\norm{f}_\cF^2 = \norm{Pf}_\cF^2 + \norm{f-Pf}_\cF^2$
 The remainder $f - Pf$ belongs to the \emph{orthogonal complement} of $\cG$.
 %The remainder $f - Pf = (I-P)f = Qf$, where $I$ is the identity map, belongs to the \emph{orthogonal complement} of $\cG$.
 %As a consequence, $\norm{f}_\cF^2 = \norm{Pf}_\cF^2 + \norm{Qf}_\cF^2$.
-%
+
 \begin{definition}[Orthogonal complement]
   Let $\cF$ be a Hilbert space and $\cG \subset \cF$ be a closed subspace.
   The linear subspace $\cG^\bot = \{ f \,|\, \ip{f,g}_\cF = 0, \forall g \in \cG \}$ is called the orthogonal complement of $\cG$ in $\cF$.
 \end{definition}
-%
-\begin{theorem}[Orthogonal decomposition]
+
+\begin{theorem}[Orthogonal decomposition]\label{thm:orthdecomp}
   Let $\cF$ be a Hilbert space and $\cG \subset \cF$ be a closed subspace.
   For every $f \in \cF$, we can write $f = g + g^c$, where $g \in \cG$ and $g^c \in \cG^\bot$, and this decomposition is unique.
 \end{theorem}
-%
+
 \begin{proof}
   Omitted---see \citet[Theorem 4.11]{rudin1987real} for a proof.
 \end{proof}
-%
+
 We can write $\cF = \cG \oplus \cG^\bot$, where the $\oplus$ symbol denotes the \emph{direct sum}, and such a decomposition is called a \emph{tensor sum decomposition}.
 In infinite-dimensional Hilbert spaces, some subspaces are not closed, but all orthogonal complements are closed. 
 In such spaces, the orthogonal complement of the orthogonal complement of $\cG$ is the closure of $\cG$, i.e. $(\cG^\bot)^\bot =: \overline \cG$, and we say that $\cG$ is \emph{dense} in $\overline \cG$.
@@ -375,7 +375,7 @@ The \emph{density} $p$ of $X$ is a measurable function with the property that
   for all $x \in \cH$ is called the \emph{mean vector}. 
 \end{definition}
 
-\begin{definition}[Covariance operator]
+\begin{definition}[Covariance operator]\label{def:covoper}
   Let $\nu$ be a Borel probability measure on a real Hilbert space $\cH$.
   Suppose that a random element $X$ of $\cH$ is \emph{square integrable}, i.e., $\E \norm{X}_\cH^2 < \infty$, and let $\mu$ be the mean vector of $X$.
   Then the \emph{covariance operator} $C$ is defined by the mapping

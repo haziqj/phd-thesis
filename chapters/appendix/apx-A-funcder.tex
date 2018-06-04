@@ -1,60 +1,84 @@
-Typically, the problem of finding the maxima of $H(p)$ in \cref{eq:entrop} is tackled using calculus of variations.
-The following is an alternative route to obtain the functional derivative of the entropy.
+We present the functional derivative of the entropy $H(p)$ in \cref{eq:entrop}.
+Typically, this is tackled using calculus of variations, but it can also be obtained using the Fréchet and Gâteaux differentials.
+Both methods are presented.
 
-\begin{definition}[Directional derivative and gradient]
-  Let ($\cH$, $\ip{\cdot,\cdot}_\cH$) be an inner product space, and consider a function $g:\mathcal H \rightarrow \mathbb R$. 
-  Denote the directional derivate of $g$ in the direction $z$ by $\nabla_z g$, that is, 
-	\[
-		\nabla_z g(x) = \lim_{\delta \rightarrow 0} \frac{g(x + \delta z) - g(x)}{\delta}.
-	\]
-	The gradient of $g$, denoted by $\nabla g$, is the unique vector field satisfying 
-	\[
-		\langle \nabla g(x), z \rangle_{\mathcal H} = \nabla_z g(x), \ \ \ \forall x,z \in \mathcal H.
-	\]
-\end{definition}
+\section{The usual functional derivative}
+
+%\begin{definition}[Directional derivative and gradient]
+%  Let ($\cH$, $\ip{\cdot,\cdot}_\cH$) be an inner product space, and consider a function $g:\mathcal H \rightarrow \mathbb R$. 
+%  Denote the directional derivate of $g$ in the direction $z$ by $\nabla_z g$, that is, 
+%	\[
+%		\nabla_z g(x) = \lim_{\delta \rightarrow 0} \frac{g(x + \delta z) - g(x)}{\delta}.
+%	\]
+%	The gradient of $g$, denoted by $\nabla g$, is the unique vector field satisfying 
+%	\[
+%		\langle \nabla g(x), z \rangle_{\mathcal H} = \nabla_z g(x), \ \ \ \forall x,z \in \mathcal H.
+%	\]
+%\end{definition}
+
+The functional derivative is defined as follows.
 
 \begin{definition}[Functional derivative]
-  Given a manifold $M$ representing continuous/smooth functions $\rho$ with certain boundary conditions, and a functional $F:M\to\bbR$, the functional derivative of $F[\rho]$ with respect to $\rho$, denoted $\partial F/\partial\rho$, is defined by
+  Given a manifold $M$ representing continuous/smooth functions $\rho$ with certain boundary conditions, and a functional $F:M\to\bbR$, the functional derivative of $F(\rho)$ with respect to $\rho$, denoted $\partial F/\partial\rho$, is defined by
   \begin{align*}
-    \int \frac{\partial F}{\partial\rho}(x)\phi(x)\d x
-    &= \lim_{\epsilon\to 0} \frac{F[\rho + \epsilon\phi] - F[\rho]}{\epsilon} \\
-    &= \left[ \frac{\d}{\d \epsilon} F[\rho + \epsilon\phi] \right]_{\epsilon=0},
+    \int \frac{\partial F}{\partial\rho}(x)\phi(x) \dint x
+    &= \lim_{\epsilon\to 0} \frac{F(\rho + \epsilon\phi) - F(\rho)}{\epsilon} \\
+    &= \left[ \frac{\d}{\d \epsilon} F(\rho + \epsilon\phi) \right]_{\epsilon=0},
   \end{align*}
   where $\phi$ is an arbitrary function.
   The function $\partial F/\partial\rho$ as the gradient of $F$ at the point $\rho$, and
   \[
-    \partial F(\rho,\phi) = \int \frac{\partial F}{\partial\rho}(x)\phi(x) \d x
+    \partial F(\rho,\phi) = \int \frac{\partial F}{\partial\rho}(x)\phi(x) \dint x
   \]
   as the directional derivative at point $\rho$ in the direction of $\phi$.
   Analogous to vector calculus, the inner product with the gradient gives the directional derivative.
 \end{definition}
 
-\begin{example}[Functional derivative of entropy]
-  Let $X$ be a discrete random variable with probability mass function $p(x) \geq 0$, for $\forall x \in \Omega$, a finite set.
-  The entropy is a functional of $p$, namely
-  \[
-    \cE[p] = - \sum_{x\in\Omega} p(x)\log p(x).
-  \]
-  Equivalently, using the counting measure $\nu$ on $\Omega$, we can write
-  \[
-    \cE[p] = -\int_\Omega p(x) \log p(x) \d\nu(x).
-  \]
-  \begin{align*}
-    \int_\Omega \frac{\partial\cE}{\partial p}(x)\phi(x) \dint x
-    &= \left[ \frac{\d}{\d \epsilon} \cE[p +  \epsilon\phi] \right]_{\epsilon=0} \\
-    &= \left[ -\frac{\d}{\d \epsilon} 
-    \big( p(x) + \epsilon\phi(x) \big) 
-    \log \big(p(x) + \epsilon\phi(x) \big) 
-    \right]_{\epsilon=0} \\
-    &= -\int_\Omega \left( 
-    \frac{p(x)\phi(x)}{p(x)+\epsilon\phi(x)}
-    + \frac{\epsilon\phi(x)}{p(x) + \epsilon\phi(x)}
-    + \phi(x)\log\big( p(x) + \epsilon\phi(x) \big)
-    \right) \d x \\
-    &= -\int_\Omega \left( 1 + \log p(x) \right) \phi(x) \dint x.
-  \end{align*}
-  Thus, $(\partial\cE/\partial p)(x) = -1 -\log p(x)$.
-\end{example}
+Now let $X$ be a discrete random variable with probability mass function $p(x) \geq 0$, for $\forall x \in \Omega$, a finite set.
+The entropy is a functional of $p$, namely
+\[
+  H(p) = - \sum_{x\in\Omega} p(x)\log p(x).
+\]
+Equivalently, using the counting measure $\nu$ on $\Omega$, we can write
+\[
+  H(p) = -\int_\Omega p(x) \log p(x) \dint\nu(x).
+\]
+Using the definition of functional derivatives, we find that
+\begin{align*}
+  \int_\Omega \frac{\partial H}{\partial p}(x)\phi(x) \dint x
+  &= \left[ \frac{\d}{\d \epsilon} H(p +  \epsilon\phi) \right]_{\epsilon=0} \\
+  &= \left[ -\frac{\d}{\d \epsilon} 
+  \big( p(x) + \epsilon\phi(x) \big) 
+  \log \big(p(x) + \epsilon\phi(x) \big) 
+  \right]_{\epsilon=0} \\
+  &= -\int_\Omega \left( 
+  \frac{p(x)\phi(x)}{p(x)+\epsilon\phi(x)}
+  + \frac{\epsilon\phi(x)}{p(x) + \epsilon\phi(x)}
+  + \phi(x)\log\big( p(x) + \epsilon\phi(x) \big)
+  \right) \d x \\
+  &= -\int_\Omega \left( 1 + \log p(x) \right) \phi(x) \dint x.
+\end{align*}
+Thus, $(\partial H/\partial p)(x) = -1 -\log p(x)$.
 
+\section{Fréchet differential of the entropy}
 
-
+Since we have already introduced concepts of Fréchet and Gâteaux derivatives earlier, we shall use those instead.
+Assume that the entropy $H$ is Fréchet differentiable at $p$, and that the probability densities $p$ under consideration belong to the Hilbert space of square integrable functions $\L^2(\Theta,\nu)$ with inner product $\ip{p,p'}_{L^2(\Theta,\nu)} = \int pp' \dint\nu$.
+Now since the Fréchet derivative of $H$ at $p$ is assumed to exist, it is equal to the Gâteaux derivative, which can be computed as follows:
+\begin{align*}
+  \partial_q H(p) 
+%  &= \lim_{t\to 0} \frac{H(p + tq) - H(p)}{t} \\
+  &= \frac{\d}{\d t} H(p + tq)  \bigg|_{t=0} \\
+  &= \frac{\d}{\d t} \left\{ - \int_\Theta \big(p(\theta) + tq(\theta)\big) \log \big(p(\theta) + tq(\theta)\big) \dint\nu(\theta) \right\} \Bigg|_{t=0} \\
+  &= - \int_\Theta \left\{ \frac{\d}{\d t} \big(p(\theta) + tq(\theta)\big) \log \big(p(\theta) + tq(\theta)\big) \bigg|_{t=0} \right\} \dint\nu(\theta)  \\
+  &= -\int_\Theta \left( 
+    \frac{p(\theta)q(\theta)}{p(\theta)+tq(\theta)}
+    + \frac{tq(\theta)^2}{p(\theta) + tq(\theta)}
+    + q(\theta)\log\big( p(\theta) + tq(\theta) \big)
+    \right)\bigg|_{t=0} \dint\nu(\theta) \\
+  &= -\int_\Theta q(\theta)\big(1 + \log p(\theta) \big) \dint\nu(\theta) \\
+  &= \left\langle -\big( 1 + \log p \big), q \right\rangle_\Theta \\
+  &= \d H(p)(q).   
+\end{align*}
+By definition, the gradient of $H$ at $p$, denoted $\nabla H(p)$, is equal to $- 1 - \log p$.
+This agrees with the usual functional derivative of the entropy obtained via standard calculus of variations.

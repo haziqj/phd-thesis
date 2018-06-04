@@ -116,11 +116,11 @@ Thus,
   -\half (\vecc \bw )^\top(\bPsi \otimes \bI_n)^{-1} \vecc (\bw ) \right] + \const \\
   &= -\half\E_{\by^*\sim \tilde q} \left[ 
   (\vecc\bw)^\top \Big( \,
-  \greyoverbrace{\bM^\top(\bPsi \otimes \bI_n)\bM + (\bPsi^{-1} \otimes \bI_n)}{\bA} 
+  \myoverbrace{\bM^\top(\bPsi \otimes \bI_n)\bM + (\bPsi^{-1} \otimes \bI_n)}{\bA} 
   \, \Big) \vecc (\bw )
   \right] \\
   &\phantom{==} + \E_{\by^*\sim \tilde q} \Big[ 
-  \greyoverbrace{\bar\by^{*\top} (\bPsi \otimes \bI_n) \bM}{\ba^\top} \vecc (\bw )
+  \myoverbrace{\bar\by^{*\top} (\bPsi \otimes \bI_n) \bM}{\ba^\top} \vecc (\bw )
   \Big] + \const \\
   &= -\half\E_{\by^*\sim \tilde q} \left[
   (\vecc\bw - \bA^{-1}\ba)^\top \bA (\vecc\bw - \bA^{-1}\ba)
@@ -230,9 +230,9 @@ The evidence lower bound (ELBO) expression involves the following calculation:
   \cL_q(\theta) &= \idotsint q(\by^*,\bw) 
   \log \frac{p(\by,\by^*,\bw|\theta)}{q(\by^*,\bw)}
   \dint\by^* \dint\bw \dint\theta \\
-  &= \E \big[ \log \greyoverbrace{p(\by,\by^*,\bw|\theta)}{\text{joint likelihood}} \big]
+  &= \E \big[ \log \myoverbrace{p(\by,\by^*,\bw|\theta)}{\text{joint likelihood}} \big]
   +
-  (\greyoverbrace{-\E \big[ \log q(\by^*,\bw,)}{\text{entropy}}) \big] \\
+  (\myoverbrace{-\E \big[ \log q(\by^*,\bw,)}{\text{entropy}}) \big] \\
   &= \E\bigg[
   \cancel{\sum_{i=1}^n \sum_{j=1}^m \log  p(y_{i}|y_{ij}^*)} + 
   \sum_{i=1}^n \log  p(\by_{i \bigcdot}^*|\balpha,\bw,\bPsi,\eta) +

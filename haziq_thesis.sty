@@ -52,7 +52,7 @@
 }
 
 % Git info
-\usepackage[maxdepth=8,mark,raisemark=0.933\paperheight]{gitinfo2}
+\usepackage[maxdepth=8,mark,raisemark=0.9323\paperheight]{gitinfo2}
 \renewcommand{\gitMark}{Branch:\;\gitBranch\,@\,\gitAbbrevHash{}~\textbullet{}~Change:\;\gitAuthorIsoDate~\textbullet{}~haziqj}
 \makeatletter
 \def\gitMarkFormat{%
@@ -353,6 +353,13 @@
   citecolor=lsedpr,
   urlcolor=lsepur
 }
+\newcommand{\mypageref}[1]{%
+  \ifstandalone
+    {{\color{lsedpr}p.} \pageref{#1}}%
+  \else
+    \cpageref{#1}%
+  \fi
+}
 
 % Page intentionally left blank
 %\makeatletter
@@ -372,19 +379,7 @@
 %\makeatother
 % https://tex.stackexchange.com/questions/290802/page-intentionally-left-blank-with-twoside-openright/308522
 
-% Opens chapters on the right side (odd page)
-\newif\ifhopenright
-\let\stdchapter\chapter
-\renewcommand*\chapter{
-  \clearpage
-  \ifhopenright
-  \ifodd\thepage\else
-    \vspace*{\fill}
-    \hfill
-    \thispagestyle{empty}
-    \newpage
-  \fi\fi
-  \stdchapter
-}
-
 %\usepackage[fontsize=10.5]{scrextend}  % place here due to conflict
+
+% Coloured parantheses
+\newcommand{\colp}[1]{{\color{lsedpr}(#1)}}

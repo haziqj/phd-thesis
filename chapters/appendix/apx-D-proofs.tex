@@ -65,7 +65,7 @@ For the second moments, plug in \cref{eq:tnXminMusq} for $g(X_i)= (X_i - \mu_i)^
 \begin{align*}
   \E [X_i - \mu_i]^2 - \sigma_i^2
   &= - \sigma_i^{\cancel{2}} C^{-1} \int   
-  \greyoverbrace{\frac{x_j - \mu_i}{\cancel{\sigma_i}}}{\hidewidth x_j - \mu_i - \mu_j + \mu_j \hidewidth} \cdot
+  \myoverbrace{\frac{x_j - \mu_i}{\cancel{\sigma_i}}}{\hidewidth x_j - \mu_i - \mu_j + \mu_j \hidewidth} \cdot
   \frac{\phi\big( (x_j - \mu_i) / \sigma_i \big)}{\Phi\big( (x_j - \mu_i) / \sigma_i \big)}
   \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j \\
   &= - \sigma_i C^{-1} \int  
@@ -73,7 +73,7 @@ For the second moments, plug in \cref{eq:tnXminMusq} for $g(X_i)= (X_i - \mu_i)^
   \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)
   \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j \\
   &\phantom{==} +  (\mu_j-\mu_i)  \cdot 
-  \greyoverbrace{-\sigma_i C^{-1} \int  
+  \myoverbrace{-\sigma_i C^{-1} \int  
   \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)
   \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j}{\E X_i - \mu_i} \\
   &= (\mu_j-\mu_i)(\E X_i - \mu_i)  \\
