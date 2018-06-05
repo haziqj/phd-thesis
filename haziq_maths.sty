@@ -57,7 +57,7 @@
 \usepackage{dsfont}  % for indicator variables \mathsds{1}
 \usepackage{bm}  % for better bold script
 \usepackage[makeroom]{cancel}
-  \renewcommand{\CancelColor}{\color{lsegry}}
+  \renewcommand{\CancelColor}{\color{gray}}
 \usepackage{mathtools}
 %\usepackage{kbordermatrix}  % https://tex.stackexchange.com/questions/59517/label-rows-of-a-matrix-by-characters
 
@@ -257,8 +257,8 @@
 \newcommand{\d}{\text{d}}
 
 % Overbrace and underbrace$\!\:\!$
-\newcommand{\greyoverbrace}[2]{{\color{lsegry}\overbrace{\color{black}#1}^{#2}}}
-\newcommand{\grayoverbrace}[2]{{\color{lsegry}\overbrace{\color{black}#1}^{#2}}}
+\newcommand{\greyoverbrace}[2]{{\color{gray}\overbrace{\color{black}#1}^{#2}}}
+\newcommand{\grayoverbrace}[2]{{\color{gray}\overbrace{\color{black}#1}^{#2}}}
 
 % Comments grey text
 \newcommand{\mycomment}[2][10pt]{\hspace{#1}\rlap{\color{gray}\text{#2}}}
@@ -282,8 +282,8 @@
 \DeclareMathSymbol{\bigobot}{1}{mathx}{"CB}
 
 % overbrace and underbrace
-\newcommand{\myoverbrace}[3][lsegry]{{\color{#1}\overbrace{\color{black}#2}^{#3}}}
-\newcommand{\myunderbrace}[3][lsegry]{{\color{#1}\underbrace{\color{black}#2}_{#3}}}
+\newcommand{\myoverbrace}[3][gray]{{\color{#1}\overbrace{\color{black}#2}^{#3}}}
+\newcommand{\myunderbrace}[3][gray]{{\color{#1}\underbrace{\color{black}#2}_{#3}}}
 
 % Conveniences
 \renewcommand{\L}{\text{L}}

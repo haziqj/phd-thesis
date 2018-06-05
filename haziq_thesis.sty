@@ -30,9 +30,9 @@
   \markboth{#1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection~#1}}
 \fancyfoot[LE,RO]{\small\thepage}
-%\fancyfoot[RE,LO]{\small\leftmark~--- \rightmark}  % if oneside
+%\fancyfoot[RE,LO]{\small\nouppercase{\leftmark}~--- \nouppercase{\rightmark}}  % if oneside
 \fancyfoot[RE]{\small\nouppercase{\leftmark}}  % if twoside
-\fancyfoot[LO]{\small\rightmark}  % if twoside
+\fancyfoot[LO]{\small\nouppercase{\rightmark}}  % if twoside
 
 \fancypagestyle{plain}{%
   \fancyhf{}
