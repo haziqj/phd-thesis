@@ -206,9 +206,9 @@ This is explained by the reduced Fisher information about the derivative of the 
 
 In \citet{bergsma2017}, it is shown that the covariance function for $\beta$ is 
 \[
-  \Cov\big[\beta(x),\beta(x') \big] = n \big( \min\{\Prob_n(X < x), \Prob_n(X_n < x') \} -  \Prob_n(X < x) \Prob_n(X_n < x') \big) 
+  \Cov\big(\beta(x),\beta(x') \big) = n \big( \min\{\Prob_n(X < x), \Prob_n(X_n < x') \} -  \Prob_n(X < x) \Prob_n(X_n < x') \big) 
 \]
-From this, notice that $\Var [\beta(x)] = \Prob_n(X_n < x)\big(1 - \Prob_n(X_n < x) \big)$, which shows an automatic boundary correction: close to the boundary there is little Fisher information on the derivative of the regression function $\beta(x)$, so the prior variance is small.
+From this, notice that $\Var \big(\beta(x)\big) = \Prob_n(X_n < x)\big(1 - \Prob_n(X_n < x) \big)$, which shows an automatic boundary correction: close to the boundary there is little Fisher information on the derivative of the regression function $\beta(x)$, so the prior variance is small.
 This will lead to more shrinkage of the posterior derivative of $f$ towards the derivative of the prior mean $f_0$.
 
 %\[

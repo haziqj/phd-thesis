@@ -3,9 +3,9 @@ With the normal I-prior model, there is the added benefit that posterior distrib
 We describe post-estimation procedures such as prediction of a new data point, inference surrounding the prediciton, and model comparison.
 The plots that are shown in this subsection is a continuation of the example from \cref{sec:compareestimation}.
 
-Recall that for the I-prior model \cref{eq:model2}, the regression function $f(x) = \sum_{i=1}^n h_{\hat\eta}(x,x_i)\tilde w_i$
+Recall that for the I-prior model \cref{eq:model2}, a regression function $f(x) = \sum_{i=1}^n h_{\hat\eta}(x,x_i)\tilde w_i$
 %, where $\hat\eta$ is the ML estimate for the kernel parameters, 
-has the posterior Gaussian distribution specified by the  multivariate-normal mean and variance of the $\tilde w_i$'s given in \cref{eq:posteriorw}.
+has the posterior Gaussian distribution specified by the mean and variance of the multivariate normal $\tilde w_i$'s given in \cref{eq:posteriorw}.
 Denote by $\bh_{\hat\eta}(x)$ the $n$-vector with entries equal to $h_{\hat\eta}(x,x_i)$.
 Precisely, the posterior density for the regression function is
 \begin{align}
@@ -30,17 +30,17 @@ Denote the covariance between $\epsilon_\new$ and $\bepsilon = (\epsilon_1,\dots
 Under an iid model (assumption \ref{ass:A3}), then $\psi_\new = \psi = \Var \epsilon_i$ for any $i\in\{1,\dots,n\}$, and $\bsigma_\new^\top=\bzero$, but otherwise, these extra parameters need to be dealt with somehow, either by specifying them a priori or estimating them again, which seems excessive.
 In any case, using a linearity argument, the posterior distribution for $y_\new$ is normal, with mean and variance given by
 \begin{gather}
-  \E[y_\new|\by] = \hat\alpha + \E \big[ f(x_\new) |\by \big] + \text{correction term} \\
+  \E(y_\new|\by) = \hat\alpha + \E \big( f(x_\new) |\by \big) + \text{correction term} \\
   \text{and} \nonumber \\
-  \Var[y_\new|\by] 
-  = \Var\big[f(x_\new)|\by\big] + \psi^{-1}_\new + \text{correction term}.
+  \Var(y_\new|\by) 
+  = \Var\big(f(x_\new)|\by\big) + \psi^{-1}_\new + \text{correction term}.
 \end{gather}
 A derivation is presented in \cref{apx:postpred}.
 Note, that the mean and variance correction term vanishes under an iid assumption \ref{ass:A3}.
 The posterior distribution for $y_\new$ can be used in several ways. 
 Among them, is to construct a $100(1 - \alpha)\%$ credibility interval for the (mean) predicted value $y_\new$ using
 \[
-  \E[y_\new|\by] \pm \Phi^{-1}(1 - \alpha/2) \, \Var[y_\new|\by]^{\half},
+  \E(y_\new|\by) \pm \Phi^{-1}(1 - \alpha/2) \, \Var(y_\new|\by)^{\half},
 \]
 where $\Phi(\cdot)$ is the standard normal cumulative distribution function.
 One could also perform a posterior predictive density check of the data $\by$, by repeatedly sampling $n$ points from its posterior distribution.
@@ -63,6 +63,7 @@ A log-likelihood comparison is possible using an asymptotic chi-squared distribu
 This is assuming model $M_0$ is nested within $M_1$, which is the case for ANOVA-type constructions.
 Note that if two models have the same number of parameters, then the model with the higher likelihood is preferred.
 
+\pagebreak
 \begin{remark}
   This method of comparing marginal likelihoods can be seen as Bayesian model selection using \emph{empirical Bayes factors}, where the Bayes factor of comparing model $M_1$ against model $M_0$ is defined as
   \[

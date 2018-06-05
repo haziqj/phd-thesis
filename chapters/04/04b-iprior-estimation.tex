@@ -39,7 +39,7 @@ Henceforth, for simplicity, the following additional standing assumptions are im
 \begin{enumerate}[label=A\arabic*,ref=A\arabic*]
   \item \textbf{Centred responses}. Set $\alpha = 0$ and replace the responses by their centred versions $y_i \mapsto \tilde y_i = y_i - \frac{1}{n}\sum_{i=1}^n$. \label{ass:A1}  
   \item \textbf{Zero prior mean}. Assume a zero prior mean $f_0(x) = 0$ for all $x\in\cX$. \label{ass:A2} 
-  \item \textbf{Iid errors}. Assume identical and independent errors, i.e. $\bPsi = \psi\bI_n$. \label{ass:A3} 
+  \item \textbf{Iid errors}. Assume identical and independent error random variables, i.e. $\bPsi = \psi\bI_n$. \label{ass:A3} 
 \end{enumerate}
 Assumptions \ref{ass:A1} and \ref{ass:A2} are motivated by the discussion in \cref{sec:intercept}.
 Although assumption \ref{ass:A3} is not strictly necessary, it is often a reasonable one and one that simplifies the estimation procedure greatly.
@@ -90,16 +90,19 @@ Thus, assumption \ref{ass:A1} therefore implies that the ML estimate for the int
 
 Under assumptions \ref{ass:A1}--\ref{ass:A3}, a direct optimisation of the parameters $\theta=\{\eta,\bPsi=\psi\bI_n \}$ using the log-likelihood of $\theta$ is straightforward to implement.
 Denote $\bSigma_\theta := \psi\bH_\eta^2 + \psi^{-1}\bI_n = \bV_y$.
-From \cref{eq:model2}, the (marginal) log-likelihood of $\theta$ is given by
+From \cref{eq:model2}, the marginal log-likelihood of $\theta$ is given by
 %
 \begin{align}
   L(\theta)
   &= \log \int p(\by|\bw,\theta)p(\bw|\theta) \dint \bw \nonumber \\
-  &= -\half[n]\log 2\pi - \half\log\vert \bSigma_\theta \vert - \half \tilde\by^\top \bSigma_\theta^{-1} \tilde\by \label{eq:marglogliky}.
+  &= -\half[n]\log 2\pi - \half\log\vert \bSigma_\theta \vert - \half \tilde\by^\top \bSigma_\theta^{-1} \tilde\by \label{eq:marglogliky},
 \end{align}
 %
-The term marginal refers to the fact that we are averaging out the random function represented by $\bw$.
-Direct optimisation is typically done using conjugate gradients with a Cholesky decomposition on the covariance kernel to maintain stability, but we opt for an eigendecomposition of the kernel matrix $\bH_{\eta} = \bV \, \text{diag}(u_1,\dots,u_n) \, \bV^\top$ instead.
+which is the log-likelihood of a zero mean multivariate normal distribution with covariance matrix $\bSigma_\theta$.
+This closed-form expression of the integral \cref{eq:marglogliky} stems from the fact that the (conditional) likelihood and the I-prior are both Gaussian.
+Note that the term `marginal' refers to the fact that we are averaging out the random function represented by $\bw$.
+
+For Gaussian processes, direct optimisation is typically done using the conjugate gradients method with a Cholesky decomposition on the covariance kernel to maintain stability \citep{rasmussen2006gaussian}, but we opt for an eigendecomposition of the kernel matrix $\bH_{\eta} = \bV \, \text{diag}(u_1,\dots,u_n) \, \bV^\top$ instead.
 Further, since $\bH_{\eta}$ is a symmetric matrix, we have that $\bV\bV^\top = \bI_n$, and thus
 \begin{align*}
   \bV_y 
@@ -148,28 +151,28 @@ With $\hat\theta$ denoting the ML estimate for $\theta$, under suitable conditio
 In particular, the standard error for $\theta_k$ is the $k$'th diagonal element of $\bU^{-1/2}$.
 
 \subsection{Expectation-maximisation algorithm}
+\label{sec:emiprior}
 
 Evidently, the model in \cref{eq:model2} resembles a random-effects model, for which the EM algorithm is easily employed to estimate its hyperparameters.
 Assume \ref{ass:A1}--\ref{ass:A3} holds.
 By treating the complete data as $\{\by,\bw \}$ and the $w_i$'s as ``missing'', the $t$'th iteration of the E-step entails computing
 \begin{align}
   Q(\theta) 
-  &= \E_\bw \left[ \log p(\by, \bw | \theta) \big\vert\, \by,\theta^{(t)} \right] \nonumber \\
-  &= \E_\bw \left[ \const 
+  &= \E_\bw \left( \log p(\by, \bw | \theta) \big\vert\, \by,\theta^{(t)} \right) \nonumber \\
+  &= \E_\bw \left( \const 
   + \cancel{\half[n]\log\psi}
   - \half[\psi] \Vert \tilde\by - \bH_\eta\bw \Vert^2  
   - \cancel{\half[n]\log\psi}
   - \half[\psi^{-1}] \Vert \bw \Vert^2
-  \,\Big\vert\, \by,\theta^{(t)} \right] \label{eq:QfnEstep} \\
+  \,\Big\vert\, \by,\theta^{(t)} \right) \label{eq:QfnEstep} \\
   &=  \const - \half[\psi] \tilde \by^\top \tilde \by
   - \half \tr \Big( (
   \myoverbrace{\psi\bH_\eta^2 + \psi^{-1}\bI_n}{\bSigma_\theta} 
   )\tilde\bW^{(t)} \Big)
   + \psi\tilde\by^\top\bH_\eta\wtilde^{(t)}, \nonumber
 \end{align}
-where $\tilde\bw^{(t)} = \E[\bw|\by,\theta^{(t)}]$ and $\tilde\bW^{(t)} = \E[\bw\bw^\top|\by,\theta^{(t)}]$ are the first and second posterior moments of $\bw$ calculated at the $t$th EM iteration.
+where $\tilde\bw^{(t)} = \E(\bw|\by,\theta^{(t)})$ and $\tilde\bW^{(t)} = \E(\bw\bw^\top|\by,\theta^{(t)})$ are the first and second posterior moments of $\bw$ calculated at the $t$th EM iteration.
 These can be computed directly from \cref{eq:posteriorw}, substituting for $\theta^{(t)} = \{\eta^{(t)}, \psi^{(t)} \}$ as appropriate.
-%Note that \cref{eq:QfnEstep} follows as a direct consequence of the results in  \cref{apx:posteriorw}.
 
 The M-step assigns $\theta^{(t+1)}$ the value of $\theta$ which maximises the $Q$ function above.
 This boils down to solving the first order conditions
@@ -269,7 +272,7 @@ The advantage of HMC is that efficiency is not dictated by conjugacy, so there i
 Intercept ($\alpha$)      & 16.1 (0.35)           & 16.1 (0.35)    & 16.1 (0.17)  \\
 Scale ($\lambda$)      & 5.01 (1.23)         & 5.01 (1.26)  & 5.61 (1.42)     \\
 Precision ($\psi$)         & 0.236 (0.03)        & 0.236 (0.03) & 0.237 (0.03)\\[0.5em]
-Log-likelihood    & -339.7              & -339.7       & -341.1                  \\
+Log-density    & -339.7              & -339.7       & -341.1                  \\
 Predictive RMSE & 0.574               & 0.575        & 0.582                   \\[0.5em]
 Iterations     & 12                  & 266          & 2000                    \\
 Time taken (s) & 0.96                & 3.65         & 232                     \\ \bottomrule
