@@ -51,7 +51,6 @@ Since the union of these cones is the entire $m$-dimensional space of reals, the
 %Upon knowing all values for $\alpha_j$, $f_j(x_i)$, and $\bSigma$, one is able to calculate $p_{ij}$ through the relationship \eqref{eq:pij}, which we denote as $g^{-1}$.
 While this does not have a closed-form expression and highlights one of the difficulties of working with probit models, the integral is by no means impossible to compute---see \cref{sec:mnint} for a note regarding this matter.
 
-
 Now, we'll see how to specify an I-prior on the regression problem \cref{eq:multinomial-latent}.
 In the naïve I-prior model, we wrote $f(x_i,j) = \alpha_j + f_j(x_i)$, and called for $f$ to belong to an ANOVA RKKS with kernel defined in \cref{eq:anovaclass}.
 Instead of doing the same, we take a different approach.
@@ -66,6 +65,7 @@ This is similar to the naïve I-prior specification \cref{eq:naiveclassiprior}, 
 Importantly, the overall regression relationship still satisfies the ANOVA functional decomposition, because the $\alpha_j$'s sum to zero.
 We find that this approach bodes well down the line computationally.
 
+%\pagebreak
 We call the multinomial probit regression model of \cref{eq:latentmodel} subject to \cref{eq:multinomial-latent} and I-priors on $f_j \in \cF$, the \emph{I-probit model}.
 For completeness, this is stated again: for $i=1,\dots,n$, $y_i = \argmax_{k=1}^m y_{ik}^* \in \{1,\dots,m\}$, where, for $j=1,\dots,m$,
 \begin{align}\label{eq:iprobitmod}

@@ -64,6 +64,15 @@
 % Retag equations
 \newcommand{\retag}[1]{\tag{from \color{black}\ref{#1}}}
 
+% Matrix spacing---https://tex.stackexchange.com/questions/14071/how-can-i-increase-the-line-spacing-in-a-matrix
+\makeatletter
+\renewcommand*\env@matrix[1][\arraystretch]{%
+  \edef\arraystretch{#1}%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{*\c@MaxMatrixCols c}}
+\makeatother
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% MATHS SYMBOLS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -196,7 +205,7 @@
 \DeclareMathOperator{\invWis}{Wis^{\textendash 1}}
 \DeclareMathOperator{\LKJ}{LKJ}
 \DeclareMathOperator{\Unif}{Unif}
-\DeclareMathOperator{\KL}{KL}
+\DeclareMathOperator{\KL}{D_{KL}\hspace{-1pt}}
 \DeclareMathOperator{\rank}{rank}
 \DeclareMathOperator{\ind}{\mathds{1}}
 \newcommand{\iid}{\,\overset{\text{iid}}{\sim}\,}

@@ -16,37 +16,37 @@ Many possible specifications of the restriction on $\bPsi$ is possible, dependin
   \item \textbf{Case {\boldmath $m=2$}} (minimum number of restrictions = 3).
   \[
     \bPsi = 
-    \begin{pmatrix}
+    \begin{pmatrix}[0.9]
     1 & \\
     0 &0 \\  
     \end{pmatrix},
     \text{ or }
     \bPsi = 
-    \begin{pmatrix}
+    \begin{pmatrix}[0.9]
     1 & \\
     0 &1 \\  
-    \end{pmatrix}
+    \end{pmatrix} \vspace{-0.45em}
   \]
   \item \textbf{Case {\boldmath $m=3$}} (minimum number of restrictions = 4).
   \[
     \bPsi = 
-    \begin{pmatrix}
+    \begin{pmatrix}[0.9]
     1 & \\
     \psi_{12} &\psi_{22} \\  
     0 &0 &0
     \end{pmatrix},
     \text{ or }
     \bPsi = 
-    \begin{pmatrix}
+    \begin{pmatrix}[0.9]
     1 & \\
     0 &\psi_{22}  \\  
     0 &0 &\psi_{33}  
-    \end{pmatrix}
+    \end{pmatrix} \vspace{-0.55em}
   \]
     \item \textbf{Case {\boldmath $m\geq 4$}} (minimum number of restrictions = $m+1$).
   \[
     \bPsi = 
-    \begin{pmatrix}
+    \begin{pmatrix}[0.9]
     1                    \\
     \psi_{12} &\psi_{22}  \\  
     \vdots    &\vdots    &\ddots \\
@@ -57,29 +57,30 @@ Many possible specifications of the restriction on $\bPsi$ is possible, dependin
     \bPsi = 
     \begin{pmatrix}
     \psi_{11} & \\
-     &\psi_{22}  \\  
-     & &\ddots \\
-     & &    &\psi_{mm} \\
+    &\psi_{22}  \\  
+    &&\ddots \\
+    &&&\psi_{mm} \\
     \end{pmatrix}
   \]
 \end{itemize}
 
 \begin{remark}
   Identification is most commonly achieved by fixing the latent propensities of one of the classes to zero and fixing one element the covariance matrix \citep{dansie1985parameter,bunch1991estimability}.
-  Fixing the last class, say, to zero, i.e. $y_{im}^* = 0,\forall i=1,\dots,n$ has the effect of shrinking $\bPsi$ to $(m-1)\times(m-1)$ in size, and thus one more restriction needs to be made (typically, the first element $\bPsi_{11}$ is set to one).
-  This speaks to the fact that the absolute values of the latent propensities themselves do not matter, but their relative differences do.   
-  We also remark that for the binary case ($m=2$), setting the latent propensities for the second class to zero and fixing the remaining variance parameter to one yields, for $i=1,\dots,n$,
+  Fixing the last class, say, to zero, i.e. $y_{im}^* = 0,\forall i=1,\dots,n$ has the effect of shrinking $\bPsi$ to an $(m-1)$ matrix, and thus one more restriction needs to be made (typically, $\bPsi_{11}$ is set to one).
+  This speaks to the fact that the absolute values of the latent propensities themselves do not matter, and only their relative differences do.   
+  We also remark that for the binary case ($m=2$), setting the latent propensities for the second class to zero and fixing the remaining variance parameter to one yields
   \begin{align}
     p_{i1} 
     &= \Prob(y_{i1}^* > y_{i2}^* = 0) \nonumber \\
     &= \Prob\big(\alpha_1 + f_1(x_i) + \epsilon_{i1} > 0 \,|\, \epsilon_{i1} \iid \N(0,1) \big) \nonumber \\
-    &= \Phi\big( \alpha_1 + f_1(x_i) \big) \label{eq:iprobitbin}
+    &= \Phi\big( \alpha_1 + f_1(x_i) \big) \label{eq:iprobitbin} 
   \end{align}
-  and $p_{i2} = 1 - \Phi\big( \alpha_1 + f_1(x_i) \big)$, the familiar binary probit model.
+  and $p_{i2} = 1 - \Phi\big( \alpha_1 + f_1(x_i) \big)$,  $i=1,\dots,n$---the familiar binary probit model.
   Note that in the binary case only one set of latent propensities need to be estimated, so we can drop the subscript `1' in the above equations.
   In fact, for $m$ classes, only $m-1$ sets of regression functions need to be estimated (since one of them needs to be fixed), but in the multinomial presentation of this thesis we define regression functions for each class.
 \end{remark}
 
+\vspace{-0.1em}
 Now, we turn to a discussion of the role of $\bPsi$ in the model.
 In decision theory, the independence axiom states that an agent's choice between a set of alternatives should not be affected by the introduction or elimination of a choice option.
 The probit model is suitable for modelling multinomial data where the independence axiom, which is also known as the \emph{independence of irrelevant alternatives} (IIA) assumption, is not desired. 
@@ -91,11 +92,13 @@ That is, assuming commuters are indifferent about the colour of the bus, commute
 
 To put it simply, the model is IIA if choice probabilities depend only on the choice in consideration, and not on any other alternatives.
 In the I-probit model, or rather, in probit models in general, choice dependency is controlled by the error precision matrix $\bPsi$.
-Specifically, the off-diagonal elements $\bPsi_{jk}$ capture the correlation between alternatives $j$ and $k$.
+Specifically, the off-diagonal elements $\bPsi_{jk}$ capture the correlations between alternatives $j$ and $k$.
 Allowing all $m(m+1)/2$ covariance elements of $\bPsi$ to be non-zero leads to the \emph{full I-probit model}, and would not assume an IIA position.
 \cref{fig:iprobcovstr} illustrates the covariance structure for the marginal distribution of the latent propensities, $\bV_{y^*} = \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n$, and of the I-prior $\bV_f = \bPsi \otimes \bH_\eta^2$.
 
+\newcommand{\matcol}{lsedpr}
 \begin{figure}[hbt]
+\vspace{-1em}
 \centering\hspace{-13pt}
 \begin{blockmatrixtabular}
 \valignbox{
@@ -106,25 +109,25 @@ Allowing all $m(m+1)/2$ covariance elements of $\bPsi$ to be non-zero leads to t
 \mblockmatrix{0.55in}{0in}{$\cdots$}&
 \mblockmatrix{0.55in}{0in}{\footnotesize $j=m$}& \\
 \mblockmatrix{0in}{0.55in}{\footnotesize $j=1$}&
-\fblockmatrix[colblu!39]{0.55in}{0.55in}{\footnotesize $\bV[1,1]$}& 
-\fblockmatrix[colblu!22]{0.55in}{0.55in}{\footnotesize $\bV[1,2]$}&
-\fblockmatrix[colblu!24]{0.55in}{0.55in}{\footnotesize $\cdots$}& 
-\fblockmatrix[colblu!46]{0.55in}{0.55in}{\footnotesize $\bV[1,m]$}\\
+\fblockmatrix[\matcol!39]{0.55in}{0.55in}{\footnotesize $\bV[1,1]$}& 
+\fblockmatrix[\matcol!22]{0.55in}{0.55in}{\footnotesize $\bV[1,2]$}&
+\fblockmatrix[\matcol!24]{0.55in}{0.55in}{\footnotesize $\cdots$}& 
+\fblockmatrix[\matcol!46]{0.55in}{0.55in}{\footnotesize $\bV[1,m]$}\\
 \mblockmatrix{0in}{0.55in}{\footnotesize $j=2$}&
-\fblockmatrix[colblu!22]{0.55in}{0.55in}{\footnotesize $\bV[2,1]$}& 
-\fblockmatrix[colblu!20]{0.55in}{0.55in}{\footnotesize $\bV[2,2]$}&
-\fblockmatrix[colblu!42]{0.55in}{0.55in}{\footnotesize $\cdots$}& 
-\fblockmatrix[colblu!40]{0.55in}{0.55in}{\footnotesize $\bV[2,m]$}\\
+\fblockmatrix[\matcol!22]{0.55in}{0.55in}{\footnotesize $\bV[2,1]$}& 
+\fblockmatrix[\matcol!20]{0.55in}{0.55in}{\footnotesize $\bV[2,2]$}&
+\fblockmatrix[\matcol!42]{0.55in}{0.55in}{\footnotesize $\cdots$}& 
+\fblockmatrix[\matcol!40]{0.55in}{0.55in}{\footnotesize $\bV[2,m]$}\\
 \mblockmatrix{0in}{0.55in}{\hspace{10pt}$\vdots$}&
-\fblockmatrix[colblu!24]{0.55in}{0.55in}{\footnotesize $\vdots$}& 
-\fblockmatrix[colblu!42]{0.55in}{0.55in}{\footnotesize $\vdots$}&
-\fblockmatrix[colblu!33]{0.55in}{0.55in}{\footnotesize $\ddots$}& 
-\fblockmatrix[colblu!30]{0.55in}{0.55in}{\footnotesize $\vdots$}\\
+\fblockmatrix[\matcol!24]{0.55in}{0.55in}{\footnotesize $\vdots$}& 
+\fblockmatrix[\matcol!42]{0.55in}{0.55in}{\footnotesize $\vdots$}&
+\fblockmatrix[\matcol!33]{0.55in}{0.55in}{\footnotesize $\ddots$}& 
+\fblockmatrix[\matcol!30]{0.55in}{0.55in}{\footnotesize $\vdots$}\\
 \mblockmatrix{0in}{0.55in}{\footnotesize $j=m$}&
-\fblockmatrix[colblu!46]{0.55in}{0.55in}{\footnotesize $\bV[m,1]$}& 
-\fblockmatrix[colblu!40]{0.55in}{0.55in}{\footnotesize $\bV[m,2]$}&
-\fblockmatrix[colblu!30]{0.55in}{0.55in}{\footnotesize $\cdots$}& 
-\fblockmatrix[colblu!20]{0.55in}{0.55in}{\footnotesize $\bV[m,m]$}\\
+\fblockmatrix[\matcol!46]{0.55in}{0.55in}{\footnotesize $\bV[m,1]$}& 
+\fblockmatrix[\matcol!40]{0.55in}{0.55in}{\footnotesize $\bV[m,2]$}&
+\fblockmatrix[\matcol!30]{0.55in}{0.55in}{\footnotesize $\cdots$}& 
+\fblockmatrix[\matcol!20]{0.55in}{0.55in}{\footnotesize $\bV[m,m]$}\\
 \end{blockmatrixtabular}
 }&
 \valignbox{\mblockmatrix{0.31in}{2.8in}{}}&
@@ -136,25 +139,25 @@ Allowing all $m(m+1)/2$ covariance elements of $\bPsi$ to be non-zero leads to t
 \mblockmatrix{0.55in}{0in}{$\cdots$}&
 \mblockmatrix{0.55in}{0in}{\footnotesize $j=m$}& \\
 %\mblockmatrix{0in}{0.55in}{\footnotesize $j=1$}&
-\fblockmatrix[colblu!39]{0.55in}{0.55in}{\footnotesize $\bV[1,1]$}& 
+\fblockmatrix[\matcol!39]{0.55in}{0.55in}{\footnotesize $\bV[1,1]$}& 
 \fblockmatrix[none]{0.55in}{0.55in}{}&
 \fblockmatrix[none]{0.55in}{0.55in}{}& 
 \fblockmatrix[none]{0.55in}{0.55in}{}\\
 %\mblockmatrix{0in}{0.55in}{\footnotesize $j=2$}&
 \fblockmatrix[none]{0.55in}{0.55in}{}& 
-\fblockmatrix[colblu!20]{0.55in}{0.55in}{\footnotesize $\bV[2,2]$}&
+\fblockmatrix[\matcol!20]{0.55in}{0.55in}{\footnotesize $\bV[2,2]$}&
 \fblockmatrix[none]{0.55in}{0.55in}{}& 
 \fblockmatrix[none]{0.55in}{0.55in}{}\\
 %\mblockmatrix{0in}{0.55in}{\hspace{10pt}$\vdots$}&
 \fblockmatrix[none]{0.55in}{0.55in}{}& 
 \fblockmatrix[none]{0.55in}{0.55in}{}&
-\fblockmatrix[colblu!33]{0.55in}{0.55in}{\footnotesize $\ddots$}& 
+\fblockmatrix[\matcol!33]{0.55in}{0.55in}{\footnotesize $\ddots$}& 
 \fblockmatrix[none]{0.55in}{0.55in}{}\\
 %\mblockmatrix{0in}{0.55in}{\footnotesize $j=m$}&
 \fblockmatrix[none]{0.55in}{0.55in}{}& 
 \fblockmatrix[none]{0.55in}{0.55in}{}&
 \fblockmatrix[none]{0.55in}{0.55in}{}& 
-\fblockmatrix[colblu!20]{0.55in}{0.55in}{\footnotesize $\bV[m,m]$}\\
+\fblockmatrix[\matcol!20]{0.55in}{0.55in}{\footnotesize $\bV[m,m]$}\\
 \end{blockmatrixtabular}
 }&
 \end{blockmatrixtabular}\\ 
@@ -170,6 +173,7 @@ In these situations, it would be beneficial, algorithmically speaking, to reduce
 We refer to this model as the \emph{independent I-probit model}.
 The independence structure causes the distribution of the latent variables to be $y_{ij}^* \sim \N(\mu_k(x_i), \sigma_j^2)$ for $j=1,\dots,m$, where $\sigma_j^2 = \psi_j^{-1}$.
 As a continuation of line \cref{eq:pij}, we can show the class probabilities $p_{ij}$ to be
+\vspace{-0.5em}
 \begin{align}
   p_{ij} 
   &= \idotsint\displaylimits_{\{y_{ij}^* > y_{ik}^* | \forall k \neq j\}} 
@@ -177,16 +181,8 @@ As a continuation of line \cref{eq:pij}, we can show the class probabilities $p_
   &= \int \mathop{\prod_{k=1}^m}_{k\neq j} 
   \Phi \left( \frac{y_{ij}^* - \mu_k(x_i)}{\sigma_k} \right) \,
    \phi(y_{ij}^*|\mu_j(x_i), \sigma_j^2)  \dint y_{ij}^* \nonumber \\
-  &= \E_Z \Bigg[ \mathop{\prod_{k=1}^m}_{k\neq j} 
-  \Phi \left(\frac{\sigma_j}{\sigma_k} Z + \frac{\mu_j(x_i) - \mu_k(x_i)}{\sigma_k} \right) \Bigg] \label{eq:pij2}
+  &= \E_Z \Bigg( \mathop{\prod_{k=1}^m}_{k\neq j} 
+  \Phi \left(\frac{\sigma_j}{\sigma_k} Z + \frac{\mu_j(x_i) - \mu_k(x_i)}{\sigma_k} \right) \Bigg) \label{eq:pij2}
 \end{align}
 where $Z\sim\N(0,1)$, $\Phi(\cdot)$ its cdf, and $\phi(\cdot|\mu,\sigma^2)$ is the pdf of $X\sim\N(\mu,\sigma^2)$.
 The equation \cref{eq:pij} is thus simplified to a unidimensional integral involving the Gaussian pdf and cdf, which can be computed fairly efficiently using quadrature methods.
-%The probit link function is evidently seen in the above equation.
-%Moreover, in the binary case where $m=2$ and fixed error precision $\psi_1 = \psi_2 = 1/2$, we get
-%\[
-%  p_{i1} = 1 - \Phi\big(\mu_1(x_i) - \mu_2(x_i)\big) \ \text{ and } \ p_{i2} =  \Phi\big(\mu_1(x_i) - \mu_2(x_i)\big),
-%\]
-%which clearly shows the probit relationship between the class probabilities and the latent regression.
-%The proof of this fact is included in the Appendix.
-%With the exception of the binary case, these probabilities still do not have a closed-form expression (per se) and numerical methods are required to calculate them.

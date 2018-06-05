@@ -23,6 +23,9 @@ pchisq(D, df = 2)
 
 ## ---- IGF.mod.lmer ----
 (mod.lmer <- lmer(conc ~ age + (age | Lot), IGF))
+coef(summary(mod.lmer))
+
+## ---- IGF.mod.lmer.eigen ----
 eigen(VarCorr(mod.lmer)$Lot)
 
 ## ---- IGf.prep.plot ----

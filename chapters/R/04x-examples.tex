@@ -203,9 +203,6 @@ The standard random effects model, as explored by \citet{davidian1995nonlinear} 
 %
 for $i=1,\dots,n_j$ and the index $j$ representing the 10 \code{Lots}.
 Fitting this model using \code{lmer}, we can test for the significance of the fixed effect $\beta_0$, for which we find that it is not ($p$-value = 0.616), and arrive at the same conclusion as in the I-prior model.
-However, we notice that the package reports a perfect negative correlation between the random effects, $\sigma_{01}$.
-This indicates a potential numerical issue when fitting the model---a value of exactly $-1$, $0$ or $1$ is typically imposed by the package to force through estimation in the event of non-positive definite covariance matrices arising.
-We can inspect the eigenvalues of the covariance matrix for the random effects to check that they are indeed non-positive definite.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
@@ -213,7 +210,7 @@ We can inspect the eigenvalues of the covariance matrix for the random effects t
 \hlstd{R> }\hlstd{(mod.lmer} \hlkwb{<-} \hlkwd{lmer}\hlstd{(conc} \hlopt{~} \hlstd{age} \hlopt{+} \hlstd{(age} \hlopt{|} \hlstd{Lot), IGF))}
 \end{alltt}
 \begin{verbatim}
-## Linear mixed model fit by REML ['lmerMod']
+## Linear mixed model fit by REML ['lmerModLmerTest']
 ## Formula: conc ~ age + (age | Lot)
 ##    Data: IGF
 ## REML criterion at convergence: 594.3662
@@ -227,6 +224,27 @@ We can inspect the eigenvalues of the covariance matrix for the random effects t
 ## (Intercept)          age  
 ##    5.374974    -0.002535
 \end{verbatim}
+\begin{alltt}
+\hlstd{R> }\hlkwd{coef}\hlstd{(}\hlkwd{summary}\hlstd{(mod.lmer))}
+\end{alltt}
+\begin{verbatim}
+##                 Estimate  Std. Error        df    t value
+## (Intercept)  5.374974121 0.107488043 41.575698 50.0053212
+## age         -0.002534995 0.005044317  9.513561 -0.5025448
+##                 Pr(>|t|)
+## (Intercept) 9.096157e-39
+## age         6.267116e-01
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+However, we notice that the package reports a perfect negative correlation between the random effects, $\sigma_{01}$.
+This indicates a potential numerical issue when fitting the model---a value of exactly $-1$, $0$ or $1$ is typically imposed by the package to force through estimation in the event of non-positive definite covariance matrices arising.
+We can inspect the eigenvalues of the covariance matrix for the random effects to check that they are indeed non-positive definite.
+One of the eigenvalues was found to be negative, so the covariance matrix is non-positive definite.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{R> }\hlkwd{eigen}\hlstd{(}\hlkwd{VarCorr}\hlstd{(mod.lmer)}\hlopt{$}\hlstd{Lot)}
 \end{alltt}
@@ -243,8 +261,9 @@ We can inspect the eigenvalues of the covariance matrix for the random effects t
 \end{kframe}
 \end{knitrout}
 
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[t]
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[htbp]
 
 {\centering \includegraphics[width=\maxwidth]{figure/04-IGF_plot_beta-1} 
 
@@ -289,7 +308,7 @@ $\rho_{01}$   & 0.690& -1.000 \\
 \end{tabular}
 \end{table}
 
-\vspace{-0.5em}
+
 \subsection{Longitudinal data analysis}
 \label{sec:cows}
 
@@ -356,13 +375,12 @@ Model & Explanation & Formula (\verb@weight ~ ...@) \\
 \end{tabular}
 \end{table}
 
-\vspace{-1em}
+
 We assume iid errors, and in addition to a smooth effect of \code{time}, we further assume a nominal effect of both cow \code{id} and treatment \code{group} using the Pearson RKHS.
 In the \pkg{iprior} package, factor type objects are treated with the Pearson kernel automatically, and the only \code{model} option we need to specify is the \code{kernel = "fbm"} option for the \code{time} variable.
 We have opted not to estimate the Hurst coefficient in the interest of computational time, and instead left it at the default value of 0.5.
 \cref{tab:cowmodel} explains the five models we have fitted.
 
-\pagebreak
 The simplest model fitted was one in which the growth curves do not depend on the treatment effect or individual cows.
 We then added treatment effect and the cow \code{id} as covariates, separately first and then together at once.
 We also assumed that both of these covariates are time-varying, and hence added also the interaction between these covariates and the \code{time} variable.
@@ -395,7 +413,7 @@ Here is the code and output for fitting the first model:
 
 
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
-\begin{table}[t!]
+\begin{table}[htb]
 \centering
 \caption[Summary of the five I-prior models fitted to the cow data set.]{Summary of the five I-prior models fitted to the cow data set. Error S.D. refers to the inverse square root of the error precision, $\psi^{-1/2}$.}
 \label{tab:cowresults}
@@ -430,7 +448,6 @@ Here is the code and output for fitting the first model:
 \bottomrule
 \end{tabular}
 \end{table}
-
 
 The results of the model fit are summarised in \cref{tab:cowresults}. We can test for a treatment effect by testing Model 4 against the alternative that Model 2 is true.
 The log-likelihood ratio test statistic is
@@ -485,7 +502,7 @@ The focus here is to use the \pkg{iprior} package to fit several I-prior models 
 We compare the predictive performance of I-prior models against Gaussian process regression and the many other different methods applied on this data set.
 These methods include neural networks \citep{thodberg1996review}, kernel smoothing \citep{ferraty2006nonparametric}, single and multiple index functional regression models \citep{chen2011single}, sliced inverse regression (SIR) and sliced average variance estimation (SAVE), multivariate adaptive regression splines (MARS), partial least squares (PLS), and functional additive model with and without component selection (FAM \& CSEFAM).
 An analysis of this data set using the SIR and SAVE methods were conducted by  \citet{lian2014series}, while the MARS, PLS and (CSE)FAM methods were studied by \citet{zhu2014structured}.
-\cref{tab:tecator} tabulates the results of all of these methods from the various references.
+\cref{tab:tecator} tabulates the results of all of these methods from these various references.
 
 Assuming a regression model as in \cref{eq:model2}, we would like to model the \code{fat} content $y_i$ using the spectral curves $x_i$.
 Let $x_i(t)$ denote the absorbance for wavelength $t = 1,\dots,100$.
@@ -647,7 +664,7 @@ We see that starting from eight different initial values, direct optimisation le
 & 0.35
 & 1.85 \\
 \\
-\emph{Gaussian process regression} \\
+\emph{Gaussian process regression}\tnote{a}  \\
 \hspace{0.5em} Linear
 & 0.18
 & 2.36 \\
@@ -658,28 +675,29 @@ We see that starting from eight different initial values, direct optimisation le
 \emph{Others} \\
 %\hspace{0.5em} Linear functional regression\tnote{a}       && 2.78 \\
 %\hspace{0.5em} Quadratic functional regression\tnote{a}    && 0.80 \\
-\hspace{0.5em} Neural network\tnote{a}                     && 0.36 \\
-\hspace{0.5em} Kernel smoothing\tnote{b}                   && 1.49 \\
-\hspace{0.5em} Single/multiple indices model\tnote{c}      && 1.55 \\
+\hspace{0.5em} Neural network\tnote{b}                     && 0.36 \\
+\hspace{0.5em} Kernel smoothing\tnote{c}                   && 1.49 \\
+\hspace{0.5em} Single/multiple indices model\tnote{d}      && 1.55 \\
 \hspace{0.5em} Sliced inverse regression                   && 0.90 \\
 \hspace{0.5em} Sliced average variance estimation          && 1.70 \\
-\hspace{0.5em} MARS\tnote{d}                               && 0.88 \\
-\hspace{0.5em} Partial least squares\tnote{d}              && 1.01 \\
-%\hspace{0.5em} FAM\tnote{d}                                && 0.92 \\
-\hspace{0.5em} CSEFAM\tnote{d}                             && 0.85 \\
+\hspace{0.5em} MARS\tnote{e}                               && 0.88 \\
+\hspace{0.5em} Partial least squares\tnote{e}              && 1.01 \\
+\hspace{0.5em} FAM\tnote{e}                                && 0.92 \\
+\hspace{0.5em} CSEFAM\tnote{e}                             && 0.85 \\
 \bottomrule
 \end{tabular}
 % \end{tabular}
 \begin{tablenotes}\footnotesize
-\item [a] Neural network best results with automatic relevance determination (ARD) quoted.
-\item [b] Data set used was a 160/55 training/test split.
-\item [c] These are results of a leave-one-out cross-validation scheme.
-\item [d] Data set used was an extended version with $n=240$, and a random 185/55 training/test split.
+\item [a] GPR models were fit using \texttt{gausspr()} in \pkg{kernlab}.
+\item [b] Neural network best results with automatic relevance determination (ARD) quoted.
+\item [c] Data set used was a 160/55 training/test split.
+\item [d] These are results of a leave-one-out cross-validation scheme.
+\item [e] Data set used was an extended version with $n=240$, and a random 185/55 training/test split.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
-Predicted values of the test data set can be obtained using the \code{predict()} function.
+Predicted values of the test data is obtained using \code{predict()}.
 An example for obtaining the first model's predicted values is shown below.
 The \code{predict()} method for \code{ipriorMod} objects also return the test MSE if the vector of test data is supplied.
 
@@ -705,7 +723,7 @@ The training RMSE is improved further by assuming a smooth RKHS of functions for
 When it comes to out-of-sample test error rates, the cubic model gives the best RMSE out of the I-prior models for this particular data set, with an RMSE of 0.58.
 This is followed closely by the fBm RKHS with estimated Hurst coefficient (fBm-0.70) and also the fBm RKHS with default Hurst coefficient (fBm-0.50).
 The best performing I-prior model is only outclassed by the neural networks of \citet{thodberg1996review}, who also performed model selection using automatic relevance determination (ARD).
-The I-prior models also give much better test RMSE than Gaussian process regression\footnote{GPR models were fit using \texttt{gausspr()} in \pkg{kernlab}.}.
+The I-prior models also give much better test RMSE than Gaussian process regression.
 
 \subsection[Using the Nystrom method]{Using the Nystr\"om method}
 
@@ -770,8 +788,8 @@ To implement the Nystr\"om method, the option \code{nystrom = 50} was added to t
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[htbp]
 
-{\centering \includegraphics[width=0.8\textwidth]{figure/04-nystrom_plot-1} 
-\includegraphics[width=0.8\textwidth]{figure/04-nystrom_plot-2} 
+{\centering \includegraphics[width=0.785\textwidth]{figure/04-nystrom_plot-1} 
+\includegraphics[width=0.785\textwidth]{figure/04-nystrom_plot-2} 
 
 }
 

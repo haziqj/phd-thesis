@@ -97,15 +97,21 @@ The standard random effects model, as explored by \citet{davidian1995nonlinear} 
 %
 for $i=1,\dots,n_j$ and the index $j$ representing the 10 \code{Lots}.
 Fitting this model using \code{lmer}, we can test for the significance of the fixed effect $\beta_0$, for which we find that it is not ($p$-value = 0.616), and arrive at the same conclusion as in the I-prior model.
-However, we notice that the package reports a perfect negative correlation between the random effects, $\sigma_{01}$.
-This indicates a potential numerical issue when fitting the model---a value of exactly $-1$, $0$ or $1$ is typically imposed by the package to force through estimation in the event of non-positive definite covariance matrices arising.
-We can inspect the eigenvalues of the covariance matrix for the random effects to check that they are indeed non-positive definite.
 
 <<IGF.mod.lmer, cache = TRUE>>=
 @
+
+However, we notice that the package reports a perfect negative correlation between the random effects, $\sigma_{01}$.
+This indicates a potential numerical issue when fitting the model---a value of exactly $-1$, $0$ or $1$ is typically imposed by the package to force through estimation in the event of non-positive definite covariance matrices arising.
+We can inspect the eigenvalues of the covariance matrix for the random effects to check that they are indeed non-positive definite.
+One of the eigenvalues was found to be negative, so the covariance matrix is non-positive definite.
+
+<<IGF.mod.lmer.eigen, cache = TRUE>>=
+@
+
 <<IGf.prep.plot, cache = TRUE, include = FALSE>>=
 @
-<<IGF.plot.beta, echo = FALSE, fig.width = 7, fig.height = 3.415, fig.cap = "A comparison of the estimates for random intercepts and slopes (denoted as points) using the I-prior model and the standard random effects model. The dashed vertical lines indicate the fixed effect values.", fig.pos = "t">>=
+<<IGF.plot.beta, echo = FALSE, fig.width = 7, fig.height = 3.5, fig.cap = "A comparison of the estimates for random intercepts and slopes (denoted as points) using the I-prior model and the standard random effects model. The dashed vertical lines indicate the fixed effect values.", fig.pos = "htbp">>=
 @
 
 Degenerate covariance matrices often occur in models with a large number of random coefficients, and in cases where values of the variance components are estimated at the boundary.
@@ -141,7 +147,7 @@ $\rho_{01}$   & \Sexpr{dec_plac(corr.iprior, 3)}& \Sexpr{dec_plac(corr.lmer, 3)}
 \end{tabular}
 \end{table}
 
-\vspace{-0.5em}
+
 \subsection{Longitudinal data analysis}
 \label{sec:cows}
 
@@ -192,13 +198,12 @@ Model & Explanation & Formula (\verb@weight ~ ...@) \\
 \end{tabular}
 \end{table}
 
-\vspace{-1em}
+
 We assume iid errors, and in addition to a smooth effect of \code{time}, we further assume a nominal effect of both cow \code{id} and treatment \code{group} using the Pearson RKHS.
 In the \pkg{iprior} package, factor type objects are treated with the Pearson kernel automatically, and the only \code{model} option we need to specify is the \code{kernel = "fbm"} option for the \code{time} variable.
 We have opted not to estimate the Hurst coefficient in the interest of computational time, and instead left it at the default value of 0.5.
 \cref{tab:cowmodel} explains the five models we have fitted.
 
-\pagebreak
 The simplest model fitted was one in which the growth curves do not depend on the treatment effect or individual cows.
 We then added treatment effect and the cow \code{id} as covariates, separately first and then together at once.
 We also assumed that both of these covariates are time-varying, and hence added also the interaction between these covariates and the \code{time} variable.
@@ -214,7 +219,7 @@ Here is the code and output for fitting the first model:
 @
 
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
-\begin{table}[t!]
+\begin{table}[htb]
 \centering
 \caption[Summary of the five I-prior models fitted to the cow data set.]{Summary of the five I-prior models fitted to the cow data set. Error S.D. refers to the inverse square root of the error precision, $\psi^{-1/2}$.}
 \label{tab:cowresults}
@@ -250,7 +255,6 @@ Here is the code and output for fitting the first model:
 \end{tabular}
 \end{table}
 
-
 The results of the model fit are summarised in \cref{tab:cowresults}. We can test for a treatment effect by testing Model 4 against the alternative that Model 2 is true.
 The log-likelihood ratio test statistic is
 $D = -2(\Sexpr{dec_plac(logLik(mod2))} - (\Sexpr{dec_plac(logLik(mod4))})) = \Sexpr{dec_plac(-2*(logLik(mod2) - logLik(mod4)))}$, which has an asymptotic chi-squared distribution with $\Sexpr{length(iprior::get_lambda(mod4))} - \Sexpr{length(iprior::get_lambda(mod2))} = \Sexpr{length(iprior::get_lambda(mod4)) - length(iprior::get_lambda(mod2))}$ degree of freedom.
@@ -261,7 +265,7 @@ As these models have the same number of parameters, we can simply choose the one
 We conclude that treatment does indeed have an effect on growth, and that the treatment effect differs among cows.
 A plot of the fitted regression curves onto the cow data set is shown in \cref{fig:cows.plot}.
 
-<<cows.plot, echo = FALSE, fig.height = 3.3, fig.width = 7, fig.cap = "A plot of the I-prior fitted regression curves from Model 5. In this model, growth curves differ among cows and by treatment effect (with an interaction between cows and treatment effect), thus producing these 60 individual lines, one for each cow, split between their respective treatment groups (A or B).", fig.pos = "htb">>=
+<<cows.plot, echo = FALSE, fig.height = 3.45, fig.width = 7, fig.cap = "A plot of the I-prior fitted regression curves from Model 5. In this model, growth curves differ among cows and by treatment effect (with an interaction between cows and treatment effect), thus producing these 60 individual lines, one for each cow, split between their respective treatment groups (A or B).", fig.pos = "htb">>=
 @
 
 \subsection{Regression with a functional covariate}
@@ -276,7 +280,7 @@ Obtained from Tecator (see \url{http://lib.stat.cmu.edu/datasets/tecator} for de
 We used the version made available in the dataframe \code{tecator} from the \proglang{R} package \pkg{caret} \citep{caret}.
 }
 
-<<tecator.data, echo = FALSE, cache = TRUE, fig.width = 5.5, fig.height = 5.5 * 3.5 / 6, out.width = "12cm", fig.cap = "Sample of spectrometric curves used to predict fat content of meat. For each meat sample the data consists of a 100 channel spectrum of absorbances and the contents of moisture, fat (numbers shown in boxes) and protein measured in percent. The absorbance is $-\\log 10$ of the transmittance measured by the spectrometer. The three contents, measured in percent, are determined by analytic chemistry.", fig.pos = "htb">>=
+<<tecator.data, echo = FALSE, cache = TRUE, fig.width = 5.5, fig.height = 5.5 * 3.4 / 6, out.width = "12cm", fig.cap = "Sample of spectrometric curves used to predict fat content of meat. For each meat sample the data consists of a 100 channel spectrum of absorbances and the contents of moisture, fat (numbers shown in boxes) and protein measured in percent. The absorbance is $-\\log 10$ of the transmittance measured by the spectrometer. The three contents, measured in percent, are determined by analytic chemistry.", fig.pos = "htb">>=
 @
 
 For our analyses and many others' in the literature, the first 172 observations in the data set are used as a training sample for model fitting, and the remaining 43 observations as a test sample to evaluate the predictive performance of the fitted model.
@@ -284,7 +288,7 @@ The focus here is to use the \pkg{iprior} package to fit several I-prior models 
 We compare the predictive performance of I-prior models against Gaussian process regression and the many other different methods applied on this data set.
 These methods include neural networks \citep{thodberg1996review}, kernel smoothing \citep{ferraty2006nonparametric}, single and multiple index functional regression models \citep{chen2011single}, sliced inverse regression (SIR) and sliced average variance estimation (SAVE), multivariate adaptive regression splines (MARS), partial least squares (PLS), and functional additive model with and without component selection (FAM \& CSEFAM).
 An analysis of this data set using the SIR and SAVE methods were conducted by  \citet{lian2014series}, while the MARS, PLS and (CSE)FAM methods were studied by \citet{zhu2014structured}.
-\cref{tab:tecator} tabulates the results of all of these methods from the various references.
+\cref{tab:tecator} tabulates the results of all of these methods from these various references.
 
 Assuming a regression model as in \cref{eq:model2}, we would like to model the \code{fat} content $y_i$ using the spectral curves $x_i$.
 Let $x_i(t)$ denote the absorbance for wavelength $t = 1,\dots,100$.
@@ -367,7 +371,7 @@ We see that starting from eight different initial values, direct optimisation le
 & \Sexpr{dec_plac(tab[6, 2], 2)}
 & \Sexpr{dec_plac(tab[6, 3], 2)} \\
 \\
-\emph{Gaussian process regression} \\
+\emph{Gaussian process regression}\tnote{a}  \\
 \hspace{0.5em} Linear
 & \Sexpr{dec_plac(RMSE.train7)}
 & \Sexpr{dec_plac(RMSE.test7)} \\
@@ -378,28 +382,29 @@ We see that starting from eight different initial values, direct optimisation le
 \emph{Others} \\
 %\hspace{0.5em} Linear functional regression\tnote{a}       && 2.78 \\
 %\hspace{0.5em} Quadratic functional regression\tnote{a}    && 0.80 \\
-\hspace{0.5em} Neural network\tnote{a}                     && 0.36 \\
-\hspace{0.5em} Kernel smoothing\tnote{b}                   && 1.49 \\
-\hspace{0.5em} Single/multiple indices model\tnote{c}      && 1.55 \\
+\hspace{0.5em} Neural network\tnote{b}                     && 0.36 \\
+\hspace{0.5em} Kernel smoothing\tnote{c}                   && 1.49 \\
+\hspace{0.5em} Single/multiple indices model\tnote{d}      && 1.55 \\
 \hspace{0.5em} Sliced inverse regression                   && 0.90 \\
 \hspace{0.5em} Sliced average variance estimation          && 1.70 \\
-\hspace{0.5em} MARS\tnote{d}                               && 0.88 \\
-\hspace{0.5em} Partial least squares\tnote{d}              && 1.01 \\
-%\hspace{0.5em} FAM\tnote{d}                                && 0.92 \\
-\hspace{0.5em} CSEFAM\tnote{d}                             && 0.85 \\
+\hspace{0.5em} MARS\tnote{e}                               && 0.88 \\
+\hspace{0.5em} Partial least squares\tnote{e}              && 1.01 \\
+\hspace{0.5em} FAM\tnote{e}                                && 0.92 \\
+\hspace{0.5em} CSEFAM\tnote{e}                             && 0.85 \\
 \bottomrule
 \end{tabular}
 % \end{tabular}
 \begin{tablenotes}\footnotesize
-\item [a] Neural network best results with automatic relevance determination (ARD) quoted.
-\item [b] Data set used was a 160/55 training/test split.
-\item [c] These are results of a leave-one-out cross-validation scheme.
-\item [d] Data set used was an extended version with $n=240$, and a random 185/55 training/test split.
+\item [a] GPR models were fit using \texttt{gausspr()} in \pkg{kernlab}.
+\item [b] Neural network best results with automatic relevance determination (ARD) quoted.
+\item [c] Data set used was a 160/55 training/test split.
+\item [d] These are results of a leave-one-out cross-validation scheme.
+\item [e] Data set used was an extended version with $n=240$, and a random 185/55 training/test split.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
-Predicted values of the test data set can be obtained using the \code{predict()} function.
+Predicted values of the test data is obtained using \code{predict()}.
 An example for obtaining the first model's predicted values is shown below.
 The \code{predict()} method for \code{ipriorMod} objects also return the test MSE if the vector of test data is supplied.
 
@@ -413,7 +418,7 @@ The training RMSE is improved further by assuming a smooth RKHS of functions for
 When it comes to out-of-sample test error rates, the cubic model gives the best RMSE out of the I-prior models for this particular data set, with an RMSE of \Sexpr{dec_plac(tab[3, 3], 2)}.
 This is followed closely by the fBm RKHS with estimated Hurst coefficient (fBm-\Sexpr{dec_plac(get_hurst(mod5))}) and also the fBm RKHS with default Hurst coefficient (fBm-0.50).
 The best performing I-prior model is only outclassed by the neural networks of \citet{thodberg1996review}, who also performed model selection using automatic relevance determination (ARD).
-The I-prior models also give much better test RMSE than Gaussian process regression\footnote{GPR models were fit using \texttt{gausspr()} in \pkg{kernlab}.}.
+The I-prior models also give much better test RMSE than Gaussian process regression.
 
 \subsection[Using the Nystrom method]{Using the Nystr\"om method}
 

@@ -1,6 +1,6 @@
 Computational challenges for the I-probit model stems from two sources: 1) calculation of the class probabilities \cref{eq:pij}; and 2) storage and time requirements for the variational EM algorithm.
 Ways in which to overcome these challenges are discussed.
-In addition, we also discuss considerations to take into account if estimation of the error precision $\bPsi$ is desired, and thus path a road for future work.
+In addition, we also discuss considerations to take into account if estimation of the error precision $\bPsi$ is desired, and thus pave the way for future work.
 
 \subsection{Efficient computation of class probabilities}
 \label{sec:mnint}
@@ -36,7 +36,7 @@ In addition, we also discuss considerations to take into account if estimation o
 %%  \int \ind(z_{i2} \geq 0) \phi(z_{i2}) \dint z_{i2} = 
 %  1 - \Phi \left( \frac{z_{i2} - \nu}{\omega^{1/2}} \right),
 %\]
-%where $\Phi(\cdot)$ is the CDF of the standard normal univariate distribution, and $\nu$ and $\omega$ are the mean and variance of the univariate random variable $\bz_{i\bigcdot} = z_{i2}$.
+%where $\Phi(\cdot)$ is the cdf of the standard normal univariate distribution, and $\nu$ and $\omega$ are the mean and variance of the univariate random variable $\bz_{i\bigcdot} = z_{i2}$.
 %The probit link function involving the cdf of a standard normal is clearly seen here, especially if the error precision is treated as fixed such that $\omega = 1$. 
 
 The issue at hand here is that for $m>4$, the evaluation of the class probabilities in \cref{eq:pij} is computationally burdensome using classical methods such as quadrature methods \citet{geweke1994alternative}.
@@ -139,7 +139,7 @@ where
   \end{cases}
 \end{equation*}
 %Thus, the original integral in \cref{eq:pij} involving an $m$-variate normal density is turned into a product of $m-1$ univariate normal cdfs, which can be computed fairly efficiently in modern computer systems.
-The GHK algorithm entails making draws from one-sided right truncated standard normal distributions (for instance, using an inverse transform method detailed in \cref{apx:truncuninorm} (p. \pageref{apx:truncuninorm})):
+The GHK algorithm entails making draws from one-sided right truncated standard normal distributions (for instance, using an inverse transform method detailed in \cref{apx:truncuninorm},  \mypageref{apx:truncuninorm}):
 \begin{itemize}
   \item Draw $\tilde\zeta_1 \sim \tN(0,1,-\infty,u_1)$.
   \item Draw $\tilde\zeta_2 \sim \tN(0,1,-\infty,\tilde u_2)$, where $\tilde u_2 = u_2(\tilde\zeta_1)$.
@@ -180,7 +180,7 @@ It is better to work on a log-probability scale, so the products in \cref{eq:til
 
 \begin{remark}
   The GHK algorithm provides reasonably fast and accurate calculations of class probabilities when $\bPsi$ is dense.
-  As we alluded to earlier in the chapter, the class probabilities condense to a unidimensional integral involving products of normal cdfs (see \cref{eq:pij2}) if $\bPsi$ is diagonal.
+  As we alluded to earlier in the chapter, the class probabilities condense to a unidimensional integral involving products of normal cdfs (see equation \ref{eq:pij2}) if $\bPsi$ is diagonal.
   Note that if $\bPsi$ is diagonal, then the transformed $\bOmega_{(j)} = \bQ\bPsi^{-1}\bQ^\top$ is certainly not: the components of $\bz$ are correlated because they are all anchored on the same random variable.
   Thus, direct evaluation of \cref{eq:pij2} using quadrature methods avoids the Cholesky step and random sampling employed by the GHK method.
 \end{remark}
@@ -231,49 +231,39 @@ If so, the $Q$ function from \cref{eq:iprobitQEstep} conditional on the rest of 
   -\half \tr 
   \big( 
   \bPsi
-  \greyoverbrace{\E[(\by^* - \bmu)^\top (\by^* - \bmu)]}{\bG_1}
+  \greyoverbrace{\E\big( (\by^* - \bmu)^\top (\by^* - \bmu) \big)}{\bG_1}
   +
   \bPsi^{-1}
-  \greyoverbrace{\E[\bw^\top\bw]}{\bG_2} 
+  \greyoverbrace{\E(\bw^\top\bw)}{\bG_2} 
   \Big)
 \end{align*}
 with $\bmu = \bone_n\balpha^\top + \bH_\eta\bw$.
-This can be differentiated with respect to $\bPsi$ to obtain
-\begin{align*}
-  \frac{\partial}{\partial\bPsi}Q(\bPsi|\balpha,\eta)
-  &= -\half \tr \left(\frac{\partial\bPsi}{\partial\bPsi}\bG_1 + \frac{\partial\bPsi^{-1}}{\partial\bPsi}\bG_2 \right) \\
-  &= -\half \tr \left(\bG_1 - \bPsi^{-2} \bG_2 \right). 
-\end{align*}
-Setting this to zero and solving for $\bPsi$ yields the M-step update equation for $\bPsi$\hltodo[Actually, I don't know how to solve this?]{}. 
-This can be solved numerically, though it must be ensured that the identifiability constraints and positive-definiteness are satisfied.
-
+This can be solved using numerical methods, though it must be ensured that the identifiability constraints and positive-definiteness are satisfied.
 Specifically in the case where $\bPsi$ is a diagonal matrix $\diag(\psi_1,\dots,\psi_m)$, then
 \begin{align*}
   \vspace{-0.5em}
   Q(\bPsi|\balpha,\eta)
-  &= \const -\half \sum_{j=1}^m \psi_j \tr
-  \E[(\by^*_{\bigcdot j} - \bmu_{\bigcdot j})(\by^*_{\bigcdot j} - \bmu_{\bigcdot j})^\top] \\
-  &\phantom{==} -\half \sum_{j=1}^m \psi_j^{-1} \tr
-  \E[\bw_{\bigcdot j}\bw_{\bigcdot j}^\top] 
-  \vspace{-1em}
+  ={}& \const -\half \sum_{j=1}^m \psi_j \tr
+  \E\big( (\by^*_{\bigcdot j} - \bmu_{\bigcdot j})(\by^*_{\bigcdot j} - \bmu_{\bigcdot j})^\top \big) \\
+  & -\half \sum_{j=1}^m \psi_j^{-1} \tr
+  \E(\bw_{\bigcdot j}\bw_{\bigcdot j}^\top)
 \end{align*}
 is maximised, for $j=1,\dots,m$, at
 \[
   \hat\psi_j = \left( 
-  \frac{\E[ \bw_{\bigcdot j}^\top\bw_{\bigcdot j} ] }{\E[ (\by^*_{\bigcdot j} - \bmu_{\bigcdot j})^\top (\by^*_{\bigcdot j} - \bmu_{\bigcdot j}) ]}
+  \frac{\E( \bw_{\bigcdot j}^\top\bw_{\bigcdot j} ) }{\E\big( (\by^*_{\bigcdot j} - \bmu_{\bigcdot j})^\top (\by^*_{\bigcdot j} - \bmu_{\bigcdot j}) \big) }
   \right)^{\half},
 \] 
 independently of the rest of the other $\psi_k$'s, $k\neq j$.
-As per the derivations in \cref{apx:qw} (p. \pageref{eq:trCEwDw}), the numerator of this expression is equal to $\tr(\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot j}^\top) = \tr (\tilde\bW_{jj})$.
+As per the derivations in \cref{apx:qw} \colp{\mypageref{eq:trCEwDw}}, the numerator of this expression is equal to $\tr(\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot j}^\top) = \tr (\tilde\bW_{jj})$.
 The denominator on the other hand is
 \[
-  \E[\by_{\bigcdot j}^{*\top}\by_{\bigcdot j}^*] - 
+  \E(\by_{\bigcdot j}^{*\top}\by_{\bigcdot j}^*) - 
   n\alpha_j^2 - \tr( \bH_\eta^2 \tilde\bW_{jj}) 
   - 2\by^{*\top}_{\bigcdot j}\bH_\eta\tilde\bw_{\bigcdot j}
   - 2\alpha_j \sum_{i=1}^n\sum_{i'=1}^n (y_{ij}^* - h_\eta(x_{i},x_{i'}) \tilde w_{ij}).
 \]
 
-\vspace{-1em}
 In either the full or I-probit model, solving $\bPsi$ involves the second moments of a truncated normal distribution.
 In the case where $\bPsi$ is dense, this is obtained by Monte Carlo methods, where samples from a truncated multivariate normal distribution are obtained using Gibbs sampling.
-Although this strategy can be used when $\bPsi$ is diagonal, we show that the form for the second moments  involve integration of standard normal cdfs and pdfs (\cref{thm:contruncn}, p. \pageref{thm:contruncn}), much like the formula for the first moments.
+Although this strategy can be used when $\bPsi$ is diagonal, we show that the form for the second moments  involve integration of standard normal cdfs and pdfs \colp{\cref{thm:contruncn}, \mypageref{thm:contruncn}}, much like the formula for the first moments.

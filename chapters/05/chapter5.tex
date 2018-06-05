@@ -1,18 +1,21 @@
-\documentclass[a4paper,showframe,11pt]{report}
+\documentclass[showframe,11pt]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
-  \usepackage{../../haziq_thesis}  
+  \usepackage{../../haziq_thesis}
   \usepackage{../../haziq_maths}
   \usepackage{../../haziq_glossary}
   \usepackage{../../knitr}
   \usepackage{../../matrix_fig}
   \addbibresource{../../bib/haziq.bib}
   \externaldocument{../01/.texpadtmp/chapter1}
-  \externaldocument{../02/.texpadtmp/chapter2}
+  \externaldocument{../02/.texpadtmp/chapter2}  
   \externaldocument{../03/.texpadtmp/chapter3}
   \externaldocument{../04/.texpadtmp/chapter4}
-  \externaldocument{../appendix/.texpadtmp/appendix}
+%  \externaldocument{../05/.texpadtmp/chapter5}
+  \externaldocument{../06/.texpadtmp/chapter6}
+  \externaldocument{../07/.texpadtmp/chapter7}
+  \externaldocument{../appendix/.texpadtmp/appendix}  
 \fi
 
 \begin{document}
@@ -36,13 +39,13 @@ Expanding on this idea further, assume that the $y_i$'s follow a categorical dis
 \]
 with the class probabilities satisfying $p_{ij} \geq 0, \forall j=1,\dots,m$ and $\sum_{j=1}^m p_{ij} = 1$. 
 The probability mass function (pmf) of $y_i$ is given by
-\begin{align*}%\label{eq:catdist}
-  p(y_i) = p_{i1}^{[y_i = 1]} \cdots p_{im}^{[y_i = m]}
-\end{align*}
+\begin{equation*}%\label{eq:catdist}
+  p(y_i) = p_{i1}^{[y_i = 1]} \cdots p_{im}^{[y_i = m]},
+\end{equation*}
 where the notation $[\cdot]$ refers to the Iverson bracket\footnote{$[A]$ returns 1 if the proposition $A$ is true, and 0 otherwise. The Iverson bracket is a generalisation of the Kronecker delta.}. 
 The dependence of the class probabilities on the covariates is specified through the relationship
 \[
-  g(p_{i1},\dots,p_{im}) = \big(\alpha_1 + f_1(x_i), \dots, \alpha_m + f_m(x_i)\big)
+  g(p_{i1},\dots,p_{im}) = \big(\alpha_1 + f_1(x_i), \dots, \alpha_m + f_m(x_i)\big),
 \]
 where $g:[0,1]^m\to\bbR^m$ is some specified link function.
 As we will see later, an underlying normal regression model as in \cref{eq:model1} subject to \cref{eq:model1ass} naturally implies a \emph{probit} link function.
@@ -55,7 +58,7 @@ With an I-prior assumed on the $f_j$'s, we call this method of probit regression
 
 Due to the nature of the model, unfortunately, the posterior distribution of the regression functions cannot be found in closed form.
 In particular, marginalising the I-prior from the joint likelihood involves a high-dimensional intractable integral.
-Similar problems are encountered in mixed logistic or probit multinomial models \citep{breslow1993approximate,mcculloch2000bayesian} and also Gaussian process classification \citep{neal1999,rasmussen2006gaussian} .
+Similar problems are encountered in mixed logistic or probit multinomial models \citep{breslow1993approximate,mcculloch2000bayesian} and also Gaussian process classification \citep{neal1999,rasmussen2006gaussian}.
 In these models, Laplace approximation for maximum likelihood estimation or Markov chain Monte Carlo (MCMC) methods for Bayesian estimation are used. 
 We instead explore a \emph{variational approximation} to the marginal log-likelihood, and thus, to the posterior density of the regression function.
 The main idea is to replace the difficult posterior distribution with an approximation that is tractable to be used within an EM framework.
@@ -122,21 +125,18 @@ Suggestions for future work include:
   
   \item \textbf{Inclusion of class-specific covariates}. 
   Throughout the chapter, we assumed that covariates were unit-specific, rather than class-specific. 
-  One such example is modelling the choice of travel mode between two destinations (car, coach, train or aeroplane) as a function of travel time. 
-  Clearly, travel time depends on the mode of transport. 
-  This would require a careful rethink of the appropriate RKHS/RKKS to which the regression function belongs.
-  The regression on the latent propensities could be extended as such:
+  To illustrate, consider modelling the choice of travel mode between two destinations (car, coach, train or aeroplane) as a function of disposable income and travel time. 
+  Individuals' income as a predictor of transportation choice is unit-specific, but clearly, travel time depends on the mode of transport. 
+  To incorporate class-specific covariates $z_{ij}$, the regression on the latent propensities in \cref{eq:multinomial-latent} could be extended as such:
   \[
-    y_{ij}^* = \alpha_j + f_j(x_i) + e(z_{ij}) + \epsilon_{ij}
+    y_{ij}^* = \myoverbrace{\alpha_j + f_j(x_i) + e(z_{ij})}{f(x_i,z_{ij},j)} + \epsilon_{ij}
   \]
-  and $f_j\in \cF_\cX$, the RKHS with kernel $h:(\cX \times \{1,\dots,m \})^2\to\bbR$ defined by $\delta_{jj'}h(x,x')$, and $e \in \cF_\cZ$, the RKHS of functions of the form $e:\{z_{ij}|i=1,\dots,n, \ j=1,\dots,m \}\to\bbR$.
-%  An I-prior would then be applied as usual, but the implications on the estimation would need to be considered as well.
+  An I-prior would then be applied as usual, with careful consideration of the RKKS used to model $f$.
   
   \item \textbf{Improving computational efficiency}. 
   The $O(n^3m)$ time requirement for estimating I-probit models hinder its use towards large-data applications.
   In a limited study, we did not obtain reliable improvements using low-rank approximations of the kernel matrix such as the Nyström method.
   The key to improving computational efficiency could lie in sparse variational methods, a suggestion that was made to improve normal I-prior models as well.
-%  \item \textbf{Efficient calculation of normal integrals}.
 \end{enumerate}
 
 \begin{figure}[hbt]
@@ -152,9 +152,9 @@ However, a variational Bayes route has its cons:
 \begin{enumerate}
   \item \textbf{Tedious derivations}. As the parameters now have a distribution $\theta = \{\balpha,\eta,\bPsi\} \sim q(\balpha,\eta,\bPsi)$, quantities such as
   \begin{itemize}
-    \item $\E[\log \vert \bPsi \vert]$;
-    \item $\E[\bH_\eta^2]$; and
-    \item $\tr \E[(\by^*-\bone_n\balpha^\top - \bH_\eta\bw)\bPsi (\by^*-\bone_n\balpha^\top - \bH_\eta\bw)^\top ]$,
+    \item $\E(\log \vert \bPsi \vert)$;
+    \item $\E(\bH_\eta^2)$; and
+    \item $\tr \E\big( (\by^*-\bone_n\balpha^\top - \bH_\eta\bw)\bPsi (\by^*-\bone_n\balpha^\top - \bH_\eta\bw)^\top \big)$,
   \end{itemize}
   among others, will need to be derived for the variational inference algorithm, and these can be tricky to compute.
   

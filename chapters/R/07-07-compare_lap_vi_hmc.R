@@ -61,6 +61,7 @@ generated quantities {
   vector[n] yvec;
   real brierscore;
   real errorrate;
+  real logLik;
   for (i in 1:n)
     yvec[i] = y[i];
   brierscore = mean(square(pi - yvec));
@@ -71,6 +72,7 @@ generated quantities {
       ypred[i] = 0;
     }
   errorrate = mean(square(ypred - yvec)) * 100;
+  logLik = bernoulli_lpmf(y|pi);
 }
 "
 # Compile the Stan programme
@@ -79,9 +81,10 @@ m@model_name <- "iprobit.fbm"
 
 # Fit stan model
 fit.stan <- sampling(m, data = stan.iprobit.dat,
-                     pars = c("alpha", "lambda", "brierscore", "errorrate", "w"),
+                     pars = c("alpha", "lambda", "brierscore", "errorrate", "w",
+                              "logLik"),
                      iter = 200, chains = 8, thin = 1)
-print(fit.stan, pars = c("alpha", "lambda", "brierscore", "errorrate"))
+print(fit.stan, pars = c("alpha", "lambda", "brierscore", "errorrate", "logLik"))
 
 # Check fit
 a <- stan2coda(fit.stan)
@@ -132,18 +135,24 @@ vector[n] w;
 }
 transformed parameters {
 vector<lower=0,upper=1>[n] pi;
-pi = Phi_approx(alpha + lambda * H * w);
+pi = Phi(alpha + lambda * H * w);
 }
 model {
 w ~ normal(0, 1);
 y ~ bernoulli(pi);
 }
+generated quantities {
+  // generate from posterior of y
+real logLik;
+logLik = bernoulli_lpmf(y|pi);
+}
 "
 m <- stan_model(model_code = stan.iprobit.mod)
-pre.dat <- list(y = as.numeric(dat$y) - 1, H = iprior::kern_fbm(dat$X), n = length(dat$y))
+pre.dat <- list(y = as.numeric(dat$y) - 1, H = iprior::kern_fbm(dat$X),
+                n = length(dat$y))
 stan.iprobit.dat <- c(pre.dat, b.alpha, b.lambda)
 fit.stan <- sampling(
-  m, data = stan.iprobit.dat, iter = 60, chains = 1, pars = c("pi"),
+  m, data = stan.iprobit.dat, iter = 60, chains = 1, pars = c("logLik"),
   thin = 1, init = list(list(w = rep(0, 300)))
 )
 # postmean <- summary(stan2coda(fit.stan))$stat[, 1]
@@ -166,9 +175,11 @@ do_it <- function() {
                    stan.iprobit.dat <- c(pre.dat, alpha = aa, lambda = exp(tt))
                    fit.stan <- sampling(
                      m, data = stan.iprobit.dat, iter = 60, chains = 1,
-                     thin = 1, init = list(list(w = rep(0, 300)))
+                     pars = "logLik", thin = 1,
+                     init = list(list(w = rep(0, 300)))
                     )
-                   res.hmc <- summary(stan2coda(fit.stan))$stat[301, 1]
+                   postmean <- summary(stan2coda(fit.stan))$stat[, 1]
+                   res.hmc <- postmean[grep("logLik", names(postmean))]
                    # res.var <- logLik(mod.vi, theta = tt, alpha = aa)
                    # res.lap <- lap_bin(mu = c(aa, tt), object = mod.vi$ipriorKernel)
                    # c(res.var, res.lap, res.hmc)
@@ -178,7 +189,7 @@ do_it <- function() {
   stopCluster(cl)
   res
 }
-z <- do_it()
+z3 <- do_it()
 # save(z, file = "data/iprobit_lik")
 load("data/iprobit_lik")
 

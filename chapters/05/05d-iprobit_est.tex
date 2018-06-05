@@ -132,19 +132,19 @@ This time, treat both the latent propensities $\by^*$ and the I-prior random eff
 Now, due to the independence of the observations $i=1,\dots,n$, the complete data log-likelihood is
 \begin{align}
   L(\theta |\by,\by^*,\bw) 
-  &= \log p(\by,\by^*,\bw|\theta) \nonumber \\
-  &= \sum_{i=1}^n \log p(y_i|\by^*_{i \bigcdot}) 
+  ={}& \log p(\by,\by^*,\bw|\theta) \nonumber \\
+  ={}& \sum_{i=1}^n \log p(y_i|\by^*_{i \bigcdot}) 
   + \log p(\by^*|\bw) + \log p(\bw) \nonumber \\
-  &= \const + \cancel{\half\log\abs{\bPsi}} - \half \tr  
+  ={}& \const + \cancel{\half\log\abs{\bPsi}} - \half \tr  
   \Big(
     \bPsi(\by^* - \bone_n\balpha^\top - \bH_\eta\bw)^\top 
     (\by^* - \bone_n\balpha^\top - \bH_\eta\bw)
   \Big) \nonumber \\
-  &\phantom{==} \cancel{- \half\log\abs{\bPsi}} 
+  &\cancel{- \half\log\abs{\bPsi}} 
   - \half \tr \Big(\bPsi^{-1} \bw^\top  \bw \Big)
   \label{eq:logjointprobit}
 \end{align}
-which looks like the complete data log-likelihood seen previously in \cref{eq:QfnEstep} (Chapter 4, p. \pageref{eq:QfnEstep}), except that here, together with $\bw$, the $\by^*_{i \bigcdot}$'s are not observed.
+which looks like the complete data log-likelihood seen previously in \cref{eq:QfnEstep} \colp{\cref{sec:ipriorem},  \mypageref{eq:QfnEstep}}, except that here, together with $\bw$, the $\by^*_{i \bigcdot}$'s are not observed.
 
 For the E-step, it is of interest to determine the posterior density $p(\by^*,\bw|\by) = p(\by^*|\bw,\by)p(\bw|\by)$. 
 We have discerned from the discussion at the beginning of this section that this is hard to obtain, since it involves an intractable marginalising integral.
@@ -155,15 +155,15 @@ We thus seek a suitable approximation
 where $\tilde q$ satisfies $\tilde q = \argmin_q \KL(q\Vert p) = \argmin_q \int \log \frac{q(\by^*,\bw)}{p(\by^*,\bw | \by, \theta)} q(\by^*,\bw) \dint\bz$, subject to certain constraints.
 The constraint considered by us in this thesis is that $q$ satisfies a \emph{mean-field} factorisation
 \[
-  q(\by^*,\bw,\theta) = q(\by^*)q(\bw).
+  q(\by^*,\bw) = q(\by^*)q(\bw).
 \]
 Under this scheme, the variational distribution for $\by^*$ is found to be a \emph{conically truncated multivariate normal} distribution, and for $\bw$, a multivariate normal distribution.
 
 It can be shown that, for any variational density $q$, the marginal log-likelihood is an upper-bound for the quantity $\cL(q,\theta)$ defined by
 \[
   \log p(\by|\theta) \geq 
-    \E_{\by^*,\bw\sim q} [\log p(\by,\by^*,\bw|\theta)]
-    - \E_{\by^*,\bw\sim q} [\log  q(\by^*,\bw)] =: \cL(q,\theta),
+    \E_{\by^*,\bw\sim q} \big( \log p(\by,\by^*,\bw|\theta)\big)
+    - \E_{\by^*,\bw\sim q} \big( \log  q(\by^*,\bw) \big) =: \cL(q,\theta),
 \]
 a quantity often referred to as the \emph{evidence lower bound} (ELBO).
 It turns out that minimising $\KL(q\Vert p)$ is equivalent to maximising the ELBO, a quantity that is more practical to work with than the KL divergence, and certainly more tractable than the log marginal density.
@@ -175,15 +175,15 @@ Let $\bar\by^* = \by^* - \bone_n\balpha^\top$.
 The objective function to be maximised is computed as
 \begin{align}
   Q(\theta) 
-  &= \E_{\by^*,\bw\sim q^{(t+1)}}  \big[ \log p(\by,\by^*,\bw|\theta) \big] \nonumber \\
-  &= \const -\half\tr\Big( \bPsi \E[\bw^\top\bH_\eta^2\bw]  + \bPsi^{-1} \E[\bw^\top\bw] \Big)  \nonumber \\
-  &\phantom{==} - \half \tr \Big( 
-  \bPsi \big( 
-  \E[\by^{*\top}\by^*] 
+  ={}& \E_{\by^*,\bw\sim q^{(t+1)}}  \big( \log p(\by,\by^*,\bw|\theta) \big) \nonumber \\
+  ={}& \const -\half\tr\Big( \bPsi \E(\bw^\top\bH_\eta^2\bw)  + \bPsi^{-1} \E(\bw^\top\bw) \Big)  \nonumber \\
+  &- \half \tr \Big( 
+  \bPsi \big\{
+  \E(\by^{*\top}\by^*)
   + n \balpha\balpha^\top 
-  - 2\balpha \bone_n \E[\by^*]
-  - 2\E[\bw]^\top\bH_\eta (\E[\by^*] - \bone_n\balpha^\top) 
-  \big) \Big) \label{eq:iprobitQEstep}
+  - 2\balpha \bone_n^\top \E(\by^*)
+  - 2\E(\bw^\top)\bH_\eta [\E(\by^*) - \bone_n\balpha^\top] 
+  \big\} \Big) \label{eq:iprobitQEstep}
   ,
 \end{align}
 and this is maximised with respect to $\theta$ in the M-step to obtain $\theta^{(t+1)}$
@@ -205,7 +205,7 @@ The models with likelihood \cref{eq:intractablelikelihood1} or \cref{eq:intracta
 However, as mentioned already, \cref{eq:intractablelikelihood1} contains an integral involving a $mn$-variate normal distribution whose covariance matrix is dense, and as far as we are aware, the Kronecker product structure cannot be exploited for efficiency in sampling.
 This leaves \cref{eq:intractablelikelihood2}, a non-conjugate model whose full conditional densities are not of recognisable form.
 Hamiltonian Monte Carlo is another possibility, since it does not require conjugacy.
-For binary models, this is a feasible approach because the class probabilities normal CDFs (see \cref{eq:iprobitbin}), which means that it is doable using off-the-shelf software such as \proglang{Stan}.
+For binary models, this is a feasible approach because the class probabilities normal cdfs (see equation \ref{eq:iprobitbin}), which means that it is doable using off-the-shelf software such as \proglang{Stan}.
 However, with multinomial responses, the arduous task of computing class probabilities, which involve integration of an at most $m$-dimensional normal density, must be addressed separately.
 
 \subsection{Comparison of estimation methods}
@@ -228,8 +228,9 @@ The results are presented in \cref{tab:compreiprobit}.
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.75\textwidth]{figure/05-example_data}
+  \includegraphics[width=0.7\textwidth]{figure/05-example_data}
   \caption{A plot of simulated spiral data set.}
+  \vspace{-0.5em}
   \label{fig:exampleiprobit}
 \end{figure}
 
@@ -249,7 +250,7 @@ The posterior density for $\lambda$ was very positively skewed, and this contrib
 & Hamiltonian MC          \\ \midrule
 Intercept ($\alpha$)      & -0.02 (0.03)           & 0.00 (0.06)    & 0.00 (0.58)  \\
 Scale ($\lambda$)      & 0.85 (0.01)         & 5.67 (0.23)  & 29.3 (5.21)     \\[0.5em]
-Log density    & -202.7              & -140.7       & -163.8                  \\
+Log-density    & -171.8              & -43.2       & -8.5                  \\
 Error rate (\%) & 44.7               & 0.00        & 0.00                   \\
 Brier score & 0.20               & 0.02        & 0.01                   \\[0.5em]
 Iterations     & 20                  & 56          & 2000                    \\
@@ -269,7 +270,7 @@ Time taken (s) & >3600                & 5.32         & >3600                    
   \vspace{1em}
   \includegraphics[width=0.49\textwidth]{figure/05-fit_hmc}
   \includegraphics[width=0.49\textwidth]{figure/05-lik_hmc}
-  \caption{Plots showing predicted probabilities (shaded region) for belonging to class 1 or 2 indicated by colour and intensity, and log-likelihood/ELBO surface plots for (a) Laplace's method, (b) variational EM, and (c) Hamiltonian MC.}
+  \caption[Predicted probabilities and log-density plots]{Plots showing predicted probabilities (shaded region) for belonging to class `1' or `2' indicated by colour and intensity, and log-likelihood/ELBO surface plots for (a) Laplace's method, (b) variational EM, and (c) Hamiltonian MC. For the Hamiltonian MC plot, parameters are treated as fixed, and the mean log-density of the I-probit model recorded.}
   \label{fig:exampleiprobitfit}
 \end{figure}
 
@@ -280,7 +281,7 @@ However, parts of the Laplace likelihood are poorly approximated resulting in a 
 Laplace's method is known to yield poor approximations to probit model likelihoods \citep{kuss2005assessing}.
 On the other hand, the log-likelihood calculated using a Hamiltonian MC sampler (treating parameters as fixed values) yields a slightly different graph: the log-likelihood increases as values of $\alpha$ become larger, resulting in the upwards inflection of the log-likelihood surface (as opposed to a downward inflection seen in the variational and Laplace likelihood).
 
-In terms of predictive abilities, both the variational and Hamiltonian MC methods, even though the posteriors are differently estimated, have good predictive performance as indicated by their error rates and Brier scores\footnote{The Brier score is defined as $\frac{1}{n}\sum_{i=1}^n\sum_{j=1}^m (y_{ij} - \hat p_{ij})$ with $y_{ij}=1$ if $y_i = j$ and zero otherwise, and $\hat p_{ij}$ is the fitted probability of $y_i = j$ occurring. It gives a better sense of ``training/test error'', compared to simple misclassification rates, by accounting for the forecasted probabilities of the events happening. The Brier score is a proper scoring rule, i.e., it is uniquely minimised by the true probabilities.}.
+In terms of predictive abilities, both the variational and Hamiltonian MC methods, even though the posteriors are differently estimated, have good predictive performance as indicated by their error rates and Brier scores\footnote{The Brier score is defined as $\frac{1}{n}\sum_{i=1}^n\sum_{j=1}^m (y_{ij} - \hat p_{ij})$ with $y_{ij}=1$ if $y_i = j$ and zero otherwise, and $\hat p_{ij}$ is the fitted probability $\hat\Prob(y_i = j)$. It gives a better sense of ``training/test error'', compared to simple misclassification rates, by accounting for the forecasted probabilities of the events happening. The Brier score is a proper scoring rule, i.e. it is uniquely minimised by the true probabilities.}.
 \cref{fig:exampleiprobitfit} shows that HMC is more confident of new data predictions compared to variational inference, as indicated by the intensity of the shaded regions (HMC is shaded stronger than variational EM).
 Laplace's method gave poor predictive performance.
 
@@ -289,4 +290,4 @@ Sampling using Hamiltonian MC was very slow, because the parameter space is in e
 As for Laplace, each Newton step involves obtaining posterior modes of the $w_i$'s, and this contributed to the slowness of this method.
 The reality is that variational inference takes seconds to complete what either the Laplace or full MCMC methods would take hours to.
 The predictive performance, while not as good as HMC, is certainly an acceptable compromise in favour of speed.
-
+\vspace{-1em}

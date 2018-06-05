@@ -15,19 +15,19 @@ Thus, for each class $j=1,\dots,m$ and any $x \in \cX$,
 \]
 and the covariance between the regression functions in two different classes is
 \[
-  \Cov\big[f_j(x),f_k(x)|\by,\hat\theta \big] = 
+  \Cov\big(f_j(x),f_k(x)|\by,\hat\theta \big) = 
   \bh_{\hat\eta}(x)^\top \tilde\bV_w[j,k] \tilde\bh_{\hat\eta}(x).
 \]
 Then, in step two, using the results obtained in the previous chapter in \cref{sec:ipriorpostest}, we have that the latent propensities $y_{\new,j}^*$ for each class are normally distributed with mean, variance, and covariances
 \begin{alignat*}{3}
-  \E[y_{\new,j}^*|\by,\hat\theta]  
-  &= \hat\alpha_j + \E \big[ f_j(x_\new) |\by,\hat\theta \big] 
+  \E(y_{\new,j}^*|\by,\hat\theta) 
+  &= \hat\alpha_j + \E \big( f_j(x_\new) |\by,\hat\theta \big) 
   &&=: \hat\mu_j(x_\text{new}) \\
-  \Var[y_{\new,j}^*|\by,\hat\theta] 
-  &= \Var\big[f(x_\new)|\by,\hat\theta \big] + \bPsi^{-1}_{jj}
+  \Var(y_{\new,j}^*|\by,\hat\theta) 
+  &= \Var\big(f(x_\new)|\by,\hat\theta \big) + \bPsi^{-1}_{jj}
   &&=: \hat\sigma_j^2(x_\text{new}) \\
-  \Cov[y_{\new,j}^*,y_{\new,k}^*|\by,\hat\theta] 
-  &= \Cov\big[f_j(x),f_k(x)|\by,\hat\theta \big] + \bPsi^{-1}_{jk}
+  \Cov(y_{\new,j}^*,y_{\new,k}^*|\by,\hat\theta) 
+  &= \Cov\big(f_j(x),f_k(x)|\by,\hat\theta \big) + \bPsi^{-1}_{jk}
   &&=: \hat\sigma_{jk}(x_\text{new}).
 \end{alignat*}
 
@@ -53,8 +53,8 @@ while the probabilities for each class are obtained via integration of a multiva
 For the independent I-probit model, class probabilities are obtained in a more compact manner via
 \[
   \hat p_{\text{new},j} 
-  = \E_Z \Bigg[ \mathop{\prod_{k=1}^m}_{k\neq j} 
-  \Phi \left(\frac{\hat\sigma_j(x_\text{new})}{\hat\sigma_k(x_\text{new})} Z + \frac{\hat\mu_j(x_\new) - \hat\mu_k(x_\new)}{\hat\sigma_k^2(x_\text{new})} \right) \Bigg],
+  = \E_Z \Bigg( \mathop{\prod_{k=1}^m}_{k\neq j} 
+  \Phi \left(\frac{\hat\sigma_j(x_\text{new})}{\hat\sigma_k(x_\text{new})} Z + \frac{\hat\mu_j(x_\new) - \hat\mu_k(x_\new)}{\hat\sigma_k^2(x_\text{new})} \right) \Bigg),
 \]
 as per \cref{eq:pij2}, since the $m$ components of $\bff(x_\new)$, and hence the $\by^*_{\new,j}$'s, are independent of each other ($\bPsi$ and $\hat\bV_\new$ are diagonal).
 Prediction of a single new data point takes $O(n^2m)$ time, because there are essentially $m$ I-prior posterior regression functions, and each take $O(n^2)$ to evaluate.
@@ -93,7 +93,7 @@ To obtain a statistic of interest, say, a 95\% credibility interval of a functio
 %      \bar\theta_l = \frac{1}{T} \sum_{t=1}^T \hat\theta_l^{(t)}.
 %    \]
   \end{enumerate}
-  The obvious downside to this is computational time.
+  The obvious downside to this bootstrap scheme is computational time.
 \end{remark}
 
 Finally, a discussion on model comparison, which, in the variational inference literature, is achieved by comparing ELBO values of competing models \citep{beal2003}.
@@ -112,9 +112,9 @@ since the Kullbeck-Leibler divergence from the true posterior density $p(\by^*,\
 and $\cL_q(\theta|M_k)$, $k=0,1$, is the ELBO for model $M_k$.
 It should be noted that while this works in practice, there is no theoretical basis for model comparison using the ELBO \citep{blei2017variational}.
 
-\begin{table}[t]\label{tab:BF}
+\begin{table}[htbp]\label{tab:BF}
   \centering
-  \caption{Guidelines for interpreting Bayes factors.}
+  \caption{Guidelines for interpreting Bayes factors \citep{kass1995bayes}.}
   \label{tab:bf}
   \begin{tabular}{lll}
     \toprule
