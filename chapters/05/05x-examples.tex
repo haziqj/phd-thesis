@@ -129,8 +129,8 @@ The experiment is set up as follows:
   \]
   \item Repeat steps 1-3 100 times to obtain the \emph{average} test error rates and standard errors.
 \end{enumerate}
-Results for the methods listed above were extracted from the in-depth study by \citet{cannings2017random}, who also conducted identical experiments using their random projection (RP) ensemble classification method .
-All of these results are tabulated in \cref{tab:cardiac}.
+Results for the methods listed above were extracted from the in-depth study by \citet{cannings2017random}, who also conducted identical experiments using their random projection (RP) ensemble classification method.
+These are all tabulated in \cref{tab:cardiac}.
 
 \begin{table}[htb]
   \caption{Mean out-of-sample misclassification rates and standard errors in parantheses for 100 runs of various training ($s$) and test ($451-s$) sizes for the cardiac arrhythmia binary classification task.}
@@ -280,7 +280,7 @@ The approximated marginal log-likelihood value for the I-prior model (i.e. varia
 2) A model with a treatment effect and a study group effect; and
 3) Model 2 with the additional assumption that treatment effect varies across study groups.
 Model 1 disregards the study group effects, while Model 2 assumes that the effectiveness of the nicotine gum treatment does not vary across study groups (akin to a varying-intercept model).
-A model comparison using the evidence lower bound indicates that Model 3 has the highest value, and the difference is significant from a Bayes factor standpoint ($\BF(M_3,M_1)$ and $\BF(M_3,M_2)$ are both greater than 150).
+A model comparison using the evidence lower bound indicates that Model 3 has the highest value, and the difference is significant from a Bayes factor standpoint---$\BF(M_3,M_1)$ and $\BF(M_3,M_2)$ are both greater than 150.
 % with both Bayes factor comparing Model 3 against Models 1 and 2 being greater than 150.
 % $\BF(M_3, M_1)iprior::dec_plac(exp(l[3] - l[1]), 2)$ and $\BF(M_3, M_2)iprior::dec_plac(exp(l[3] - l[2]), 2)$.
 % Although not soundly based in theory, we may compare variational lower bounds of the three models for model selection as a proxy to using the true log-likelihood value.
@@ -435,10 +435,11 @@ It also provides significant improvement over multiple linear regression.
 
 Data containing the number of breakdows of bovine tubercolosis (BTB) in Cornwall, the locations of the infected animals, and the year of occurence is analysed.
 The interest, as motivated by veterinary epidimiology, is to understand whether or not there is spatial segregation between the herds, and whether there is a time-element to presence or absence of this spatial segregation.
-There have been previous work done to analyse this data set: \citet{diggle2005nonparametric} developed a non-parametric method to estimate spatial segregation using a multivariate point process.
+There has been previous work done to analyse this data set.
+\citet{diggle2005nonparametric} developed a non-parametric method to estimate spatial segregation using a multivariate point process.
 The occurrences are modelled as Poisson point processes, and spatial segregation is said to have occured if the model-estimated type-specific breakdown probabilities at any given location are not significantly different from the sample proportions.
 The authors estimated the probabilities via kernel regression, and the test statistic of interest had to be estimated via Monte Carlo methods.
-Other work includes \citet{diggle2013spatial}, who used a fully Bayesian approach for spatio-temporal multivariate log-Gaussian Cox processes, and implemented in the \proglang{R} package \pkg{lgcp} \citep{taylor2013lgcp}.
+Other works include \citet{diggle2013spatial}, who used a fully Bayesian approach for spatio-temporal multivariate log-Gaussian Cox processes, which is implemented in the \proglang{R} package \pkg{lgcp} \citep{taylor2013lgcp}.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[htb]
@@ -473,7 +474,7 @@ We had grouped the remaining seven spoligotypes into an `Others' category ($m=5$
 
 We are able to investigate any spatio-temporal patterns of infection using I-priors rather simply.
 Let $p_{ij}$ denote the probability that a particular farm $i$ is infected with a BTB disease with spoligotype $j \in \{1,\dots,5\}$.
-We model the transformed probabilities $g(p_{ij})$ (as described in the categorical response chapter) as following a smooth function $f$ which takes two covariates: the spatial data $x_1 \in \bbR^2$, and the temporal data $x_2$ (year of infection):
+We model the transformed probabilities $g_j(p_{ij})$ as following a function which takes two covariates, i.e. the spatial data $x_1 \in \bbR^2$, and the temporal data $x_2$ (year of infection):
 \begin{align*}
   p_{ij}
   &= g_j^{-1} \big( f_k(x_1, x_2) \big)_{k=1}^m \\

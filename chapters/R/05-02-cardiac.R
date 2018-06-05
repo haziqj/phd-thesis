@@ -77,8 +77,8 @@ set.seed(123)
 # )
 p1 <- iplot_lb(mod, lab.pos = "down") +
   scale_y_continuous(sec.axis = dup_axis(name = " ")) +
-  coord_cartesian(xlim = c(1, 12))
-p2 <- iplot_error(mod, 1:12) + coord_cartesian(xlim = c(1, 12))
+  coord_cartesian(xlim = c(1, 14))
+p2 <- iplot_error(mod) + coord_cartesian(xlim = c(1, 14))
 p1; p2
 
 ## ---- simulations.cardiac ----
