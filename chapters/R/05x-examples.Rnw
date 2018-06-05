@@ -1,4 +1,4 @@
-\documentclass[a4paper,showframe,11pt]{report}
+\documentclass[showframe,11pt]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
@@ -10,27 +10,26 @@
   \externaldocument{../02/.texpadtmp/chapter2}
   \externaldocument{../03/.texpadtmp/chapter3}
   \externaldocument{../04/.texpadtmp/chapter4}
-  \externaldocument{../05/.texpadtmp/chapter5}  % remove this
+  \externaldocument{../05/.texpadtmp/chapter5}
   \externaldocument{../appendix/.texpadtmp/appendix}
 \fi
 
 <<setup, include = FALSE, cache = FALSE>>=
 # Load external .R file
 knitr::read_chunk("00-prelim.R")
-knitr::read_chunk("07-02-cardiac.R")
-knitr::read_chunk("07-04-smoking.R")
-knitr::read_chunk("07-05-vowel.R")
-knitr::read_chunk("07-06-btb.R")
+knitr::read_chunk("05-02-cardiac.R")
+knitr::read_chunk("05-04-smoking.R")
+knitr::read_chunk("05-05-vowel.R")
+knitr::read_chunk("05-06-btb.R")
 @
 <<prelim, include = FALSE>>=
 @
 
 \begin{document}
 
-% \section{Examples}  % remove this
-
 We present analyses of real-data examples using the I-probit model for a variety of applicaitons, namely binary and multiclass classification, meta-analysis, and spatio-temporal modelling of point processes.
-Examples in this section have been analysed using the \proglang{R} package \pkg{iprobit} developed by us.
+Examples in this section have been analysed using in \proglang{R} using the in-development \pkg{iprobit} package written by us.
+Code for replication is provided at \url{http://myphdcode.haziqj.ml}.
 All of these examples had assumed a fixed error precision $\bPsi = \bI_m$.
 
 \subsection{Predicting cardiac arrhythmia}
@@ -45,7 +44,7 @@ Altogether, there are $n=451$ observations and $p=279$ predictors.
 In order for a valid comparison to be made to other studies, we excluded nominal covariates, leaving us with $p=194$ continuous predictors, which we then standardised.
 In the original data set, there are 13 distinct classes of cardiac arrhythmia---again, following the lead of other studies, we had combined all forms of cardiac diseases to form a single class, thus reducing the problem to a binary classification task (normal vs. arrhythmia).
 
-The relationship between patient $i$'s probability of having a form of cardiac arrhthmia $p_i$ and the predictors $x_i\in\cX \equiv \bbR^{194}$ is modelled as
+Following \cref{eq:iprobitbin}, the relationship between patient $i$'s probability of having a form of cardiac arrhthmia $p_i$ and the predictors $x_i\in\cX \equiv \bbR^{194}$ is modelled as
 \begin{gather*}
   \Phi(p_i) = \alpha + f(x_i).
 \end{gather*}
@@ -63,12 +62,11 @@ As expected, the lower bound value increases over time until a convergence crite
 @
 <<mod.full.cardiac, include = FALSE, cache = TRUE>>=
 @
-<<cardiac.mod.full.plot, echo = FALSE, fig.height = 4*0.8, fig.width = 6.5*0.8, out.width = "0.49\\linewidth", fig.cap = "Plot of variational lower bound over time (left), and plot of training error rate and Brier scores over time (right).", fig.show = "hold", fig.pos = "t">>=
+<<cardiac.mod.full.plot, echo = FALSE, fig.height = 3.9 * 0.9, fig.width = 6.5 * 0.9, out.width = "0.785\\linewidth", fig.cap = "Plot of variational lower bound over time (left), and plot of training error rate and Brier scores over time (right).", fig.show = "hold", fig.pos = "htb">>=
 @
 
 To measure predictive ability, we fit the I-probit models on a random subset of the data and obtain the out-of-sample test error rates from the remaining held-out observations.
-We then compare the results against popular machine learning classifiers, namely: 1) linear and quadratic discriminant analysis (LDA/QDA); 2) $k$-nearest neighbours; 3) support vector machines (SVM) \citep{steinwart2008support}; 4) Gaussian process classification \citep{rasmussen2006gaussian}; 5) random forests \citep{breiman2001random}; 6) nearest shrunken centroids (NSC) \citep{tibshirani2002diagnosis}; and 7) L-1 penalised logistic regression.
-% Method no. 6 also performs variable selection, something that the I-probit model can do as well, but for now we concentrate on using all the available predictors for training and testing.
+We then compare the results against popular machine learning classifiers, namely: 1) linear and quadratic discriminant analysis (LDA/QDA); 2) $k$-nearest neighbours; 3) support vector machines (SVM) \citep{steinwart2008support}; 4) Gaussian process classification \citep{rasmussen2006gaussian}; 5) random forests \citep{breiman2001random}; 6) nearest shrunken centroids (NSC) \citep{tibshirani2002diagnosis}; and 7) L-1 penalised logistic regression \citep{friedman2001elements}.
 The experiment is set up as follows:
 \begin{enumerate}
   \item Form a training set by sub-sampling $s \in \{50, 100, 200\}$ observations.
@@ -79,8 +77,8 @@ The experiment is set up as follows:
   \]
   \item Repeat steps 1-3 100 times to obtain the \emph{average} test error rates and standard errors.
 \end{enumerate}
-Results for the methods listed above were extracted from the in-depth study by \citet{cannings2017random}, who also conducted an identical experiment using their random projection ensemble classification method (RP).
-The results are tabulated in \cref{tab:cardiac}.
+Results for the methods listed above were extracted from the in-depth study by \citet{cannings2017random}, who also conducted identical experiments using their random projection (RP) ensemble classification method .
+All of these results are tabulated in \cref{tab:cardiac}.
 
 \begin{table}[htb]
   \caption{Mean out-of-sample misclassification rates and standard errors in parantheses for 100 runs of various training ($s$) and test ($451-s$) sizes for the cardiac arrhythmia binary classification task.}
@@ -119,8 +117,8 @@ Of the three I-probit models, the fBm model performed the best.
 That it performed better than the canonical linear I-probit model is unsurprising, since an underlying smooth function to model the latent variables is expected to generalise better than a rigid straight line function.
 The poor performance of the SE I-probit model may be due to the fact that the lengthscale parameter was not estimated (fixed at $l=1$), but then again, we notice reliable performance of the fBm even with fixed Hurst index ($\gamma = 0.5$).
 It can be seen that the fBm I-probit model also outperform the more popular machine learning algorithms out there including $k$-nearest neighbours, support vector machines and Gaussian process classification.
-It came second only to random forests, an ensemble learning method, which depending on the number of random decisions trees generated simultaneously, might be slow.
-The time complexity of a random forest algorithm is $O(pqn\log(n))$, where $p$ is the number of variables used for training, $q$ is the number of random decision trees, and $n$ is the number of observations.
+It came second only to random forests, an ensemble learning method, which is also generally faster to train than Gaussian process-like regressions such as I-prior models.
+The time complexity of a random forest algorithm is $O(pqn\log(n))$ \citep{louppe2014understanding}, where $p$ is the number of variables used for training, $q$ is the number of random decision trees, and $n$ is the number of observations.
 
 \subsection{Meta-analysis of smoking cessation}
 
@@ -138,7 +136,7 @@ Regardless of method, the approach of analysing study-level treatment effects in
 % However, analysing study-level estimates of effect size can be problematic for various reasons, such as small group samples or rare occurences.
 <<data.smoke, include = FALSE>>=
 @
-<<plot.data.smoke, echo = FALSE, fig.height = 4, message = FALSE, fig.cap = "Comparative box-plots of the distribution of patients who successfully quit smoking and those who remained smokers, in the two treatment groups.", fig.pos = "htb">>=
+<<plot.data.smoke, echo = FALSE, fig.height = 4, message = FALSE, fig.cap = "Comparative box-plots of the distribution of patients who successfully quit smoking and those who remained smokers, in the two treatment groups. It is evident that there are more successful patients quitting smoking in the treatment group than in the control group. The raw odds ratio of quitting smoking (treatment vs. control) is 1.66.", fig.pos = "htb">>=
 @
 A summary of the data is displayed by the box-plot in \cref{fig:plot.data.smoke}.
 On the whole, there are a total of 5,908
@@ -229,6 +227,9 @@ A model comparison using the evidence lower bound indicates that Model 3 has the
 % In this case, Model 3 has the highest lower bound value.
 The misclassification rate and Brier score indicates good predictive performance of the models, and there is not much to distinguish between the three although Model 3 is the best out of the three models.
 
+<<smoke.forest.plot, echo = FALSE, warning = FALSE, fig.height = 7.6, fig.width = 6, out.width = "\\linewidth", fig.cap = "Forest plot of effect sizes (log odds ratios) in each group as well as the overall effect size together with their 95\\% confidence bands. The plot compares the raw log odds ratios, the logistic random-effect estimates, and the I-prior estimates. Sizes of the points indicate the relative sample sizes per study group.", fig.pos = "p">>=
+@
+
 Unlike in the logistic random-effects model, where the log odds ratio can be read off directly from the coefficients, with an I-prior probit model the log odds ratio needs to be calculated manually from the fitted probabilities.
 The probabilities of interest are the probabilities of quitting smoking under each treatment group for each study group $k$---call these $p_k(\text{treatment})$ and $p_k(\text{control})$.
 That is,
@@ -245,9 +246,6 @@ The log odds ratio for each study group can then be calculated as usual.
 For the overall log odds ratio, the probabilities that are used are the averaged probabilities weighted according to the sample sizes in each group.
 This has been calculated as $\Sexpr{iprior::dec_plac(smoke.ip.res$logodds[28])} = \log \Sexpr{iprior::dec_plac(exp(smoke.ip.res$logodds[28]))}$, slightly lower than both the raw log odds ratio and the log odds ratio estimated by the logistic random-effects model.
 This can perhaps be attributed to some shrinkage of the estimated probabilities due to placing a prior with zero mean on the regression functions.
-
-<<smoke.forest.plot, echo = FALSE, warning = FALSE, fig.height = 7.6, fig.width = 6, out.width = "\\linewidth", fig.cap = "Forest plot of effect sizes (log odds ratios) in each group as well as the overall effect size together with their 95\\% confidence bands. The plot compares the raw log odds ratios, the logistic random-effect estimates, and the I-prior estimates. Sizes of the points indicate the relative sample sizes per study group.", fig.pos = "p">>=
-@
 
 The credibility intervals for the log odds ratios in the forest plot of \cref{fig:smoke.forest.plot} are also noticeably narrower under an I-prior compared to the fitted multilevel model.
 One explanation is that empirical Bayes estimates, such as the I-probit estimates under a variational EM framework, tend to underestimate the variability in the estimates because the variability in the parameters are ignored when point estimates are used, compared to distributions in a true Bayesian estimation framework.

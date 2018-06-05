@@ -63,8 +63,23 @@ set.seed(123)
 # tmp <- cowplot::plot_grid(iplot_lb(mod, lab.pos = "down"), NULL,
 #                           rel_widths = c(1, 0.06))
 # cowplot::plot_grid(tmp, iplot_error(mod), nrow = 2)
-iplot_lb(mod, lab.pos = "down")
-iplot_error(mod)
+# p1 <- iplot_lb(mod, lab.pos = "down") +
+#   scale_y_continuous(sec.axis = dup_axis(name = " ")) +
+#   coord_cartesian(xlim = c(1, 12)) +
+#   labs(x = NULL) +
+#   theme(axis.ticks = element_blank(), axis.text.x = element_blank())
+# suppressMessages(
+#   p2 <- iplot_error(mod, 1:12, plot.test = TRUE) +
+#     scale_x_continuous(
+#       breaks = scales::pretty_breaks(n = min(5, ifelse(mod$niter == 2, 1, mod$niter)))
+#     ) +
+#     coord_cartesian(xlim = c(1, 12))
+# )
+p1 <- iplot_lb(mod, lab.pos = "down") +
+  scale_y_continuous(sec.axis = dup_axis(name = " ")) +
+  coord_cartesian(xlim = c(1, 12))
+p2 <- iplot_error(mod, 1:12) + coord_cartesian(xlim = c(1, 12))
+p1; p2
 
 ## ---- simulations.cardiac ----
 source("07-03-classification_simulation.R")
