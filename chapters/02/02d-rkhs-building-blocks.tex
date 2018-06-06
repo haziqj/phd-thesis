@@ -88,17 +88,17 @@ We define the centred canonical RKHS as follows.
   Let $\cX$ be a Hilbert space, $\Prob$ be a probability measure over $\cX$, and $\mu\in\cX$ be the mean of a random element $X\in\cX$. 
 %  (i.e. $\E\ip{x,x'}_{\cX}  = \ip{\mu,x'}_{\cX}$ for all $x' \in \cX$) with respect to this probability measure.
   Define $(\cX - \mu)'$, the continuous dual space of $\cX - \mu$, to be the \emph{centred canonical RKHS}.
-  $(\cX - \mu)'$ consists of the centred linear functions $f_\beta(x)=\ip{x-\mu,\beta}_\cX$, for $\beta\in\cX$, such that $\E \big( f_\beta(X) \big) = 0$.
+  $(\cX - \mu)'$ consists of the centred linear functions $f_\beta(x)=\ip{x-\mu,\beta}_\cX$, for $\beta\in\cX$, such that $\E [f_\beta(X)] = 0$.
   The reproducing kernel of $(\cX - \mu)'$ is
   \[
     h(x,x') = \ip{x-\mu,x'-\mu}_\cX.
   \]
 \end{definition}
 
-That the centred canonical RKHS consists of zero mean function, $\E \big( f_\beta(X) \big)  = 0$, consider the following argument:
+That the centred canonical RKHS consists of zero mean function, $\E [f_\beta(X)] = 0$, consider the following argument:
 \vspace{-0.5em}
 \begin{align*}
-  \E \big( f_\beta(X) \big) 
+  \E [f_\beta(X)] 
   &= \E \ip{X-\mu,\beta}_\cX \\
   &= \E \ip{X,\beta}_\cX - \ip{\mu,\beta}_\cX, \vspace{-0.5em}
 \end{align*}
@@ -113,10 +113,10 @@ and since $\E \ip{X,\beta}_\cX = \ip{\mu,\beta}_\cX$ for any $\beta\in\cX$, the 
 Brownian motion, which also goes by the name Wiener process, has been an inquisitive subject in the mathematical sciences, and here, we describe a function space motivated by a generalised version of Brownian motion paths.
 
 Suppose $B_\gamma(t)$ is a continuous-time Gaussian process on $[0,T]$, i.e. for any finite set of indices $t_1,\dots,t_k$, where each $t_j \in [0,T]$, $\big(B_\gamma(t_1),\dots,B_\gamma(t_k)\big)$ is a multivariate normal random variable.
-$B_\gamma(t)$ is said to be a \emph{fractional Brownian motion} (fBm) if $\E \big( B_\gamma(t)\big) = 0$ for all $t \in [0,T]$ and 
+$B_\gamma(t)$ is said to be a \emph{fractional Brownian motion} (fBm) if $\E [B_\gamma(t)] = 0$ for all $t \in [0,T]$ and 
 \vspace{-0.5em}
 \[
-  \Cov\big( B_\gamma(t),B_\gamma(s) \big) = \half\big( |t|^{2\gamma} + |s|^{2\gamma} - |t-s|^{2\gamma} \big) \hspace{1cm} \forall t,s \in [0,T],
+  \Cov\big[ B_\gamma(t),B_\gamma(s) \big] = \half\big( |t|^{2\gamma} + |s|^{2\gamma} - |t-s|^{2\gamma} \big) \hspace{1cm} \forall t,s \in [0,T],
 \]
 where $\gamma \in (0,1)$ is called the \emph{Hurst index}, \emph{Hurst parameter} or even \emph{Hurst coefficient}.
 Introduced by \citet{mandelbrot1968fractional}, fBms are a generalisation of Brownian motion.
@@ -219,9 +219,9 @@ We define the centred fBm RKHS as follows.
   with respect to this probability measure.
   The kernel $\bar h_\gamma:\cX\times\cX\to\bbR$ defined by
   \[
-    \bar h_\gamma(x,x') = \half \E \left( \norm{x-X}_\cX^{2\gamma} + \norm{x'-X'}_\cX^{2\gamma} - \norm{x-x'}_\cX^{2\gamma} - \norm{X-X'}_\cX^{2\gamma} \right)
+    \bar h_\gamma(x,x') = \half \E \left[ \norm{x-X}_\cX^{2\gamma} + \norm{x'-X'}_\cX^{2\gamma} - \norm{x-x'}_\cX^{2\gamma} - \norm{X-X'}_\cX^{2\gamma} \right]
   \]
-  is the reproducing kernel of the \emph{centred} fBm-$\gamma$ RKHS, which consists of functions $f$ in the fBm-$\gamma$ RKHS such that $\E \big( f(X) \big) = 0$.
+  is the reproducing kernel of the \emph{centred} fBm-$\gamma$ RKHS, which consists of functions $f$ in the fBm-$\gamma$ RKHS such that $\E [f(X)] = 0$.
   In the above definition, $X,X' \sim \Prob$ are two independent copies of a random vector $X \in \cX$.
 \end{definition}
 
@@ -230,8 +230,8 @@ We define the centred fBm RKHS as follows.
   \vspace{-0.1em}
   \begin{align*}
     \bar h_{\gamma=1}(x,x') 
-    &= \half \E \left( \norm{x-X}_\cX^{2} + \norm{x'-X'}_\cX^{2} - \norm{x-x'}_\cX^{2} - \norm{X-X'}_\cX^{2} \right) \\
-    &= \half \E \left( \ip{X,X}_\cX + \ip{X',X'}_\cX + 2\ip{x,x'}_\cX - 2\ip{x,X}_\cX - 2\ip{x',X'}_\cX\right) \\
+    &= \half \E \left[ \norm{x-X}_\cX^{2} + \norm{x'-X'}_\cX^{2} - \norm{x-x'}_\cX^{2} - \norm{X-X'}_\cX^{2} \right] \\
+    &= \half \E \left[ \ip{X,X}_\cX + \ip{X',X'}_\cX + 2\ip{x,x'}_\cX - 2\ip{x,X}_\cX - 2\ip{x',X'}_\cX\right] \\
     &= \ip{\mu,\mu}_\cX + \ip{x,x'}_\cX - \ip{x,\mu}_\cX - \ip{\mu,x'}_\cX \\
     &= \ip{x-\mu,x'-\mu}_\cX, \vspace{-1em}
   \end{align*}
@@ -241,10 +241,10 @@ We define the centred fBm RKHS as follows.
 \begin{remark}
   For posterity, a general centring of any (positive-definite) kernel $\hXXR$ can be achieved via
   \[
-    \bar h(x,x') = h(x,x') - \E\big(h(x,X')\big) - \E\big(h(X,x')\big) + \E\big(h(X,X')\big),
+    \bar h(x,x') = h(x,x') - \E[h(x,X')] - \E[h(X,x')] + \E[h(X,X')],
   \]  
   where expectations are taken for the random elements $X,X'\iid\Prob$, a probability measure over $\cX$.
-  This centred kernel gives rise to the centred RKHS $\bar\cF$ of centred functions $\E\big(f(X)\big)$, $f\in\bar\cF$.
+  This centred kernel gives rise to the centred RKHS $\bar\cF$ of centred functions $\E[f(X)]$, $f\in\bar\cF$.
   As per \cref{rem:empircent}, the empirical distribution of $\Prob$ can be used to approximate the unknown, true $\Prob$.
 \end{remark}
 
@@ -252,7 +252,7 @@ We define the centred fBm RKHS as follows.
 
 The \gls*{SE} kernel function is indeed known to be the default kernel used for Gaussian process regression in machine learning.
 It is a positive definite function, and hence defines an RKHS.
-The definition of the SE RKHS is as follows.
+The definition of the \gls{SE} RKHS is as follows.
 
 \begin{definition}[Squared exponential RKHS]
   The squared exponential (SE) RKHS $\cF$ of functions over some set $\cX \subseteq \bbR^p$ equipped with the 2-norm $\norm{\cdot}_2$ is defined by the positive definite kernel $h_l:\cX\times\cX\to\bbR$ 
@@ -295,12 +295,12 @@ In a similar manner to the two previous subsections, we may also derive the \emp
   Assuming integrability of $h(x,X)$, for any $x\in\cX$ and a random element $X\in\cX$, the \emph{centred} squared exponential (SE) RKHS (with lengthscale $l$) of functions over $\cX$ is defined by the positive definite kernel $\hXXR$ 
   \[
     h(x,x') = e^{-\frac{\norm{x-x'}_2^2}{2l^2}} 
-    - \E  e^{-\frac{\norm{x-X'}_2^2}{2l^2}} 
-    - \E  e^{-\frac{\norm{X-x'}_2^2}{2l^2}} 
-    + \E  e^{-\frac{\norm{X-X'}_2^2}{2l^2}} ,
+    - \E \bigg[ e^{-\frac{\norm{x-X'}_2^2}{2l^2}} \bigg] 
+    - \E \bigg[ e^{-\frac{\norm{X-x'}_2^2}{2l^2}} \bigg] 
+    + \E \bigg[ e^{-\frac{\norm{X-X'}_2^2}{2l^2}} \bigg],
   \]
   where $X,X'\sim\Prob$ are two independent random elements of $\cX$. 
-  This ensures that $\E \big( f(X) \big) = 0$ for any $f$ in this RKHS.
+  This ensures that $\E[ f(X) ] = 0$ for any $f$ in this RKHS.
 \end{definition}
 
 \subsection{The Pearson RKHS}
@@ -318,31 +318,30 @@ The Pearson RKHS is defined as follows.
   where $X \sim \Prob$ and $\delta$ is the Kronecker delta.
 \end{definition}
 
-The Pearson RKHS contains functions which are centred, and has the desirable property that the contribution of $\big( f(x) \big)^2$ to the squared norm of $f$ is proportional to $\Prob(X=x)$.
+The Pearson RKHS contains functions which are centred, and has the desirable property that the contribution of $[f(x)]^2$ to the squared norm of $f$ is proportional to $\Prob(X=x)$.
 
 \begin{proposition}
   Let $\cF$ be the Pearson RKHS of functions over a finite set $\cX$.
   Then,
   \[
-    \cF = \{f:\cX\to\bbR \,|\, \E \big( f(x) \big) = 0 \}
+    \cF = \{f:\cX\to\bbR \,|\, \E [f(X)] = 0 \}
   \]
   with
   \[
-    \norm{f}_\cF^2 = \Var [f(X)] = \sum_{x\in\cX} \Prob(X=x)\big( f(x) \big)^2, \ \forall f \in \cF.
+    \norm{f}_\cF^2 = \Var [f(X)] = \sum_{x\in\cX} \Prob(X=x)[f(x)]^2, \ \forall f \in \cF.
   \]
 \end{proposition}
 
 \begin{proof}
   Write $p_x = \Prob(X=x)$.
   The set of functions $\{h(\cdot,x) \,|\, x \in \cX\}$ form a basis for $\cF$, and thus each $f \in \cF$ can be written as $f(x) = \sum_{x'\in\cX} w_{x'}h(x,x')$ for some scalars $w_i\in\bbR$, $i\in\cX$.
-  But $\E\big( h(X,x')\big) = \E (\delta_{Xx'}) / p_{x'} - 1 = p_{x'} / p_{x'} - 1 = 0$, and thus $\E \big( f(x) \big) = 0$.
-  Conversely, suppose $f:\cX\to\bbR$ is such that $\E \big( f(x) \big) = 0$.
+  But $\E[ h(X,x')] = \E [\delta_{Xx'}] / p_{x'} - 1 = p_{x'} / p_{x'} - 1 = 0$, and thus $\E [f(X)] = 0$.
+  Conversely, suppose $f:\cX\to\bbR$ is such that $\E [f(X)] = 0$.
   Taking $w_x = p_xf(x)$, we see that
   \begin{align*}
     \sum_{x'\in\cX} w_{x'}h(x,x') 
     &= \frac{w_x}{p_x} - \sum_{x'\in\cX} w_{x'} \\
-    &= \frac{f(x)\cancel{p_x}}{\cancel{p_x}} - \cancelto{\E \big( f(x) \big) = 0}{\sum_{x'\in\cX} p_{x'}f(x')} \\ 
-    &= f(x)
+    &= \frac{f(x)\cancel{p_x}}{\cancel{p_x}} - \cancelto{\E [f(X)] = 0}{\sum_{x'\in\cX} p_{x'}f(x')} = f(x)
   \end{align*}
   and thus $h(\cdot,x)$ spans $\cF$ so $f\in\cF$.
   
@@ -352,9 +351,10 @@ The Pearson RKHS contains functions which are centred, and has the desirable pro
     \ip{f,f}_\cF 
     &= \left\langle \sum_{x\in\cX} w_{x}h(\cdot,x), \sum_{x'\in\cX} w_{x'}h(\cdot,x') \right\rangle_\cF \\
     &= \sum_{x\in\cX} \sum_{x'\in\cX} w_{x} w_{x'} \left\langle h(\cdot,x), h(\cdot,x') \right\rangle_\cF \\
+%    &= \sum_{x\in\cX} \sum_{x'\in\cX} w_{x} w_{x'} \left( \frac{\delta_{xx'}}{\Prob(X=x)} - 1 \right)
     &= \sum_{x\in\cX} \sum_{x'\in\cX} w_{x} w_{x'} h(x,x')  \\
     &= \sum_{x\in\cX} w_{x} f(x) \\
-    &= \sum_{x\in\cX} \Prob(X=x) \big( f(x) \big)^2,
+    &= \sum_{x\in\cX} \Prob(X=x) [f(x)]^2,
   \end{align*}
   which is also the variance of $f(X)$.
   \vspace{-0.5em}

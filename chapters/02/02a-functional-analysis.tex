@@ -381,13 +381,13 @@ The \emph{density} $p$ of $X$ is a measurable function with the property that
   Then the \emph{covariance operator} $C$ is defined by the mapping
   \begin{align*}
     C:\cH &\to \cH \\
-    x &\mapsto \E\big(\ip{X - \mu, x}_{\cH}(X - \mu) \big).
+    x &\mapsto \E\big[\ip{X - \mu, x}_{\cH}(X - \mu) \big].
   \end{align*}
   The covariance operator $C$ is also an element of $\cH\otimes\cH$ that satisfies
   \begin{align*}
     \ip{C,x\otimes x'}_{\cH\otimes\cH} 
     &= \int_\cH \ip{z-\mu, x}_\cH\ip{z-\mu,x'}_\cH \dint\nu(z) \\
-    &= \E\big(\ip{X-\mu,x}_\cH \ip{X-\mu,x'}_\cH\big)
+    &= \E\big[\ip{X-\mu,x}_\cH \ip{X-\mu,x'}_\cH\big]
   \end{align*}
   for all $x,x'\in\cH$.
 \end{definition}
@@ -395,9 +395,9 @@ The \emph{density} $p$ of $X$ is a measurable function with the property that
 From the definition of the covariance operator, we see that it induces a symmetric, bilinear form, which we shall denote by $\Cov:\cH\times\cH\to\bbR$, through
 \begin{align*}
   \ip{Cx,x'}_\cH 
-  &= \big\langle\E\big(\ip{X - \mu, x}_{\cH}(X - \mu) \big), x' \big\rangle_\cH \\
-  &= \E\big(\ip{X-\mu,x}_\cH \ip{X-\mu,x'}_\cH\big) \\
-  &=: \Cov(x,x').
+  &= \big\langle\E\big[\ip{X - \mu, x}_{\cH}(X - \mu) \big], x' \big\rangle_\cH \\
+  &= \E\big[\ip{X-\mu,x}_\cH \ip{X-\mu,x'}_\cH\big] \\
+  &=: \Cov[x,x'].
 \end{align*}
 
 \begin{definition}[Gaussian vectors]

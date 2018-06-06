@@ -192,7 +192,7 @@ can easily be found, and it is in fact normally distributed.
 The posterior mean for $f$ evaluated at a point $x \in \cX$ is given by
 %
 \begin{equation}\label{eq:postmean}
-  \E\big(f(x)\big|\by\big) 
+  \E\big[f(x)\big|\by\big] 
   = f_0(x) + \bh_\eta^\top(x) \,
   \myoverbrace{\bPsi\bH_\eta \big(\bH_\eta\bPsi\bH_\eta + \bPsi^{-1}\big)^{-1} (\by -\bff_0 )}{\tilde \bw}
 \end{equation}
@@ -202,7 +202,7 @@ Incidentally, the elements of the $n$-vector $\tilde \bw$ defined in \cref{eq:po
 The point-evaluation posterior variance for $f$ is given by
 %
 \begin{align}\label{eq:postvar}
-  \Var\big(f(x)\big|\by\big) = \bh_\eta^\top(x)\big( \bH_\eta\bPsi\bH_\eta + \bPsi^{-1} \big)^{-1} \bh_\eta^\top(x).
+  \Var\big[f(x)\big|\by\big] = \bh_\eta^\top(x)\big( \bH_\eta\bPsi\bH_\eta + \bPsi^{-1} \big)^{-1} \bh_\eta^\top(x).
 \end{align}
 %
 Prediction for a new data point $x_\new \in \cX$ then concerns obtaining the \emph{posterior predictive distribution}
