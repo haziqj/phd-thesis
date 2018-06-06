@@ -1,0 +1,99 @@
+\documentclass[showframe,11pt]{report}
+\usepackage{standalone}
+\standalonetrue
+\ifstandalone
+  \usepackage{../../haziq_thesis}
+  \usepackage{../../haziq_maths}
+  \usepackage{../../haziq_glossary}
+  \addbibresource{../../bib/haziq.bib}
+  \externaldocument{../01/.texpadtmp/chapter1}
+  \externaldocument{../02/.texpadtmp/chapter2}  
+  \externaldocument{../03/.texpadtmp/chapter3}
+  \externaldocument{../04/.texpadtmp/chapter4}
+  \externaldocument{../05/.texpadtmp/chapter5}
+  \externaldocument{../06/.texpadtmp/chapter6}
+  \externaldocument{../07/.texpadtmp/chapter7}
+  \externaldocument{../appendix/.texpadtmp/appendix}  
+\fi
+
+\begin{document}
+\hChapterStandalone[2]{Vector space of functions}
+\label{chapter2}
+
+For regression modelling with I-priors, it is assumed that the regression functions lie in some vector space of functions.
+The purpose of this chapter is to provide a concise review of functional analysis leading up to the theory of reproducing kernel Hilbert and Kreĭn spaces (RKHS/RKKS).
+The interest with these RKHSs and RKKSs is that these spaces have well established mathematical structure and offer desirable topologies.
+In particular, it allows the possibility of deriving the Fisher information for regression functions---this will be covered in \cref{chapter3}.
+As we shall see, RKHSs are also extremely convenient in that they may be specified completely via their reproducing kernels.
+Several of these function spaces are of interest to us, for example, spaces of linear functions, smoothing functions, and functions whose inputs are nominal values and even functions themselves.
+RKHSs are widely studied in the applied statistical and machine learning literature, but perhaps RKKSs are less so.
+To provide an early insight, RKKSs are simply a generalisation of RKHSs, and are defined as the difference between two RKHSs.
+The flexibility provided by RKKSs will prove both useful and necessary, especially when considering sums and products of scaled function spaces, as is done in I-prior modelling.
+
+It is emphasised that a deep knowledge of functional analysis, including RKHS and RKKS theory, is not at all necessary for I-prior modelling, so perhaps the advanced reader may wish to skip \cref{sec:funcanalysis,sec:rkhstheory,sec:rkkstheory}. 
+\cref{sec:rkhsbuild} describes the fundamental RKHS of interest for I-prior regression, which we refer to as the ``building block'' RKHSs.
+The reason for this is that it is possible to construct new function spaces from existing ones, and this is described in \cref{sec:constructrkks}.
+
+Two remarks before starting.
+Firstly, on notation: sets and vector spaces are denoted by calligraphic letters, and as much as possible, we shall stick to the convention that $\cF$ denotes a function space, and $\cX$ denotes the set of covariates or function inputs. 
+Occasionally, we will describe a generic Hilbert space denoted by $\cH$.
+Elements of the vector space of real functions over a set $\cX$ are denoted $f(\cdot)$, but more commonly and simply $f$.
+This distinguishes them from the actual evaluation of the function at an input point $x \in \cX$, denoted $f(x) \in \bbR$.
+For a much cleaner read, we dispense with boldface notation for vectors and matrices when talking about them, without ambiguity, in the abstract sense.
+Secondly, on bibliography: references will be minimised throughout the presentation of this chapter, but a complete annotated bibliography at the end in \cref{sec:summarychapter2}.
+ 
+%A vector space... of `functions'?
+%
+%At first glance, this may seem strange, that the notion of functions (as mappings from input to output space) and vector spaces are somehow equatable.
+%Upon further thought, one realises that firstly, two functions of a similar, particular form may be added together (in some meaningful way) resulting in a function in that same form. 
+%Secondly, multiplication of a function by a scalar $c$ can be thought of as $c$ times the output of that function.
+%Indeed, running through the checklist of what constitutes a vector space, we find that a ``space of functions'' satisfies them all.
+%In modern linear algebra texts, this checklist is the eight axioms of vector spaces over a field $\bbF$: The vectors forms an abelian group under addition, and this group has an $\bbF$-module structure.
+
+\section{Some functional analysis}\label{sec:funcanalysis}
+\input{02a-functional-analysis}
+
+\section{Reproducing kernel Hilbert space theory}\label{sec:rkhstheory}
+\input{02b-rkhs}
+
+\section{Reproducing kernel Kreĭn space theory}\label{sec:rkkstheory}
+\input{02c-rkks}
+
+\section{RKHS building blocks}\label{sec:rkhsbuild}
+\input{02d-rkhs-building-blocks}
+
+\section{Constructing RKKSs from existing RKHSs}\label{sec:constructrkks}
+\input{02e-rkks-construction}
+
+\section{Summary}\label{sec:summarychapter2}
+
+The review of functional analysis allows us to describe the theory of RKHSs and RKKSs, which are of interest to us because the topology endowed on such spaces gives appreciable assurances---in particular, all evaluation functionals are continuous in these spaces.
+Moreover, RKHSs and RKKSs can be specified completely through kernel functions, with new and complex function spaces built simply by manipulation of these kernel functions.
+Of particular importance is the ANOVA functional decomposition, for which we realise provides an objective way of constructing various function spaces for regression and modelling. 
+Such models will be described later on in detail in \cref{chapter4}.
+
+An annotated collection of bibliographical references used for this chapter is as follows.
+\begin{itemize}
+  \item \textbf{Functional analysis}. 
+  On the introductory material relating to functional analysis in \cref{sec:funcanalysis}, the lecture notes by \citet{sejdinovic2012} is recommended, and forms the basis for most of our material. 
+  Additionally, \citet{rudin1987real,yamamoto2012vector,kokoszka2017introduction} provides a complementary reading.
+  \item \textbf{RKHS theory}. 
+  There are certainly no shortages of introductory texts relating to the theory of RKHS: \citet{steinwart2008support}, \citet{berlinet2011reproducing}, and \citet{gu2013smoothing} to name a few. 
+  The concise sketch proof for the Moore-Aronszajn theorem was mostly inspired by \citet[Theorem 4]{hein2004kernels}.
+  \item \textbf{Kreĭn space and RKKS theory}. 
+  The innovation of indefinite inner product spaces perhaps started in mathematical physics literature, for which the theory of special relativity depends. 
+  Four-dimensional space-time is an often cited example. 
+  In any case, we referred to mainly \citet{ong2004learning}, which gives an overview in the context of learning using indefinite kernels. 
+  \citet{alpay1991some} and \citet{zafeiriou2012subspace} were also useful for understanding the fundamental concepts of RKKSs.
+  \item \textbf{RKHS building blocks}. 
+  The main building block RKHSs, i.e. the canonical RKHS, the fBm RKHS and the Pearson RKHS, are described in the manuscript of \citet{bergsma2017}.
+  \item \textbf{ANOVA and functional ANOVA}. 
+  Classical ANOVA is pretty much existent in every fundamental statistical textbook. These texts have extremely well written introductions to this very important concept: \citet[Ch. 11]{casella2002statistical}, \citet[Ch. 3]{dean1999design}. 
+  On the relation between classical ANOVA and functional ANOVA decomposition, \citet{gu2013smoothing} offers novel insights. There is diverse literature concerning functional ANOVA, namely from the fields of statistical learning (e.g. \cite{wahba1990spline}), applied mathematics (e.g. \cite{kuo2010decompositions}), and sensitivity analysis (e.g. \cite{sobol2001global,durrande2013anova}). 
+%  What is interesting is that several authors who simply set out to obtain a suitable functional decomposition, all ended up somewhat independently recovering the ANOVA decomposition as being ``optimal'' in some sense.
+%  This speaks largely to this classical idea that is ANOVA.
+\end{itemize}
+
+
+\hClosingStuffStandalone
+\end{document}

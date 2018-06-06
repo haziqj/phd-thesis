@@ -2,17 +2,17 @@ Changelog
 
 General 
 
-- New colour scheme (LSE colour palette)
-- QED symbols changed to `\blacksquare`
-- Added Nomenclature
-- Corrected margins as per LSE requirement
+- New colour scheme (LSE colour palette).
+- QED symbols changed to `\blacksquare`.
+- Added Nomenclature.
+- Corrected margins as per LSE requirement.
 
 Chapter 1
 
-- Cleaned up grammar and language, added some citations
-- Now explicitly mention RKKS instead of RKHS only
-- Updated graphic on thesis organisation
-- Rearranged points 1, 2 and 3 of the advantages of I-prior methodology
+- Cleaned up grammar and language, added some citations.
+- Now explicitly mention RKKS instead of RKHS only.
+- Updated graphic on thesis organisation.
+- Rearranged points 1, 2 and 3 of the advantages of I-prior methodology.
 
 Chapter 2
 
@@ -26,7 +26,30 @@ Chapter 2
 
 Chapter 3
 
-- Cleaned up proof I-prior theorem
-- Changed notation for Fisher information (calligraphic I -> regular I), and (f -> \rho) for definitions in Fréchet and Gâteaux, so as to not confuse f with the regression function (parameter)
-- Replaced all instances of RKHS with RKKS (nothing changes otherwise, because the derivatives depend on Hilbertian topology and the I-prior derivation depends on reproducing property)
-- Remarked that the induced Fisher information RKHS is indeed a RKHS, since the kernel is positive definite (squared kernel)
+- Cleaned up proof I-prior theorem.
+- Changed notation for Fisher information (calligraphic I -> regular I), and (f -> \rho) for definitions in Fréchet and Gâteaux, so as to not confuse f with the regression function (parameter).
+- Replaced all instances of RKHS with RKKS (nothing changes otherwise, because the derivatives depend on Hilbertian topology and the I-prior derivation depends on reproducing property).
+- Remarked that the induced Fisher information RKHS is indeed a RKHS, since the kernel is positive definite (squared kernel).
+
+Chapter 4
+
+- Cleaned up the multiple regression section 4.1.1, including comments on scaling and standardisation.
+- Added small remark on sign identifiability.
+
+Chapter 5
+
+- In keeping with single letter symbols, changed KL(q||p) to D_{KL}(q||p) for Kullback-Leibler divergences.
+- Edited conclusion suggestion for future work point 1.
+
+Chapter 6
+
+- No changes
+
+Chapter 7
+
+- 
+
+Circle back to later
+
+- Truncated normal plots
+- Google map for ozone data

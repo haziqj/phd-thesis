@@ -1,0 +1,411 @@
+The core study of functional analysis revolves around the treatment of functions as objects in vector spaces over a field\footnote{In this thesis, this will be $\bbR$ exclusively.}.
+Vector spaces, or linear spaces as they are sometimes known, may be endowed with some kind of structure so as to allow ideas such as closeness and limits to be conceived.
+Of particular interest to us is the structure brought about by \emph{inner products}\index{inner product}, which allow the rigorous mathematical study of various geometrical concepts such as lengths, directions, and orthogonality, among other things.
+We begin with the definition of an inner product. 
+
+\begin{definition}[Inner products]\label{def:innerprod}
+	Let $\mathcal F$ be a vector space over $\mathbb R$. A function $\langle\cdot,\cdot\rangle_{\mathcal F}:\mathcal F \times \mathcal F \rightarrow \mathbb R$ is said to be an inner product on $\mathcal F$ if all of the following are satisfied:
+	\begin{itemize}
+	\item \textbf{Symmetry}. $\langle f, g\rangle_{\mathcal F} = \langle g, f \rangle_{\mathcal F}$, $\forall f,g \in \mathcal F$.
+	\item \textbf{Linearity}. $\langle \lambda_1 f_1 + \lambda_2 f_2, g\rangle_{\mathcal F} = \lambda_1\langle f_1,g \rangle_{\mathcal F} + \lambda_2\langle f_2,g \rangle_{\mathcal F}$, $\forall f_1, f_2, g \in \mathcal F$, $\forall \lambda_1,\lambda_2 \in \mathbb R$.
+	\item \textbf{Non-degeneracy}. $\langle f, f\rangle_{\mathcal F} = 0 \Leftrightarrow f=0$.
+	\end{itemize}
+\end{definition}
+
+Additionally, an inner product is said to be \emph{positive definite} if $\langle f, f\rangle_{\mathcal F} \geq 0$, $\forall f \in \mathcal F$.
+Inner products need not necessarily be positive definite, and we shall revisit this fact later when we cover Kreĭn spaces.
+However, for the purposes of the forthcoming discussion, the inner products that are referenced are the positive definite kind, unless otherwise stated.
+
+We can always define a \emph{norm} on $\cF$ using the inner product as 
+\begin{equation}\label{eq:normip}
+  \norm{f}_\cF = \sqrt{\ip{f,f}_\cF}.
+\end{equation}
+Norms are another form of structure that specifically captures the notion of length. 
+This is defined below.
+
+\begin{definition}[Norms]
+	Let $\mathcal F$ be a vector space over $\mathbb R$. A non-negative function $||\cdot||_{\mathcal F}:\mathcal F \times \mathcal F \rightarrow \mathbb [0,\infty)$ is said to be a norm  on $\mathcal F$ if all of the following are satisfied:
+	\begin{itemize}
+	\item \textbf{Absolute homogeneity}. $||\lambda f||_{\mathcal F} = |\lambda| \, ||f||_{\mathcal F}$, $\forall \lambda \in \mathbb R$, $\forall f \in \mathcal F$
+	\item \textbf{Subadditivity}. $||f+g||_{\mathcal F} \leq ||f||_{\mathcal F} + ||g||_{\mathcal F}$, $\forall f,g \in \mathcal F$
+	\item \textbf{Point separating}. $||f||_{\mathcal F} = 0 \Leftrightarrow f=0$
+	\end{itemize}
+\end{definition}
+
+\index{subadditivity}\index{inequality!triangle}
+The subadditivity property is also known as the \emph{triangle inequality}.
+Also note that since $\norm{-f}_\cF = \norm{f}_\cF$, and by the triangle inequality and point separating property, we have that $\norm{f}_\cF = \half\norm{f}_\cF + \half\norm{-f}_\cF \geq \half\norm{f - f}_\cF = 0$, thus implying non-negativity of norms.
+Several important relationships between norms and inner products hold in linear spaces, namely, the \emph{Cauchy-Schwarz inequality}\index{inequality!Cauchy-Schwarz}
+\[
+  |\ip{f,g}_\cF| \leq \norm{f}_\cF \, \norm{g}_\cF;
+\]
+the \emph{parallelogram law}
+\[
+  \norm{f+g}_\cF^2 + \norm{f-g}_\cF^2 = 2\norm{f}_\cF^2 + 2\norm{g}_\cF^2;
+\]
+and the \emph{polarisation identity} (in various forms)
+\begin{align*}
+  \norm{f+g}_\cF^2 - \norm{f-g}_\cF^2 &= 4\ip{f,g}_\cF,  \\
+  \norm{f+g}_\cF^2 - \norm{f}_\cF^2 - \norm{g}_\cF^2 &= 2\ip{f,g}_\cF, \\
+  - \norm{f-g}_\cF^2 + \norm{f}_\cF^2 + \norm{g}_\cF^2  &= 2\ip{f,g}_\cF,
+\end{align*}
+for any $f,g\in\cF$.
+
+A vector space endowed with an inner product (c.f. norm) is called an inner product space (c.f. normed vector space).
+As a remark, inner product spaces can always be equipped with a norm using \cref{eq:normip}, but not always the other way around.
+A norm needs to satisfy the parallelogram law for an inner product to be properly defined.
+
+The norm $||\cdot||_{\mathcal F}$, in turn, induces a metric (a notion of distance) on $\mathcal F$, i.e. $D(f,g) = ||f-g||_{\mathcal F}$, for $f,g\in\cF$.
+With these notions of distances, one may talk about sequences of functions in $\cF$ which are \emph{convergent}, and sequences whose elements become arbitrarily close to one another as the sequence progresses (\emph{Cauchy}).
+
+\begin{definition}[Convergent sequence]
+	A sequence $\{f_n\}_{n=1}^\infty$ of elements of a normed vector space $(\mathcal F, ||\cdot ||_{\mathcal F})$ is said to \emph{converge} to some $f\in\cF$, if for every $\epsilon > 0$, $\exists N=N(\epsilon) \in \mathbb N$, such that $\forall n > N$, $||f_n - f||_{\mathcal F} < \epsilon$.
+\end{definition}
+
+\begin{definition}[Cauchy sequence]
+	A sequence $\{f_n\}_{n=1}^\infty$ of elements of a normed vector space $(\mathcal F, ||\cdot ||_{\mathcal F})$ is said to be a Cauchy sequence if for every $\epsilon > 0$, $\exists N=N(\epsilon) \in \mathbb N$, such that $\forall n,m > N$, $||f_n - f_m||_{\mathcal F} < \epsilon$.
+\end{definition}
+
+Every convergent sequence is Cauchy (from the triangle inequality), but the converse is not true.
+If the limit of the Cauchy sequence exists within the vector space, then the sequence converges to it.
+A vector space is said to be \emph{complete} if it contains the limits of all Cauchy sequences, or in other words, if every Cauchy sequence converges.
+There are special names given to complete vector spaces.
+A complete inner product space is known as a \emph{Hilbert space}, while a complete normed space is called a \emph{Banach space}.
+Out of interest, an inner product space that is not complete is sometimes known as a \emph{pre-Hilbert space}, since its completion with respect to the norm induced by the inner product is a Hilbert space.
+
+A subset $\cG\subseteq\cF$ is a \emph{closed subspace} of $\cF$ if it is closed under addition and multiplication by a scalar.
+That is, for any $g,g'\in\cG$, $\lambda_1 g + \lambda_2 g'$ is also in $\cG$, for $\lambda_1,\lambda_2\in\bbR$.
+For Hilbert spaces, each closed subspace is also complete, and thus a Hilbert space in its own right.
+Although, as a remark, not every Hilbert subspace need be closed, and therefore complete. 
+
+Being vectors in a vector space, we can discuss mapping of vectors onto a another space, or in essence, having a function acted upon them.
+To establish terminology, we define linear and bilinear maps (operators).
+%
+\begin{definition}[Linear map/operator]
+  Let $\cF$ and $\cG$ be two Hilbert spaces over $\bbR$.
+  An operator $A$ is a map from $\cF$ to $\cG$, and we denote its action on a function $f \in\cF$ as $A(f) \in \cG$, or simply $Af \in \cG$.
+  A \emph{linear operator} satisfies $A(f+f') = A(f) + A(f')$ and $A(\lambda f) = \lambda A(f)$, for all $f,f' \in\cF$ and $\lambda\in\bbR$.
+  If $\cG$ is the base field ($\bbR$ in our case), then the linear operator $A$ is called a \emph{linear functional}.
+\end{definition}
+%
+\begin{definition}[Bilinear map/operator]
+  Let $\cF$, $\cG$ and $\cH$ be Hilbert spaces over $\bbR$.
+  A \emph{bilinear operator} $B:\cF\times\cG\to\cH$ is linear in each argument separately, i.e.
+  \begin{itemize}
+    \item $B(\lambda_1 f +\lambda_2 f', h) = \lambda_1 B(f,h) + \lambda_2 B(f',h)$; and
+    \item $B(f, \lambda_1 g +\lambda_2 g') = \lambda_1 B(f,g) + \lambda_2 B(f,g')$,
+  \end{itemize} 
+  for all $f,f' \in \cF$, $g,g' \in \cG$ and $\lambda_1,\lambda_2\in\bbR$.
+  In other words, the mappings $B_g: f \mapsto B(f,g)$ for any $g\in\cG$, and $B_f: g \mapsto B(f,g)$ for any $f\in\cF$, are both linear maps.
+  If $\cF\equiv\cG$, then the bilinear map is \emph{symmetric}.
+  If $\cH$ is the base field ($\bbR$ in our case), then $B$ is called a \emph{bilinear form}.
+\end{definition}
+
+\vspace{-0.6em}
+An interesting property of these operators to look at, besides linearity, is whether or not they are \emph{continuous}.
+
+\index{continuous}
+\index{continuous!uniform}
+\begin{definition}[Continuity]\label{def:continuity}
+  Let $\cF$ and $\cG$ be two Hilbert spaces.
+  A function $A:\cF\to\cG$ is said to be \emph{continuous at $g\in\cF$}, if for every $\epsilon>0$, $\exists \delta=\delta(\epsilon,g)>0$ such that
+  \[
+    \norm{f-g}_\cF < \delta \ \ \Rightarrow \ \ \norm{Af - Ag}_\cG < \epsilon.
+  \]
+  A is \emph{continuous} on $\cF$, if it is continuous at every point $g \in\cF$.
+  If, in addition, $\delta$ depends on $\epsilon$ only, $A$ is said to be \emph{uniformly continuous}.
+\end{definition}
+
+Continuity in the sense of linear operators here means that a convergent sequence in $\cF$ can be mapped to a convergent sequence in $\cG$.
+For a particular linear operator, the evaluation functional, this means that closeness in norm implies pointwise closeness---this relates to RKHSs, which is discussed in \cref{sec:rkhstheory}.
+There is an even stronger notion of continuity called  \emph{Lipschitz continuity}.
+
+\begin{definition}[Lipschitz continuity]
+  Let $\cF$ and $\cG$ be two Hilbert spaces.  
+  A function $A:\cF\to\cG$ is \emph{Lipschitz continuous} if $\exists M >0$ such that $\forall f,f'\in\cF$,
+  \[
+    \norm{Af - Af'}_\cG \leq M \norm{f - f'}_\cF.
+  \]
+\end{definition}
+
+\vspace{-0.8em}
+Clearly, Lipschitz continuity implies uniform continuity: choose $\delta = \delta(\epsilon) := \epsilon/M$ and replace this in  \cref{def:continuity}.
+A continuous, linear operator is also one that is bounded.
+
+\begin{definition}[Bounded operator]\label{def:boundedop}
+  The linear operator $A:\mathcal F \rightarrow \mathcal G$ between two Hilbert spaces $\cF$ and $\cG$ is said to be \emph{bounded} if there exists some $M>0$ such that
+  \[
+    \norm{Af}_\cG \leq M \norm{f}_\cF.\vspace{-0.4em}
+  \]
+  The smallest such $M$ is defined to be the \emph{operator norm}, denoted $\norm{A} := \sup_{f\in\cF} \frac{\norm{Af}_\cG}{\norm{f}_\cF}$.
+\end{definition}
+
+\begin{lemma}[Equivalence of boundedness and continuity]\label{thm:boundcont}
+  Let $\cF$ and $\cG$ be two Hilbert spaces, and $A:\cF\to\cG$ a linear operator.
+  $A$ is bounded if and only if it is continuous.
+\end{lemma}
+
+\begin{proof}
+  Suppose that $A$ is bounded.
+  Then, $\forall f,f' \in \cF$, $\exists M>0$ such that $\norm{A(f-f')}_\cG \leq M \norm{f-f'}_\cG$, so $A$ is Lipschitz continuous.
+  Conversely, let $A$ be a continuous linear operator, especially at the zero vector.
+  In other words, $\exists \delta > 0$ such that $\norm{A(f)}_\cG = \norm{A(f+0-0)}_\cG = \norm{A(f) - A(0)} \leq 1$, $\forall f\in\cF$ whenever $\norm{f}_\cF \leq \delta$.
+  Thus, for all non-zero $f \in\cF$,
+  \begin{align*}
+    \norm{A(f)}_\cG &= \left\Vert \frac{\norm{f}_\cF}{\delta} A\left(\frac{\delta}{\norm{f}_\cF}f\right)\right\Vert_\cG \\
+    &= \left\vert \frac{\norm{f}_\cF}{\delta}\right\vert \, \left\Vert A\left(\frac{\delta}{\norm{f}_\cF}f\right)\right\Vert_\cG \\    
+    &\leq \frac{\norm{f}_\cF}{\delta} \cdot 1, \vspace{-0.5em}
+  \end{align*}
+  and therefore $A$ is bounded.
+\end{proof}
+\vspace{-0.5em}
+So important is the concept of linearity and continuity, that there are specially named spaces which contain linear and continuous functionals.
+
+\begin{definition}[Dual spaces]
+  Let $\cF$ be a Hilbert space. 
+  The space $\cF^\vee$ of \emph{linear functionals} is called the \emph{algebraic dual space} of $\cF$.
+  The space $\cF^*$ of \emph{continuous linear functionals} is called the \emph{continuous dual space} or alternatively, the \emph{topological dual space}, of $\cF$.   
+\end{definition}
+
+As it turns out, the algebraic dual space and continuous dual space coincide in finite-dimensional Hilbert spaces:
+take any $A\in\cF^\vee$; since $A$ is finite-dimensional, it is bounded, and therefore continuous (see \cref{thm:boundcont}), so $A\in\cF^*$ and $\cF^\vee \subseteq \cF^*$; but $\cF^* \subseteq \cF^\vee$ trivially, so $\cF^\vee \equiv \cF^*$.
+For infinite-dimensional Hilbert spaces, this is not so, but in any case, we will only be considering the continuous dual space in this thesis.
+The following result is an important one, which states that continuous linear functionals of an inner product space are nothing more than inner products.
+
+\begin{theorem}[Riesz-Fréchet]
+  Let $\cF$ be a Hilbert space.
+  Every element $A$ of the continuous dual space $\cF^*$, i.e. all continuous linear functionals $A:\cF\to\bbR$, can be uniquely written in the form $\ip{\cdot,g}_\cF =: A_g \in \cF^*$, for some $g\in\cF$. 
+  Moreover, $\norm{g}_\cF = \norm{A_g}_{\cF^*}$.
+\end{theorem}
+
+\begin{proof}
+  Omitted---see \citet[Theorem 4.2.1]{yamamoto2012vector} for a proof.
+%  \citet[Theorem 4.12]{rudin1987real} 
+\end{proof}
+
+\begin{remark}
+  The Riesz-Fréchet theorem is also commonly referred to as the \emph{Riesz representation theorem} for Hilbert spaces.
+\end{remark}
+
+The notion of isometry (transformation that preserves distance) is usually associated with metric spaces; two metric spaces being isometric means that they identical as far as their metric properties are concerned.
+For Hilbert spaces (and more generally, for normed spaces), there is an analogous concept as well in \emph{isometric isomorphism} (a bijective isometry), such that two Hilbert spaces being isometrically isomorphic imply that they have exactly the same geometric structure, but may very well contain fundamentally different objects.
+
+\begin{definition}[Isometric isomorphism]
+  Two Hilbert spaces $\cF$ and $\cG$ are said to be \emph{isometrically isomorphic}, symbolised $\cF \cong \cG$, if there is a linear bijective map $U:\cF\to\cG$ which preserves the inner product, i.e. for any $f,f'\in\cF$, 
+  \[
+    \ip{f,f'}_\cF = \ip{Uf,Uf'}_\cG.
+  \]
+\end{definition}
+
+A consequence of the Riesz-Fréchet theorem is that it gives us a canonical isometric isomorphism $U:g\mapsto \ip{\cdot,g}_\cF =: A_g$ between $\cF$ and its continuous dual $\cF^*$: 
+$A_g$ is obviously linear (bilinearity of inner products), and using the polarisation identity,
+\begin{align*}
+  2\ip{Ug,Ug'}_{\cF^*} 
+  &= \norm{U(g)}_{\cF^*}^2 + \norm{U(g')}_{\cF^*}^2 - \norm{U(g - g')}_{\cF^*}^2 \\
+  &= \norm{g}_{\cF}^2 + \norm{g'}_{\cF}^2 - \norm{g-g'}_{\cF}^2 \\
+  &= 2\ip{g,g'}_{\cF}.
+\end{align*}
+%An isometry that preserves the norm is known as \emph{linear isometry}.
+Implicitly, this means that $\cF^*$ is a Hilbert space as well.
+
+\pagebreak
+Another important type of mapping is the mapping $P$ of an element in $\cF$ onto a closed subspace $\cG\subset\cF$, such that $Pf \in \cG$ is closest to $f$.
+This mapping is called the \emph{orthogonal projection}, due to the fact that such projections yield perpendicularity in the sense that $\ip{f-Pf,g}_\cF = 0$ for any $g\in\cG$.
+Consequently, we see that $\norm{f}_\cF^2 = \norm{Pf}_\cF^2 + \norm{f-Pf}_\cF^2$ from the polarisation identity.
+The remainder $f - Pf$ belongs to the \emph{orthogonal complement} of $\cG$.
+%The remainder $f - Pf = (I-P)f = Qf$, where $I$ is the identity map, belongs to the \emph{orthogonal complement} of $\cG$.
+%As a consequence, $\norm{f}_\cF^2 = \norm{Pf}_\cF^2 + \norm{Qf}_\cF^2$.
+
+\begin{definition}[Orthogonal complement]
+  Let $\cF$ be a Hilbert space and $\cG \subset \cF$ be a closed subspace.
+  The linear subspace $\cG^\bot = \{ f \,|\, \ip{f,g}_\cF = 0, \forall g \in \cG \}$ is called the orthogonal complement of $\cG$ in $\cF$.
+\end{definition}
+
+\begin{theorem}[Orthogonal decomposition]\label{thm:orthdecomp}
+  Let $\cF$ be a Hilbert space and $\cG \subset \cF$ be a closed subspace.
+  For every $f \in \cF$, we can write $f = g + g^c$, where $g \in \cG$ and $g^c \in \cG^\bot$, and this decomposition is unique.
+\end{theorem}
+
+\begin{proof}
+  Omitted---see \citet[Theorem 4.11]{rudin1987real} for a proof.
+\end{proof}
+
+We can write $\cF = \cG \oplus \cG^\bot$, where the $\oplus$ symbol denotes the \emph{direct sum}, and such a decomposition is called a \emph{tensor sum decomposition}.
+In infinite-dimensional Hilbert spaces, some subspaces are not closed, but all orthogonal complements are closed. 
+In such spaces, the orthogonal complement of the orthogonal complement of $\cG$ is the closure of $\cG$, i.e. $(\cG^\bot)^\bot =: \overline \cG$, and we say that $\cG$ is \emph{dense} in $\overline \cG$.
+Another interesting fact regarding the orthogonal complement is that $\cG \cap \cG^\bot = \{ 0 \}$, since any $g\in \cG \cap \cG^\bot$ must be orthogonal to itself, i.e. $\ip{g,g}_\cG = 0$ implying that $g=0$.
+
+The following theorem states that orthogonal decompositions are unique.
+
+\begin{corollary}\label{thm:orthdecomp2}
+  Let $\cG$ be a subspace of a Hilbert space $\cF$. 
+  Then, $\cG^\bot = \{0\}$ if and only if $\cG$ is dense in $\cF$.
+\end{corollary}
+
+\begin{proof}
+  If $\cG^\bot=\{0\}$ then $(\cG^\bot)^\bot = \overline \cG = \cF$.
+  Conversely, since $\cG$ is dense in $\cF$, we have $\cG^\bot = \overline\cG^\bot = \cF^\bot = \{0\}$.
+%  Conversely, suppose that there exists a non-zero element $h \in \cG^\bot$.
+%  Because $\cG$ is dense, we can construct a sequence $\{h_n\}_{n=1}^\infty\in\cG$ converging to $h$.
+%  We have
+%  \begin{align*}
+%    \norm{h}_\cG^2 
+%    &= \ip{h,h}_\cG \\
+%    &= \ip{h,h}_\cG - \ip{h_n,h}_\cG \hspace{1em} \rlap{\color{gray} since $h$ is in $\cG^\bot$} \\
+%    &= \ip{h-h_n,h}_\cG \\
+%    &\leq \norm{h-h_n}_\cG \cdot \norm{h}_\cG,
+%  \end{align*}
+%  but the final term tends to zero since $h_n$ converges to $h$.
+%  So $h=0$, a contradiction.
+\end{proof}
+
+%https://en.wikibooks.org/wiki/Functional_Analysis/Hilbert_spaces
+
+Besides tensor sums, of importance is the concept of \emph{tensor products}, which can be thought of as a generalisation of the outer product in Euclidean space.
+
+\begin{definition}[Tensor products]\label{def:tensorprod}
+  Let $x_1\in\cH_1$ and $x_2\in\cH_2$ be two elements of two real Hilbert spaces.
+  Then, the tensor product $x_1 \otimes x_2:\cH_1\times\cH_2\to\bbR$, is a bilinear form defined as
+  \[
+    (x_1\otimes x_2)(y_1,y_2) = \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2}
+  \]
+  for any $(y_1,y_2)\in\cH_1\times\cH_2$.
+\end{definition}
+
+Correspondingly, we may also define the \emph{tensor product space}.
+
+\begin{definition}[Tensor product space]\label{def:tensprodspace}
+  The tensor product space $\cH_1\otimes\cH_2$ is the completion of the space
+  \[
+    \cA = \left\{ \sum_{j=1}^J x_{1j} \otimes x_{2j} \,\Bigg\vert\, x_{1j}\in\cH_1, x_{2j}\in\cH_2, J \in \bbN \right\}.
+  \]
+  with respect to the norm induced by the inner product
+  \[
+    \left\langle  \sum_{j=1}^J x_{1j} \otimes x_{2j},  \sum_{k=1}^K y_{1k} \otimes y_{2k} \right\rangle_\cA = \sum_{j=1}^J\sum_{k=1}^K \ip{x_{1j},y_{1k}}_{\cH_1} \ip{x_{2j},y_{2k}}_{\cH_2}.
+  \]
+\end{definition}
+
+Interestingly, the tensor product can be viewed as an operator between two Hilbert spaces.
+That is, for each pair of elements $(x_1,x_2) \in \cH_1\times\cH_2$, we define the operator $A_{x_1,x_2}:\cH_1\to\cH_2$ in the following way:
+\begin{align*}
+  A_{x_1,x_2}:\cH_1&\to\cH_2 \\
+  y_1&\mapsto \ip{x_1,y_1}_{\cH_1}x_2.
+\end{align*}
+Incidentally, an operator defined in such a way is called a \emph{rank one} operator.
+Indeed, for some $y_1\in\cH_1$ and $y_2\in\cH_2$, we have that
+\vspace{-0.5em}
+\begin{align*}
+  \ip{A_{x_1,x_2}(y_1),y_2}_{\cH_2} 
+  &= \big\langle \ip{x_1,y_1}_{\cH_1}x_2 , y_2 \big\rangle_{\cH_2} \\
+  &= \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2} \\
+  &= (x_1\otimes x_2)(y_1,y_2). 
+\end{align*}
+We now have three distinct interpretations of the tensor product.
+For $x_1,y_1\in\cH_1$ and $x_2,y_2\in\cH_2$, these are:
+\begin{itemize}
+  \item \textbf{General form} (as an element in the tensor product space).
+  \[
+    x_1 \otimes x_2 \in \cH_1 \otimes \cH_2. 
+  \]
+  \item \textbf{Operator}.
+  \begin{align*}
+    x_1 \otimes x_2:\cH_1 &\to \cH_2 \\
+    y_1 &\mapsto \ip{x_1,y_1}_{\cH_1}x_2 
+  \end{align*}  
+  \item \textbf{Bilinear form} (as per \cref{def:tensorprod}). 
+  \begin{align*}
+    x_1 \otimes x_2:\cH_1 \times \cH_2 &\to \bbR \\
+    (y_1,y_2) &\mapsto \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2}
+  \end{align*}
+\end{itemize}
+
+\begin{remark}
+  As explained by \citet[§10.5, p. 227]{kokoszka2017introduction}, tensors are often thought of as generalisations of matrices.
+  For example, in Euclidean space, a matrix $\bA \in \bbR^{n\times m}$, formed by two vectors $x_1\in\bbR^n$ and $x_2\in\bbR^m$ via $\bA = x_1x_2^\top =: x_1 \otimes x_2$, can be viewed in at least three ways: 
+  1) as a traditional matrix in the space $\bbR^n \otimes \bbR^m = \bbR^{n\times m}$; 
+  2) as a linear transformation in Euclidean space $\bA:\bbR^n\to\bbR^m$ (or the reverse) by multiplying $\bA$ from the left or right by a vector; or
+  3) as a bilinear mapping $\bA:\bbR^n \times \bbR^m \to \bbR$ in the form of $\bA(y_1,y_2) = y_1^\top\bA y_2 = y_1^\top x_1 x_2^\top y_2 = (y_1^\top x_1)(y_2^\top x_2)$, for some $y_1\in\bbR^n$ and $y_2\in\bbR^m$, arising often in the study of quadratic forms.
+\end{remark}
+
+For the last part of this introductory section on functional analysis, we discuss measures on Hilbert spaces, and in particular, a probability measure.
+Let $\cH$ be a real Hilbert space. 
+As discussed earlier, we can define a metric on $\cH$ using $D(x,x') = \norm{x-x'}_\cH$, where the norm on $\cH$ is the norm induced by the inner product.
+A collection $\Sigma$ of subsets of $\cH$ is called a \emph{$\sigma$-algebra} if $\emptyset \in \Sigma$, $S \in \Sigma$ implies its complement $S^c \in \Sigma$, and $S_j\in\Sigma$, $j\geq 1$ implies $\bigcup_{j=1}^\infty S_j \in \Sigma$.
+The smallest $\sigma$-algebra containing all open subsets of $\cH$ is called the \emph{Borel $\sigma$-algebra}, and its members the Borel sets.
+Denote by $\cB(\cH)$ the Borel $\sigma$-algebra of $\cH$.
+%The metric space $(\cH,D)$ is called \emph{separable} if it has a countable dense subset, i.e., there are $x_1,x_2,\cdots$ in $\cH$ such that the closure $\overline{\{x,_1,x_2,\cdots\}} = \cH$.
+
+Recall that a function $\nu:\Sigma\to[0,\infty]$ is called a \emph{measure} if it satisfies
+\begin{itemize}
+  \item \textbf{Non-negativity:} $\nu(S) \geq 0$ for all $S$ in $\Sigma$;
+  \item \textbf{Null empty set:} $\nu(\emptyset) = 0$; and
+  \item \textbf{$\sigma$-additivity:} for all countable, mutually disjoint sets $\{S_i\}_{i=1}^\infty$,
+  \[
+    \nu\left(\bigcup_{i=1}^\infty S_i \right) = \sum_{i=1}^\infty \nu(S_i).
+  \] 
+\end{itemize}
+A measure $\nu$ on $\big(\cH,\cB(\cH)\big)$ is called a \emph{Borel measure} on $\cH$.
+We shall only concern ourselves with finite Borel measures. 
+In addition, if $\nu(\cH) = 1$ then $\nu$ is a \emph{(Borel) probability measure} and the measure space $\big(\cH,\cB(\cH),\nu\big)$ is a \emph{(Borel) probability space}.
+
+Let $(\Omega,\cE,\Prob)$ be a probability space.
+We say that a mapping $X:\Omega\to\cH$ is a \emph{random element} in $\cH$ if $X^{-1}(B)\in\cE$ for every Borel set, i.e., $X$ is a function such that for every $B\in\cB(\cH)$, its preimage $X^{-1}(B) = \{\omega \in \Omega \,|\, X(\omega) \in B \}$ lies in $\cE$.
+This is simply a generalisation of the definition of random variables in regular Euclidean space.
+From this definition, we can also properly define random functions $f$ in a Hilbert space of functions $\cF$.
+In any case, every random element $X$ induces a probability measure on $\cH$ defined by
+\[
+  \nu(B) = \Prob\big(X^{-1}(B)\big) = \Prob\big( \omega \in \Omega | X(\omega) \in B  \big) = \Prob(X \in B).
+\]
+The measure $\nu$ is called the \emph{distribution} of $X$.
+The \emph{density} $p$ of $X$ is a measurable function with the property that
+\[
+  \Prob(X \in B) = \int_{X^{-1}(B)} \omega \dint\Prob(\omega) = \int_B p(x) \dint\nu(x).
+\]
+
+\begin{definition}[Mean vector]
+  Let $\nu$ be a Borel probability measure on a real Hilbert space $\cH$.
+  Supposing that a random element $X$ of $\cH$ is \emph{integrable}, that is to say
+  \[
+    \E \norm{X}_\cH = \int_\cH \norm{z}_\cH \dint\nu(z) < \infty,
+  \]
+  then the unique element $\mu\in\cH$ satisfying 
+  \[
+    \ip{\mu,x} = \int_\cX \ip{z,x}_\cX \dint\nu(z) = \E\ip{X,x}_\cH
+  \]
+  for all $x \in \cH$ is called the \emph{mean vector}. 
+\end{definition}
+
+\begin{definition}[Covariance operator]\label{def:covoper}
+  Let $\nu$ be a Borel probability measure on a real Hilbert space $\cH$.
+  Suppose that a random element $X$ of $\cH$ is \emph{square integrable}, i.e., $\E \norm{X}_\cH^2 < \infty$, and let $\mu$ be the mean vector of $X$.
+  Then the \emph{covariance operator} $C$ is defined by the mapping
+  \begin{align*}
+    C:\cH &\to \cH \\
+    x &\mapsto \E\big(\ip{X - \mu, x}_{\cH}(X - \mu) \big).
+  \end{align*}
+  The covariance operator $C$ is also an element of $\cH\otimes\cH$ that satisfies
+  \begin{align*}
+    \ip{C,x\otimes x'}_{\cH\otimes\cH} 
+    &= \int_\cH \ip{z-\mu, x}_\cH\ip{z-\mu,x'}_\cH \dint\nu(z) \\
+    &= \E\big(\ip{X-\mu,x}_\cH \ip{X-\mu,x'}_\cH\big)
+  \end{align*}
+  for all $x,x'\in\cH$.
+\end{definition}
+
+From the definition of the covariance operator, we see that it induces a symmetric, bilinear form, which we shall denote by $\Cov:\cH\times\cH\to\bbR$, through
+\begin{align*}
+  \ip{Cx,x'}_\cH 
+  &= \big\langle\E\big(\ip{X - \mu, x}_{\cH}(X - \mu) \big), x' \big\rangle_\cH \\
+  &= \E\big(\ip{X-\mu,x}_\cH \ip{X-\mu,x'}_\cH\big) \\
+  &=: \Cov(x,x').
+\end{align*}
+
+\begin{definition}[Gaussian vectors]
+  A random element $X$ is called \emph{Gaussian} if $\ip{X,x}_\cH$ has a normal distribution for all fixed $x\in\cH$.
+  A Gaussian vector $X$ is characterised by its mean element $\mu\in\cH$ and its covariance $C\in\cH\otimes\cH$.
+\end{definition}
+
+
+
+
+
