@@ -41,18 +41,14 @@ In addition to introducing the statistical model of interest and  motivating the
 For subject $i \in \{1,\dots,n\}$, assume a real-valued response $y_i$ has been observed, as well as a row vector of $p$ covariates $x_i = (x_{i1},\dots,x_{ip})$, where each $x_{ik}$ belongs to some set $\cX_k$, for $k = 1,\dots,p$.
 Let $\cS = \{(y_1, x_1), \dots, (y_n,x_n)\}$ denote this observed sample of size $n$.
 Consider then the following regression\index{regression} model, which stipulates the dependence of the $y_i$ on the $x_i$:
-%
 \begin{align}\label{eq:model1}
   y_i = \alpha + f(x_i) + \epsilon_i,
 \end{align}
-%
 where $f$ is some regression function to be estimated, and $\alpha$ is an intercept.
 Additionally, it is assumed that the errors $\epsilon_i$ are normally distributed according to
-%
 \begin{align}\label{eq:model1ass}
   (\epsilon_1, \dots, \epsilon_n)^\top \sim \N_n(0, \bPsi^{-1}).
 \end{align}
-%
 where $\bPsi = (\psi_{ij})_{i,j=1}^n$ is the precision matrix.
 We shall often refer to model \cref{eq:model1} subject to \cref{eq:model1ass} as the \emph{normal regression model}\index{normal!regression model}.
 The choice of multivariate normal errors is not only a convenient one (as far as distributional assumptions go), but one that is motivated by the principle of maximum entropy \citep{jaynes1957a,jaynes1957b,jaynes2003probability}.
@@ -62,11 +58,9 @@ For instance, when $f$ can be parameterised linearly as $f(x_i) = x_i^\top \beta
 
 We might also have data that is separated naturally into groups or levels by design, for example, data from stratified\index{stratified} sampling, students within schools, or longitudinal\index{longitudinal!measurements} measurements over time.
 In such a case, we might want to consider a regression function with additive\index{additive} components
-%
 \[
   f(x_i^{(j)}, j) = f_1(x_i^{(j)}) + f_2(j) + f_{12}(x_i^{(j)}, j)
 \]
-%
 where $x_i^{(j)}$ denotes the $p$-dimensional $i$'th observation for group $j\in\{1,\dots,m\}$.
 Again, assuming a linear parameterisation, this is recognisable as the standard multilevel\index{multilevel} or random-effects linear model \citep{skrondal2012multilevel}, with $f_2$ representing the varying intercept via $f_2(j) = \alpha_{j}$, $f_{12}$ representing the varying slopes via $f_{12}(x_{ij},j) = x_{i}^\top \beta_{j}$, with $\beta_j \in \bbR^p$, and $f_1$ representing the fixed-effects linear component $x_i^\top\beta$ as above.
 
@@ -75,11 +69,9 @@ A myriad of models exist for this type of problem, with most classed as nonparam
 Semiparametric regression models, on the other hand, combines the linear component of a regression model with a non-parameteric component.
 
 Further, the regression problem is made more intriguing when the set of covariates $\cX$ is functional---in which case the linear regression model aims to estimate coefficient functions $\beta:\cT \to \bbR$ from the model
-%
 \[
   y_i = \int_\cT x_i(t)\beta(t) \dint t + \epsilon_i.
 \]
-%
 Nonparametric and semiparametric regression with functional covariates \citep{ramsay2005functional} have also been widely explored.
 Models of this nature still fall under the remit of the normal regression model by selecting a regression functional with domain over the functional covariates.
 
@@ -104,18 +96,14 @@ This would allow us to fit the various models described earlier within this RKHS
 
 Having decided on a vector space $\cF$, we now turn to the task of choosing the best $f \in \cF$ that fits the data sample $\cS$.
 `Best' here could mean a great deal of things, such as choosing $f$ which minimises an empirical risk measure\footnotemark~defined by
-%
 \begin{equation*}
   \hat{\text{R}}(f) = \frac{1}{n} \sum_{i=1}^n \Lambda\big( y_i, f(x_i) \big) 
 \end{equation*}
-%
 for some loss function $\Lambda:\bbR^2 \to [0,\infty)$.
 A common choice for the loss function is the \emph{squared loss function}
-%
 \[
   \Lambda\big(y_i,f(x_i)\big) = \sum_{j=1}^n \psi_{ij} \big(y_i - f(x_i)\big)\big(y_j - f(x_j)\big),
 \]
-%
 and when used, defines the \emph{(generalised) least squares regression}.
 For the normal model, the minimiser of the empirical risk measure under the squared loss function is also the maximum likelihood (ML) estimate of $f$, since $ \hat{\text{R}}(f)$ would be twice the negative log-likelihood of $f$, up to a constant.
 
@@ -128,7 +116,6 @@ The ML estimator of $f$ typically interpolates the data if the dimension of $\cF
 The most common method to overcome this issue is \emph{Tikhonov regularisation}, whereby a regularisation term is added to the risk function, with the aim of imposing a penalty on the complexity of $f$. 
 In particular, smoothness assumptions on $f$ can be represented by using its \gls{rkhs} norm $\norm{\cdot}_\cF:\cF \to \bbR$ as the regularisation term\footnotemark. 
 Therefore, the solution to the regularised least squares problem---call this $f_{\text{reg}}$---is the minimiser of the mapping from $\cF$ to $\bbR$ defined by
-%
 \begin{equation}\label{eq:penfunctional}
   f \mapsto 
   \myoverbrace{\frac{1}{n}\sum_{i=1}^n \sum_{j=1}^n \psi_{ij} \big( y_i - f(x_i) \big) \big( y_j - f(x_j) \big)}{\text{data fit term}}
@@ -136,17 +123,14 @@ Therefore, the solution to the regularised least squares problem---call this $f_
   \myoverbrace{\vphantom{\sum_{i=1}^n} \norm{f-f_0}^2_\cF}{\text{penalty term}}
   ,
 \end{equation}
-%
 which also happens to be the \emph{penalised maximum likelihood} solution. 
 Here, $f_0 \in \cF$ can be thought of a prior `best guess' for the function $f$.
 The $\lambda^{-1} > 0$ parameter---known as the regularisation parameter---controls the trade-off between the data-fit term and the penalty term in \cref{eq:penfunctional}, and is not usually known a priori and must be estimated.
 
 An attractive consequence of the representer theorem \citep{kimeldorf1970correspondence} for Tikhonov regularisation implies that $f_\text{reg}$ admits the form
-%
 \begin{align}\label{eq:repform}
   f_\text{reg} = f_0 + \sum_{i=1}^n h(\cdot,x_i)w_i, \hspace{0.5cm} w_i \in \bbR, \ \forall i=1,\dots,n, 
 \end{align}
-%
 even if $\cF$ is infinite dimensional.
 This simplifies the original minimisation problem from a search for $f$ over a possibly infinite-dimensional domain, to a search for the optimal coefficients $w_i$ in $n$ dimensions.
 
@@ -163,15 +147,11 @@ The exact solution for the coefficients $\bw := (w_1,\dots,w_n)^\top$ are in fac
 
 Building upon the Bayesian interpretation of regularisation, \citet{bergsma2017} proposes an original prior distribution for the regression function such that its realisations admit the form for the solution given in the representer theorem.
 The \emph{I-prior} for the regression function $f$ in \cref{eq:model1} subject to \cref{eq:model1ass} and $f\in\cF$, a RKKS with kernel $h_\eta$, is defined as the distribution of a random function of the form \cref{eq:repform} when the $w_i$ are distributed according to 
-%
 \[
   (w_1,\dots,w_n)^\top \sim \N_n(\bzero,\bPsi),
 \]
-%
-%where $\bff_0 = \big(f_0(x_1),\dots,f_0(x_n) \big)^\top$ is a vector of prior means for the regression function.
 where $\bzero$ is a length $n$ vector of zeroes.
 As a result, we may view the I-prior for $f$ as having the Gaussian process distribution
-%
 \begin{align}\label{eq:iprior}
   \bff := \big(f(x_1),\dots,f(x_n) \big)^\top \sim \N_n(\bff_0, \bH_\eta\bPsi\bH_\eta)
 \end{align}
@@ -183,34 +163,27 @@ Furthermore, the I-prior happens to be an entropy-maximising prior, subject to c
 
 As with \gls*{gpr}, the function $f$ is estimated by its posterior mean.
 For the normal model, the posterior distribution for the regression function conditional on the responses $\by = (y_1,\dots,y_n)$,
-%
 \begin{equation}
-  p(\bff|\by) = \frac{p(\by|\bff)p(\bff)}{\int p(\by|\bff)p(\bff) \d \bff} \, ,
+  p(\bff|\by) = \frac{p(\by|\bff)p(\bff)}{\int p(\by|\bff)p(\bff) \dint \bff} \, ,
 \end{equation}
-%
 can easily be found, and it is in fact normally distributed.
 The posterior mean for $f$ evaluated at a point $x \in \cX$ is given by
-%
+\vspace{-0.3em}
 \begin{equation}\label{eq:postmean}
   \E\big[f(x)\big|\by\big] 
   = f_0(x) + \bh_\eta^\top(x) \,
   \myoverbrace{\bPsi\bH_\eta \big(\bH_\eta\bPsi\bH_\eta + \bPsi^{-1}\big)^{-1} (\by -\bff_0 )}{\tilde \bw}
 \end{equation}
-%
 where we have defined $\bh_\eta(x)$ to be the vector of length $n$ with entries $h_\eta(x,x_i)$ for $i=1,\dots,n$.
 Incidentally, the elements of the $n$-vector $\tilde \bw$ defined in \cref{eq:postmean} are the posterior means of the random variables $w_i$ in the formulation \cref{eq:repform}.
 The point-evaluation posterior variance for $f$ is given by
-%
 \begin{align}\label{eq:postvar}
   \Var\big[f(x)\big|\by\big] = \bh_\eta^\top(x)\big( \bH_\eta\bPsi\bH_\eta + \bPsi^{-1} \big)^{-1} \bh_\eta^\top(x).
 \end{align}
-%
 Prediction for a new data point $x_\new \in \cX$ then concerns obtaining the \emph{posterior predictive distribution}
-%
 \[
   p(y_\new|\by) = \int p(y_\new|f_\new,\by)p(f_\new|\by) \dint f_\new,
 \]
-%
 where we had defined $f_\new := f(x_\new)$.
 This is again a normal distribution in the case of the normal model, with similar mean and variance as in \cref{eq:postmean}. 
 For a derivation, see \cref{sec:ipriorestimation} in \cref{chapter4} for details.
@@ -225,7 +198,7 @@ For a derivation, see \cref{sec:ipriorestimation} in \cref{chapter4} for details
 There is also the matter of optimising model parameters $\theta$, which in our case, collectively refers to the kernel parameters $\eta$ and the precision matrix of the errors $\bPsi$.
 Model parameters $\theta$ may be estimated in several ways, either by likelihood-based methods or fully Bayesian methods.
 The former includes methods such as direct maximisation of the (marginal) likelihood, $L(\theta) = \int p(\by|\theta,\bff)p(\bff)\dint \bff$, and the \gls*{em} algorithm.
-Both are seen as a form of \emph{empirical Bayes} estimation.
+Both are seen as a form of \emph{empirical Bayes} estimation, or a type-II ML estimation \citep{bishop2006pattern}, as it is known in machine learning.
 In a fully Bayesian setting on the other hand, \gls*{mcmc} may be employed, assuming prior distributions on the model parameters.
 
 \section{Advantages and limitations of I-priors}
