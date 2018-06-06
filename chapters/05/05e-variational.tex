@@ -1,27 +1,27 @@
 We present an EM algorithm to estimate the I-probit latent variables $\by^*$ and $\bw$, in which the E-step consists of a mean-field variational approximation of the conditional density $p(\by^*,\bw|\by,\theta) = q(\by^*)q(\bw)$.
 As per assumptions $\ref{ass:A4}$, $\ref{ass:A5}$ and $\ref{ass:A6}$, the parameters of the I-probit model consists of $\theta =\{ \balpha = (\alpha_1,\dots,\alpha_m)^\top,\eta \}$.
 
-The algorithm cycles through a variational inference E-step, in which the variational density $q(\by^*,\bw) = \prod_{i=1}^n q(\by^*_{i\bigcdot}) q(\bw)$ is optimised with respect to the Kullbeck-Leibler divergence $\KL\big( q(\by^*,\bw) \Vert p(\by^*,\bw|\by) \big)$, and an M-step, in which the approximate expected joint density \cref{eq:iprobitQEstep} is maximised with respect to the parameters $\theta$. 
+The algorithm cycles through a variational inference E-step, in which the variational density $q(\by^*,\bw) = \prod_{i=1}^n q(\by^*_{i\bigcdot}) q(\bw)$ is optimised with respect to the Kullback-Leibler divergence $\KL\big( q(\by^*,\bw) \Vert p(\by^*,\bw|\by) \big)$, and an M-step, in which the approximate expected joint density \cref{eq:iprobitQEstep} is maximised with respect to the parameters $\theta$. 
 Convergence is assessed by monitoring the ELBO.
 Apart from the fact that the variational EM algorithm uses approximate conditional distributions and involves matrices $\by^*$ and $\bw$, it is very similar to the EM described in \cref{chapter4}, and as such, the efficient computational work derived there is applicable.
 
 \subsection{The variational E-step}
 
-Let $\tilde q(\by^*,\bw)$ be the pdf that minimises the Kullbeck-Leibler divergence $\KL\big( q \Vert p \big)$ subject to the mean-field constraint $q(\by^*,\bw) = q(\by^*)q(\bw)$.
+Let $\tilde q(\by^*,\bw)$ be the pdf that minimises the Kullback-Leibler divergence $\KL\big( q \Vert p \big)$ subject to the mean-field constraint $q(\by^*,\bw) = q(\by^*)q(\bw)$.
 By appealing to \citet[equation 10.9, p. 466]{bishop2006pattern}, the optimal mean-field variational density $\tilde q$ for the latent variables $\by^*$ and $\bw$ satisfy
 \begin{align}
-  \log \tilde q(\by^*) &= \E_{\bw\sim\tilde q} \big( \log p(\by,\by^*,\bw) \big) + \const \label{eq:logqystar} \\
-  \log \tilde q(\bw) &= \E_{\by^*\sim\tilde q} \big( \log p(\by,\by^*,\bw) \big) + \const \label{eq:logqw}
+  \log \tilde q(\by^*) &= \E_{\bw\sim\tilde q} [\log p(\by,\by^*,\bw)] + \const \label{eq:logqystar} \\
+  \log \tilde q(\bw) &= \E_{\by^*\sim\tilde q} [\log p(\by,\by^*,\bw)] + \const \label{eq:logqw}
 \end{align}
 where $p(\by,\by^*,\bw) = p(\by|\by^*) p(\by^*|\bw) p(\bw)$ is as per \cref{eq:iprobitlik}.
 We now present the variational densities $\tilde q(\by^*)$ and $\tilde q(\bw)$.
-For further details on the derivation of these densities, please refer to the appendix.
+For further details on the derivation of these densities, please refer to \cref{apx:varemiprobit} \colp{\mypageref{apx:varemiprobit}}.
 
 \subsubsection{Variational distribution for the latent propensities \texorpdfstring{$\by^*$}{$y^*$}}
 
 The fact that the rows $\by_{i \bigcdot}^* \in \bbR^m$, $i=1,\dots,n$ of $\by^* \in \bbR^{n \times m}$ are independent can be exploited, and this results in a further induced factorisation $q(\by^*) = \prod_{i=1}^n q(\by_i^*)$.
 Define the set $\cC_j = \{y_{ij}^* > y_{ik}^* \,|\, \forall k\neq j \}$.
-Then $q(\by_{i \bigcdot}^*)$ is the density of a multivariate normal distribution with mean $\tilde \bmu_{i \bigcdot} = \balpha + \tilde\bw^\top  \bh_\eta(x_i)$, where $\tilde \bw = \E_{\bw\sim\tilde q}\bw$, and variance $\bPsi^{-1}$, subject to a truncation of its components to the set $\cC_{y_i}$.
+Then $q(\by_{i \bigcdot}^*)$ is the density of a multivariate normal distribution with mean $\tilde \bmu_{i \bigcdot} = \balpha + \tilde\bw^\top  \bh_\eta(x_i)$, where $\tilde \bw = \E_{\bw\sim\tilde q}[\bw]$, and variance $\bPsi^{-1}$, subject to a truncation of its components to the set $\cC_{y_i}$.
 That is, for each $i=1,\dots,n$ and noting the observed categorical response $y_i \in \{1,\dots,m\}$ for the $i$'th observation, the $\by_i^*$'s are distributed according to
 \begin{align}\label{eq:ystardist}
   \by_{i \bigcdot}^* \iid
@@ -32,7 +32,7 @@ That is, for each $i=1,\dots,n$ and noting the observed categorical response $y_
 \end{align}
 We denote this by $\by_{i \bigcdot}^* \iid \tN(\tilde\bmu_{i \bigcdot}, \bPsi^{-1},\cC_{y_i})$, and the important properties of this distribution are explored in the appendix.
 
-The required expectation $\tilde\by^* := \E_{\by^*\sim\tilde q} (\by^*_{i\bigcdot}) = \E_{\by^*\sim\tilde q} (y_{i1}^*,\dots, y_{im}^*)^\top$ in the M-step can be tricky to obtain.
+The required expectation $\tilde\by^* := \E_{\by^*\sim\tilde q} [\by^*_{i\bigcdot}] = \E_{\by^*\sim\tilde q} [y_{i1}^*,\dots, y_{im}^*]^\top$ in the M-step can be tricky to obtain.
 One strategy that can be considered is Monte Carlo integration: using samples from $\N_m(\tilde\bmu_{i \bigcdot},  \bPsi^{-1})$, disregard those that do not satisfy the condition $y_{iy_i}^* > y_{ik}^*, \forall k \neq j$, and then take the sample average.
 This works reasonably well so long as the truncation region does not fall into the extreme tails of the multivariate normal.
 Alternatively, a Gibbs-based approach \citep{robert1995simulation} for sampling from a truncated multivariate normal can be implemented, and this is detailed in \cref{apx:truncmultinorm}.
@@ -57,31 +57,44 @@ with
 \end{align*}
 and $Z \sim \N(0,1)$ with pdf and cdf $\phi(\cdot)$ and $\Phi(\cdot)$ respectively. 
 The integrals that appear above are functions of a unidimensional Gaussian pdf, and these can be computed rather efficiently using quadrature methods.
+\vspace{-0.3em}
 
 \subsubsection{Variational distribution for the I-prior random effects \texorpdfstring{$\bw$}{$w$}}
 
 Given that both $\vecc \by^* | \vecc \bw$ and $\vecc\bw$ are normally distributed as per the model \cref{eq:iprobitmod}, we find that the full conditional distribution $p(\bw|\by^*,\by) \propto p(\by^*,\by,\bw) \propto p(\by^*|\bw)p(\bw)$ is also normal. 
 The variational density $q$ for $\vecc \bw \in \bbR^{nm}$ is found to be Gaussian with mean and precision given by
+\begingroup
+\setlength{\abovedisplayskip}{10pt}
+\setlength{\belowdisplayskip}{4pt}
 \begin{gather}\label{eq:varipostw}
    \vecc \tilde\bw = \tilde\bV_w 
     (\bPsi \otimes \bH_\eta) \vecc (\tilde\by^* - \bone_n\balpha^\top)
   \hspace{0.5cm}\text{and}\hspace{0.5cm} 
   \tilde \bV_w^{-1} = \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n = \bV_{y^*}.
 \end{gather}
+\endgroup
 As a computational remark, computing the inverse $\tilde\bV_w^{-1}$ presents a challenge, as this takes $O(n^3m^3)$ time if computed naïvely. 
 By exploiting the Kronecker product structure in $\tilde\bV_w$, we are able to efficiently compute the required inverse in roughly $O(n^3m)$ time---see \cref{sec:complxiprobit} for details.
 Storage requirement is $O(n^2m^2)$, as a result of the covariance matrix in \cref{eq:varipostw}.
 
 If the independent I-probit model is assumed, i.e. $\bPsi = \diag(\psi_1,\dots,\psi_m)$, then the posterior covariance matrix $\tilde\bV_w$ has a simpler structure which implies column independence in the matrix $\bw$.
 By writing $\bw_{\bigcdot j} = (w_{1j},\dots,w_{nj})^\top \in \bbR^n$, $j=1,\dots,m$, to denote the column vectors of $\bw$, and with a slight abuse of notation, we have that
-\begin{align*}
+\begingroup
+\setlength{\abovedisplayskip}{5pt}
+\setlength{\belowdisplayskip}{6pt}
+\[
   \N_{nm}(\vecc \bw|\vecc\wtilde, \tilde\bV_w) 
   = \prod_{j=1}^m \N_{n}(\bw_{\bigcdot j}|\tilde\bw_{\bigcdot j}, \tilde\bV_{w_j}),
-\end{align*}
-where 
+\]
+\endgroup
+where $\N_{d}(\bx|\bmu,\bSigma)$ is the pdf of $\bx \sim \N(\bmu,\bSigma)$, and
+\begingroup
+\setlength{\abovedisplayskip}{5pt}
+\setlength{\belowdisplayskip}{0pt}
 \[
   \tilde \bw_{\bigcdot j} = \psi_j\tilde \bV_{w_j}\bH_\eta (\tilde\by^*_j - \alpha_j\bone_n) \ \text{ and } \ \tilde \bV_{w_j} = \big(\psi_j\bH_{\eta}^2 + \psi_j^{-1}\bI_n \big)^{-1}.
 \]
+\endgroup
 We note the similarity between \cref{eq:varipostw} above and the posterior distribution for the I-prior random effects in a normal model \cref{eq:posteriorw} seen in the previous chapter, with the difference being \cref{eq:varipostw} uses the continuous latent propensities $\by^*$ instead of the the observations $\by$.
 The consequence of this is that the posterior regression functions are class independent, the exact intended effect by specifying a diagonal precision matrix $\bPsi$.
 Storage requirement is $O(n^2m)$, since we need $\bV_{w_1},\dots,\bV_{w_m}$.
@@ -90,14 +103,12 @@ Storage requirement is $O(n^2m)$, since we need $\bV_{w_1},\dots,\bV_{w_m}$.
   The variational distribution $q(\bw)$ which approximates $p(\bw|\by)$ is in fact exactly $p(\bw|\by^*)$, the conditional density of the I-prior random effects given the latent propensities.
   By the law of total expectations, 
   \begin{gather*}
-    \E(r(\bw)|\by) = \E_{\by^*}\big( \E(r(\bw)|\by^*) \,\big|\, \by \big),
+    \E[r(\bw)|\by] = \E_{\by^*}\big[ \E[r(\bw)|\by^*] \,\big|\, \by \big],
   \end{gather*}
   where $r(\cdot)$ is some function of $\bw$, and expectations are taken under the posterior distribution of $\by^*$.
   Hypothetically, if the true pdf $p(\by^*|\by)$ were tractable,  then the E-step can be computed using the true conditional distribution.
   Since it is not tractable, we resort to an approximation, and in the case of a variational approximation, \cref{eq:varipostw} is obtained.
 \end{remark}
-
-
 
 \subsection{The M-step}
 \label{sec:varupdeta}
@@ -105,28 +116,29 @@ Storage requirement is $O(n^2m)$, since we need $\bV_{w_1},\dots,\bV_{w_m}$.
 From \cref{eq:iprobitQEstep}, the function to be maximised in the M-step is
 \begin{align*}
   Q(\theta) 
-  ={}& \const -\half\tr\Big( \bPsi \E(\bw^\top\bH_\eta^2\bw)  + \bPsi^{-1} \E(\bw^\top\bw) \Big)  \nonumber \\
+  ={}& \E_{\by^*,\bw\sim q^{(t+1)}}  [ \log p(\by,\by^*,\bw|\theta) ] \nonumber \\
+  ={}& \const -\half\tr\Big( \bPsi \E[\bw^\top\bH_\eta^2\bw]  + \bPsi^{-1} \E[\bw^\top\bw] \Big)  \nonumber \\
   &- \half \tr \Big( 
   \bPsi \big\{
-  \E(\by^{*\top}\by^*)
+  \E[\by^{*\top}\by^*]
   + n \balpha\balpha^\top 
-  - 2\balpha \bone_n^\top \E(\by^*)
-  - 2\E(\bw^\top)\bH_\eta [\E(\by^*) - \bone_n\balpha^\top] 
+  - 2\balpha \bone_n^\top \E[\by^*]
+  - 2\E[\bw^\top]\bH_\eta [\E[\by^*] - \bone_n\balpha^\top] 
   \big\} \Big)
   ,
 \end{align*}
 where expectations are taken with respect to the variational distributions of $\by^*$ and $\bw$. 
-Note that since $\bPsi$ is treated as fixed, the term $\E(\by^{*\top}\by^*)$ is absorbed into the constant.
+Note that since $\bPsi$ is treated as fixed, the term $\E[\by^{*\top}\by^*]$ is absorbed into the constant.
 On closer inspection, the trace involving the second moments of $\bw$ is found to be
 \begin{align*}
-  \tr \Big( \bPsi\E(\bw^\top\bH_\eta^2\bw)  + \bPsi^{-1} \E(\bw^\top\bw) \Big)
+  \tr \Big( \bPsi\E[\bw^\top\bH_\eta^2\bw]  + \bPsi^{-1} \E[\bw^\top\bw] \Big)
   &= \sum_{i,j=1}^m \left\{ \psi_{ij} \tr(\bH_\eta^2\tilde\bW_{ij}) + \psi_{ij}^- \tr(\tilde\bW_{ij}) \right\}
 \end{align*}
 by the results of the derivations in \cref{{apx:qw}} \colp{\mypageref{eq:trCEwDw}}.
 In the above, we had defined $\psi_{ij}^-$ to be the $(i,j)$'th element of $\bPsi^{-1}$, and
 \[
   \tilde\bW_{ij} 
-  = \E(\bw_{\bigcdot i}\bw_{\bigcdot j}^\top)
+  = \E[\bw_{\bigcdot i}\bw_{\bigcdot j}^\top]
   =  \bV_{w}[i,j] + \tilde\bw_{\bigcdot i} \tilde\bw_{\bigcdot j}^\top,
 \]
 where $\bV_{w}[i,j] \in \bbR^{n\times n}$ refers to the $(i,j)$'th submatrix block of $\bV_w$, and the $n$-vector $\tilde \bw_{\bigcdot j} = \big( \E w_{ij} \big)_{i=1}^n$ is the expected value of the random effects for class $j$.
@@ -140,7 +152,7 @@ Specifically, when the error precision is of the form $\bPsi = \diag(\psi_1,\dot
   \tilde\bW_{jj} \big)
 \end{align*}
 
-\vspace{-1em}
+\vspace{-0.5em}
 The bulk of the computational effort required to evaluate $Q(\theta)$ stems from the trace involving the second moments of $\bw$, and the fact that $\bH_\eta^2$ needs to be reevaluated each time $\theta = \{\balpha,\eta\}$ changes.
 As discussed previously, each E-step takes $O(n^3m)$ time to compute the required first and second (approximate) posterior moments of $\bw$.
 Once this is done, we can use the `front-loading of the kernel matrices' trick described in \cref{sec:efficientEM1}, which effectively renders the evaluation of $Q$ to be linear in $\theta$ (after an initial $O(n^2)$ procedure at the beginning).
@@ -159,7 +171,7 @@ We now present the update equations for the parameters.
 
 \subsubsection{Update for kernel parameters $\eta$}
 
-When only ANOVA RKHS scale parameters are involved, then the conditional solution of $\eta$ to \cref{eq:vemeta} can be found in closed-form, much like in the exponential family EM algorithm described in \cref{sec:expfamEM}.
+When only ANOVA RKHS scale parameters are involved, then the conditional solution of $\eta$ to \cref{eq:vemeta} can be found in closed-form, much like in the exponential family EM algorithm described in \cref{sec:expfamEM} \colp{\mypageref{sec:expfamEM}}.
 Under the same setting as in that subsection, assume that only $\eta = \{\lambda_1,\dots,\lambda_p\}$ need be estimated, and for each $k=1,\dots,p$, we can decompose the kernel matrix as $\bH_\eta = \lambda_k \bR_k + \bS_k$ and its square as $\bH_\eta^2 = \lambda_k^2 \bR_k^2 + \lambda_k \bU_k + \bS_k^2$.
 As a follow-on from \cref{eq:vemeta}, the conditional solution for $\lambda_k$ given the rest of the parameters is obtained by solving
 \vspace{-0.5em}
@@ -169,9 +181,9 @@ As a follow-on from \cref{eq:vemeta}, the conditional solution for $\lambda_k$ g
   + \tr\left( \bPsi \tilde\bw^\top \bR_k (\tilde\by^* - \bone_n\balpha^\top)  \right) \\
   ={}& - \lambda_k \sum_{i,j=1}^m \psi_{ij} \tr(\bR_k^2\tilde\bW_{ij})
   - \half \sum_{i,j=1}^m \psi_{ij} \tr(\bU_k\tilde\bW_{ij}) \\
-  &+ \tr\left( \bPsi \tilde\bw^\top \bR_k (\tilde\by^* - \bone_n\balpha^\top)  \right)
-\end{align*}
-equals zero. 
+  &+ \tr\left( \bPsi \tilde\bw^\top \bR_k (\tilde\by^* - \bone_n\balpha^\top)  \right) 
+\end{align*} 
+equals zero.
 This yields the solution
 \[
   \hat\lambda_k 
@@ -194,7 +206,7 @@ In the case of the independent I-probit model, where $\bPsi = \diag(\psi_1,\dots
 
 \begin{remark}
   There is no closed-form solution for $\eta$ when the polynomial kernel is used, or when there are kernel parameters to optimise (e.g. Hurst coefficient or SE kernel lengthscale).
-  In these situations, solutions for $\eta$ are obtained using numerical methods (i.e. employ quasi-Newton methods such as L-BFGS algorithm for optimising $Q(\eta|\balpha)$).
+  In these situations, solutions for $\eta$ are obtained using numerical methods (i.e. employ quasi-Newton methods such as L-BFGS algorithm for optimising $Q(\eta)$).
 \end{remark}
 
 \subsubsection{Update for intercepts \texorpdfstring{$\balpha$}{$\alpha$}}
@@ -206,11 +218,11 @@ It is easy to see that the unique solution to \cref{eq:vemalpha} is
   =\frac{1}{n} \sum_{i=1}^n \big(\by_{i\bigcdot}^* - \tilde\bw^\top\bh_\eta(x_i) \big) \in \bbR^m.
 \end{align*}
 Being free of $\bPsi$, the solution is the same whether the full or independent I-probit model is assumed.
-Furthermore, we must have that $\sum_{j=1}^m \alpha_j = 0$ for identifiability, so as an additional step to satisfy this condition, the solution $\balpha$ is centred.
+Furthermore, we must have that $\sum_{j=1}^m \alpha_j = 0$ for identifiability, so as an additional step to satisfy this condition, the solution $\hat\balpha$ is centred.
 
 \subsection{Summary}
 
-A summary of the variational EM algorithm is presented.
+%A summary of the variational EM algorithm is presented.
 Notice that the evaluation of each component of the posterior depends on knowing the posterior distribution of the other, i.e. $q(\by^*)$ depends on $q(\bw)$ and vice-versa.
 Similarly, each parameter update is obtained conditional upon the value of the rest of the parameters.
 These circular dependencies are dealt with by way of an iterative updating scheme: with arbitrary starting values for the distributions $q^{(0)}(\by^*)$ and $q^{(0)}(\bw)$, and for the parameters $\theta^{(0)}$, each are updated in turn according to the above derivations.
@@ -218,12 +230,12 @@ These circular dependencies are dealt with by way of an iterative updating schem
 The updating sequence is repeated until no significant increase in the convergence criterion, the ELBO, is observed.
 The ELBO for the I-probit model is given by the quantity
 \begin{align}
-  \cL(q, \theta) = \half[nm] + \sum_{i=1}^n \log C_i(\theta) + \half\log \abs{\tilde\bV_w} - \half[n]\log\abs{\bPsi} - \half\sum_{i,j=1}^m \psi_{ij}^- \tr(\tilde\bW_{ij}),
+  \cL_q(\theta) = \half[nm] + \sum_{i=1}^n \log C_i(\theta) + \half\log \abs{\tilde\bV_w} - \half[n]\log\abs{\bPsi} - \half\sum_{i,j=1}^m \psi_{ij}^- \tr(\tilde\bW_{ij}),
 \end{align}
-where $C_i(\theta)$ is the normalising constant of the distribution $\tN_m(\balpha + \bw^\top\bh_\eta(x_i),\bPsi^{-1},\cC_{y_i})$, with $\cC_{y_i} = \{y_{iy_i}^* > y_{ik}^* | \forall k \neq y_i \}$.
+where $C_i(\theta)$ is the normalising constant of the distribution $\tN_m(\balpha + \tilde\bw^\top\bh_\eta(x_i),\bPsi^{-1},\cC_{y_i})$, with $\cC_{y_i} = \{y_{iy_i}^* > y_{ik}^* | \forall k \neq y_i \}$, and $\psi_{ij}^{-}$.
 That is,
 \[
-  C_i(\theta) = \idotsint\displaylimits_{\{y_{iy_i}^* > y_{ik}^* | \forall k \neq y_i \}} \phi(y_{i1}^*, \dots, y_{im}^*|\balpha + \bw^\top\bh_\eta(x_i), \bPsi^{-1}) \dint y_{i1}^* \cdots \dint y_{im}^*.
+  C_i(\theta) = \idotsint\displaylimits_{\{y_{iy_i}^* > y_{ik}^* \,|\, \forall k \neq y_i \}} \phi(y_{i1}^*, \dots, y_{im}^*|\balpha + \tilde\bw^\top\bh_\eta(x_i), \bPsi^{-1}) \dint y_{i1}^* \cdots \dint y_{im}^*.
 \]
 Similar to the EM algorithm, each iteration of the algorithm increases the ELBO to a stationary point \citep{blei2017variational}.
 Unlike the EM algorithm though, the variational EM algorithm does \emph{not} guarantee an increase in the marginal log-likelihood at each step, nor does it guarantee convergence to the global maxima of the log-likelihood.

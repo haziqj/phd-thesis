@@ -196,21 +196,8 @@ as required.  \qedhere
 
 \end{proof}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \section{Matrix normal distribution}
+\label{apx:matrixnormal}
 
 The matrix normal distribution is an extension of the Gaussian distribution to matrices.
 Let $X\in\bbR^{n \times m}$ matrix, and let $X$ follow a matrix normal distribution with mean $\mu\in\bbR^{n \times m}$ and row and column variances $\Sigma \in \bbR^{n \times n}$ and $\Psi \in \bbR^{m \times m}$ respectively, which we denote by $X\sim\MN_{n,m}(\mu,\Sigma,\Psi)$.
@@ -220,39 +207,6 @@ Then,
   \item \textbf{Moments}. $\E X=\mu$, $\Var(X_{i \bigcdot }) = \Psi$ for $i=1,\dots,n$, and $\Var(X_{\bigcdot j}) = \Sigma$ for $j=1,\dots,m$. 
   \item \textbf{Entropy}. $H(p) = \half \log \abs{2\pi e (\Psi \otimes \Sigma)} = \half[nm](1 + \log 2\pi) + \half\log\abs{\Sigma}^m\abs{\Psi}^n$.
 \end{itemize}
-
-In the above, `$\otimes$' denotes the Kronecker matrix product defined by
-\[
-  \Psi \otimes \Sigma = 
-  \begin{pmatrix}
-    \Psi_{11}\Sigma &\Psi_{12}\Sigma &\cdots &\Psi_{1m}\Sigma \\
-    \Psi_{21}\Sigma &\Psi_{22}\Sigma &\cdots &\Psi_{2m}\Sigma \\    
-    \vdots & \vdots &\ddots  &\vdots \\
-    \Psi_{m1}\Sigma &\Psi_{m2}\Sigma &\cdots &\Psi_{mm}\Sigma \\
-  \end{pmatrix} \in \bbR^{nm\times nm}.
-\]
-Of use will be these properties of the Kronecker product \citep{zhang2013kronecker}.
-\begin{itemize}
-  \item \textbf{Bilinearity and associativity}. For appropriately sized matrices $A$, $B$ and $C$, and a scalar $\lambda$,
-  \begin{align*}
-    A \otimes (B + C) &= A \otimes B + A \otimes C \\
-    (A + B) \otimes C &= A \otimes C + B \otimes C \\
-    \lambda A \otimes B &= A \otimes \lambda B = \lambda(A \otimes B) \\
-    (A \otimes B) \otimes C &= A \otimes (B \otimes C)
-  \end{align*}
-  \item \textbf{Non-commutative}. In general, $A \otimes B \neq B \otimes A$, but they are \emph{permutation equivalent}, i.e. $A \otimes B \neq P(B \otimes A)Q$ for some permutation matrices $P$ and $Q$.
-  \item \textbf{The mixed product property}. $(A \otimes B)(C \otimes D) = AC \otimes BD$.
-  \item \textbf{Inverse}. $A \otimes B$ is invertible if and only if $A$ and $B$ are both invertible, and $(A \otimes B)^{-1} = A^{-1} \otimes B^{-1}$.
-  \item \textbf{Transpose}. $(A \otimes B)^\top = A^\top \otimes B^\top$.
-  \item \textbf{Determinant}. If $A$ is $n\times n$ and $B$ is $m \times m$, then $\abs{A \otimes B} = \abs{A}^m \abs{B}^n$. Note that the exponent of $\abs{A}$ is the order of $B$ and vice versa.
-  \item \textbf{Trace}. Suppose $A$ and $B$ are square matrices. Then $\tr (A \otimes B) = \tr A \tr B$.
-  \item \textbf{Rank}. $\rank (A \otimes B) = \rank A \rank B$.
-  \item \textbf{Matrix equations}. $AXB = C \Leftrightarrow (B^\top \otimes A) \vecc X = \vecc (AXB) = \vecc C$.
-\end{itemize}
-The vectorisation operation `$\vecc$' stacks the columns of the matrices into one long vector, for instance,
-\[
-  \vecc \Psi = (\Psi_{11},\dots,\Psi_{m1},\Psi_{12},\dots,\Psi_{m2},\dots,\Psi_{1m},\dots,\Psi_{mm})^\top \in \bbR^{m \times m}.
-\]
 
 \begin{lemma}[Equivalence between matrix and multivariate normal]
   $X\sim\MN_{n,m}(\mu,\Sigma,\Psi)$ if and only if $\vecc X\sim \N_{nm}(\vecc\mu,\Psi \otimes \Sigma)$.
@@ -385,8 +339,6 @@ Thus, both $X$ and $Y$ can be sampled directly from uniform variates.
 
 For probit models, we are interested in the conical truncations $\cC_j = \{ X_j > X_k | k\neq j, \text{and } k=1,\dots,m  \}$ for which the $j$'th component of $X$ is largest.
 These truncations form cones in $d$-dimensional space such that $\cC_1 \cup \cdots \cup \cC_d = \bbR^d$, and hence the name.
-
-\hltodo{insert scatterplot and density plot of conically truncated samples}
 
 In the case where $\Sigma$ is a diagonal matrix, the conically truncated multivariate normal distributions are easier to deal with due to the independence structure in the covariance matrix.
 In particular, most calculations of interest involve only a one dimensional integral of products of normal cdfs.

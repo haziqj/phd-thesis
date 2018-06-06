@@ -114,7 +114,7 @@ mod.hmc$param.full[1, ] <- b.alpha
 iplot_predict(mod.hmc)
 
 ## ---- compare.lik ----
-no.points <- 50
+no.points <- 5
 x <- log(get_lambda(mod.vi))
 x <- seq(x - 5, x + 5, length = no.points)
 y <- get_alpha(mod.vi)
@@ -166,7 +166,7 @@ do_it <- function() {
 
   cl <- makeCluster(parallel::detectCores())
   registerDoSNOW(cl)
-  res <- foreach(i = 1:1250, .combine = rbind,  # seq_len(nrow(tab))
+  res <- foreach(i = seq_len(nrow(tab)), .combine = rbind,
                  .packages = c("iprobit", "rstan", "coda", "purrr"),
                  .export = c("mod.vi", "tab", "m", "pre.dat", "stan2coda"),
                  .options.snow = list(progress = progress)) %dopar% {

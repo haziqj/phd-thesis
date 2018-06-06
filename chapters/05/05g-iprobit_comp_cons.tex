@@ -5,40 +5,6 @@ In addition, we also discuss considerations to take into account if estimation o
 \subsection{Efficient computation of class probabilities}
 \label{sec:mnint}
 
-
-%Choosing the first category as the reference category, define new random variables $z_{ij} = y_{ij}^* - y_{i1}^*$, for $j = 2,\dots,m$. 
-%The model \cref{eq:latentmodel} is equivalently represented by
-%\begin{equation}
-%  y_i = 
-%  \begin{cases}
-%    1 & \text{if } \max (z_{i2},\dots,z_{im}) < 0 \\
-%    j & \text{if } \max (z_{i2},\dots,z_{im}) = z_{ij} \geq 0.
-%  \end{cases}
-%\end{equation} 
-%Write $\bz_{i\bigcdot} = (z_{i2},\dots,z_{im})^\top \in \bbR^{m-1}$.
-%Then $\bz_{i\bigcdot} = \bQ\by^*_{i\bigcdot}$, where $\bQ \in \bbR^{(m-1)\times m}$  is the $(m-1)$ identity matrix pre-augmented with a column vector of minus ones.
-%We have that $\bz_{i\bigcdot} \iid \N_{m-1}(\bnu, \bOmega)$, where $\bnu_{i\bigcdot} = \bQ\bmu_{i\bigcdot}$ and $\bOmega = \bQ\bPsi^{-1}\bQ^\top$.
-%Note that if $\bPsi$ is diagonal, then the transformation to $\bOmega$ will not retain diagonality---indeed, each component will undoubtedly be correlated with one another as they are all anchored on the same latent variable.
-%
-%Now, the class probabilities for $j=2,\dots,m$ are
-%\begin{align}
-%  p_{ij} = 
-%  \int\displaylimits_{\{z_{ik} < 0 \,|\, \forall k \neq 1,j \}} \ind[z_{ij} \geq 0] \,\phi(\bz_{i\bigcdot} |\bnu_{i\bigcdot}, \bOmega) \dint\bz_{i\bigcdot} \ . \label{eq:pij3}
-%\end{align}
-%The class probability $p_{i1}$ is simply $p_{i1} = 1- \sum_{k\neq 1} p_{ik}$.
-%From this representation of the model, with $m=2$ (binary outcomes) we see that
-%\[
-%  p_{i1} = 
-%%  \int \ind(z_{i2} < 0) \phi(z_{i2}) \dint z_{i2} = 
-%  \Phi \left( \frac{z_{i2} - \nu}{\omega^{1/2}} \right)
-%  \hspace{0.5cm}\text{and}\hspace{0.5cm}
-%  p_{i2} = 
-%%  \int \ind(z_{i2} \geq 0) \phi(z_{i2}) \dint z_{i2} = 
-%  1 - \Phi \left( \frac{z_{i2} - \nu}{\omega^{1/2}} \right),
-%\]
-%where $\Phi(\cdot)$ is the cdf of the standard normal univariate distribution, and $\nu$ and $\omega$ are the mean and variance of the univariate random variable $\bz_{i\bigcdot} = z_{i2}$.
-%The probit link function involving the cdf of a standard normal is clearly seen here, especially if the error precision is treated as fixed such that $\omega = 1$. 
-
 The issue at hand here is that for $m>4$, the evaluation of the class probabilities in \cref{eq:pij} is computationally burdensome using classical methods such as quadrature methods \citet{geweke1994alternative}.
 As such, simulation techniques (Monte Carlo integration) are employed instead.
 The simplest strategy to overcome this is a frequency simulator (otherwise known as Monte Carlo integration): obtain random samples from $\N_{m}\big(\bmu(x_i), \bPsi^{-1}\big)$, and calculate how many of these samples fall within the required  region.
@@ -138,12 +104,11 @@ where
     - \big(\nu_{(j)j'} + \sum_{k=1}^{j'-1} L_{kj'}\zeta_k \big) / L_{j'j'} &\text{for } j' = 2,\dots,m-1
   \end{cases}
 \end{equation*}
-%Thus, the original integral in \cref{eq:pij} involving an $m$-variate normal density is turned into a product of $m-1$ univariate normal cdfs, which can be computed fairly efficiently in modern computer systems.
 The GHK algorithm entails making draws from one-sided right truncated standard normal distributions (for instance, using an inverse transform method detailed in \cref{apx:truncuninorm},  \mypageref{apx:truncuninorm}):
 \begin{itemize}
   \item Draw $\tilde\zeta_1 \sim \tN(0,1,-\infty,u_1)$.
   \item Draw $\tilde\zeta_2 \sim \tN(0,1,-\infty,\tilde u_2)$, where $\tilde u_2 = u_2(\tilde\zeta_1)$.
-  \item Draw $\tilde\zeta_3 \sim \tN(0,1,-\infty,\tilde u_3)$, where $\tilde u_2 = u_2(\tilde\zeta_1,\tilde\zeta_2)$. 
+  \item Draw $\tilde\zeta_3 \sim \tN(0,1,-\infty,\tilde u_3)$, where $\tilde u_3 = u_3(\tilde\zeta_1,\tilde\zeta_2)$. 
   \item $\cdots$
   \item Draw $\tilde\zeta_{m-1} \sim \tN(0,1,-\infty,\tilde u_{m-2})$, where $\tilde u_{m-1} = u_m(\tilde\zeta_1,\dots,\tilde\zeta_{m-2})$.
 \end{itemize}
@@ -167,7 +132,7 @@ Therefore, a simulated probability for $p_j$ (denoted with a tilde) is obtained 
 \begin{equation}\label{eq:tildepj}
   \tilde p_j = \Phi\left( -\nu_{(j)1}/ L_{11} \right) 
   \prod_{j'=2}^{m-1} \Phi \left( 
-  - \big(\nu_{(j)j'} + \textstyle\sum_{k=1}^{j'-1} L_{kj'}\zeta_k \big) / L_{j'j'} 
+  - \big(\nu_{(j)j'} + \textstyle\sum_{k=1}^{j'-1} L_{kj'}\tilde\zeta_k \big) / L_{j'j'} 
   \right).
 \end{equation}
 By performing the above scheme $T$ number of times to obtain $T$ such simulated probabilities $\{p_j^{(1)},\dots,p_j^{(T)} \}$, the actual probability of interest $p_j$ is then approximated by the sample mean of the draws,
@@ -180,7 +145,7 @@ It is better to work on a log-probability scale, so the products in \cref{eq:til
 
 \begin{remark}
   The GHK algorithm provides reasonably fast and accurate calculations of class probabilities when $\bPsi$ is dense.
-  As we alluded to earlier in the chapter, the class probabilities condense to a unidimensional integral involving products of normal cdfs (see equation \ref{eq:pij2}) if $\bPsi$ is diagonal.
+  As we alluded to earlier in the chapter, the class probabilities condense to a unidimensional integral involving products of normal cdfs (c.f. equation \ref{eq:pij2}) if $\bPsi$ is diagonal.
   Note that if $\bPsi$ is diagonal, then the transformed $\bOmega_{(j)} = \bQ\bPsi^{-1}\bQ^\top$ is certainly not: the components of $\bz$ are correlated because they are all anchored on the same random variable.
   Thus, direct evaluation of \cref{eq:pij2} using quadrature methods avoids the Cholesky step and random sampling employed by the GHK method.
 \end{remark}

@@ -1,4 +1,4 @@
-\documentclass[showframe,11pt]{report}
+\documentclass[showframe,11pt,twoside,openright]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
@@ -10,7 +10,7 @@
   \externaldocument{../02/.texpadtmp/chapter2}  
   \externaldocument{../03/.texpadtmp/chapter3}
   \externaldocument{../04/.texpadtmp/chapter4}
-  \externaldocument{../05/.texpadtmp/chapter5}
+  \externaldocument{../05/.texpadtmp/chapter5}  
   \externaldocument{../06/.texpadtmp/chapter6}
   \externaldocument{../07/.texpadtmp/chapter7}
 \fi
@@ -42,6 +42,7 @@
 \input{apx-G-ipriorpost}
 
 \chapter{Variational EM algorithm for I-probit models}
+\label{apx:varemiprobit}
 \input{apx-H-vemiprobit}
 
 \chapter{The Gibbs sampler for the I-prior Bayesian variable selection model}\label{apx:gibbsbvs}

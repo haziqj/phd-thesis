@@ -1,33 +1,33 @@
 Post-estimation procedures such as obtaining predictions for a new data point, the credibility interval for such predictions, and model comparison, are of interest.
-These are performed in a empirical Bayes manner using the variational posterior density of the regression function obtained from the output of the variational EM algorithm.
+These are performed in an empirical Bayes manner using the variational posterior density of the regression function obtained from the output of the variational EM algorithm.
 
 We first describe prediction of a new data point $x_{\text{new}}$.
-Step one is to determine the distribution of the posterior regression functions in each class, $\bff(x_{\text{new}}) = \bw^\top\bh_\eta(x_{\text{new}})$, given values for the parameters $\theta$ of the I-probit model.
+Step one is to determine the distribution of the posterior regression functions in each class, $\bff(x_{\text{new}}) = \bw^\top\bh_\eta(x_{\text{new}})$, where $\bh_\eta(x_{\text{new}})$ is the vector of length $n$ containing entries $h_\eta(x_i,x_\new)$, given values for the parameters $\theta$ of the I-probit model.
 To this end, we use the ELBO estimates for $\theta$, i.e. $\hat\theta = \argmax_\theta \cL_q(\theta)$, as obtained from the variational EM algorithm.
 As we know, the variational distribution of $\vecc\bw$ is normally distributed with mean and variance according to \cref{eq:varipostw}.
-By writing $\vecc \tilde\bw = (\tilde \bw_{\bigcdot 1}, \dots, \tilde \bw_{\bigcdot m})^\top$ to separate out the I-prior random effects per class, we have that $\bw_{\bigcdot j}|\hat\theta \sim \N_n(\tilde \bw_{\bigcdot j}, \tilde\bV_w[j,j])$, and $\Cov(\bw_{\bigcdot j},\bw_{\bigcdot k}) = \tilde\bV_w[j,k]$, where the `$[\cdot,\cdot]$' indexes the $n\times n$ sub-block of the block matrix structured matrix $\bV_w$.
+By writing $\vecc \tilde\bw = (\tilde \bw_{\bigcdot 1}, \dots, \tilde \bw_{\bigcdot m})^\top$ to separate out the I-prior random effects per class, we have that $\bw_{\bigcdot j}|\hat\theta \sim \N_n(\tilde \bw_{\bigcdot j}, \tilde\bV_w[j,j])$, and $\Cov[\bw_{\bigcdot j},\bw_{\bigcdot k}] = \tilde\bV_w[j,k]$, where the `$[\cdot,\cdot]$' indexes the $n\times n$ sub-block of the block matrix structured matrix $\bV_w$.
 Thus, for each class $j=1,\dots,m$ and any $x \in \cX$,
 \[
   f_j(x)|\by,\hat\theta \sim \N\big(\,
-  \bh_{\hat\eta}(x)^\top \tilde\bw_{\bigcdot j}, \,
+  \bh_{\hat\eta}(x)^\top \tilde\bw_{\bigcdot j} \, , \,
   \bh_{\hat\eta}(x)^\top\tilde\bV_w[j,j]\bh_{\hat\eta}(x)
   \big),
 \]
 and the covariance between the regression functions in two different classes is
 \[
-  \Cov\big(f_j(x),f_k(x)|\by,\hat\theta \big) = 
+  \Cov\big[f_j(x),f_k(x)|\by,\hat\theta \big] = 
   \bh_{\hat\eta}(x)^\top \tilde\bV_w[j,k] \tilde\bh_{\hat\eta}(x).
 \]
-Then, in step two, using the results obtained in the previous chapter in \cref{sec:ipriorpostest}, we have that the latent propensities $y_{\new,j}^*$ for each class are normally distributed with mean, variance, and covariances
+Then, in step two, using the results obtained in the previous chapter in \cref{sec:ipriorpostest} \colp{\mypageref{sec:ipriorpostest}}, we have that the latent propensities $y_{\new,j}^*$ for each class are normally distributed with mean, variance, and covariances
 \begin{alignat*}{3}
-  \E(y_{\new,j}^*|\by,\hat\theta) 
-  &= \hat\alpha_j + \E \big( f_j(x_\new) |\by,\hat\theta \big) 
+  \E[y_{\new,j}^*|\by,\hat\theta] 
+  &= \hat\alpha_j + \E \big[ f_j(x_\new) |\by,\hat\theta \big] 
   &&=: \hat\mu_j(x_\text{new}) \\
-  \Var(y_{\new,j}^*|\by,\hat\theta) 
-  &= \Var\big(f(x_\new)|\by,\hat\theta \big) + \bPsi^{-1}_{jj}
+  \Var[y_{\new,j}^*|\by,\hat\theta] 
+  &= \Var\big[f(x_\new)|\by,\hat\theta \big] + \bPsi^{-1}_{jj}
   &&=: \hat\sigma_j^2(x_\text{new}) \\
-  \Cov(y_{\new,j}^*,y_{\new,k}^*|\by,\hat\theta) 
-  &= \Cov\big(f_j(x),f_k(x)|\by,\hat\theta \big) + \bPsi^{-1}_{jk}
+  \Cov[y_{\new,j}^*,y_{\new,k}^*|\by,\hat\theta]
+  &= \Cov\big[f_j(x),f_k(x)|\by,\hat\theta \big] + \bPsi^{-1}_{jk}
   &&=: \hat\sigma_{jk}(x_\text{new}).
 \end{alignat*}
 
@@ -53,8 +53,8 @@ while the probabilities for each class are obtained via integration of a multiva
 For the independent I-probit model, class probabilities are obtained in a more compact manner via
 \[
   \hat p_{\text{new},j} 
-  = \E_Z \Bigg( \mathop{\prod_{k=1}^m}_{k\neq j} 
-  \Phi \left(\frac{\hat\sigma_j(x_\text{new})}{\hat\sigma_k(x_\text{new})} Z + \frac{\hat\mu_j(x_\new) - \hat\mu_k(x_\new)}{\hat\sigma_k^2(x_\text{new})} \right) \Bigg),
+  = \E_Z \Bigg[ \mathop{\prod_{k=1}^m}_{k\neq j} 
+  \Phi \left(\frac{\hat\sigma_j(x_\text{new})}{\hat\sigma_k(x_\text{new})} Z + \frac{\hat\mu_j(x_\new) - \hat\mu_k(x_\new)}{\hat\sigma_k^2(x_\text{new})} \right) \Bigg],
 \]
 as per \cref{eq:pij2}, since the $m$ components of $\bff(x_\new)$, and hence the $\by^*_{\new,j}$'s, are independent of each other ($\bPsi$ and $\hat\bV_\new$ are diagonal).
 Prediction of a single new data point takes $O(n^2m)$ time, because there are essentially $m$ I-prior posterior regression functions, and each take $O(n^2)$ to evaluate.
@@ -62,7 +62,7 @@ This is assuming negligible time to compute the class probabilities.
 
 We are able to take advantage of the Bayesian machinery to obtain credibility intervals for probability estimates or any transformation of these probabilities (e.g. log odds or odds ratios).
 The procedure is as follows.
-First, obtain samples $\bw^{(1)},\dots,\bw^{(T)}$ by drawing from its variational posterior distribution $\vecc\bw^{(i)}|\hat\theta \sim \N_{nm}(\vecc \tilde\bw,\bV_w)$.
+First, obtain samples $\bw^{(1)},\dots,\bw^{(T)}$ by drawing from its variational posterior distribution $\vecc\bw^{(t)}|\hat\theta \sim \N_{nm}(\vecc \tilde\bw,\bV_w)$.
 Then, obtain samples of class probabilities $\{p_{xj}^{(1)},\dots, p_{xj}^{(T)} \}_{j=1}^m$, for a given data point $x\in\cX$ by evaluating
 \[
   p_{xj}^{(t)} = \idotsint\displaylimits_{\{y^*_j > y^*_k | \forall k \neq j \}} \phi\big(y_{1}^*, \dots, y_{m}^*|\hat\bmu^{(t)}(x), \hat\bV(x)\big) \dint y_{1}^* \cdots \dint y_{m}^*,
@@ -104,7 +104,7 @@ This stems from the fact that
   &= \cL_q(\theta) + \KL(q \Vert p ) 
   > \cL_q(\theta),
 \end{align*}
-since the Kullbeck-Leibler divergence from the true posterior density $p(\by^*,\bw|\by)$ to the variational density $q(\by^*,\bw)$ is strictly positive (it is zero if and only if the two densities are equivalent), and is minimised under a variational inference scheme.
+since the Kullback-Leibler divergence from the true posterior density $p(\by^*,\bw|\by)$ to the variational density $q(\by^*,\bw)$ is strictly positive (it is zero if and only if the two densities are equivalent), and is minimised under a variational inference scheme.
 \citet{kass1995bayes} suggest \cref{tab:BF} as a way of interpreting  observed Bayes factor values $\BF(M_1,M_0)$ for comparing model $M_1$ against model $M_0$, where $\BF(M_1,M_0)$ is approximated by
 \[
   \BF(M_1,M_0) \approx \frac{\cL_q(\theta|M_1)}{\cL_q(\theta|M_0)},
@@ -112,6 +112,7 @@ since the Kullbeck-Leibler divergence from the true posterior density $p(\by^*,\
 and $\cL_q(\theta|M_k)$, $k=0,1$, is the ELBO for model $M_k$.
 It should be noted that while this works in practice, there is no theoretical basis for model comparison using the ELBO \citep{blei2017variational}.
 
+\vspace{0.3em}
 \begin{table}[htbp]\label{tab:BF}
   \centering
   \caption{Guidelines for interpreting Bayes factors \citep{kass1995bayes}.}

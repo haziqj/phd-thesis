@@ -32,7 +32,7 @@ A schematic diagram depicting the I-probit model is shown in \cref{fig:iprobitda
       \node[rectangle, draw=black!100, fit={($(alpha.south east) + (0,-0.25cm)$) ($(pij.north east) + (0.3,0cm)$) ($(w.north west) + (-0.3,0.58cm)$)  }] {}; 
       \node[draw=none] () [right=of alpha,xshift=-0.4cm,yshift=-0.48cm] {$j=1,\dots,m$};      
     \end{tikzpicture}
-    \caption{A directed acyclic graph (DAG) of the I-probit model. Observed/fixed nodes are shaded, while double-lined nodes represents calculable quantities.}
+    \caption{A directed acyclic graph (DAG) of the I-probit model. Observed or fixed nodes are shaded, while double-lined nodes represents calculable quantities.}
     \label{fig:iprobitdag}
 \end{figure}
 
@@ -73,7 +73,7 @@ where we have denoted the class probabilities $p_{ij}$ from \cref{eq:pij} using 
 Unfortunately, neither of these two simplifications are particularly helpful.
 In \cref{eq:intractablelikelihood1}, the integral represents the probability  of a $mn$-dimensional normal variate which is not straightforward to calculate, because its covariance matrix is dense.
 In \cref{eq:intractablelikelihood2}, the integral has no apparent closed-form.
-Unavailability of an efficient, reliable way of calculating the log-likelihood hampers hope of obtaining parameter estimates via direct likelihood maximisation methods.
+The unavailability of an efficient, reliable way of calculating the log-likelihood hampers hope of obtaining parameter estimates via direct likelihood maximisation methods.
 
 Furthermore, the posterior density of the regression function $\bff = \bH_\eta \bw$, which requires the posterior density of $\bw$ obtained via $p(\bw|\by) \propto p(\by|\bw)p(\bw)$, has normalising constant equal to  $L(\theta)$, which is intractable.
 The challenge of estimation is then to first overcome this intractability by means of a suitable approximation of the marginalising integral.
@@ -112,7 +112,7 @@ The log marginal density of course depends on the parameters $\theta$, which bec
 Note that, should a fully Bayesian approach be undertaken, i.e. priors prescribed on the model parameters using $\theta \sim p(\theta)$, then this approach is viewed as a maximum a posteriori approach.
 
 In any case, each evaluation of the objective function $L(\theta) = \log p(\by|\btheta)$ involves finding the posterior modes $\hat\bw$.
-This is a slow and difficult undertaking, especially for large sample sizes $n$---even assuming computation of the class probabilities $g^{-1}$ is efficient---because the dimension of this integral is exactly the sample size.
+This is a slow and difficult undertaking, especially for large sample sizes $n$---even assuming computation of the class probabilities is efficient---because the dimension of this integral is exactly the sample size.
 
 Standard errors for the parameters can be obtained from diagonal entries of the information matrix involving the second derivatives of $\log p(\by)$.
 However, it is not known whether the asymptotic variance of the parameters are affected by a Laplace approximation to the likelihood.
@@ -159,30 +159,30 @@ The constraint considered by us in this thesis is that $q$ satisfies a \emph{mea
 \]
 Under this scheme, the variational distribution for $\by^*$ is found to be a \emph{conically truncated multivariate normal} distribution, and for $\bw$, a multivariate normal distribution.
 
-It can be shown that, for any variational density $q$, the marginal log-likelihood is an upper-bound for the quantity $\cL(q,\theta)$ defined by
+It can be shown that, for any variational density $q$, the marginal log-likelihood is an upper-bound for the quantity $\cL_q(\theta) := \cL(q,\theta)$ defined by
 \[
   \log p(\by|\theta) \geq 
-    \E_{\by^*,\bw\sim q} \big( \log p(\by,\by^*,\bw|\theta)\big)
-    - \E_{\by^*,\bw\sim q} \big( \log  q(\by^*,\bw) \big) =: \cL(q,\theta),
+    \E_{\by^*,\bw\sim q} [\log p(\by,\by^*,\bw|\theta)]
+    - \E_{\by^*,\bw\sim q} [ \log  q(\by^*,\bw) ] =: \cL(q,\theta),
 \]
 a quantity often referred to as the \emph{evidence lower bound} (ELBO).
 It turns out that minimising $\KL(q\Vert p)$ is equivalent to maximising the ELBO, a quantity that is more practical to work with than the KL divergence, and certainly more tractable than the log marginal density.
 Hence, if $q$ approximates the true posterior well, then the ELBO is a suitable proxy for the marginal log-likelihood.
 
-In practice, obtaining ML parameter estimates and the posterior density $q(\by^*,\bw)$ which maximise the ELBO is achieved using a \emph{variational EM algorithm}, an EM algorithm in which the conditional distribution are replaced with a variational approximation.
+In practice, obtaining ML parameter estimates and the posterior density $q(\by^*,\bw)$ which maximises the ELBO is achieved using a \emph{variational EM algorithm}, an EM algorithm in which the conditional distribution are replaced with a variational approximation.
 The $t$'th E-step entails obtaining the density $q^{(t+1)}$ as a solution to $\argmax_q \cL(q,\theta)$, keeping $\theta$ fixed at the current estimate $\theta^{(t)}$.
 Let $\bar\by^* = \by^* - \bone_n\balpha^\top$.
 The objective function to be maximised is computed as
 \begin{align}
   Q(\theta) 
-  ={}& \E_{\by^*,\bw\sim q^{(t+1)}}  \big( \log p(\by,\by^*,\bw|\theta) \big) \nonumber \\
-  ={}& \const -\half\tr\Big( \bPsi \E(\bw^\top\bH_\eta^2\bw)  + \bPsi^{-1} \E(\bw^\top\bw) \Big)  \nonumber \\
+  ={}& \E_{\by^*,\bw\sim q^{(t+1)}}  [ \log p(\by,\by^*,\bw|\theta) ] \nonumber \\
+  ={}& \const -\half\tr\Big( \bPsi \E[\bw^\top\bH_\eta^2\bw]  + \bPsi^{-1} \E[\bw^\top\bw] \Big)  \nonumber \\
   &- \half \tr \Big( 
   \bPsi \big\{
-  \E(\by^{*\top}\by^*)
+  \E[\by^{*\top}\by^*]
   + n \balpha\balpha^\top 
-  - 2\balpha \bone_n^\top \E(\by^*)
-  - 2\E(\bw^\top)\bH_\eta [\E(\by^*) - \bone_n\balpha^\top] 
+  - 2\balpha \bone_n^\top \E[\by^*]
+  - 2\E[\bw^\top]\bH_\eta [\E[\by^*] - \bone_n\balpha^\top] 
   \big\} \Big) \label{eq:iprobitQEstep}
   ,
 \end{align}
@@ -193,19 +193,19 @@ A full derivation of the variational EM algorithm used by us will be described i
 \subsection{Markov chain Monte Carlo methods}
 
 Markov chain Monte Carlo (MCMC) methods is the tool of choice for a complete Bayesian analysis of multinomial probit models \citep{mcculloch2000bayesian,nobile1998hybrid,mcculloch2000bayesian}.
-\citet{albert1993bayesian} showed that the latent variable approach to probit models can be analysed using exact Bayesian methods, due to the underlying normality structure.
+\citet{albert1993bayesian} showed that a data augmentation approach, i.e. the latent variable approach, to probit models can be analysed using exact Bayesian methods, due to the underlying normality structure.
 Paired with corresponding conjugate prior choices, sampling from the posterior is very simple using a Gibbs sampling approach.
 That is, assuming a prior distribution on the parameters $\theta\sim p(\theta)$, the model with likelihood given by \cref{eq:iprobitlik} obtains posterior samples $\{\by^{*(t)}, \bw^{(t)},\theta^{(t)} \}_{t=1}^T$ from their respective Gibbs conditional distributions.
 In particular, $\by^{*}|\by,\bw,\theta$ is distributed according to a truncated multivariate normal, while $\bw|\by,\by^*,\theta$ a multivariate normal.
 These conditional distributions are exactly of the same form as the ones obtained under a variational scheme.
 The difference is that in MCMC, sampling from posterior distributions is performed, whereas in a variational inference framework, a deterministic update of the variational distributions is performed.
-As such, a downside to this data augmentation scheme in an MCMC framework is that it enlarges the variable space by an additional $nm$ dimensions, which is memory inefficient for large $n$.
 
+A downside to the data augmentation scheme for probit models in a MCMC framework is that it enlarges the variable space by an additional $nm$ dimensions, which is memory inefficient for large $n$.
 The models with likelihood \cref{eq:intractablelikelihood1} or \cref{eq:intractablelikelihood2} after integrating out $\bw$ and $\by^*$ respectively, is less demanding for MCMC sampling than the model with likelihood \cref{eq:iprobitlik}.
 However, as mentioned already, \cref{eq:intractablelikelihood1} contains an integral involving a $mn$-variate normal distribution whose covariance matrix is dense, and as far as we are aware, the Kronecker product structure cannot be exploited for efficiency in sampling.
 This leaves \cref{eq:intractablelikelihood2}, a non-conjugate model whose full conditional densities are not of recognisable form.
 Hamiltonian Monte Carlo is another possibility, since it does not require conjugacy.
-For binary models, this is a feasible approach because the class probabilities normal cdfs (see equation \ref{eq:iprobitbin}), which means that it is doable using off-the-shelf software such as \proglang{Stan}.
+For binary models, this is a feasible approach because the class probabilities normal cdfs (c.f. equation \ref{eq:iprobitbin}), which means that it is doable using off-the-shelf software such as \proglang{Stan}.
 However, with multinomial responses, the arduous task of computing class probabilities, which involve integration of an at most $m$-dimensional normal density, must be addressed separately.
 
 \subsection{Comparison of estimation methods}
@@ -213,17 +213,20 @@ However, with multinomial responses, the arduous task of computing class probabi
 In this subsection, we utilise a toy binary classification data set which has been simulated according to a spiral pattern, as in \cref{fig:exampleiprobit}.
 The predictor variables are $X_1$ and $X_2$, each of which are scaled similarly.
 Following \cref{eq:iprobitbin}, the binary I-probit model that is fitted is
+\vspace{-1.3em}
 \begin{gather*}
   y_i \sim \Bern(p_i) \\
-  \Phi^{-1}(p_i) = \alpha + \sum_{k=1}^n h_\lambda(x_i,x_k)w_k  \\
-  w_1,\dots,w_n \iid \N(0,1),
+  \Phi^{-1}(p_i) = \alpha + 
+  \myoverbrace{\sum_{k=1}^n h_\lambda(x_i,x_k)w_k}{f(x_i)}  \\
+  w_1,\dots,w_n \iid \N(0,1), 
+  \vspace{-2em}
 \end{gather*}
-where $h_\lambda$ is the (scaled) kernel of the fBm RKHS.
+where $h_\lambda$ is the (scaled) kernel of the fBm-0.5 RKHS $\cF$ to which $f$ belongs.
 
 We carry out the three estimation precodures described above (Laplace's method, variational EM, and Hamiltonian MC) to compare parameter estimates, (training) error rates, and runtime.
 The Laplace and variational EM methods were performed in the \pkg{iprobit} package, while \proglang{Stan} was used to code the Hamiltonian MC sampler.
-Prior choices for the fully Bayesian methods were: 1) a vague normal prior $\lambda\sim\N_+(0,100)$ for the RKHS scale parameter, and 2) a diffuse prior for the intercept $p(\alpha) \propto \const$
-Note that restriction of $\lambda$ to the positive orthant is required for identifiability.
+Prior choices for the fully Bayesian methods were: 1) a vague folded normal prior $\lambda\sim\N_+(0,100)$ for the RKHS scale parameter, and 2) a diffuse prior for the intercept $p(\alpha) \propto \const$
+Note that the restriction of $\lambda$ to the positive orthant is required for identifiability.
 The results are presented in \cref{tab:compreiprobit}.
 
 \begin{figure}[hbt]
@@ -235,7 +238,7 @@ The results are presented in \cref{tab:compreiprobit}.
 \end{figure}
 
 The three methods pretty much concur on the estimation of the intercept, but not on the RKHS scale parameter.
-As a result, the log-density value at the optima is also different in all three methods.
+As a result, the log-density value calculated at the parameter estimates is also different in all three methods.
 Notice the high posterior standard deviation for the scale parameter in the HMC method.
 The posterior density for $\lambda$ was very positively skewed, and this contributed to the large posterior mean.
 
@@ -254,7 +257,7 @@ Log-density    & -171.8              & -43.2       & -8.5                  \\
 Error rate (\%) & 44.7               & 0.00        & 0.00                   \\
 Brier score & 0.20               & 0.02        & 0.01                   \\[0.5em]
 Iterations     & 20                  & 56          & 2000                    \\
-Time taken (s) & >3600                & 5.32         & >3600                     \\ \bottomrule
+Time taken (s) & >3600                & 5.32         & >1800                     \\ \bottomrule
 \end{tabular}
 \end{table}
 
@@ -274,7 +277,7 @@ Time taken (s) & >3600                & 5.32         & >3600                    
   \label{fig:exampleiprobitfit}
 \end{figure}
 
-A plot of the log-likelihood surface for three methods in \cref{fig:exampleiprobitfit} reveals some insight.
+A plot of the log-likelihood (or ELBO) surface for three methods in \cref{fig:exampleiprobitfit} reveals some insight.
 The variational likelihood has two ridges, with the maxima occurring around the intersection of these two ridges.
 The Laplace likelihood seems to indicate a similar shape---in both the Laplace and variational method, the posterior distribution of $\bw$ is approximated by a Gaussian distribution, with different means and variances.
 However, parts of the Laplace likelihood are poorly approximated resulting in a loss of fidelity around the supposed maxima, which might have contributed to the set of values that were estimated.
@@ -288,6 +291,6 @@ Laplace's method gave poor predictive performance.
 Finally, on the computational side, variational inference was by far the fastest method to fit the model.
 Sampling using Hamiltonian MC was very slow, because the parameter space is in effect $O(n + 2)$ (parameters are $\{w_1,\dots,w_n,\alpha,\lambda\}$ under the model with likelihood \cref{eq:intractablelikelihood2}, i.e. without the data augmentation scheme).
 As for Laplace, each Newton step involves obtaining posterior modes of the $w_i$'s, and this contributed to the slowness of this method.
-The reality is that variational inference takes seconds to complete what either the Laplace or full MCMC methods would take hours to.
+The reality is that variational inference takes seconds to complete what either the Laplace or full MCMC methods would take minutes or even hours to.
 The predictive performance, while not as good as HMC, is certainly an acceptable compromise in favour of speed.
 \vspace{-1em}
