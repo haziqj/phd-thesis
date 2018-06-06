@@ -1,13 +1,13 @@
 %\section{A brief introduction}
 \label{misc:hmc}
 
-Hamiltonian Monte Carlo had its beginnings in statistical physics, with the \citeyear{duane1987hybrid} paper by \citeauthor{duane1987hybrid} using what they called `Hybrid Monte Carlo' in lattice models of quantum theory.
+Hamiltonian Monte Carlo had its beginnings in statistical physics, with the \citeyear{duane1987hybrid} paper by \citeauthor{duane1987hybrid}, using what they called `Hybrid Monte Carlo' in lattice models of quantum theory.
 Their work merged the approaches of molecular dynamics and Markov chain Monte Carlo methods.
-As interesting side note, their method abbreviates also to `HMC', but throughout the statistical literature, it is more commonly referred to by its more descriptive name Hamiltonian Monte Carlo.
-Incidentally, the use of HMC started with applications to neural networks as early as 1996 (see \citet{neal2011mcmc} for an excellent review of the subject matter).
+As an interesting side note, their method abbreviates also to `HMC', but throughout the statistical literature, it is more commonly referred to by its more descriptive name Hamiltonian Monte Carlo.
+Incidentally, the use of HMC started with applications to neural networks as early as 1996 (see \cite{neal2011mcmc} for an excellent review of the subject matter).
 It was not until 2011 when active development of the method, and in particular, software for for statistical applications began.
 The \proglang{Stan} initiative \citep{carpenter2016stan} began in response to difficulties faced when performing full Bayesian inference on multilevel generalised linear models.
-These difficulties mainly involved poor efficiency in usual MCMC samplers, particularly high autocorrelations in the posterior chains, which meant that many chains and many iterations were required to get an adequate sample.
+These difficulties mainly involved poor efficiency in usual MCMC samplers, particularly due to high autocorrelations in the posterior chains, which meant that many chains and many iterations were required to get an adequate sample.
 It was a case of exhausting all possible algorithmic remedies for existing samplers (Gibbs samplers, Metropolis samplers, etc.), and realising that fundamentally not much improvement can be had unless a novel sampling technique was discovered.
 
 The basic idea behind HMC is to use Hamiltonian dynamics to propose new states in the posterior sampling, rather than relying on `random walks'.
@@ -96,7 +96,7 @@ The HMC algorithm is summarised in \cref{alg:hmc}.
 \label{alg:hmc}
 \begin{algorithmic}[1]
   \State \textbf{initialise} $x^{(0)}$, $z^{(0)}$ and choose values for $L$, $\epsilon$ and $M$
-  \While{not converged}
+  \For{$t=1,\dots,T$}
     \State Draw $z\sim\N_d(0,M)$ \Comment{Perturb momentum}
     \State Move $(x^{(t)},z^{(t)}) \mapsto (x^*,z^*)$ using Hamiltonian dynamics  \Comment{Proposal state}
     \State Accept/reject proposal state, i.e. \Comment{Metropolis update}
@@ -111,8 +111,8 @@ The HMC algorithm is summarised in \cref{alg:hmc}.
     \[
       A = \frac{p(x^*,z^*)}{(x^{(t)},z^{(t)})} = \exp\left( H(x,z) -  H(x^{(t)},z^{(t)}) \right)
     \]
-  \EndWhile
-  \State \textbf{return} Samples $\big\{x^{(t)} \,|\, t=1,2,\dots\big\}$
+  \EndFor
+  \State \textbf{return} Samples $\big\{x^{(1)},\dots,x^{(T)}\big\}$
 \end{algorithmic}
 \end{algorithm}
 
@@ -132,6 +132,7 @@ The HMC algorithm is summarised in \cref{alg:hmc}.
   \includegraphics[width=0.49\textwidth]{figure/04-phase8}
   \caption{A phase diagram schematic of HMC sampling in one-dimension. At step 0, initialise values for momentum and position. At step 1, simulate movement using Hamiltonian dynamics, accept position and discard momentum. At step 2, perturb momentum using a normal density, then repeat.}
 \end{figure}
+\vspace{-0.5em}
 
 HMC is often times superior to standard Gibbs sampling, for a variety of reasons. 
 For one, conjugacy does not play any role in the efficiency of the HMC sampler, thus freeing the modeller to choose more appropriate and more intuitive prior densities for the parameters of the model. 

@@ -23,8 +23,8 @@ As the name suggests, these methods require evaluation of gradients or approxima
 Depending on the situation, gradients or Hessians can be expensive or inconvenient to compute or approximate.
 In cases of multi-modality of the objective function, the algorithms can potentially converge to a local optima, as it is known that the algorithms are quite sensitive to starting locations.
 
-Besides invariance, the ML estimate comes with the attractive limiting property $\surd{n}(\theta_{\text{ML}} - \theta_{\text{true}}) \xrightarrow{\text{dist.}} \N(0,\cI)$ \citep{casella2002statistical} as sample size $n\to\infty$, where $\cI$ is the Fisher information.
-In words, the ML estimate is consistent, efficient, and asymptotically normal.
+Besides invariance, the ML estimate comes with the attractive limiting property $\surd{n}(\hat\theta_{\text{ML}} - \theta_{\text{true}}) \xrightarrow{\text{dist.}} \N_p\big(0,\cI(\theta)^{-1}\big)$ \citep{casella2002statistical} as sample size $n\to\infty$, where $\cI(\theta)$ is the Fisher information for $\theta$.
+Other asymptotic properties of the ML estimate include consistency, i.e. $\Prob(\Vert \hat\theta_{\text{ML}} - \theta_{\text{true}}\Vert > \epsilon) \xrightarrow{\text{prob.}} 0$ for any $\epsilon>0$, and efficiency, i.e. it achieves the Cramér-Rao lower bound $\Var[\theta_{\text{ML}}] \geq \cI(\theta)^{-1}$.
 
 As the likelihood measures the plausibility of a parameter value given the data, it can be used to compare two competing models.
 Let $\Theta_0 = \{\theta \,|\, \theta_{d+1} = \theta_{d+1,0},\dots,\theta_{p} = \theta_{p,0} \}$ be the set of parameters with restrictions on the last $d$ components of $\theta$.
@@ -70,7 +70,7 @@ Markov chain Monte Carlo (MCMC) methods are the standard way of approximating su
 The sample $\{\theta^{(1)},\dots,\theta^{(T)} \}$ is then manipulated in a way to derive its approximation.
 In the case of the posterior mean,
 \begin{equation}
-  \hat{\E[\theta|\by]} = \frac{1}{T}\sum_{i=1}^T \theta^{(t)}
+  \hat\E[\theta|\by] = \frac{1}{T}\sum_{i=1}^T \theta^{(t)}
 \end{equation}
 gives an approximation, and its $(1-\alpha) \times 100\%$ credible interval can be approximated using the lower $\alpha/2\times 100\%$ and upper $(1-\alpha/2)\times 100\%$ quantile of the sample.
 
@@ -100,8 +100,8 @@ It is different from the ML estimate in that the maximisation objective is augme
 In this sense, MAP estimation can be seen as regularisation of the ML estimation procedure, whereby a `penalty' term is added to avoid overfitting.
 
 MAP estimation is often criticised for not being representative of Bayesian methods.
-That is, MAP estimation returns a point estimation with no apparent way of quantifying uncertainty of this point estimate.
-Furthermore, unlike ML estimators, MAP estimators are invariant under reparameterisation.
+That is, MAP estimation returns a point estimate with no apparent way of quantifying its uncertainty.
+Furthermore, unlike ML estimators, MAP estimators are not invariant under reparameterisation.
 If $\theta$ is a random variable with density $p(\theta)$, then the pdf of $\xi := g(\theta)$, where $g:\theta \mapsto g(\theta)$ is a one-to-one transformation, is
 \begin{equation}\label{eq:pdftransform}
   p_\xi(\xi) = p_\theta\big(g^{-1}(\xi)\big) \left\vert \frac{\d }{\d \xi} g^{-1}(\xi) \right\vert.
@@ -138,11 +138,11 @@ This paves the way for using the \emph{maximum marginal likelihood} estimate
   \hat\eta = \argmax_\eta p(\by|\eta) 
 \end{equation}
 in place of $\eta$ in the equation of \cref{eq:empbayes1}.
-This procedure is coined \emph{maximum likelihood type-II} by \citet{rasmussen2006gaussian}, and is commonly referred to as such in the machine learning literature.
+This procedure is also coined \emph{maximum likelihood type-II} \citep{bishop2006pattern}, and is commonly referred to as such in the machine learning literature.
 It is also commonplace in statistics, especially in random-effects or latent variable models which employ a maximum likelihood procedure such as EM algorithm.
 
 As a remark, estimation of $\eta$ itself can be made to conform to Bayesian philosophy, i.e., by placing priors on it and inferring $\eta$ through its posterior.
 Such a procedure is referred to as \emph{Bayesian hierarchical modelling}.
 A motivation for doing this is because the ML estimate of $\eta$ ignores any uncertainty in it.
-Of course, the hyper-prior for $\eta$ could  parameterised by a hyper-hyper-parameter, and itself have a prior, and so on and so forth.
-Evidently the model is specified until such a point where there are parameters of the model which are left `unoptimised' and must be specified in subjective manner.
+Of course, the hyper-prior for $\eta$ could be parameterised by a hyper-hyper-parameter, and itself have a prior, and so on and so forth.
+Evidently the model is specified until such a point where there are parameters of the model which are left `unoptimised' and must be specified in subjective manner \citep{beal2003variational}.

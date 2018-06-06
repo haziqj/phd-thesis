@@ -1,21 +1,21 @@
-Often times, there are unobserved, random variables $\bz=\{z_1,\dots,z_n\}$ that are assumed to make up the data generative process, prescribed in the statistical model through the \emph{joint pdf} $p(\by,\bz|\theta)$.
+Often times, there are unobserved, random variables $\bw=\{w_1,\dots,w_n\}$ that are assumed to make up the data generative process, prescribed in the statistical model through the \emph{joint pdf} $p(\by,\bw|\theta)$.
 Examples of models that include latent variables are plenty: Gaussian mixture models, latent class analysis, factor models, random coefficient models, and so on.
 In order to obtain ML estimates through a direct maximisation of the likelihood, it is necessary to first marginalise out the latent variables via
 \begin{equation}\label{eq:varint}
   p(\by|\theta) 
   = \int 
-  \greyoverbrace{p(\by|\bz,\theta)p(\bz|\theta)}{p(\by,\bz|\theta)}
-  \dint \bz
+  \greyoverbrace{p(\by|\bw,\theta)p(\bw|\theta)}{p(\by,\bw|\theta)}
+  \dint \bw
 \end{equation}
 and obtain the \emph{marginal likelihood}.
-Note that the integral is replaced by a summation over all possible values in the case of discrete latent variables $\bz$.
+Note that the integral is replaced by a summation over all possible values in the case of discrete latent variables $\bw$.
 
 Direct maximisation of the marginal (log-)likelihood might not be favourable due to intractability in obtaining ML solutions.
 The form of the marginal likelihood might might not be conducive for closed-form estimates to be found, necessitating the use of numerical, gradient-based methods which is subject to its own undesirable quirks.
 Moreover, when the evaluation of the (log-)likelihood, gradient and/or Hessian are expensive to compute, then numerical methods are burdensome to execute.
 
-It is usually the case that if the latent variables $\bz$ were somehow known, estimation would be made simpler.
-That is, the solution to $\argmax_\theta \log p(\by,\bz|\theta)$ can be obtained in a simple manner.
+It is usually the case that if the latent variables $\bw$ were somehow known, estimation would be made simpler.
+That is, the solution to $\argmax_\theta \log p(\by,\bw|\theta)$ can be obtained in a simple manner.
 The expectation-maximisation algorithm \citep{dempster1977maximum}, commonly known as the EM algorithm, is an iterative procedure which exploits the fact that the so-called \emph{complete data likelihood} is easier to work with.
 Correspondingly, in EM terminology, the marginal likelihood is referred to as the \emph{incomplete data likelihood}.
 
@@ -34,21 +34,21 @@ where the solution to \cref{eq:em1} yields an improvement to the current $t$'th 
 Note that the objective function in \cref{eq:em1} forms an upper bound for the quantity $Q(\theta|\theta^{(t)})$, as shown below:
 \begin{align*}
   L(\theta|\by) - L(\theta^{(t)}|\by)
-  &= \log \int p(\by|\bz,\theta)p(\bz|\theta) \, \frac{p(\bz|\by,\theta^{(t)})}{p(\bz|\by,\theta^{(t)})}  \dint\bz - \log p(\by|\theta^{(t)}) \\
-  &\geq \int p(\bz|\by,\theta^{(t)}) \log \frac{p(\by|\bz,\theta)p(\bz|\theta)}{p(\bz|\by,\theta^{(t)})} \dint\bz \mycomment{(Jensen's inequality)} \\
-  &\phantom{==} - \log p(\by|\theta^{(t)})\int p(\bz|\by,\theta^{(t)}) \dint \bz \\
-  &= \int p(\bz|\by,\theta^{(t)}) \log \frac{p(\by|\bz,\theta)p(\bz|\theta)}{p(\bz|\by,\theta^{(t)})p(\by|\theta^{(t)})} \dint\bz\\
+  &= \log \int p(\by|\bw,\theta)p(\bw|\theta) \, \frac{p(\bw|\by,\theta^{(t)})}{p(\bw|\by,\theta^{(t)})}  \dint\bw - \log p(\by|\theta^{(t)}) \\
+  &\geq \int p(\bw|\by,\theta^{(t)}) \log \frac{p(\by|\bw,\theta)p(\bw|\theta)}{p(\bw|\by,\theta^{(t)})} \dint\bw \mycomment{(Jensen's inequality)} \\
+  &\phantom{==} - \log p(\by|\theta^{(t)})\int p(\bw|\by,\theta^{(t)}) \dint \bw \\
+  &= \int p(\bw|\by,\theta^{(t)}) \log \frac{p(\by|\bw,\theta)p(\bw|\theta)}{p(\bw|\by,\theta^{(t)})p(\by|\theta^{(t)})} \dint\bw\\
   &=: Q(\theta|\theta^{(t)}).
 \end{align*}
-Evidently, to maximise $L(\theta|\by)$, we can't do any worse than maximising $\Delta(\theta|\theta^{(t)})$ in $\theta$.
+Evidently, to maximise $L(\theta|\by)$, we can't do any worse than maximising $Q(\theta|\theta^{(t)})$ in $\theta$.
 Denote by $\theta^{(t+1)}$ as the maximiser of $Q(\theta|\theta^{(t)})$. 
 Then,
 \begin{align*}
   \theta^{(t+1)}
-  &= \argmax_\theta \int p(\bz|\by,\theta^{(t)}) \log \frac{p(\by|\bz,\theta)p(\bz|\theta)}{p(\bz|\by,\theta^{(t)})p(\by|\theta^{(t)})} \dint\bz \\
-  &= \argmax_\theta \int p(\bz|\by,\theta^{(t)}) \log p(\by|\bz,\theta)p(\bz|\theta) \dint\bz \\
-  &= \argmax_\theta \int p(\bz|\by,\theta^{(t)}) \log p(\by,\bz|\theta) \dint\bz \\
-  &= \argmax_\theta \E_\bz \left[\log p(\bz,\by|\theta) | \by, \theta^{(t)} \right] 
+  &= \argmax_\theta \int p(\bw|\by,\theta^{(t)}) \log \frac{p(\by|\bw,\theta)p(\bw|\theta)}{p(\bw|\by,\theta^{(t)})p(\by|\theta^{(t)})} \dint\bw \\
+  &= \argmax_\theta \int p(\bw|\by,\theta^{(t)}) \log p(\by|\bw,\theta)p(\bw|\theta) \dint\bw \\
+  &= \argmax_\theta \int p(\bw|\by,\theta^{(t)}) \log p(\by,\bw|\theta) \dint\bw \\
+  &= \argmax_\theta \E_\bw \left[\log p(\bw,\by|\theta) | \by, \theta^{(t)} \right] 
 \end{align*}
 We arrive at an iterative procedure summarised succintly as the following:
 
@@ -57,13 +57,14 @@ We arrive at an iterative procedure summarised succintly as the following:
 \begin{algorithmic}[1]
   \State \textbf{initialise} $\btheta^{(0)}$ and $t\gets 0$
   \While{not converged}
-    \State E-step: compute $Q(\theta|\theta^{(t)}) = \E_\bz \left[\log p(\bz,\by|\theta) | \by, \theta^{(t)} \right]$
+    \State E-step: compute $Q(\theta|\theta^{(t)}) = \E_\bw \left[\log p(\bw,\by|\theta) | \by, \theta^{(t)} \right]$
     \State M-step: $\theta^{(t+1)} \gets \argmax_\theta Q(\theta|\theta^{(t)})$
     \State $t \gets t + 1$
   \EndWhile
 \end{algorithmic}
 \end{algorithm}
 
+\vspace{-0.9em}
 Notice that the log-likelihood function satisfies
 \begin{equation}
   L(\theta|\by) \geq L(\theta^{(t)}|\by) + Q(\theta|\theta^{(t)}),
@@ -71,8 +72,8 @@ Notice that the log-likelihood function satisfies
 for which equality is achieved when $\theta = \theta^{(t)}$, since
 \begin{align*}
   Q(\theta^{(t)}|\theta^{(t)})
-  &= \int p(\bz|\by,\theta^{(t)}) \log \frac{p(\by|\bz,\theta^{(t)})p(\bz|\theta^{(t)})}{p(\bz|\by,\theta^{(t)})p(\by|\theta^{(t)})} \dint\bz \\
-  &= \int p(\bz|\by,\theta^{(t)}) \cancelto{0}{\log \frac{p(\by,bz|\theta^{(t)})}{p(\by,bz|\theta^{(t)})}} \dint\bz\\
+  &= \int p(\bw|\by,\theta^{(t)}) \log \frac{p(\by|\bw,\theta^{(t)})p(\bw|\theta^{(t)})}{p(\bw|\by,\theta^{(t)})p(\by|\theta^{(t)})} \dint\bw \\
+  &= \int p(\bw|\by,\theta^{(t)}) \cancelto{0}{\log \frac{p(\by,\bw|\theta^{(t)})}{p(\by,\bw|\theta^{(t)})}} \dint\bw\\
   &=0.
 \end{align*}
 This implies that the EM algorithm improves the log-likelihood values at each iteration, since
@@ -81,8 +82,8 @@ This implies that the EM algorithm improves the log-likelihood values at each it
 \end{align*}
 and $Q(\theta^{(t+1)}|\theta^{(t)}) \geq Q(\theta^{(t)}|\theta^{(t)}) = 0$ since $\theta^{(t+1)}$ maximises $Q(\cdot|\theta^{(t)})$.
 
-The expectation in the E-step involves the conditional pdf $p(\bz|\by,\theta^{(t)})$.
-Viewed through Bayesian lens, this is the posterior density of the latent variables using the $t$'th iteration parameter values.
+The expectation in the E-step involves the conditional pdf $p(\bw|\by,\theta^{(t)})$.
+Viewed through a Bayesian lens, this is the posterior density of the latent variables using the $t$'th iteration parameter values.
 The success of the E-step is predicated on the availability of the conditional pdf for the expectation.
 If not, approximations to the E-step can be explored, for example using Monte Carlo methods \citep{wei1990monte} or a variational approximation \citep{beal2003variational}.
 
@@ -94,6 +95,7 @@ In such situations, the generalised EM algorithm (as defined by \cite{dempster19
 \]
 That is, $\theta^{(t+1)}$ is chosen so as to increase the value of the $Q$ function at its current parameter value.
 As seen in the argument above, this requirement is sufficient for a guaranteed increase in the log-likelihood function at each iteration.
+
 
 \section{Exponential family EM algorithm}
 \label{apx:expem}
@@ -132,7 +134,7 @@ So the only difference between the first order condition of \cref{eq:expEM1} and
 %but this is not an issue: by the law of total expectations, $\E\bT(\bz) = \E \bT(\by,\bw) = \E \big[ \E_\bw[\bT(\by,\bw)|\by] \big]$
 %so solving $\bT(\bz) = \E \bT(\bz)$ for $\btheta$ is not possible without some manipulation.
 
-A useful identity to know is that $\frac{\partial}{\partial\bfeta} A^*(\bfeta) = \E_\bz \bT(\bz)$ \citep[Theorem 3.4.2 \& Exercise 3.32(a)]{casella2002statistical}, which can be expressed in terms of the original parameters $\btheta$.
+A useful identity to know is that $\frac{\partial}{\partial\bfeta} A^*(\bfeta) = \E_\bz[ \bT(\bz)]$ \citep[Theorem 3.4.2 \& Exercise 3.32(a)]{casella2002statistical}, which can be expressed in terms of the original parameters $\btheta$.
 As a consequence, solving for the ML estimate for $\btheta$ from the FOC equations \cref{eq:expEM2} is possible without having to deal with the derivative of $A^*$ with respect to the natural parameters.
 Having said this, an analytical solution in $\btheta$ may not exist, because the relationship of $\btheta$ could be implicit in the set of equations $\E_\bw \big[ \bT(\bw,\by) | \by, \btheta \big] = \E_{\by,\bw}\left[ \bT(\by,\bw) | \btheta \right]$.
 One way around this is to employ an iterative procedure, as detailed in \cref{alg:EM3}.
@@ -174,10 +176,10 @@ Recall that the MAP estimate is obtained as the maximiser of the log-density $\l
 
 The EM algorithm works as before, but replaces the E-step with 
 \begin{equation}\label{eq:bayesem}
-  \E_\bz \left[\log p(\bz,\by|\theta) + \log p(\theta) | \by, \theta^{(t)} \right]
+  \E_\bw \left[\log p(\bw,\by|\theta) + \log p(\theta) | \by, \theta^{(t)} \right]
   = Q(\theta|\theta^{(t)}) + \log p(\theta)
 \end{equation}
-since $\log p(\theta)$ has no terms involving the latent variables $\bz$.
+since $\log p(\theta)$ has no terms involving the latent variables $\bw$.
 The M-step now maximises \cref{eq:bayesem} with respect to $\theta$, which includes the log prior density (or a penalty term).
 It would seem that the regular EM algorithm maximises \cref{eq:bayesem} such that $p(\theta) \propto \const$ is a diffuse prior for $\theta$.
 \citet{beal2003} discuss a more Bayesian extension of EM, in which the output of the so-called \emph{variational Bayes EM} algorithm are (approximate) posterior distributions of the parameters, rather than MAP estimates discussed here.
