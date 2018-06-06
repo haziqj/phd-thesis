@@ -1,4 +1,4 @@
-\documentclass[a4paper,showframe,11pt]{report}
+\documentclass[showframe,11pt,twoside,openright]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
@@ -20,19 +20,22 @@
 \hChapterStandalone[7]{Summary}
 
 The work done in this thesis explores the concept of regression modelling using priors with Fisher information covariance kernels (I-priors, \cite{bergsma2017}).
-It is best categorised as a form non-parametric regression, and bears similarity to Gaussian process regression.
+It is best seen as a flexible regression technique which is able to fit both parametric and nonparametric models, and bears similarity to Gaussian process regression.
 For the regression model \cref{eq:model1} subject to \cref{eq:model1ass}, stated again here for convenience,
 \begin{gather}
   y_i = \alpha + f(x_i) + \epsilon_i \tag{from \ref{eq:model1}} \\
   (\epsilon_1,\dots,\epsilon_n) \sim \N_n(\bzero,\bPsi^{-1}) \tag{from \ref{eq:model1ass}} \\
   i = 1,\dots,n, \nonumber
 \end{gather}
-it is assumed that the regression function $f$ lies in some reproducing kernel Hilbert or Krein space $\cF$ with kernel $h_\eta$ defined over the set of covariates $\cX$.
+and it is assumed that the regression function $f$ lies in some reproducing kernel Hilbert or Krein space $\cF$ with kernel $h_\eta$ defined over the set of covariates $\cX$.
 In \cref{chapter2}, we built a primer on basic functional analysis, and described various interesting RKHS/RKKS for regression modelling.
-We ascertained the form of the Fisher information for $f$, treated as a parameter of the model to be estimated, and from Corollary 3.3.1, it is
-\begin{equation*}
-  \cI\big(f(x),f(x') \big) = \sum_{i,j=1}^n \psi_{ij} h_\eta(x,x_i) h_\eta(x',x_j) = \bh_\eta(x)^\top\bPsi\bh_\eta(x'), 
-\end{equation*}
+
+We then ascertained the form of the Fisher information for $f$, treated as a parameter of the model to be estimated, and from \cref{thm:fisherreglinfunc}, it is
+\begin{align*}
+  \cI\big(f(x),f(x') \big) 
+  &= \sum_{i,j=1}^n \psi_{ij} h_\eta(x,x_i) h_\eta(x',x_j) \\
+  &= \bh_\eta(x)^\top\bPsi\bh_\eta(x'), 
+\end{align*}
 for any two points $x,x'$ in the domain of $f$, obtained using appropriate calculus for topological spaces detailed in \cref{chapter3}.
 An I-prior for $f$ is defined as Gaussian with mean function $f_0$ chosen a priori, and covariance function equal to the Fisher information.
 The I-prior for $f$ has the simple representation
@@ -41,10 +44,11 @@ The I-prior for $f$ has the simple representation
   (w_1,\dots,w_n)^\top \sim \N_n(\bzero,\bPsi) \\
   i=1,\dots,n,
 \end{gather*}
-and written equivalently as a Gaussian process prior
+and is written equivalently as the Gaussian process prior
 \begin{equation*}
-  \big(f(x_1),\dots,f(x_n) \big)^\top \sim \N_n(\bff_0, \bH_\eta\bPsi\bH_\eta).
+  \big(f(x_1),\dots,f(x_n) \big)^\top \sim \N_n(\bff_0, \bH_\eta\bPsi\bH_\eta),
 \end{equation*}
+where $\bH_\eta=\big( h_\eta(x_i,x_j) \big)_{i,j=1}^n$.
 
 In \cref{chapter4}, we looked how the I-prior model has wide-ranging applications, from multilevel modelling, to longitudinal modelling, and modelling with functional covariates.
 Estimation was conducted mainly using a simple EM algorithm, although direct optimisation and fully Bayesian estimation using MCMC is also possible.
@@ -72,15 +76,16 @@ We give a summary of the novel contributions of this thesis.
   The technology of Fréchet and Gâteaux differentials accommodate for the fact that $f$ may be infinite-dimensional, which, at minimum, requires $\cF$ to be a  normed vector space. 
   We foresee the work of \cref{sec:fihilbert} being applicable elsewhere, such as learning in (reproducing kernel) Banach spaces \citep{zhang2009reproducing,zhang2012regularized}, or in the theory of parameter estimation for general exponential family type distributions of the form
   \[
-    p(X|\theta) = B(X)\exp\big(\ip{\theta,T(X)} - A(\theta) \big),
+    p(X|\theta) = B(X)\exp\big(\ip{\theta,T(X)}_\cH - A(\theta) \big),
   \]
-  for which $\theta$ lies in some inner-product space $\Theta$ which might be infinite-dimensional \citep{sriperumbudur2013density}.
+  for which $\theta$ lies in some inner-product space $\cH$ which might be infinite-dimensional \citep{sriperumbudur2013density}.
   
   \item \textbf{Efficient estimation methods for normal I-prior models}. 
   The preferred estimation method for normal I-prior models for stability is the EM algorithm.
-  Implementing the EM algorithm can be computationally costly, due to the squaring of the kernel matrices in the $Q$ function in \cref{eq:QfnEstep}.
+  Implementing the EM algorithm can be computationally costly, due to the squaring and inversion of the kernel matrices in the $Q$ function in \cref{eq:QfnEstep}.
+  Unfortunately, not much can be done about the inversion part, but we explored some ways to perform the squaring methodically.
   Combining a `front-loading method' of the kernel matrices (\cref{sec:efficientEM1}) and an exponential family ECM (expectation conditional maximisation) algorithm \citep{meng1993maximum}, the estimation procedure is streamlined.
-  Our computational work is encapsulated in the publicly available and well-documented \proglang{R} package \pkg{iprior} published on CRAN.
+  Our computational work culminated in the publicly available and well-documented \proglang{R} package \pkg{iprior} \citep{jamil2017iprior} published on CRAN.
   
   \item \textbf{Methodological extension of I-priors to categorical responses}.
   Extension of the I-prior methodology to fit categorical responses is of great interest.
@@ -106,10 +111,10 @@ We give a summary of the novel contributions of this thesis.
 
 \section{Open questions}
 
-In completing this project, several questions remain open, and we discuss these briefly below.
+In closing, we briefly discuss several questions which remain open during the course of completing this project.
 
 \begin{itemize}
-  \item \hltodo[Rethink this.]{\textbf{Initialisation of EM or gradient-based methods}}.
+  \item \textbf{Initialisation of EM or gradient-based methods}.
   \cref{fig:ipriorridge} indicates the impact that starting values can have on gradient-based optimisation.
   One can end up at a local optima on one of the two ridges.
   Usually, one of the ridges will have a higher maximum than the other, but it is not clear how to direct the algorithm in the direction of the `correct' ridge.
@@ -134,6 +139,12 @@ In completing this project, several questions remain open, and we discuss these 
   Also, obtaining standard errors directly from an EM algorithm is of interest, especially under a variational EM setting.
   Though this is described in \citet[Ch. 4]{mclachlan2007algorithm}, we have not seen this implemented widely.
   
+  \item \textbf{Comparison of logistic and probit links}.
+  For general binary and multinomial models, the logistic link function sees more prevalent use than its probit counterpart.
+  Of course, we chose the probit as it has distributional advantages which we can exploit for estimation using variational inference.
+  However, is there a difference between the behaviour of the probit and logistic model?
+  We know that there is a difference between the logistic and normal distribution, especially in scaling and behaviour in the tails, but do these affect the outcome of I-prior models?
+  
   \item \textbf{Consistency of I-prior Bayesian variable selection}.
   We wondered about model selection consistency for I-priors in Bayesian variable selection.
   That is, assuming that model $M_\text{true}$ is behind the true data generative process, do
@@ -149,52 +160,47 @@ In completing this project, several questions remain open, and we discuss these 
   
 \end{itemize}
 
-\newpage
-\section{Next steps}
-
-As far as next steps go, we identify the following to be concentrated on for immediate future work.
-\begin{itemize}
-  \item \textbf{Estimation of $\bPsi$ in I-probit models}.
-  As discussed in conclusion section of \cref{chapter5}, estimation of $\bPsi$ would certainly add flexibility and is especially of interest for choice models.
-  We discussed that estimation of $\bPsi$ is done by its inclusion as a free parameter in the M-step of the variational EM algorithm, subject to suitable constraints.
-  If this is successful, then this would be a key feature to be added on to the ongoing development of the \pkg{iprobit} package in \proglang{R}.
-  As an aside, the package also contains features related to the truncated multivariate normal, which, if exported, could prove to be useful for other statistical models such as tobit models, constrained linear regression, and others.
-  
-  \item \textbf{Extension of I-prior methodology to other model classes}.
-  An immediate extension to I-probit models is for modelling ordinal responses.
-  The underlying latent variable model in \cref{eq:latentmodel} is changed to
-  \begin{align}\label{eq:latentmodel2}
-    y_i =
-    \begin{cases}
-      1 &\text{ if } y_i^* \leq \tau_1 \\
-      2 &\text{ if } \tau_1 < y_i^* \leq \tau_2 \\
-      \,\vdots \\
-      m &\text{ if } y_i^* > \tau_{m-1}, \\
-    \end{cases}  
-  \end{align}
-  where instead of $m$ latent propensities, there is only one, but $m-1$ thresholds $\tau_1,\dots,\tau_{m-1}$ need to be estimated.
-  
-  Another extension of the I-prior methodology is to fit Poisson count data.
-  A suggestion would be to model $y_i\sim\Pois(\mu_i)$, where $\mu_i = g^{-1}\big( \alpha + f(x_i) + \epsilon_i \big)$ is modelled using the  regression model of \cref{eq:model1} subject to \cref{eq:model1ass} and an I-prior.
-  Since the mean of the Poisson is positive, the function $g^{-1}$ should map real values to the positive reals.
-  Examples include $g^{-1}(x)=e^x$ (which is the canonical link function in GLM theory), or simply $g^{-1}(x)=x^2$ (as per \cite{lloyd2015variational}).
-  
-  Both the ordinal probit and Poisson model should be very interesting to look at especially from an estimation perspective.
-
-  \item \textbf{Variational inference for I-prior Bayesian variable selection}.
-  The work of \citet{ormerod2017variational} is encouraging in that the stochastic nature of BVS models can be replaced with a deterministic variational algorithm.
-  Especially since Gibbs conditional densities are somewhat related to mean-field variational densities, there could be minimal effort required in switching between them.
-  The benefits of course would come in terms of speed of estimation of the posterior model probabilities.
-  
-  Hyperparameters ($\kappa,\sigma^2$) in the I-prior BVS model can also be replaced with their posterior mode estimate, so as to impart an empirical Bayesian flavour to BVS, so perhaps a variational EM algorithm can be explored.
-  
-  We think it would also be interesting to extend the BVS model to linear categorical response models (I-probit with canonical RKHS).
-  
-
-\end{itemize}
-
-
-
+%\section{Next steps}
+%
+%As far as next steps go, we identify the following to be concentrated on for immediate future work.
+%\begin{itemize}
+%  \item \textbf{Estimation of $\bPsi$ in I-probit models}.
+%  As discussed in conclusion section of \cref{chapter5}, estimation of $\bPsi$ would certainly add flexibility and is especially of interest for choice models.
+%  We discussed that estimation of $\bPsi$ is done by its inclusion as a free parameter in the M-step of the variational EM algorithm, subject to suitable constraints.
+%  If this is successful, then this would be a key feature to be added on to the ongoing development of the \pkg{iprobit} package in \proglang{R}.
+%  As an aside, the package also contains features related to the truncated multivariate normal, which, if exported, could prove to be useful for other statistical models such as tobit models, constrained linear regression, and others.
+%  
+%  \item \textbf{Extension of I-prior methodology to other model classes}.
+%  An immediate extension to I-probit models is for modelling ordinal responses.
+%  The underlying latent variable model in \cref{eq:latentmodel} is changed to
+%  \begin{align}\label{eq:latentmodel2}
+%    y_i =
+%    \begin{cases}
+%      1 &\text{ if } y_i^* \leq \tau_1 \\
+%      2 &\text{ if } \tau_1 < y_i^* \leq \tau_2 \\
+%      \,\vdots \\
+%      m &\text{ if } y_i^* > \tau_{m-1}, \\
+%    \end{cases}  
+%  \end{align}
+%  where instead of $m$ latent propensities, there is only one, but $m-1$ thresholds $\tau_1,\dots,\tau_{m-1}$ need to be estimated.
+%  
+%  Another extension of the I-prior methodology is to fit Poisson count data.
+%  A suggestion would be to model $y_i\sim\Pois(\mu_i)$, where $\mu_i = g^{-1}\big( \alpha + f(x_i) + \epsilon_i \big)$ is modelled using the  regression model of \cref{eq:model1} subject to \cref{eq:model1ass} and an I-prior.
+%  Since the mean of the Poisson is positive, the function $g^{-1}$ should map real values to the positive reals.
+%  Examples include $g^{-1}(x)=e^x$ (which is the canonical link function in GLM theory), or simply $g^{-1}(x)=x^2$ (as per \cite{lloyd2015variational}).
+%  
+%  Both the ordinal probit and Poisson model should be very interesting to look at especially from an estimation perspective.
+%
+%  \item \textbf{Variational inference for I-prior Bayesian variable selection}.
+%  The work of \citet{ormerod2017variational} is encouraging in that the stochastic nature of BVS models can be replaced with a deterministic variational algorithm.
+%  Especially since Gibbs conditional densities are somewhat related to mean-field variational densities, there could be minimal effort required in switching between them.
+%  The benefits of course would come in terms of speed of estimation of the posterior model probabilities.
+%  
+%  Hyperparameters ($\kappa,\sigma^2$) in the I-prior BVS model can also be replaced with their posterior mode estimate, so as to impart an empirical Bayesian flavour to BVS, so perhaps a variational EM algorithm can be explored.
+%  
+%  We think it would also be interesting to extend the BVS model to linear categorical response models (I-probit with canonical RKHS).
+%  
+%\end{itemize}
 
 \hClosingStuffStandalone
 \end{document}
