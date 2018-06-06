@@ -407,6 +407,8 @@ While the optimal $\pi_j$ corresponds directly to the true SNR (e.g. SNR = 10\% 
 \section{Examples}
 
 Now, we apply our I-prior Bayesian variable selection model to three real-world data sets that have all been previously analysed in the variable selection literature.
+All examples were analysed in \proglang{R} using our \pkg{ipriorBVS} package \citep{jamil2018ripriorBVS} which contains a wrapper to \proglang{JAGS} \citep{plummer2003jags}.
+Reproducible code is available at \url{http://myphdcode.haziqj.ml}.
 In all analyses, a two-stage procedure was conducted for the I-prior model, where each stage consists of obtaining 15,000 MCMC samples (including 5,000 for burn-in).
 
 \subsection{Aerobic data set}
@@ -423,7 +425,7 @@ A sample of $n=30$ male participants' had their physical fitness measured by mea
 The response variable contains measurement of oxygen uptake rate in mL/kg body weight per minute. 
 The six covariates were the participants' age ($X_1$), weight ($X_2$), time taken to run one mile ($X_3$), resting heart rate ($X_4$), heart rate while running ($X_5$), and maximum heart rate during the exercise ($X_6$). 
 This dataset, although small in size, is interesting to analyse because of the correlations between the variables, mainly due to the measurements being taken during the same exercise test. 
-The sample correlations of interest are shown in Figure \ref{fig:aerobic-cor}.
+The sample correlations of interest are shown in Figure \cref{fig:aerobic-cor}.
 
 \begin{table}[htb]
 \centering
