@@ -1,5 +1,6 @@
 This is a reference relating to the multivariate normal,  matrix normal, truncated univariate and multivariate normal, which are collated from various sources for convenience.
-Of interest are probability density functions, first and second moments, and entropy (\cref{def:entropy}, page \pageref{def:entropy}).
+Of interest are probability density functions, first and second moments, and entropy \colp{\cref{def:entropy}, page \pageref{def:entropy}}.
+Note that in this part of the appendix, boldface notation for matrix and vectors are not used.
 
 \section{Multivariate normal distribution}
 \label{apx:fishermultinormal}
@@ -12,6 +13,9 @@ Then,
   \item \textbf{Moments}. $\E X=\mu$, $\E [XX^\top] = \Sigma + \mu \mu^\top$.
   \item \textbf{Entropy}. $H(p) = \half \log \abs{2\pi e \Sigma} = \half[d](1 + \log 2\pi) + \half\log\abs{\Sigma}$.
 \end{itemize}
+
+For $d=1$, i.e. $X$ is univariate, then its pdf is $p(X|\mu,\sigma^2) = \frac{1}{\sigma}\phi \left( \frac{X-\mu}{\sigma} \right)$, and its cdf is $F(X|\mu,\sigma^2) = \Phi \left( \frac{X-\mu}{\sigma} \right)$, where $\phi(\cdot)$ and $\Phi(\cdot)$ are the pdf and cdf of a univariate standard normal distribution.
+In the special case that $\Sigma = \diag(\sigma_1^2,\dots,\sigma_d^2)$, then the components of $X=(X_1,\dots,X_d)^\top$ are independently distributed according to $X_i\sim\N(\mu_i,\sigma_i^2)$.
 
 \begin{lemma}[Properties of multivariate normal]
   Assume that $X \sim \N_d(\mu,\Sigma)$ and $Y \sim \N_{d}(\nu,\Psi)$, where
@@ -230,9 +234,9 @@ Some useful properties of the matrix normal distribution are listed:
   \begin{align*}
     \E (X-\mu)(X-\mu)^\top &= \tr(\Psi)\Sigma \in \bbR^{n\times n} \\
     \E (X-\mu)^\top(X-\mu) &= \tr(\Sigma)\Psi \in \bbR^{m\times m} \\
-    \E XAX^\top &= \tr(A^\top\Psi)\Sigma + \mu A\mu^\top \\
-    \E X^\top BX &= \tr(\Sigma B^\top)\Psi + \mu^\top B\mu \\   
-    \E X CX &=  \Sigma C^\top\Psi  + \mu C \mu \\    
+    \E [XAX^\top] &= \tr(A^\top\Psi)\Sigma + \mu A\mu^\top \\
+    \E [X^\top BX] &= \tr(\Sigma B^\top)\Psi + \mu^\top B\mu \\   
+    \E [X CX] &=  \Sigma C^\top\Psi  + \mu C \mu \\    
   \end{align*} 
   \item \textbf{Transpose}. $X^\top \sim \MN_{m,n}(\mu^\top, \Psi, \Sigma)$.
   \item \textbf{Linear transformation}. Let $A \in \bbR^{a \times n}$ be of full-rank $a \leq n$ and $B \in \bbR^{m \times b}$ be of full-rank $b\leq m$. Then $AXB  \sim \MN_{a,b}(\mu^\top, A\Sigma A^\top, B^\top \Psi B)$.
@@ -266,9 +270,11 @@ Then,
 \end{itemize}
 
 For binary probit models, the distributions that come up are one-sided truncations at zero, i.e. $\tN(\mu,\sigma^2,0,+\infty)$ (upper tail/positive part) and $\tN(\mu,\sigma^2,-\infty,0)$ (lower tail/negative part), for which their moments are of interest.
-As an aside, if $\mu = 0$ then the truncation $\tN(0,\sigma^2,0,+\infty)$ is called the \emph{half-normal} distribution.
+As an aside, if $\mu = 0$ then the truncation $\tN(0,\sigma^2,0,+\infty) \equiv \N_+(0,\sigma^2)$ is called the \emph{folded-normal} distribution.
 For the positive one-sided truncation at zero, $C = \Phi(+\infty) - \Phi(-\mu/\sigma) = 1 - \Phi(-\mu/\sigma) = \Phi(\mu/\sigma)$, and for the negative one-sided truncation at zero, $C = \Phi(-\mu/\sigma) - \Phi(-\infty) = 1 - \Phi(\mu/\sigma)$.
+Additionally, if $\sigma=1$, then $\tN(0,1,0,+\infty) \equiv \N_+(0,1)$ is called the \emph{half-normal} distribution.
 
+\pagebreak
 One may simulate random draws from a truncated normal distribution by drawing from $\N(\mu,\sigma^2)$ and discarding samples that fall outside $(a,b)$.
 Alternatively, the inverse-transform method using
 \[
@@ -323,15 +329,15 @@ Therefore, the Gibbs sampler makes draws from truncated normal distributions in 
 
 In a later work, \citet{damien2001sampling} introduce a latent variable $Y \in \bbR$ such that the joint pdf of $X$ and $Y$ is
 \[
-  p(X_1,\dots,X_d,Y) \propto \exp(-Y/2) \ind[y > (x-\mu)^\top\Sigma^{-1}(x-\mu)]\ind[X\in\cA].
+  p(X_1,\dots,X_d,Y) \propto \exp(-Y/2) \ind\big( Y > (X-\mu)^\top\Sigma^{-1}(X-\mu)\big)\ind(X\in\cA).
 \]
 Now, the Gibbs conditional densities for the $X_k$'s are given by
 \[
-  p(X_j|X_{-j},Y) \propto \ind[X_j \in \cB_j]
+  p(X_j|X_{-j},Y) \propto \ind(X_j \in \cB_j)
 \]
 where
 \[
-  \cB_j \in (x_j^-, x_j^+) \cap \{X_j | (X-\mu)^\top\Sigma^{-1}(X-\mu) < Y \}.
+  \cB_j \in (x_j^-, x_j^+) \cap \{X_j \,|\, (X-\mu)^\top\Sigma^{-1}(X-\mu) < Y \}.
 \]
 Thus, given values for $X_{-j}$ and $Y$, the bounds for $X_j$ involves solving a quadratic equation in $X_j$.
 The Gibbs conditional density for $Y|X$ is a shifted exponential distribution, which can be sampled using the inverse-transform method.
@@ -425,9 +431,10 @@ We present some results that we have not previously seen before elsewhere.
 %\]
 %
 \section{Gamma distribution}
-\label{sec:gammadist}
+\label{apx:gammadist}
 
-For $X\in\bbR^+$, let $X$ be distributed according to the gamma distribution with shape $s$ and rate $r$, denoted $X\sim\Gamma(s,r)$. 
+\vspace{-0.3em}
+For $X\in\bbR_{\geq 0}$, let $X$ be distributed according to the gamma distribution with shape $s$ and rate $r$, denoted $X\sim\Gamma(s,r)$. 
 Then,
 \begin{itemize}
   \item \textbf{Pdf}. $p(X) = \Gamma(s)^{-1} r^s X^{s-1} e^{-rX}$.
@@ -447,18 +454,20 @@ and
   \psi(a) = \frac{\partial}{\partial a}\log \Gamma(a) = \frac{\partial\Gamma(a)/\partial a}{\Gamma(a)}.
 \]
 Often, the gamma distribution is parameterised according to shape $s$ and scale $\sigma = 1/r$ parameters, $X\sim\Gamma(s,\sigma)$.
+\vspace{-0.6em}
 
 \section{Inverse gamma distribution}
 \label{def:invgam}
 
-For $X\in\bbR^+$, a random variable $X$ distributed according to an inverse gamma distribution with parameters $s$ (shape) and $\sigma$ (scale) is denoted by $X\sim\Gamma^{-1}(s,\sigma)$.
+\vspace{-0.3em}
+For $X\in\bbR_{\geq 0}$, a random variable $X$ distributed according to an inverse gamma distribution with parameters $s$ (shape) and $\sigma$ (scale) is denoted by $X\sim\Gamma^{-1}(s,\sigma)$.
 Then,
 \begin{itemize}
   \item \textbf{Pdf}. $p(X) = \Gamma(s)^{-1} \sigma^s  X^{-(s+1)} e^{-\sigma/X}$.
   \item \textbf{Moments}. $\E X=\sigma/(s-1)$, $\Var X = \sigma^2\big((s-1)^2(s-2) \big)^{-1}$.
   \item \textbf{Entropy}. $H(p)= s + \log \big(\sigma\Gamma(s)\big) - (1+s)\psi(s)$.
 \end{itemize}
-with $\Gamma(\cdot)$ and $\psi(\cdot)$ representing the gamma and digamma functions respectively, as defined in \cref{sec:gammadist}.
+with $\Gamma(\cdot)$ and $\psi(\cdot)$ representing the gamma and digamma functions respectively, as defined in \cref{apx:gammadist}.
 
 \begin{lemma}
   If $X$ has a Gamma distribution with shape and rate $s$ and $r$, then $1/X \sim \Gamma^{-1}(s,r)$.

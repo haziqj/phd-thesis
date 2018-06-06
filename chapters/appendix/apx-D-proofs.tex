@@ -4,12 +4,12 @@ We present the proof for \cref{thm:contruncn} related to the conically truncated
 
 Using the fact that $\int p(x) \dint x = 1$, and that
   \begin{align*}
-    \idotsint & \ind[x_i < x_j, \forall i \neq j] \prod_{i=1}^d \phi(x_i|\mu_i, \sigma_i^2) \dint x_1 \cdots \dint x_d \\
+    \idotsint & [x_i < x_j, \forall i \neq j] \cdot \prod_{i=1}^d \phi(x_i|\mu_i, \sigma_i^2) \dint x_1 \cdots \dint x_d \\
     =&  \idotsint \ind[x_i < x_j, \forall i \neq j] \prod_{i=1}^d \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma_i} \right) \right] \dint x_1 \cdots \dint x_d \\
     =&  \idotsint \ind[x_i < x_j, \forall i \neq j] \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right)\mathop{\prod_{i=1}^d}_{i \neq j} \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma_i} \right) \right] \dint x_1 \cdots \dint x_d \\    
-    =& \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{x_j - \mu_i}{\sigma_i} \right) \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right) \dint x_j \displaybreak \\
+    =& \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{x_j - \mu_i}{\sigma_i} \right) \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right) \dint x_j  \\
     =& \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j z + \mu_j - \mu_i}{\sigma_i} \right) \phi(z) \dint z \\
-    \phantom{=}&\phantom{==} {\color{gray} (\text{by using the standardisation } z = (x_j - \mu_j) / \sigma_j)} \\    
+    \phantom{=}&\phantom{==} {\color{gray} (\text{by using the standardisation } z = (x_j - \mu_j) / \sigma_j)} \displaybreak \\    
     =& \E_Z \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j}{\sigma_i}Z + \frac{\mu_j - \mu_i}{\sigma_i} \right) \bigg] 
   \end{align*}
   the proof follows directly.
@@ -18,7 +18,7 @@ Using the fact that $\int p(x) \dint x = 1$, and that
 
 Recall that for $Y \sim \tN(\mu,\sigma^2,-\infty,b)$, for some function $g$ of $Y$, we have that
 \[
-  \E g(Y) = \Phi(\beta)^{-1} \int g(y) \ind[y < b] \phi(y|\mu,\sigma^2) \dint y,
+  \E g(Y) = \Phi(\beta)^{-1} \int [y < b] \cdot g(y)  \phi(y|\mu,\sigma^2) \dint y,
 \]
 and in particular, we have
 \begin{align}
@@ -31,14 +31,14 @@ For simplicity, denote $p(x_k) = \phi(x_k|\mu_k,\sigma_k) = \sigma^{-1}_k \phi(\
 For $i \neq j$, we have
 \begin{align}
   \E g(X_i)
-  &= C^{-1} \idotsint  g(x_i) \ind[x_k < x_j, \forall k \neq j]  \prod_{k=1}^d p(x_k) \dint x_1 \cdots \dint x_d \nonumber \\
-  &= C^{-1} \frac{\Phi((x_j-\mu_j)/\sigma_j)}{\Phi((x_j-\mu_j)/\sigma_j)} \iint g(x_i) \ind[x_i < x_j] p(x_i) p(x_j) \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  \dint x_i \dint x_j \nonumber \\
-  &= C^{-1}  \int \E_{X_i\sim\tN(\mu_i,\sigma_i^2,-\infty,x_j)} g(X_i) \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j)\dint x_j \label{eq:tnproofi}
+  &= C^{-1} \idotsint [x_k < x_j, \forall k \neq j] \cdot g(x_i) \prod_{k=1}^d p(x_k) \dint x_1 \cdots \dint x_d \nonumber \\
+  &= C^{-1} \frac{\Phi((x_j-\mu_j)/\sigma_j)}{\Phi((x_j-\mu_j)/\sigma_j)} \iint [x_i < x_j] \cdot g(x_i) p(x_i) p(x_j) \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  \dint x_i \dint x_j \nonumber \\
+  &= C^{-1}  \int \E_{X_i\sim\tN(\mu_i,\sigma_i^2,-\infty,x_j)} [g(X_i)] \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j)\dint x_j \label{eq:tnproofi}
   \end{align}
 where $C$ is the normalising constant for $X$, while for the $j$'the component we have
 \begin{align}
   \E g(X_j)
-  &= C^{-1} \idotsint  g(x_j) \ind[x_k < x_j, \forall k \neq j]  \prod_{k=1}^d p(x_k) \dint x_1 \cdots \dint x_d \nonumber \\
+  &= C^{-1} \idotsint  [x_k < x_j, \forall k \neq j] \cdot g(x_j)  \prod_{k=1}^d p(x_k) \dint x_1 \cdots \dint x_d \nonumber \\
   &= C^{-1} \int  g(x_j)  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right) p(x_j) \dint x_d. \label{eq:tnproofj}  
 \end{align}
 
@@ -135,10 +135,14 @@ Lastly, we use the following result in the derivation above.
 \begin{proof}
   Use the fact that for any differentiable function $g$, $\E[Zg(Z)] = \E[g'(Z)]$, and apply the result with the function $g_m:z \mapsto \prod_{k \neq j} \Phi(\sigma_k z + \mu_k)$. All that is left is to derive the derivative of $g$, and we use an inductive proof to do this. 
   Introduce the following notation for convenience:
+  \begingroup
+  \setlength{\abovedisplayskip}{10pt}
+%  \setlength{\belowdisplayskip}{4pt}
   \begin{align*}
     \phi_i = \phi(\sigma_i z + \mu_i) \\
     \Phi_i = \Phi(\sigma_i z + \mu_i) 
   \end{align*}
+  \endgroup
   
   The simplest case is when $m=2$, which can be trivially shown to be true. Without loss of generality, let $j=1$. Then
   \begin{align*}

@@ -103,7 +103,7 @@ This is an inverse gamma distribution with shape $\tilde c = p/2 + c + 1$ and sc
 \section{Computational note}
 
 From the above, we see that all of the Gibbs conditionals are of recognisable form, making Gibbs sampling a straightforward MCMC method to implement.
-We built an \proglang{R} \hltodo[Cite this with correct version.]{package} \pkg{ipriorBVS} that uses \proglang{JAGS} \citep{plummer2003jags}, a variation of \proglang{WinBUGS}, internally for the Gibbs sampling, and wrote a wrapper function which takes formula based inputs for convenience.
+We built an \proglang{R} package \pkg{ipriorBVS} that uses \proglang{JAGS} \citep{plummer2003jags}, a variation of \proglang{WinBUGS}, internally for the Gibbs sampling, and wrote a wrapper function which takes formula based inputs for convenience.
 The \pkg{ipriorBVS} also performs two-stage BVS, and supported priors are the I-prior, $g$-prior, and independent prior, as used in this thesis.
 Although a Gibbs sampler could be coded from scratch, \proglang{JAGS} has the advantage of being tried and tested and has simple controls for tuning (burn-in, adaptation, thinning, etc.).
 Furthermore, the output from \proglang{JAGS} can be inspected using a myriad of multipurpose MCMC tools to diagnose convergence problems.

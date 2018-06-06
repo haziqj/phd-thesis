@@ -1,4 +1,4 @@
-These are additional details relating to discussion on various I-prior regression models in \cref{sec:various-regression} of \cref{chapter4}.
+These are additional details relating to discussion on various I-prior regression models in \cref{sec:various-regression} of \cref{chapter4} \colp{\mypageref{sec:various-regression}}.
 These details relate to the standard linear multilevel model and the naïve classification model.
 
 \section{The I-prior for standard multilevel models}
@@ -127,7 +127,7 @@ Suppose hypothetically, one uses the uncentered identity kernel $a(j,j') = \delt
 In conjunction with an assumption of iid errors ($\bPsi = \psi\bI_n$), the above distributions simplify further.
 Specifically, the variance in the marginal distribution becomes 
 \begin{align*}
-  \Var(\vecc \by) 
+  \Var[\vecc \by] 
   &= (\psi\bI_m \otimes \bB_\eta^2) + (\psi^{-1}\bI_m \otimes \bI_n) \\
   &= (\bI_m \otimes \psi\bB_\eta^2) + (\bI_m \otimes \psi^{-1}\bI_n) \\
   &= \bI_m \otimes (\myoverbrace{\psi\bB_\eta^2 + \psi^{-1}\bI_n}{\tilde\bV_y}).

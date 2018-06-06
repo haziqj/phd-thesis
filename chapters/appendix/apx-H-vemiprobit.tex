@@ -33,7 +33,7 @@ For reference, the three relevant distributions are listed below.
   
   \item {\boldmath$p(\by^*|\bw)$}. Given values for the parameters and I-prior random effects, the distribution of the latent propensities is matrix normal
   \[
-    \by^*|\balpha,\bw,\eta,\bPsi \sim \MN_{n,m}(\bone_n\balpha^\top + \bH_\eta\bw, \bI_n, \bPsi^{-1}).
+    \by^*|\bw \sim \MN_{n,m}(\bone_n\balpha^\top + \bH_\eta\bw, \bI_n, \bPsi^{-1}).
   \]
   Write $\bmu = \bone_n\balpha^\top + \bH_\eta\bw$.
   Its pdf is
@@ -64,18 +64,18 @@ In such cases, we have that $y_{ij}^* > y_{ik}$ for all $k\neq j$, and that
   &= \left[ - \half (\by^*_i - \tilde\bmu_i)^\top \bPsi (\by^*_i - \tilde\bmu_i)  \right] + \const \tag{$\star$} 
 \end{align*}
 where $\tilde\bmu_{i \bigcdot} = \balpha + \tilde\bw\bh_\eta(x_i)$,  $\tilde\bw = \E_{\bw\sim\tilde q}[\bw]$.
-This is recognised as the logarithm of a multivariate normal pdf with mean $\tilde \mu_{i \bigcdot}$ and variance $\bPsi^{-1}$.
+This is recognised as the logarithm of a multivariate normal pdf with mean $\tilde \bmu_{i \bigcdot}$ and variance $\bPsi^{-1}$.
 On the other hand, when $y_i \neq j$, the pdf is zero.
 Thus,
 \begin{align*}
   \tilde q(\by_{i \bigcdot}^*) =
   \begin{cases}
-    \phi(\by_{i \bigcdot}^*|\bmu_{i \bigcdot},\bPsi^{-1}) & \text{ if } y_{ij}^* > y_{ik}^*, \forall k \neq j \\
+    \phi(\by_{i \bigcdot}^*|\tilde\bmu_{i \bigcdot},\bPsi^{-1}) & \text{ if } y_{ij}^* > y_{ik}^*, \forall k \neq j \\
     0 & \text{ otherwise,} \\
   \end{cases}
 \end{align*}
 implying a truncated multivariate normal distribution for $\by_{i \bigcdot}^*$.
-The required moments from the truncated multivariate normal distribution can be obtained using the methods described in \cref{sec:truncmultinorm}.
+The required moments from the truncated multivariate normal distribution can be obtained using the methods described in \cref{apx:truncmultinorm} \colp{\mypageref{apx:truncmultinorm}}.
 
 
 \begin{remark}
@@ -95,7 +95,7 @@ The required moments from the truncated multivariate normal distribution can be 
 \subsection{Derivation of \texorpdfstring{$\tilde q(\bw)$}{$\tilde q(w)$}}
 \label{apx:qw}
 
-The terms involving $\bw$ in \cref{eq:qtilde} are the $p(\by^*|\balpha,\bw,\eta,\bPsi)$ and $p(\bw|\bPsi)$ terms, and the rest are absorbed into the constant.
+The terms involving $\bw$ in the joint likelihood \cref{eq:logqw} are the $p(\by^*|\bw)$ and $p(\bw)$ terms, so the rest are absorbed into the constant.
 The easiest way to derive $\tilde q(\bw)$ is to vectorise $\by^*$ and $\bw$.
 We know that
 \begin{gather*}
@@ -104,6 +104,7 @@ We know that
   \vecc \bw | \bPsi \sim \N_{nm} (\bzero, \bPsi\otimes\bI_n)
 \end{gather*}
 using properties of matrix normal distributions.
+
 We also use the fact that $\vecc (\bH_\eta\bw) = (\bI_m \otimes \bH_\eta)\vecc\bw$.  %\diag(\bH_\eta,\dots,\bH_\eta)\vecc\bw = 
 For simplicity, write $\bar\by^* = \vecc(\by^* - \bone_n\balpha^\top)$, and $\bM = (\bI_m \otimes \bH_\eta)$.
 Thus,
@@ -227,19 +228,19 @@ If $\bC = \diag(c_1,\dots,c_m)$, then
 
 The evidence lower bound (ELBO) expression involves the following calculation:
 \begin{align*}
-  \cL_q(\theta) &= \idotsint q(\by^*,\bw) 
+  \cL_q(\theta) 
+  ={}& \idotsint q(\by^*,\bw) 
   \log \frac{p(\by,\by^*,\bw|\theta)}{q(\by^*,\bw)}
   \dint\by^* \dint\bw \dint\theta \\
-  &= \E \big[ \log \myoverbrace{p(\by,\by^*,\bw|\theta)}{\text{joint likelihood}} \big]
+  ={}& \E \big[ \log \myoverbrace{p(\by,\by^*,\bw|\theta)}{\text{joint likelihood}} \big]
   +
   (\myoverbrace{-\E \big[ \log q(\by^*,\bw,)}{\text{entropy}}) \big] \\
-  &= \E\bigg[
+  ={}& \E\bigg[
   \cancel{\sum_{i=1}^n \sum_{j=1}^m \log  p(y_{i}|y_{ij}^*)} + 
   \sum_{i=1}^n \log  p(\by_{i \bigcdot}^*|\balpha,\bw,\bPsi,\eta) +
   \log p(\bw|\bPsi)  
   \bigg] \\
-  &\phantom{==} 
-  + \sum_{i=1}^n H\big[q(\by^*_{i \bigcdot}) \big]
+  &+ \sum_{i=1}^n H\big[q(\by^*_{i \bigcdot}) \big]
   + H\big[q(\bw) \big].
 \end{align*}
 As discussed, given the latent propensities $\by^*$, the pdf of $\by$ is degenerate and hence can be disregarded.  
@@ -247,23 +248,23 @@ As discussed, given the latent propensities $\by^*$, the pdf of $\by$ is degener
 \subsection{Terms involving distributions of \texorpdfstring{$\by^*$}{$y^*$}}
 
 \begin{align*}
-  \sum_{i=1}^n  \bigg( &
-  \E  \log p(\by_{i \bigcdot}^*|\balpha,\bw,\bPsi,\eta) 
+  \sum_{i=1}^n  \bigg\{ &
+  \E \big[ \log p(\by_{i \bigcdot}^*|\balpha,\bw,\bPsi,\eta) \big]
   + H \big[q(\by^*_{i \bigcdot}) \big] 
-  \bigg) \\
-  &=  -\half[nm]\log 2\pi + \half[n] \log \abs{\bPsi} - \half \E \sum_{i=1}^n (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \bmu_{i \bigcdot}) \\
-  &\phantom{==} +\half[nm]\log 2\pi - \half[n] \log \abs{\bPsi} + \half \E \sum_{i=1}^n (\by^*_{i \bigcdot} - \bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \bmu_{i \bigcdot}) + \log C_i  \\
-   &=\sum_{i=1}^n \log C_i 
+  \bigg\} \\
+  ={}&  -\half[nm]\log 2\pi + \half[n] \log \abs{\bPsi} - \half \E \bigg[ \sum_{i=1}^n (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot}) \bigg] \\
+  & +\half[nm]\log 2\pi - \half[n] \log \abs{\bPsi} + \half \E \bigg[ \sum_{i=1}^n (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot})^\top \bPsi (\by^*_{i \bigcdot} - \tilde\bmu_{i \bigcdot})\bigg] + \log C_i  \\
+   ={}& \sum_{i=1}^n \log C_i 
 \end{align*}
-where $C_i$ is the normalising constant for the distribution of multivariate truncated normal $\by_{i \bigcdot}^* \sim \tN(\bmu(x_i),\bPsi^{-1},\cC_{y_i})$.
+where $C_i$ is the normalising constant for the distribution of multivariate truncated normal $\by_{i \bigcdot}^* \sim \tN(\tilde\bmu(x_i),\bPsi^{-1},\cC_{y_i})$, with $\tilde\bmu(x_i) = \balpha + \tilde\bw\bh_\eta(x_i)$.
 
 \subsection{Terms involving distributions of $\bw$}
 
 \begin{align*}
   \E \log p(\bw|\bPsi) + H \big[q(\bw) \big] 
-  &= \cancel{-\half[nm]\log 2\pi} - \half[n]\log\abs{\bPsi} - \half\E\tr \big( \bw \bPsi^{-1} \bw^\top \big) \\
-  &\phantom{==} + \half[nm](1 + \cancel{\log 2\pi}) + \half\log\abs{\tilde\bV_w} \\
-  &=  \half[nm] - \half[n]\log\abs{\bPsi} 
+  ={}& \cancel{-\half[nm]\log 2\pi} - \half[n]\log\abs{\bPsi} - \half\E\tr \big( \bw \bPsi^{-1} \bw^\top \big) \\
+  & + \half[nm](1 + \cancel{\log 2\pi}) + \half\log\abs{\tilde\bV_w} \\
+  ={}&  \half[nm] - \half[n]\log\abs{\bPsi} 
   - \half \sum_{i,j=1}^m \bPsi^{-1}_{ij}  \tr \E \big[\tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot j}^\top\big]
   + \half\log\abs{\tilde\bV_w}
 \end{align*}
