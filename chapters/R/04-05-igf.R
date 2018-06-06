@@ -23,7 +23,7 @@ pchisq(D, df = 2)
 
 ## ---- IGF.mod.lmer ----
 (mod.lmer <- lmer(conc ~ age + (age | Lot), IGF))
-coef(summary(mod.lmer))
+round(coef(summary(mod.lmer)), 4)
 
 ## ---- IGF.mod.lmer.eigen ----
 eigen(VarCorr(mod.lmer)$Lot)
@@ -90,7 +90,8 @@ ggplot(plot.df.beta) +
              linetype = "dashed") +
   facet_grid(. ~ type, scales = "free") +
   theme_bw() +
-  theme(legend.position = "top")
+  theme(legend.position = "top") +
+  labs(colour = "Model", x = expression(beta))
 
 ## ---- IGF.plot.param ----
 ggplot(plot.df.param) +

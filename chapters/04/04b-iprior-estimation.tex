@@ -24,7 +24,7 @@ Using standard multivariate normal results, one finds that the posterior distrib
 \end{align}
 %where $\bff_0=\big(f_0(x_1),\dots,f_0(x_n) \big)^\top$, $\bH_\eta$ is the kernel matrix with $(i,j)$ entries equal to $h_\eta(x_i,x_j)$, and $\bV_y$ is the variance of the marginal distribution for $\by = (y_1,\dots,y_n)$.
 using the familiar notation that we introduced in \cref{sec:introregiprior}.
-For a derivation, see \cref{apx:posteriorw}.
+For a derivation, see \cref{apx:posteriorw} \colp{\mypageref{apx:posteriorw}}.
 By linearity, the posterior distribution for $f$ is also normal.
 
 In each modelling scenario, there are a number of kernel parameters $\eta$ that need to be estimated from the data.
@@ -171,7 +171,7 @@ By treating the complete data as $\{\by,\bw \}$ and the $w_i$'s as ``missing'', 
   )\tilde\bW^{(t)} \Big)
   + \psi\tilde\by^\top\bH_\eta\wtilde^{(t)}, \nonumber
 \end{align}
-where $\tilde\bw^{(t)} = \E(\bw|\by,\theta^{(t)})$ and $\tilde\bW^{(t)} = \E(\bw\bw^\top|\by,\theta^{(t)})$ are the first and second posterior moments of $\bw$ calculated at the $t$th EM iteration.
+where $\tilde\bw^{(t)} = \E[\bw|\by,\theta^{(t)}]$ and $\tilde\bW^{(t)} = \E[\bw\bw^\top|\by,\theta^{(t)}]$ are the first and second posterior moments of $\bw$ calculated at the $t$th EM iteration.
 These can be computed directly from \cref{eq:posteriorw}, substituting for $\theta^{(t)} = \{\eta^{(t)}, \psi^{(t)} \}$ as appropriate.
 
 The M-step assigns $\theta^{(t+1)}$ the value of $\theta$ which maximises the $Q$ function above.
@@ -256,9 +256,9 @@ These two methods are implemented in the \pkg{iprior} package.
 A full Bayesian treatment is possible, and we use the \pkg{rstan} implementation of \proglang{Stan} to perform Hamiltonian Monte Carlo sampling of the posterior densities.
 A vague prior choice for $\lambda$ and $\psi$ are prescribed, namely
 \[
-  \lambda,\psi \iid \N_+(0,100),
+  \lambda,\psi \iid \N_{\geq 0}(0,100),
 \]
-where $\N_+(\mu,\sigma^2)$ represents the \emph{half-normal} distribution\footnote{The random variable $X \sim \N_+(\mu,\sigma^2)$ has the density $p(x) = \phi(x|\mu,\sigma^2)\ind(x \geq 0)$.}\footnote{Note that a single scale parameter $\lambda$ is not identified in sign, and is thus constrained to the positive reals. This is applicable in both likelihood-based and Bayesian methods.}.
+where $\N_+(0,\sigma^2)$ represents the \emph{folded-normal} distribution\footnote{The random variable $X \sim \N_+(\mu,\sigma^2)$ has the density $p(x) = \phi(x|\mu,\sigma^2)\ind(x \geq 0)$.}\footnote{Note that a single scale parameter $\lambda$ is not identified in sign, and is thus constrained to the positive reals. This is applicable in both likelihood-based and Bayesian methods.}.
 We have also set an improper prior density $p(\alpha) \propto \const$ for the intercept.
 The advantage of HMC is that efficiency is not dictated by conjugacy, so there is freedom to choose any appropriate prior choice on the parameters.
 

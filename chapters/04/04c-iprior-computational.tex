@@ -33,7 +33,7 @@ The main idea is to obtain an (approximation to the true) eigendecomposition of 
 
 Let $\bH_\eta = \bV\bU\bV^\top = \sum_{i=1}^n u_i \bv_i \bv_i^\top$ be the (orthogonal) decomposition of the symmetric matrix $\bH_\eta$.
 As mentioned, avoiding this expensive $O(n^3)$ eigendecomposition is desired, and this is achieved by selecting a subset $\cQ$ of size $q$ of the $n$ data points $\{1,\dots,n \}$, so that $\bH_\eta$ may be approximated using the rank $q$ matrix $\bH_\eta \approx \sum_{i\in\cQ} \tilde u_i \tilde\bv_i\tilde\bv_i^\top$.
-Without loss of generality, reorder the rows and columns of $\bH_\eta$ so that the data points indexed by $\cM$ are used first:
+Without loss of generality, reorder the rows and columns of $\bH_\eta$ so that the data points indexed by $\cQ$ are used first:
 %
 \[
   \bH_\eta =
@@ -296,7 +296,7 @@ As a remark, it is not necessary that $h_\lambda$ is the full ANOVA RKKS; any of
 
 \begin{remark}
   Another compelling reason to use \cref{alg:EM2} is conjugacy of the exponential family of distributions.
-  Realise that $\lambda_k|(\by,\bw,\lambda_{-k},\psi)$ is in fact normally distributed, with mean and variance given by $T_2/2T_1$ and $1/2T_1$ respectively.
+  Realise that $\lambda_k|\by,\bw,\lambda_{-k},\psi$ is in fact normally distributed, with mean and variance given by $T_2/2T_1$ and $1/2T_1$ respectively.
   If we were so compelled to assign a normal prior on each of the $\lambda_k$'s, then the conditionally dependent log-likelihood of $\lambda_k$, $L(\lambda_k|\by,\bw,\lambda_{-k},\psi)$, would have a normal prior log-density involving $\lambda_k$ added on.
   Importantly, viewed as a posterior log-density for $\lambda_k$, the $\lambda_k$ is normally distributed.
   The exponential family EM is thus easily modified to compute maximum a posteriori (MAP) estimates (or penalised ML estimates) of the scale parameters.
