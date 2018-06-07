@@ -6,6 +6,7 @@ General
 - QED symbols changed to `\blacksquare`.
 - Added Nomenclature.
 - Corrected margins as per LSE requirement.
+- Cleaned up bibliography.
 
 Chapter 1
 
@@ -43,13 +44,18 @@ Chapter 5
 
 Chapter 6
 
-- No changes
+- No changes.
 
 Chapter 7
 
-- 
+- Added logistic vs probit as open question.
 
-Circle back to later
+Supplementaries & Appendices
 
-- Truncated normal plots
-- Google map for ozone data
+- No change.
+
+Circle back to later if have time
+
+- Truncated normal plots.
+- Google map for ozone data example.
+- Add Bernoulli and categorical dist to appendix.

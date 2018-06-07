@@ -293,9 +293,31 @@
 
 % Adds Bibliography to TOC
 \newcommand{\hPrintBibliography}{
-  \printbibliography
+  \begingroup
+    \singlespacing
+%    \renewcommand{\UrlFont}{\footnotesize\tt}
+    \AtNextBibliography{\small}
+    \printbibliography
+  \endgroup
   \addcontentsline{toc}{chapter}{Bibliography}
 }
+
+% Change arXiv style
+\makeatletter
+\DeclareFieldFormat{eprint:arxiv}{%
+  \textsc{arXiv}\addcolon\space
+  \ifhyperref
+    {\href{https://arxiv.org/\abx@arxivpath/#1}{%
+       \nolinkurl{#1}%
+       \iffieldundef{eprintclass}
+         {}
+         {\addspace\texttt{\mkbibbrackets{\thefield{eprintclass}}}}}}
+    {\nolinkurl{#1}%
+     \iffieldundef{eprintclass}
+       {}
+       {\addspace\texttt{\mkbibbrackets{\thefield{eprintclass}}}}}}
+\makeatother
+
 
 % List of figures, tables, symbols, and abbreviations
 \newcommand{\hLists}{
@@ -346,8 +368,8 @@
 % Adds the closing stuff (STANDALONE VERSION)
 \newcommand{\hClosingStuffStandalone}{
   \ifstandalone
-    {\hypersetup{allcolors=.} %pdfborder=0 0 0
-      \hPrintBibliography
+    \hPrintBibliography
+    {\hypersetup{allcolors=.} %pdfborder=0 0 0  
       \hLists
 %      \printindex
     }
@@ -406,4 +428,18 @@
 % Coloured parantheses
 \newcommand{\colp}[1]{{\color{lsedpr}(#1)}}
 
+\makeatletter
+\DeclareFieldFormat{eprint:arxiv}{%
+  \textsc{arXiv}\addcolon\space
+  \ifhyperref
+    {\href{https://arxiv.org/\abx@arxivpath/#1}{%
+       \nolinkurl{#1}%
+       \iffieldundef{eprintclass}
+         {}
+         {\addspace\texttt{\mkbibbrackets{\thefield{eprintclass}}}}}}
+    {\nolinkurl{#1}%
+     \iffieldundef{eprintclass}
+       {}
+       {\addspace\texttt{\mkbibbrackets{\thefield{eprintclass}}}}}}
+\makeatother
 
