@@ -117,7 +117,7 @@ Write
 \begin{align*}
   h_\lambda(x,x')_\cF = \sum_{k=0}^d \frac{d!}{k!(d-k)!} c^{k-d} \lambda^k \ip{x,x'}_\cX^k.
 %  &= \sum_{k=0}^d 
-%  {\color{gray}\overbrace{\color{black}\frac{d!}{k!(d-k)!} c^{k-d} \lambda^k}^{\beta_k}}
+%  {\color{grymath}\overbrace{\color{black}\frac{d!}{k!(d-k)!} c^{k-d} \lambda^k}^{\beta_k}}
 %  \, \ip{x,x'}_\cX^k.
 \end{align*}
 Evidently, as the name suggests, this is a polynomial involving the canonical kernel.
@@ -170,7 +170,7 @@ Now write the \gls*{anova} model slightly differently, as $y_{i} = f(x_i) + \eps
 Here, $f$ represents the group-level mean, returning $\mu_j$ for some $j\in\cX$.
 In a similar manner, we can perform the \gls*{anova} decomposition on $f$ as
 \[
-%  f = \greyoverbrace{Af}{f_0} +  \greyoverbrace{(I - A)f}{f_1},
+%  f = \myoverbrace{Af}{f_0} +  \myoverbrace{(I - A)f}{f_1},
   f = Af + (I-A)f = f_o + f_t,
 \]
 where $A$ is an averaging operator that ``averages out'' its argument $x$ and returns a constant, and $I$ is the identity operator.

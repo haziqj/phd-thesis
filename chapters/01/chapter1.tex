@@ -114,7 +114,7 @@ Often the true probability measure is not known, so the empirical risk measure i
 
 The ML estimator of $f$ typically interpolates the data if the dimension of $\cF$ is at least $n$, so is of little use.
 The most common method to overcome this issue is \emph{Tikhonov regularisation}, whereby a regularisation term is added to the risk function, with the aim of imposing a penalty on the complexity of $f$. 
-In particular, smoothness assumptions on $f$ can be represented by using its \gls{rkhs} norm $\norm{\cdot}_\cF:\cF \to \bbR$ as the regularisation term\footnotemark. 
+In particular, smoothness assumptions on $f$ can be represented by using its \gls*{rkhs} norm $\norm{\cdot}_\cF:\cF \to \bbR$ as the regularisation term\footnotemark. 
 Therefore, the solution to the regularised least squares problem---call this $f_{\text{reg}}$---is the minimiser of the mapping from $\cF$ to $\bbR$ defined by
 \begin{equation}\label{eq:penfunctional}
   f \mapsto 

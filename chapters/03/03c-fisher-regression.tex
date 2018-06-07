@@ -62,8 +62,8 @@ Note that the dependence of the kernel on parameters $\eta$ is implicitly assume
 		&=\E \left[ \sum_{i=1}^n\sum_{j=1}^n \psi_{ij}  \langle \phi(x_i), \cdot \rangle_{\cV} \, \langle \phi(x_j), \cdot \rangle_{\cV} \right] \\
 		&= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \, \langle \phi(x_i) \otimes \phi(x_j), \cdot \rangle_{\cV\otimes\cV}  \\		
 		&=\sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \cdot \phi(x_i) \otimes \phi(x_j).
-%		&\rlap {\color{gray}\text{by substituting $\nabla k_x(f) = h(\cdot,x)$, the expectation}} \\
-%		&\rlap {\color{gray}\text{is free of $f$}} 
+%		&\rlap {\color{grymath}\text{by substituting $\nabla k_x(f) = h(\cdot,x)$, the expectation}} \\
+%		&\rlap {\color{grymath}\text{is free of $f$}} 
 	\end{align*}	 	
 	Here, we had treated $\phi(x_i) \otimes \phi(x_j)$ as a bilinear operator, since $\cI(v) \in \cV \otimes \cV$ as well.
 	Also, the expectation is free of the random variable under expectation (i.e. $\by$), which makes the second line possible.
@@ -111,8 +111,8 @@ We can also compute the Fisher information for linear functionals of $f$, and in
     &= \big\langle \cI(f), h(\cdot, x) \otimes h(\cdot, x') \big\rangle_{\mathcal F \otimes \mathcal F} \\
     &= \Bigg\langle \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(\cdot,x_i) \otimes h(\cdot,x_j) \ , \ h(\cdot, x) \otimes h(\cdot, x') \Bigg\rangle_{\mathcal F \otimes \mathcal F} \\
     &= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \big\langle h(\cdot,x_i), h(\cdot, x) \big\rangle_{\mathcal F} \big\langle h(\cdot,x_j), h(\cdot, x') \big\rangle_{\mathcal F } \\
-    %		&{\color{gray}\text{(by using the fact that inner products are linear, and that $\forall a_1, a_2 \in \mathcal A$}} \\
-    %		&{\color{gray}\text{and $\forall b_1, b_2 \in \mathcal B$, $\langle a_1 \otimes b_1, a_2 \otimes b_2 \rangle_{\mathcal A \otimes \mathcal B} = \langle a_1, a_2 \rangle_{\mathcal A}\langle b_1, b_2 \rangle_{\mathcal B}$)}} \\
+    %		&{\color{grymath}\text{(by using the fact that inner products are linear, and that $\forall a_1, a_2 \in \mathcal A$}} \\
+    %		&{\color{grymath}\text{and $\forall b_1, b_2 \in \mathcal B$, $\langle a_1 \otimes b_1, a_2 \otimes b_2 \rangle_{\mathcal A \otimes \mathcal B} = \langle a_1, a_2 \rangle_{\mathcal A}\langle b_1, b_2 \rangle_{\mathcal B}$)}} \\
     &= \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} h(x,x_i) h(x', x_j).
     %		\mycomment{(by the reproducing property)}
 %    &=: \cI\big(f(x),f(x')\big).

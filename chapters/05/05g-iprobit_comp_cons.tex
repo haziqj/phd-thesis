@@ -16,12 +16,12 @@ Suppose that an observation $y=j$ has been made.
 Reformulate $\by^*$ in \cref{eq:latentmodel} by anchoring on the $j$'th latent variable $y_j^*$ to obtain
 \[
   \bz := (
-  \greyoverbrace{y_1^* - y_j^*}{ z_1},
+  \myoverbrace{y_1^* - y_j^*}{ z_1},
   \dots,
-  \greyoverbrace{y_{j-1}^* - y_j^*}{ z_{j-1}},
-  \greyoverbrace{y_{j+1}^* - y_j^*}{ z_{j}},
+  \myoverbrace{y_{j-1}^* - y_j^*}{ z_{j-1}},
+  \myoverbrace{y_{j+1}^* - y_j^*}{ z_{j}},
   \dots, 
-  \greyoverbrace{y_m^* - y_j^*}{ z_{m-1}},
+  \myoverbrace{y_m^* - y_j^*}{ z_{m-1}},
   )^\top \in \bbR^{m-1}.
 \]
 Note that we have indexed the vector $\bz$ using $j' = k$ if $k < j$, and $j' = k -1$ if $k > j$ for $k=1,\dots,m$, so that the index $j'$ runs from $1$ to $m-1$.
@@ -196,10 +196,10 @@ If so, the $Q$ function from \cref{eq:iprobitQEstep} conditional on the rest of 
   -\half \tr 
   \big( 
   \bPsi
-  \greyoverbrace{\E\big( (\by^* - \bmu)^\top (\by^* - \bmu) \big)}{\bG_1}
+  \myoverbrace{\E\big( (\by^* - \bmu)^\top (\by^* - \bmu) \big)}{\bG_1}
   +
   \bPsi^{-1}
-  \greyoverbrace{\E(\bw^\top\bw)}{\bG_2} 
+  \myoverbrace{\E(\bw^\top\bw)}{\bG_2} 
   \Big)
 \end{align*}
 with $\bmu = \bone_n\balpha^\top + \bH_\eta\bw$.

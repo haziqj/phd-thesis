@@ -4,7 +4,7 @@ In order to obtain ML estimates through a direct maximisation of the likelihood,
 \begin{equation}\label{eq:varint}
   p(\by|\theta) 
   = \int 
-  \greyoverbrace{p(\by|\bw,\theta)p(\bw|\theta)}{p(\by,\bw|\theta)}
+  \myoverbrace{p(\by|\bw,\theta)p(\bw|\theta)}{p(\by,\bw|\theta)}
   \dint \bw
 \end{equation}
 and obtain the \emph{marginal likelihood}.
@@ -34,11 +34,11 @@ where the solution to \cref{eq:em1} yields an improvement to the current $t$'th 
 Note that the objective function in \cref{eq:em1} forms an upper bound for the quantity $Q(\theta|\theta^{(t)})$, as shown below:
 \begin{align*}
   L(\theta|\by) - L(\theta^{(t)}|\by)
-  &= \log \int p(\by|\bw,\theta)p(\bw|\theta) \, \frac{p(\bw|\by,\theta^{(t)})}{p(\bw|\by,\theta^{(t)})}  \dint\bw - \log p(\by|\theta^{(t)}) \\
-  &\geq \int p(\bw|\by,\theta^{(t)}) \log \frac{p(\by|\bw,\theta)p(\bw|\theta)}{p(\bw|\by,\theta^{(t)})} \dint\bw \mycomment{(Jensen's inequality)} \\
-  &\phantom{==} - \log p(\by|\theta^{(t)})\int p(\bw|\by,\theta^{(t)}) \dint \bw \\
-  &= \int p(\bw|\by,\theta^{(t)}) \log \frac{p(\by|\bw,\theta)p(\bw|\theta)}{p(\bw|\by,\theta^{(t)})p(\by|\theta^{(t)})} \dint\bw\\
-  &=: Q(\theta|\theta^{(t)}).
+  \phantom{:}={}& \log \int p(\by|\bw,\theta)p(\bw|\theta) \, \frac{p(\bw|\by,\theta^{(t)})}{p(\bw|\by,\theta^{(t)})}  \dint\bw - \log p(\by|\theta^{(t)}) \\
+  \phantom{:}\geq{}& \int p(\bw|\by,\theta^{(t)}) \log \frac{p(\by|\bw,\theta)p(\bw|\theta)}{p(\bw|\by,\theta^{(t)})} \dint\bw \mycomment{(Jensen's inequality)} \\
+  \phantom{:}& - \log p(\by|\theta^{(t)})\int p(\bw|\by,\theta^{(t)}) \dint \bw \\
+  \phantom{:}={}& \int p(\bw|\by,\theta^{(t)}) \log \frac{p(\by|\bw,\theta)p(\bw|\theta)}{p(\bw|\by,\theta^{(t)})p(\by|\theta^{(t)})} \dint\bw\\
+  =:{}& Q(\theta|\theta^{(t)}).
 \end{align*}
 Evidently, to maximise $L(\theta|\by)$, we can't do any worse than maximising $Q(\theta|\theta^{(t)})$ in $\theta$.
 Denote by $\theta^{(t+1)}$ as the maximiser of $Q(\theta|\theta^{(t)})$. 

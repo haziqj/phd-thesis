@@ -10,10 +10,10 @@ The distribution of $\by|\bw$ is $\N_n(\balpha + \bff_0 +\bH_\eta\bw,\bPsi^{-1})
 Since $p(\bw|\by) \propto p(\by|\bw)p(\bw)$, we have that
 \begin{align*}
   \log p(\bw|\by) 
-  &=  \log p(\by|\bw) + \log p(\bw) \\
-  &= \const + \cancel{\half\log\abs{\bPsi}} - \half (\by - \balpha - \bff_0 - \bH_\eta\bw)^\top \bPsi (\by - \balpha - \bff_0 - \bH_\eta\bw) \\
-  &\phantom{==} -\cancel{\half\log\abs{\bPsi}} - \half \bw^\top\bPsi^{-1}\bw \\
-  &= \const - \half \bw^\top(\bH_\eta\bPsi\bH_\eta + \bPsi^{-1})\bw + (\by - \balpha - \bff_0)^\top\bPsi\bH_\eta\bw.
+  ={}&  \log p(\by|\bw) + \log p(\bw) \\
+  ={}& \const + \cancel{\half\log\abs{\bPsi}} - \half (\by - \balpha - \bff_0 - \bH_\eta\bw)^\top \bPsi (\by - \balpha - \bff_0 - \bH_\eta\bw) \\
+  & -\cancel{\half\log\abs{\bPsi}} - \half \bw^\top\bPsi^{-1}\bw \\
+  ={}& \const - \half \bw^\top(\bH_\eta\bPsi\bH_\eta + \bPsi^{-1})\bw + (\by - \balpha - \bff_0)^\top\bPsi\bH_\eta\bw.
 \end{align*}
 Setting $\bA = \bH_\eta\bPsi\bH_\eta + \bPsi^{-1}$, $\ba^\top = (\by - \balpha - \bff_0)^\top\bPsi\bH_\eta$, and using the fact that 
 \[
@@ -116,15 +116,15 @@ In any case, using standard multivariate normal results, we get that $y_\new|\by
 and variance
 \begin{align*}
   \Var[y_\new|\by] 
-  &= v_\new - (\bh_{\hat\eta}(x_\new)^\top\hat\bPsi\bH_{\hat\eta} + \bsigma_\new)\hat\bV_y^{-1}(\bh_{\hat\eta}(x_\new)^\top\hat\bPsi\bH_{\hat\eta} + \bsigma_\new)^\top \\
-  &= \bh_{\hat\eta}(x_\new)^\top \hat\bPsi\hat \bh_{\hat\eta}(x_\new) + \psi^{-1}_\new - \bh_{\hat\eta}(x_\new)^\top\hat\bPsi\bH_{\hat\eta}\hat\bV_y^{-1}\bH_{\hat\eta}\hat\bPsi\bh_{\hat\eta}(x_\new) \\
-  &\phantom{==}+ \text{variance correction term} \\
-  &= \bh_{\hat\eta}(x_\new)^\top 
+  ={}& v_\new - (\bh_{\hat\eta}(x_\new)^\top\hat\bPsi\bH_{\hat\eta} + \bsigma_\new)\hat\bV_y^{-1}(\bh_{\hat\eta}(x_\new)^\top\hat\bPsi\bH_{\hat\eta} + \bsigma_\new)^\top \\
+  ={}& \bh_{\hat\eta}(x_\new)^\top \hat\bPsi\hat \bh_{\hat\eta}(x_\new) + \psi^{-1}_\new - \bh_{\hat\eta}(x_\new)^\top\hat\bPsi\bH_{\hat\eta}\hat\bV_y^{-1}\bH_{\hat\eta}\hat\bPsi\bh_{\hat\eta}(x_\new) \\
+  &+ \text{variance correction term} \\
+  ={}& \bh_{\hat\eta}(x_\new)^\top 
   \big(
   \hat\bPsi - \hat\bPsi\bH_{\hat\eta}\hat\bV_y^{-1}\bH_{\hat\eta}\hat\bPsi
   \big)
   \bh_{\hat\eta}(x_\new) + \psi^{-1}_\new \\
-  &\phantom{==} + \text{variance correction term} \\
-  &= \bh_{\hat\eta}(x_\new)^\top \hat\bV_y^{-1}\bh_{\hat\eta}(x_\new) + \psi^{-1}_\new + \text{variance correction term} \\
-  &= \Var\big[f(x_\new)|\by\big] + \psi^{-1}_\new + \text{variance correction term}.
+  & + \text{variance correction term} \\
+  ={}& \bh_{\hat\eta}(x_\new)^\top \hat\bV_y^{-1}\bh_{\hat\eta}(x_\new) + \psi^{-1}_\new + \text{variance correction term} \\
+  ={}& \Var\big[f(x_\new)|\by\big] + \psi^{-1}_\new + \text{variance correction term}.
 \end{align*}

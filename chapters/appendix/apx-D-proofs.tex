@@ -9,7 +9,7 @@ Using the fact that $\int p(x) \dint x = 1$, and that
     =&  \idotsint \ind[x_i < x_j, \forall i \neq j] \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right)\mathop{\prod_{i=1}^d}_{i \neq j} \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma_i} \right) \right] \dint x_1 \cdots \dint x_d \\    
     =& \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{x_j - \mu_i}{\sigma_i} \right) \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right) \dint x_j  \\
     =& \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j z + \mu_j - \mu_i}{\sigma_i} \right) \phi(z) \dint z \\
-    \phantom{=}&\phantom{==} {\color{gray} (\text{by using the standardisation } z = (x_j - \mu_j) / \sigma_j)} \displaybreak \\    
+    \phantom{=}&\phantom{==} {\color{grymath} (\text{by using the standardisation } z = (x_j - \mu_j) / \sigma_j)} \displaybreak \\    
     =& \E_Z \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j}{\sigma_i}Z + \frac{\mu_j - \mu_i}{\sigma_i} \right) \bigg] 
   \end{align*}
   the proof follows directly.
@@ -64,25 +64,25 @@ where we have made use of Lemma \ref{lem:EZgZ} in the second last step.
 For the second moments, plug in \cref{eq:tnXminMusq} for $g(X_i)= (X_i - \mu_i)^2 - \sigma_i^2$ in \cref{eq:tnproofi} to get
 \begin{align*}
   \E [X_i - \mu_i]^2 - \sigma_i^2
-  &= - \sigma_i^{\cancel{2}} C^{-1} \int   
+  ={}& - \sigma_i^{\cancel{2}} C^{-1} \int   
   \myoverbrace{\frac{x_j - \mu_i}{\cancel{\sigma_i}}}{\hidewidth x_j - \mu_i - \mu_j + \mu_j \hidewidth} \cdot
   \frac{\phi\big( (x_j - \mu_i) / \sigma_i \big)}{\Phi\big( (x_j - \mu_i) / \sigma_i \big)}
   \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j \\
-  &= - \sigma_i C^{-1} \int  
+  ={}& - \sigma_i C^{-1} \int  
   (x_j - \mu_j)
   \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)
   \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j \\
-  &\phantom{==} +  (\mu_j-\mu_i)  \cdot 
+  & +  (\mu_j-\mu_i)  \cdot 
   \myoverbrace{-\sigma_i C^{-1} \int  
   \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)
   \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j) \dint x_j}{\E X_i - \mu_i} \\
-  &= (\mu_j-\mu_i)(\E X_i - \mu_i)  \\
-  &\phantom{==}
+  ={}& (\mu_j-\mu_i)(\E X_i - \mu_i)  \\
+  &
   + \sigma_i C^{-1} \int  \sigma_j z 
   \phi \left( \frac{x_j-\mu_i}{\sigma_i} \right)
   \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{\sigma_j z + \mu_j - \mu_k}{\sigma_k} \right)  \phi(z) \dint z \\
-  &= (\mu_j-\mu_i)(\E X_i - \mu_i) \\
-  &\phantom{==} + \sigma_i\sigma_j C^{-1} 
+  ={}& (\mu_j-\mu_i)(\E X_i - \mu_i) \\
+  & + \sigma_i\sigma_j C^{-1} 
   \E \Bigg[
   Z \phi \left( \frac{\sigma_j Z + \mu_j -\mu_i}{\sigma_i} \right) 
   \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{\sigma_j Z + \mu_j - \mu_k}{\sigma_k} \right) 

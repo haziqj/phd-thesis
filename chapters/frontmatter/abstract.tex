@@ -5,7 +5,7 @@ We assume that the regression function belongs to a reproducing kernel Hilbert o
 This is important for the derivation of the Fisher information of the regression function, which might be infinite-dimensional. Based on the principle of maximum entropy, an I-prior is an objective Gaussian process prior for the regression function with covariance function proportional to its Fisher information. 
 
 Our work focusses on the statistical methodology and computational aspects of fitting I-priors models. In the first part of the thesis, we examine a likelihood-based approach (direct optimisation and EM algorithm) for fitting I-prior models with normally distributed errors.
-The culmination of this work is the R package \pkg{iprior} which has been made publicly available on the \gls*{cran}. In the second part, the normal I-prior methodology is extended to fit categorical response models, achieved by "squashing" the regression functions through a probit sigmoid function.
+The culmination of this work is the R package \pkg{iprior} which has been made publicly available on the \gls*{cran}. In the second part, the normal I-prior methodology is extended to fit categorical response models, achieved by ``squashing'' the regression functions through a probit sigmoid function.
  Estimation of I-probit models, as we call it, proves challenging due to the intractable integral involved in computing the likelihood. 
  We apply a fully Bayesian treatment with a variational approximation in order to obtain the required posterior distributions. 
  Finally, in the third part, we again turn to a fully Bayesian approach of variable selection for linear models using I-priors.

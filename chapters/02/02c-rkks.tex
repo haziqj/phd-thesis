@@ -76,11 +76,11 @@ Indeed, for every RKKS $\cF$ of functions over a set $\cX$, there corresponds a 
   Then, for any $f\in\cF$,
   \begin{align*}
     \ip{f, h(\cdot,x)}_\cF 
-    &= \ip{f, h_+(\cdot,x)}_{\cF} - \ip{f, h_-(\cdot,x)}_{\cF} \\ 
-    &= \ip{f_+, h_+(\cdot,x)}_{\cF_+} - \cancelto{0}{\ip{f_-, h_+(\cdot,x)}_{\cF_-}} \\
-    &\phantom{==} - \cancelto{0}{\ip{f_+, h_-(\cdot,x)}_{\cF_+}} + \ip{f_-, h_-(\cdot,x)}_{\cF_-} \\
-    &= f_+(x) + f_-(x) \\
-    &= f(x)
+    ={}& \ip{f, h_+(\cdot,x)}_{\cF} - \ip{f, h_-(\cdot,x)}_{\cF} \\ 
+    ={}& \ip{f_+, h_+(\cdot,x)}_{\cF_+} - \cancelto{0}{\ip{f_-, h_+(\cdot,x)}_{\cF_-}} \\
+    & - \cancelto{0}{\ip{f_+, h_-(\cdot,x)}_{\cF_+}} + \ip{f_-, h_-(\cdot,x)}_{\cF_-} \\
+    ={}& f_+(x) + f_-(x) \\
+    ={}& f(x)
   \end{align*}
   The last two lines are achieved by linearity of evaluation functionals ($\delta_x(f_+) + \delta_x(f_-) = \delta_x(f_+ + f_-)$), and the fact that $f = f_+ + f_-$ (by the Kreĭn space decomposition).
   We have that $h=h_+ - h_-$ is a reproducing kernel for $\cF$.

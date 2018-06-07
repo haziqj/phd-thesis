@@ -57,7 +57,7 @@
 \usepackage{dsfont}  % for indicator variables \mathsds{1}
 \usepackage{bm}  % for better bold script
 \usepackage[makeroom]{cancel}
-  \renewcommand{\CancelColor}{\color{gray}}
+  \renewcommand{\CancelColor}{\color{grymath}}
 \usepackage{mathtools}
 %\usepackage{kbordermatrix}  % https://tex.stackexchange.com/questions/59517/label-rows-of-a-matrix-by-characters
 
@@ -72,6 +72,8 @@
   \let\@ifnextchar\new@ifnextchar
   \array{*\c@MaxMatrixCols c}}
 \makeatother
+
+\definecolor{grymath}{HTML}{89949A}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% MATHS SYMBOLS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -256,12 +258,12 @@
 \newcommand{\dint}{\dd\hspace{0.5pt}\!}
 \newcommand{\d}{\text{d}}
 
-% Overbrace and underbrace$\!\:\!$
-\newcommand{\greyoverbrace}[2]{{\color{gray}\overbrace{\color{black}#1}^{#2}}}
-\newcommand{\grayoverbrace}[2]{{\color{gray}\overbrace{\color{black}#1}^{#2}}}
+% Overbrace and underbrace
+\newcommand{\myoverbrace}[3][grymath]{{\color{#1}\overbrace{\color{black}#2}^{#3}}}
+\newcommand{\myunderbrace}[3][grymath]{{\color{#1}\underbrace{\color{black}#2}_{#3}}}
 
 % Comments grey text
-\newcommand{\mycomment}[2][10pt]{\hspace{#1}\rlap{\color{gray}\text{#2}}}
+\newcommand{\mycomment}[2][10pt]{\hspace{#1}\rlap{\color{grymath}\text{#2}}}
 
 % \obot and \bigobot from the matha and mathx font (from mathabx.sty)
 \DeclareFontFamily{U}{matha}{\hyphenchar\font45}
@@ -280,10 +282,6 @@
 
 \DeclareMathSymbol{\obot}{2}{matha}{"6B}
 \DeclareMathSymbol{\bigobot}{1}{mathx}{"CB}
-
-% overbrace and underbrace
-\newcommand{\myoverbrace}[3][gray]{{\color{#1}\overbrace{\color{black}#2}^{#3}}}
-\newcommand{\myunderbrace}[3][gray]{{\color{#1}\underbrace{\color{black}#2}_{#3}}}
 
 % Conveniences
 \renewcommand{\L}{\text{L}}

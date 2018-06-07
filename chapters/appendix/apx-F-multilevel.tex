@@ -26,12 +26,12 @@ The distribution of $\beta_{0j}$ is normal with zero mean and variance
 \end{align*}
 The covariance between any two random intercepts $\beta_{0j}$ and $\beta_{0j'}$ is
 \begin{align*}
-  \Cov(\beta_{0j},\beta_{0j'})
-  &= \Cov\left( \lambda_2\left( \frac{w_{+j}}{p_j} - w_{++} \right), \lambda_2\left( \frac{w_{+j'}}{p_{j'}} - w_{++} \right) \right)  \\
-  &= \frac{\lambda_2^2}{p_j p_{j'}} \cancelto{0}{\Cov(w_{+j},w_{+j'})} - \frac{\lambda_2^2}{p_j} \Cov(w_{+j},w_{++}) - \frac{\lambda_2^2}{p_{j'}} \Cov(w_{++},w_{+j'}) \\
-  &\phantom{==} + \lambda_2^2 \Cov(w_{++},w_{++}) \\
-  &= - \frac{\lambda_2^2}{\cancel{n_j}/n} \cancel{n_j}\psi - \frac{\lambda_2^2}{\cancel{n_{j'}}/n} \cancel{n_{j'}}\psi + \lambda_2^2 n\psi \\
-  &= -n\psi\lambda_2^2.
+  \Cov[\beta_{0j},\beta_{0j'}]
+  ={}& \Cov\left[ \lambda_2\left( \frac{w_{+j}}{p_j} - w_{++} \right), \lambda_2\left[ \frac{w_{+j'}}{p_{j'}} - w_{++} \right) \right]  \\
+  ={}& \frac{\lambda_2^2}{p_j p_{j'}} \cancelto{0}{\Cov(w_{+j},w_{+j'})} - \frac{\lambda_2^2}{p_j} \Cov[w_{+j},w_{++}] - \frac{\lambda_2^2}{p_{j'}} \Cov[w_{++},w_{+j'}] \\
+  & + \lambda_2^2 \Cov[w_{++},w_{++}] \\
+  ={}& - \frac{\lambda_2^2}{\cancel{n_j}/n} \cancel{n_j}\psi - \frac{\lambda_2^2}{\cancel{n_{j'}}/n} \cancel{n_{j'}}\psi + \lambda_2^2 n\psi \\
+  ={}& -n\psi\lambda_2^2.
 \end{align*}
 
 Functions in $\cF_{12}$, on the other hand, have the form
@@ -39,16 +39,13 @@ Functions in $\cF_{12}$, on the other hand, have the form
   f_{12}(\bx_i, j)
   &= \sum_{i'=1}^{n_{j'}}\sum_{j'=1}^m \lambda_1\lambda_2 \cdot \tilde \bx_i^{(j)\top} \tilde \bx_{i'}^{(j')} \cdot \left( \frac{\delta_{jj'}}{p_j} - 1 \right)  w_{i'j'} \\
   &=  \tilde \bx_i^{(j)\top}   
-  {\color{gray}
-  \underbrace{\color{black}
-  \left( \frac{\lambda_1\lambda_2}{p_j} \sum_{i'=1}^{n_{j}}  \tilde \bx_{i'}^{(j)} w_{i'j} - \lambda_1\lambda_2\sum_{i'=1}^{n_{j'}}\sum_{j'=1}^m  \tilde \bx_{i'}^{(j')}  w_{i'j'} \right)
-  }_{\boldsymbol\beta_{1j}}},
+  \myunderbrace{\left( \frac{\lambda_1\lambda_2}{p_j} \sum_{i'=1}^{n_{j}}  \tilde \bx_{i'}^{(j)} w_{i'j} - \lambda_1\lambda_2\sum_{i'=1}^{n_{j'}}\sum_{j'=1}^m  \tilde \bx_{i'}^{(j')}  w_{i'j'} \right)}{\boldsymbol\beta_{1j}},
 \end{align*}
 and this is, as expected, a linear form dependent on cluster $j$.
 We can calculate the variance for $\beta_{1j}$ to be
 \begin{align*}
   \Var \boldsymbol{\beta}_{1j}
-  &= \lambda_1^2\lambda_2^2 \Var\left( \frac{1}{p_j} \tilde\bX_j^\top \bw_j - \tilde\bX^\top \bw \right) \\
+  &= \lambda_1^2\lambda_2^2 \Var\left[ \frac{1}{p_j} \tilde\bX_j^\top \bw_j - \tilde\bX^\top \bw \right] \\
   &= \lambda_1^2\lambda_2^2 \left( \frac{\psi}{n_j^2/n^2} \tilde\bX_j^\top\tilde\bX_j + \psi \tilde\bX^\top  \tilde\bX - \frac{1}{p_j} \tilde\bX_j^\top \Cov( \bw_j,\bw) \tilde\bX^\top  \right) \\
   &= n\psi\lambda_1^2\lambda_2^2 \left( \frac{1}{p_j}\bS_j +  \bS - \bS_{j} \right) \\
   &= n\psi\lambda_1^2\lambda_2^2 \left( \left(\frac{1}{p_j}-1\right)\bS_j +  \bS  \right)
@@ -56,24 +53,24 @@ We can calculate the variance for $\beta_{1j}$ to be
 where $\bS_j = \frac{1}{n_j} \sum_{i=1}^{n_j} (\bx_i^{(j)} - \bar \bx)^\top(\bx_i^{(j)} - \bar \bx)$, $\bS = \frac{1}{n} \sum_{i=1}^{n_j} \sum_{j=1}^{m} (\bx_i^{(j)} -  \bar \bx)^\top(\bx_i^{(j)} - \bar \bx)$, and $\bar \bx = \frac{1}{n} \sum_{i=1}^{n_j} \sum_{j=1}^{m} \bx_i^{(j)}$.
 The covariance between two vectors of the random slopes is
 \begin{align*}
-  \Cov(\boldsymbol{\beta}_{1j},\boldsymbol{\beta}_{1j'}) 
-  &= \lambda_1^2\lambda_2^2  \Cov \left( \frac{1}{p_j} \tilde\bX_j^\top \bw_j - \tilde\bX^\top \bw, \frac{1}{p_{j'}} \tilde\bX_{j'}^\top \bw_{j'} - \tilde\bX^\top \bw  \right) \\
+  \Cov[\boldsymbol{\beta}_{1j},\boldsymbol{\beta}_{1j'}] 
+  &= \lambda_1^2\lambda_2^2  \Cov \left[ \frac{1}{p_j} \tilde\bX_j^\top \bw_j - \tilde\bX^\top \bw, \frac{1}{p_{j'}} \tilde\bX_{j'}^\top \bw_{j'} - \tilde\bX^\top \bw  \right] \\
   &= \psi\lambda_1^2\lambda_2^2 \left( \tilde\bX^\top\tilde\bX - \frac{1}{p_j}\tilde\bX_j^\top\tilde\bX_j  - \frac{1}{p_{j'}}\tilde\bX_{j'}^\top\tilde\bX_{j'} \right) \\
   &= n\psi\lambda_1^2\lambda_2^2 \left( \bS - \bS_j - \bS_{j'}  \right).
 \end{align*}
 
 Another quantity of interest is the covariance between the random intercepts and random slopes:
 \begin{align*}
-  \Cov(\beta_{0j}, \boldsymbol{\beta}_{1j}) 
-  &= \lambda_1\lambda_2^2  \Cov\left( \frac{1}{p_{j}} \bone_{n_j}^\top \bw_{j} - \bone_n^\top \bw, \frac{1}{p_{j}} \tilde\bX_{j}^\top \bw_{j} - \tilde\bX^\top \bw   \right) \\
+  \Cov[\beta_{0j}, \boldsymbol{\beta}_{1j}] 
+  &= \lambda_1\lambda_2^2  \Cov\left[ \frac{1}{p_{j}} \bone_{n_j}^\top \bw_{j} - \bone_n^\top \bw, \frac{1}{p_{j}} \tilde\bX_{j}^\top \bw_{j} - \tilde\bX^\top \bw   \right] \\
   &= \psi\lambda_1\lambda_2^2  \left( \cancelto{0}{\bone_{n}^\top \tilde\bX} + \frac{1}{p_{j}^2} \bone_{n_j}^\top \tilde\bX_j  - \frac{2}{p_{j}} \bone_{n_{j}}^\top \tilde\bX_{j} \right) \\
   &= n\psi\lambda_1\lambda_2^2  \left(  \left(\frac{1}{p_j} - 2 \right) \frac{1}{n_{j}} \sum_{i=1}^{n_j}(\bx_i^{(j)} - \bar \bx)  \right) \\
   &= n\psi\lambda_1\lambda_2^2 \left(\frac{1}{p_j} - 2 \right) ( \bar\bx^{(j)}   -\bar \bx  ) 
 \end{align*}
 and
 \begin{align*}
-  \Cov(\beta_{0j}, \boldsymbol{\beta}_{1j'}) 
-  &= \lambda_1\lambda_2^2  \Cov\left( \frac{1}{p_{j}} \bone_{n_j}^\top \bw_{j} - \bone_n^\top \bw, \frac{1}{p_{j'}} \tilde\bX_{j'}^\top \bw_{j'} - \tilde\bX^\top \bw   \right) \\
+  \Cov[\beta_{0j}, \boldsymbol{\beta}_{1j'}] 
+  &= \lambda_1\lambda_2^2  \Cov\left[ \frac{1}{p_{j}} \bone_{n_j}^\top \bw_{j} - \bone_n^\top \bw, \frac{1}{p_{j'}} \tilde\bX_{j'}^\top \bw_{j'} - \tilde\bX^\top \bw   \right] \\
   &= \psi\lambda_1\lambda_2^2  \left( \cancelto{0}{\bone_{n}^\top \tilde\bX} + \frac{1}{p_{j}p_{j'}} \bone_{n_j}^\top \cancelto{0}{\Cov(\bw_j,\bw_{j'})} \tilde\bX_{j'} - \frac{1}{p_{j}} \bone_{n_j}^\top \tilde\bX_j  - \frac{1}{p_{j'}} \bone_{n_{j'}}^\top \tilde\bX_{j'} \right) \\
   &= n\psi\lambda_1\lambda_2^2  \left(  - \frac{1}{n_{j}} \sum_{i=1}^{n_j}(\bx_i^{(j)} - \bar \bx)  - \frac{1}{n_{j'}} \sum_{i=1}^{n_{j'}}(\bx_i^{(j')} - \bar \bx) \right) \\
   &= n\psi\lambda_1\lambda_2^2  \left(  2\bar \bx -  \bar\bx^{(j)}  -  \bar \bx^{(j')}  \right).

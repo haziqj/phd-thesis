@@ -90,7 +90,7 @@ Thus, to sample variables $x$ from $p(x)$, one artificially introduces momentum 
 The HMC algorithm is summarised in \cref{alg:hmc}.
 
 %\vspace{1em}
-\algrenewcommand{\algorithmiccomment}[1]{{\color{gray} \hfill $\triangleright$ #1}}
+\algrenewcommand{\algorithmiccomment}[1]{{\color{grymath} \hfill $\triangleright$ #1}}
 \begin{algorithm}[hbt]
 \caption{Hamiltonian Monte Carlo}
 \label{alg:hmc}
@@ -130,7 +130,7 @@ The HMC algorithm is summarised in \cref{alg:hmc}.
   \vspace{-20pt}  
   \includegraphics[width=0.49\textwidth]{figure/04-phase7}
   \includegraphics[width=0.49\textwidth]{figure/04-phase8}
-  \caption{A phase diagram schematic of HMC sampling in one-dimension. At step 0, initialise values for momentum and position. At step 1, simulate movement using Hamiltonian dynamics, accept position and discard momentum. At step 2, perturb momentum using a normal density, then repeat.}
+  \caption[A phase diagram schematic of HMC sampling in one-dimension. At step 0, initialise values for momentum and position]{A phase diagram schematic of HMC sampling in one-dimension. At step 0, initialise values for momentum and position. At step 1, simulate movement using Hamiltonian dynamics, accept position and discard momentum. At step 2, perturb momentum using a normal density, then repeat.}
 \end{figure}
 \vspace{-0.5em}
 

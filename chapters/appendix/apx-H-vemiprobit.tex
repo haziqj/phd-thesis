@@ -110,20 +110,20 @@ For simplicity, write $\bar\by^* = \vecc(\by^* - \bone_n\balpha^\top)$, and $\bM
 Thus,
 \begin{align*}
   \log \tilde q(\bw) 
-  &= \E_{\by^*\sim \tilde q} \left[ 
+  ={}& \E_{\by^*\sim \tilde q} \left[ 
   -\half (\bar\by^* - \bM\vecc\bw )^\top(\bPsi^{-1} \otimes \bI_n)^{-1} (\bar\by^* - \bM\vecc\bw )
   \right] \\
-  &\phantom{==} + \E_{\by^*\sim \tilde q} \left[ 
+  & + \E_{\by^*\sim \tilde q} \left[ 
   -\half (\vecc \bw )^\top(\bPsi \otimes \bI_n)^{-1} \vecc (\bw ) \right] + \const \\
-  &= -\half\E_{\by^*\sim \tilde q} \left[ 
+  ={}& -\half\E_{\by^*\sim \tilde q} \left[ 
   (\vecc\bw)^\top \Big( \,
   \myoverbrace{\bM^\top(\bPsi \otimes \bI_n)\bM + (\bPsi^{-1} \otimes \bI_n)}{\bA} 
   \, \Big) \vecc (\bw )
   \right] \\
-  &\phantom{==} + \E_{\by^*\sim \tilde q} \Big[ 
+  & + \E_{\by^*\sim \tilde q} \Big[ 
   \myoverbrace{\bar\by^{*\top} (\bPsi \otimes \bI_n) \bM}{\ba^\top} \vecc (\bw )
   \Big] + \const \\
-  &= -\half\E_{\by^*\sim \tilde q} \left[
+  ={}& -\half\E_{\by^*\sim \tilde q} \left[
   (\vecc\bw - \bA^{-1}\ba)^\top \bA (\vecc\bw - \bA^{-1}\ba)
   \right] + \const
 \end{align*}
@@ -171,9 +171,9 @@ The mean $\vecc \tilde\bw$ is
   (\tilde\by^* - \bone_n\balpha^\top) \\
   &= 
   \bordermatrix{
-  &\color{gray}\tilde\bw_{\bigcdot 1}^\top 
-  &\color{gray}\cdots 
-  &\color{gray}\tilde\bw_{\bigcdot m}^\top \cr
+  &\color{grymath}\tilde\bw_{\bigcdot 1}^\top 
+  &\color{grymath}\cdots 
+  &\color{grymath}\tilde\bw_{\bigcdot m}^\top \cr
   &\big(\psi_1\tilde\bV_{w_{1}}\bH_\eta(\tilde\by^*_{\bigcdot 1} - \alpha_1\bone_n)\big)^\top
   &\cdots 
   &\big(\psi_m\tilde\bV_{w_{m}}\bH_\eta(\tilde\by^*_{\bigcdot m} - \alpha_m\bone_n)\big)^\top

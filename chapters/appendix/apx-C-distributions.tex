@@ -134,12 +134,12 @@ A useful reference for these identities is \citet{petersen2008matrix}.
 Differentiating the log-likelihood for $\theta$ with respect to the $i$'th component of $\theta$ yields
 \begin{align*}
 \frac{\partial}{\partial \theta_i} L(\theta|X) 
-  &= -\half \frac{\partial}{\partial \theta_i} \log \abs{\Sigma_\theta} - \half \frac{\partial}{\partial \theta_i} \tr(\Sigma_\theta^{-1}\Xmu\Xmu^\top) \\
-  &= -\half \tr \left(\Sigma_\theta^{-1} \frac{\partial\Sigma_\theta}{\partial \theta_i}  \right) - \half \tr \left( \frac{\partial\Sigma_\theta^{-1}}{\partial \theta_i} \Xmu\Xmu^\top \right)   \\
-  &\phantom{==} - \half \tr \left( \Sigma_\theta^{-1} \frac{\partial}{\partial \theta_i}\big( \Xmu\Xmu^\top \big) \right) \\
-  &= -\myoverbrace{\half \tr \left( \Sigma_\theta^{-1} \frac{\partial\Sigma_\theta}{\partial \theta_i}\right)}{(A)}
+  ={}& -\half \frac{\partial}{\partial \theta_i} \log \abs{\Sigma_\theta} - \half \frac{\partial}{\partial \theta_i} \tr(\Sigma_\theta^{-1}\Xmu\Xmu^\top) \\
+  ={}& -\half \tr \left(\Sigma_\theta^{-1} \frac{\partial\Sigma_\theta}{\partial \theta_i}  \right) - \half \tr \left( \frac{\partial\Sigma_\theta^{-1}}{\partial \theta_i} \Xmu\Xmu^\top \right)   \\
+  & - \half \tr \left( \Sigma_\theta^{-1} \frac{\partial}{\partial \theta_i}\big( \Xmu\Xmu^\top \big) \right) \\
+  ={}& -\myoverbrace{\half \tr \left( \Sigma_\theta^{-1} \frac{\partial\Sigma_\theta}{\partial \theta_i}\right)}{(A)}
   - \myoverbrace{\half \tr \left( \Sigma_\theta^{-1} \frac{\partial\Sigma_\theta}{\partial \theta_i}\Sigma_\theta^{-1} \Xmu\Xmu^\top \right)}{(B)} \\
-  &\phantom{==}  + \myoverbrace{\tr \left( \Sigma_\theta^{-1}\Xmu\dmuitop \right)}{(C)}.
+  ={}&  + \myoverbrace{\tr \left( \Sigma_\theta^{-1}\Xmu\dmuitop \right)}{(C)}.
 \end{align*}
 
 Taking derivatives again, this time with respect to $\theta_j$, of the three parts (A), (B) and (C) above, we get:
@@ -159,16 +159,16 @@ Taking derivatives again, this time with respect to $\theta_j$, of the three par
     &\tr \left( 
     \Sigma_\theta^{-1} \dSi \Sigma_\theta^{-1} \Xmu\Xmu^\top 
     \right)  \\
-    &= \half \tr \left( 
+    ={}& \half \tr \left( 
     \dSjnv \dSi \Sigma_\theta^{-1} \Xmu\Xmu^\top
     \right) \\
-    &\phantom{==} +\half \tr \left( 
+    & +\half \tr \left( 
     \Sigma_\theta^{-1} \dStwo \Sigma_\theta^{-1} \Xmu\Xmu^\top
     \right) \\
-    &\phantom{==} +\half \tr \left( 
+    & +\half \tr \left( 
     \Sigma_\theta^{-1} \dSi \dSjnv \Xmu\Xmu^\top
     \right) \\
-    &\phantom{==} - \tr \left( 
+    & - \tr \left( 
     \Sigma_\theta^{-1} \dSi \Sigma_\theta^{-1} \dmuj\Xmu^\top
     \right)
   \end{align*}
@@ -190,11 +190,11 @@ The Fisher information matrix $U$ contains $(i,j)$ entries equal to the expectat
 Using the fact that 1) $\E[X-\mu_\theta]=0$; 2) $\E [\tr \Sigma] = \tr (\E \Sigma)$; 3) $\E [XX^\top] = \Sigma_\theta$; and 4) the trace is invariant under cyclic permutations, we get
 \begin{align*}
   U_{ij} 
-  &= \tr \left( \Sigma_\theta^{-1} \dmuj \dmuitop \right)   \\
-  &\phantom{==} + \half \tr \left( 
+  ={}& \tr \left( \Sigma_\theta^{-1} \dmuj \dmuitop \right)   \\
+  & + \half \tr \left( 
   \cancel{\dSjnv \dSi} + \cancel{\Sigma_\theta^{-1}\dStwo}
   - \cancel{\dSjnv \dSi}  - \cancel{\Sigma_\theta^{-1}\dStwo} -  \dSi\dSjnv \right) \\
-  &=  \dmuitop \Sigma_\theta^{-1} \dmuj + \half \tr \left(\Sigma_\theta^{-1} \dSi \Sigma_\theta^{-1} \dSj \right)
+  ={}&  \dmuitop \Sigma_\theta^{-1} \dmuj + \half \tr \left(\Sigma_\theta^{-1} \dSi \Sigma_\theta^{-1} \dSj \right)
 \end{align*}
 as required.  \qedhere
 

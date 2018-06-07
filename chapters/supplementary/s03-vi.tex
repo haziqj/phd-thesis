@@ -77,7 +77,7 @@ In this case, the task is to find optimal mean and variance parameters of a norm
     \node[gray] at (4.5,1.4) {$\KL(q\Vert p)$};
   \end{tikzpicture}
   \vspace{-1em}
-  \caption[Schematic view of variational inference. The aim is to find the closest distribution $q$ (parameterised by a variational parameter $\nu$) to $p$ in terms of KL divergence within the set of variational distributions, represented by the ellipse.]{Schematic view of variational inference\footnotemark. The aim is to find the closest distribution $q$ (parameterised by a variational parameter $\nu$) to $p$ in terms of KL divergence within the set of variational distributions, represented by the ellipse.}
+  \caption[Schematic view of variational inference]{Schematic view of variational inference\footnotemark. The aim is to find the closest distribution $q$ (parameterised by a variational parameter $\nu$) to $p$ in terms of KL divergence within the set of variational distributions, represented by the ellipse.}
 \end{figure}
 \footnotetext{Reproduced from the talk by David Blei entitled `Variational Inference: Foundations and Innovations', 2017. URL: \url{https://simons.berkeley.edu/talks/david-blei-2017-5-1}.}
 
@@ -107,12 +107,12 @@ The impact of the mean-field factorisation on the ELBO is inspected:
 and rearranging slightly for terms involving the $j$'th component only, we get
 \begin{align*}
   \cL(q) 
-  &= \idotsint \left( \log p(\by,\bw)  - \log q_j(w_{[j]}) + \const \right) q_j(w_{[j]}) \dint w_{[j]} \prod_{k\neq j} \left\{ q_k(w_{[k]}) \dint w_{[k]} \right\} \\
-  &= \int \Bigg( 
-  \greyoverbrace{\idotsint \log p(\by,\bw)  \prod_{k\neq j} \left\{ q_k(w_{[k]}) \dint w_{[k]} \right\}}{\log \tilde p(\by,w_{[j]}) + \const}
+  ={}& \idotsint \left( \log p(\by,\bw)  - \log q_j(w_{[j]}) + \const \right) q_j(w_{[j]}) \dint w_{[j]} \prod_{k\neq j} \left\{ q_k(w_{[k]}) \dint w_{[k]} \right\} \\
+  ={}& \int \Bigg( 
+  \myoverbrace{\idotsint \log p(\by,\bw)  \prod_{k\neq j} \left\{ q_k(w_{[k]}) \dint w_{[k]} \right\}}{\log \tilde p(\by,w_{[j]}) + \const}
   \Bigg) q_j(w_{[j]}) \dint w_{[j]} \\
-  &\phantom{==} - \int  \log q_j(w_{[j]}) q_j(w_{[j]}) \dint w_{[j]} + \const \\
-  &= -\KL(q_{[j]} \Vert \tilde p) + \const
+  & - \int  \log q_j(w_{[j]}) q_j(w_{[j]}) \dint w_{[j]} + \const \\
+  ={}& -\KL(q_{[j]} \Vert \tilde p) + \const
 \end{align*}
 The task of maximising $\cL$ is then equivalent to maximising $-\KL(q_{[j]} \Vert \tilde p)$, where $\tilde p$ is defined in the overbrace of the second line in the equation above.
 Thus, for each $w_{[k]}$, $k=1,\dots,M$, $\tilde q_k$ satisfies

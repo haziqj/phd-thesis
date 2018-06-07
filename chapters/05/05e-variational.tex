@@ -148,7 +148,7 @@ Specifically, when the error precision is of the form $\bPsi = \diag(\psi_1,\dot
   \tr \Big( \bPsi\E(\bw^\top\bH_\eta^2\bw)  + \bPsi^{-1} \E(\bw^\top\bw) \Big)
   &= \sum_{j=1}^m \left\{ \psi_j \tr(\bH_\eta^2\tilde\bW_{jj}) + \psi_j^{-1} \tr(\tilde\bW_{jj}) \right\} \\
   &= \sum_{j=1}^m \tr\big( 
-  (\greyoverbrace{\psi_j\bH_\eta^2 + \psi_j^{-1}\bI_n}{\bSigma_{\theta,j}}) 
+  (\myoverbrace{\psi_j\bH_\eta^2 + \psi_j^{-1}\bI_n}{\bSigma_{\theta,j}}) 
   \tilde\bW_{jj} \big)
 \end{align*}
 
@@ -244,7 +244,7 @@ Further, the ELBO expression to be maximised is often not convex, which means th
 Note that the variational distribution with the higher ELBO value is the distribution that is closer, in terms of the KL divergence, to the true posterior distribution.
 In our experience, multiple random starts alleviates this issue for the I-probit model.
 
-\algrenewcommand{\algorithmiccomment}[1]{{\color{gray} \hfill $\triangleright$ #1}}
+\algrenewcommand{\algorithmiccomment}[1]{{\color{grymath} \hfill $\triangleright$ #1}}
 \begin{algorithm}[p]
 \caption{Variational EM for the I-probit model (fixed $\bPsi$)}\label{alg:varemiprobit}
 \begin{algorithmic}[1]

@@ -144,7 +144,7 @@ From \cref{eq:frech2gat}, it must be that
 \begin{align*}
   \d^2 \funder(x)(v,v') &= \lim_{t\to 0} \frac{\d \funder(x + t v)(v') - \d \funder(x)(v')}{t} \\
   &= \lim_{t\to 0} \frac{\ip{\nabla \funder(x+tv), v'}_\cV - \ip{\nabla \funder(x), v'}_\cV}{t} \\
-  &= \lim_{t\to 0} \left\langle \frac{\nabla \funder(x+tv) - \nabla \funder(x)}{t} , v' \right\rangle_\cV \\%\hspace{10pt} \rlap{\color{gray} \text{by linearity}} \\
+  &= \lim_{t\to 0} \left\langle \frac{\nabla \funder(x+tv) - \nabla \funder(x)}{t} , v' \right\rangle_\cV \\%\hspace{10pt} \rlap{\color{grymath} \text{by linearity}} \\
   &= \left\langle \partial_v \nabla \funder(x) , v' \right\rangle_\cV.
 \end{align*}
 The second line follows from the definition of gradients, the third line by linearity of inner products, and the final line by definition of Gâteaux derivatives and continuity of inner products\footnote{For any continuous function $g:\bbR\to\bbR$, $\lim_{x\to a} g(x) = g(\lim_{x\to a} x) = g(a)$.}.
