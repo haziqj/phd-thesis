@@ -403,13 +403,7 @@
   citecolor=lsedpr,
   urlcolor=lsepur
 }
-\newcommand{\mypageref}[1]{%
-  \ifstandalone
-    {{\color{lsedpr}p.} \pageref{#1}}%
-  \else
-    \cpageref{#1}%
-  \fi
-}
+\newcommand{\mypageref}[1]{{{\color{lsedpr}p.} \pageref{#1}}}
 
 % Page intentionally left blank
 %\makeatletter

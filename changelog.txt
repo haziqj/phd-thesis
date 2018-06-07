@@ -52,7 +52,7 @@ Chapter 7
 
 Supplementaries & Appendices
 
-- No change.
+- Removed example on component-wise derivatives failing in Hilbert space
 
 Review before submission
 
