@@ -30,15 +30,15 @@
 \renewcommand{\chaptermark}[1]{%
   \markboth{#1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection~#1}}
-\fancyfoot[LE,RO]{\small\thepage}
-%\fancyfoot[RE,LO]{\small\nouppercase{\leftmark}~--- \nouppercase{\rightmark}}  % if oneside
-\fancyfoot[RE]{\small\nouppercase{\leftmark}}  % if twoside
-\fancyfoot[LO]{\small\nouppercase{\rightmark}}  % if twoside
+\fancyfoot[RO]{\small\nouppercase{\rightmark}\begin{tikzpicture}[remember picture,overlay]\node [anchor=west,xshift=-21mm,yshift=72.81pt] at (current page.south east) {\small\thepage};  \end{tikzpicture}}
+\fancyfoot[LE]{\small\nouppercase{\leftmark}\begin{tikzpicture}[remember picture,overlay]\node [anchor=east,xshift=21mm,yshift=72.81pt] at (current page.south west) {\small\thepage};  \end{tikzpicture}}
 
 \fancypagestyle{plain}{%
   \fancyhf{}
-  \fancyfoot[LE,RO]{\small\thepage}
+  \fancyfoot[RO]{\begin{tikzpicture}[remember picture,overlay]\node [anchor=west,xshift=-21mm,yshift=72.81pt] at (current page.south east) {\small\thepage};  \end{tikzpicture}}
+  \fancyfoot[LE]{\begin{tikzpicture}[remember picture,overlay]\node [anchor=east,xshift=21mm,yshift=72.81pt] at (current page.south west) {\small\thepage};  \end{tikzpicture}}
 }
+% https://tex.stackexchange.com/questions/195106/page-numbers-on-the-side-of-the-page
 
 % Typeset and appearance
 \usepackage[english]{babel}   % manages structure of paper better
