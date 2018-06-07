@@ -1,4 +1,4 @@
-\documentclass[showframe,11pt]{report}\usepackage[]{graphicx}\usepackage[]{color}
+\documentclass[showframe,11pt,twoside,openright]{report}\usepackage[]{graphicx}\usepackage[]{color}
 %% maxwidth is the original width if it is less than linewidth
 %% otherwise use linewidth (to make sure the graphics do not exceed the margin)
 \makeatletter
@@ -75,6 +75,7 @@ The \pkg{iprior} package comes documented with usage examples in the vignette.
 The complete source code for replication is found at \url{http://myphdcode.haziqj.ml}.
 Note that in all of these examples, \ref{ass:A1}--\ref{ass:A3} were assumed.
 
+\pagebreak
 \subsection{Random effects models}
 
 In this section, a comparison between a standard random effects model and the I-prior approach for estimating varying intercept and slopes model is illustrated.
@@ -109,11 +110,13 @@ The data were collected with the aim of identifying possible trends in control v
 \citet{pinheiro2000mixed} remarks that this is not considered a longitudinal problem because different samples were used at each measurement.
 
 We shall  model the IGF data set using the I-prior methodology using the ANOVA-decomposed regression function
-%
+\begingroup
+\setlength{\abovedisplayskip}{8pt}
+\setlength{\belowdisplayskip}{8pt}
 \[
   f(\texttt{age}, \texttt{Lot}) = f_1(\texttt{age}) + f_2(\texttt{Lot}) + f_{12}(\texttt{age}, \texttt{Lot})
 \]
-%
+\endgroup
 where $f_1$ lies in the linear RKHS $\cF_1$, $f_2$ in the Pearson RKHS $\cF_2$ and $f_{12}$ in the tensor product space $\cF_{12} = \cF_1 \otimes \cF_2$.
 The regression function $f$ then lies in the RKHS $\cF = \cF_1 \oplus \cF_2 \oplus \cF_{12}$ with kernel equal to the sum of the kernels from each of the RKHSs.
 The explanation here is that the \code{conc} levels are assumed to be related to both \code{age} and \code{Lot}, and in particular, the contribution of \code{age} on \code{conc} varies with each individual \code{Lot}.
@@ -272,7 +275,6 @@ One of the eigenvalues was found to be negative, so the covariance matrix is non
 
 \end{knitrout}
 
-\pagebreak
 Degenerate covariance matrices often occur in models with a large number of random coefficients, and in cases where values of the variance components are estimated at the boundary.
 These are typically solved by setting restrictions which then avoids overparameterising the model.
 One advantage of the I-prior method for varying intercept/slopes model is that the positive-definiteness is automatically taken care of.
@@ -305,7 +307,6 @@ $\rho_{01}$   & 0.690& -1.000 \\
 \bottomrule
 \end{tabular}
 \end{table}
-
 
 \subsection{Longitudinal data analysis}
 \label{sec:cows}
@@ -392,7 +393,7 @@ Here is the code and output for fitting the first model:
 \begin{alltt}
 \hlstd{R> }\hlcom{# Model 1: weight ~ f(time)}
 \hlstd{R> }\hlkwd{set.seed}\hlstd{(}\hlnum{456}\hlstd{)}
-\hlstd{R> }\hlstd{(mod1} \hlkwb{<-} \hlkwd{iprior}\hlstd{(weight} \hlopt{~} \hlstd{time, cattle,} \hlkwc{kernel} \hlstd{=} \hlstr{"fbm"}\hlstd{,} \hlkwc{method} \hlstd{=} \hlstr{"mixed"}\hlstd{))}
+\hlstd{R> }\hlstd{(mod1} \hlkwb{<-} \hlkwd{iprior}\hlstd{(weight} \hlopt{~} \hlstd{time, cattle,} \hlkwc{kern} \hlstd{=} \hlstr{"fbm"}\hlstd{,} \hlkwc{method} \hlstd{=} \hlstr{"mixed"}\hlstd{))}
 \end{alltt}
 \begin{verbatim}
 ## Running 5 initial EM iterations
@@ -451,7 +452,7 @@ The log-likelihood ratio test statistic is
 $D = -2(-2791.42 - (-2270.85)) = 1041.14$, which has an asymptotic chi-squared distribution with $3 - 2 = 1$ degree of freedom.
 The $p$-value for this likelihood ratio test is less than $10^{-6}$, so we conclude that Model 4 is significantly better.
 
-We can next investigate whether the treatment effect differs among cows by comparing Model 5 against Model 4.
+We can next investigate whether the treatment effect differs among cows by comparing Models 5 and 4.
 As these models have the same number of parameters, we can simply choose the one with the higher likelihood, which is Model 5.
 We conclude that treatment does indeed have an effect on growth, and that the treatment effect differs among cows.
 A plot of the fitted regression curves onto the cow data set is shown in \cref{fig:cows.plot}.
@@ -627,9 +628,37 @@ We see that starting from eight different initial values, direct optimisation le
 
 
 
+Predicted values of the test data is obtained using \code{predict()}.
+An example for obtaining the first model's predicted values is shown below.
+The \code{predict()} method for \code{ipriorMod} objects also return the test MSE if the vector of test data is supplied.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{R> }\hlkwd{predict}\hlstd{(mod1,} \hlkwc{newdata} \hlstd{=} \hlkwd{list}\hlstd{(absorp.test),} \hlkwc{y.test} \hlstd{= fat.test)}
+\end{alltt}
+\begin{verbatim}
+## Test RMSE: 2.890353 
+## 
+## Predicted values:
+##  [1] 43.607 20.444  7.821  4.491  9.044  8.564  7.935 11.615 13.807
+## [10] 17.359
+## # ... with 33 more values
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+These results are summarised in \cref{tab:tecator}.
+For the I-prior models, a linear effect of the functional covariate gives a training RMSE of 2.89, which is improved by both the qudratic and cubic model.
+The training RMSE is improved further by assuming a smooth RKHS of functions for $f$, i.e. the fBm and SE RKHSs.
+When it comes to out-of-sample test error rates, the cubic model gives the best RMSE out of the I-prior models for this particular data set, with an RMSE of 0.58.
+This is followed closely by the fBm RKHS with estimated Hurst coefficient (fBm-0.70) and also the fBm RKHS with default Hurst coefficient (fBm-0.50).
+The best performing I-prior model is only outclassed by the neural networks of \citet{thodberg1996review}, who also performed model selection using automatic relevance determination (ARD).
+The I-prior models also give much better test RMSE than Gaussian process regression.
+
 % \renewcommand{\TPTminimum}{0.5\linewidth}
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
-\begin{table}[p]
+\begin{table}[b!]
 \centering
 \caption{A summary of the root mean squared error (RMSE) of prediction for the I-prior models and various other methods in literature conducted on the Tecator data set. Values for the methods under \emph{Others} were obtained from the corresponding references cited earlier.}
 \label{tab:tecator}
@@ -697,34 +726,6 @@ We see that starting from eight different initial values, direct optimisation le
 \end{threeparttable}
 \end{table}
 
-Predicted values of the test data is obtained using \code{predict()}.
-An example for obtaining the first model's predicted values is shown below.
-The \code{predict()} method for \code{ipriorMod} objects also return the test MSE if the vector of test data is supplied.
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{R> }\hlkwd{predict}\hlstd{(mod1,} \hlkwc{newdata} \hlstd{=} \hlkwd{list}\hlstd{(absorp.test),} \hlkwc{y.test} \hlstd{= fat.test)}
-\end{alltt}
-\begin{verbatim}
-## Test RMSE: 2.890353 
-## 
-## Predicted values:
-##  [1] 43.607 20.444  7.821  4.491  9.044  8.564  7.935 11.615 13.807
-## [10] 17.359
-## # ... with 33 more values
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-These results are summarised in \cref{tab:tecator}.
-For the I-prior models, a linear effect of the functional covariate gives a training RMSE of 2.89, which is improved by both the qudratic and cubic model.
-The training RMSE is improved further by assuming a smooth RKHS of functions for $f$, i.e. the fBm and SE RKHSs.
-When it comes to out-of-sample test error rates, the cubic model gives the best RMSE out of the I-prior models for this particular data set, with an RMSE of 0.58.
-This is followed closely by the fBm RKHS with estimated Hurst coefficient (fBm-0.70) and also the fBm RKHS with default Hurst coefficient (fBm-0.50).
-The best performing I-prior model is only outclassed by the neural networks of \citet{thodberg1996review}, who also performed model selection using automatic relevance determination (ARD).
-The I-prior models also give much better test RMSE than Gaussian process regression.
-
 \subsection[Using the Nystrom method]{Using the Nystr\"om method}
 
 We investigate the use of the Nystr\"om method of approximating the kernel matrix in estimating I-prior models.
@@ -786,7 +787,7 @@ To implement the Nystr\"om method, the option \code{nystrom = 50} was added to t
 \end{knitrout}
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[htbp]
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[t!]
 
 {\centering \includegraphics[width=0.785\textwidth]{figure/04-nystrom_plot-1} 
 \includegraphics[width=0.785\textwidth]{figure/04-nystrom_plot-2} 
@@ -798,8 +799,6 @@ To implement the Nystr\"om method, the option \code{nystrom = 50} was added to t
 
 
 \end{knitrout}
-% out.width = "0.49\\textwidth", fig.width = 5, fig.height = 5 * 4 / 6.5,
-
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
 \begin{alltt}

@@ -15,7 +15,7 @@ In addition, assume $\nu$ is a probability measure over $\Theta$ so that $(\Thet
 \end{definition}
 
 In deriving the maximum entropy distribution, we will need to maximise the functional $H$ with respect to $p$.
-Typically, this is done using calculus of variations techniques, and standard calculations \colp{\cref{apx:funcder}} reveal that the functional derivative of $H(p)$ with respect to $p$, denoted $\partial H/\partial p$, is equal to $- 1 - \log p$. 
+Typically, this is done using calculus of variations techniques, and standard calculations \colp{\cref{apx:funcder}, \mypageref{apx:funcder}} reveal that the functional derivative of $H(p)$ with respect to $p$, denoted $\partial H/\partial p$, is equal to $- 1 - \log p$. 
 We now present another well known result from information theory, regarding the form of the maximum entropy distribution.
 
 \begin{lemma}[Maximum entropy distribution]\label{thm:maxentr}
@@ -50,7 +50,7 @@ We now present another well known result from information theory, regarding the 
       \gamma_1 \left(\int_\Theta D(\theta,\theta_0)^2 p(\theta) \dint\nu(\theta) - \const \right) \\
       &+ \gamma_2 \left( \int_\Theta p(\theta) \dint\nu(\theta) - 1 \right).
   \end{align*}
-  Taking derivatives with respect to $p$ (see \cref{apx:funcder} for definition of functional derivatives) yields
+  Taking derivatives with respect to $p$ (see \cref{apx:funcder}, \mypageref{apx:funcder} for definition of functional derivatives) yields
   \begin{align*}
     \frac{\partial}{\partial p} \cL(p,\gamma_1,\gamma_2)(\theta)
     = - 1 - \log p(\theta) + \gamma_1 D(\theta,\theta_0)^2 + \gamma_2.
@@ -131,7 +131,7 @@ We now state and prove the main I-prior theorem.
   \end{align*}
   so $\mu \equiv f_0$. 
   
-  Following \cref{def:covoper}, the covariance between two evaluation functionals of $f$ is shown to satisfy 
+  Following \cref{def:covoper} \colp{\mypageref{def:covoper}}, the covariance between two evaluation functionals of $f$ is shown to satisfy 
   \begin{align*}
     \Cov\big[f(x),f(x')\big] 
     &= \Cov\big[\ip{f,h(\cdot,x)}_{\cF}, \ip{f,h(\cdot,x')}_{\cF} \big] \\

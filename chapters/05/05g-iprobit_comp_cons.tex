@@ -84,15 +84,15 @@ That is,
 With this setup, the probability $p_{j}$ of an observation belonging to class $j$, which is equivalent to the probability that each $ z_{j'} < 0$, $j'=1,\dots,m-1$, can be expressed as
 \begin{align*}
   p_j 
-  &= \Prob( z_1 < 0,\dots, z_{m-1} < 0) \\
-  &= 
+  ={}& \Prob( z_1 < 0,\dots, z_{m-1} < 0) \\
+  ={}& 
   \Prob(\zeta_1 < u_1,\dots,\zeta_{m-1}<u_{m-1}) \\
-  &= 
+  ={}& 
   \Prob(\zeta_1 < u_1)
   \Prob(\zeta_2 < u_2|\zeta_1 < u_1)
   \Prob(\zeta_3 < u_3|\zeta_1 < u_1,\zeta_2 < u_2)
   \cdots \\
-  &\phantom{==}\cdots
+  &\cdots
   \Prob(\zeta_{m-1}<u_{m-1}|\zeta_1 < u_1,\dots,\zeta_{m-2}<u_{m-2}),
 \end{align*}
 where 

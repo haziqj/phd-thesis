@@ -173,10 +173,10 @@ On the bright side, once the kernel matrices are stored in hard memory, the \pkg
 A practical situation where this might be useful is when we would like to repeat the EM at various initial values.
 Although front-loading of kernel matrices increase storage requirements, this is manageable in practice in modern computer systems for sample sizes of $n \leq 5,000$, and there is a clear advantage of doing so.
 
-\begin{figure}[H]
+\begin{figure}[htb]
   \centering
-  \includegraphics[width=0.85\textwidth]{figure/04-iprior_size}
-  \caption[Storage cost of front-loading the kernel matrices.]{Storage cost of front-loading the kernel matrices for varying number of ANOVA components $p=1,\dots,5$ and sample sizes. Solid lines indicate actual values, while dotted lines represent (linear) predictions. Storage requirements increases exponentially, since for $p$ ANOVA components, there are $2^{p+1}$ kernel matrices to store in memory.}
+  \includegraphics[width=0.831\textwidth]{figure/04-iprior_size}
+  \caption[Storage cost of front-loading the kernel matrices.]{Storage cost of front-loading the kernel matrices for varying number of ANOVA components $p=1,\dots,5$ and sample sizes. Solid lines indicate actual values, while dotted lines are (linear) extrapolations. Storage requirements increases exponentially, since for $p$ ANOVA components, there are $2^{p+1}$ kernel matrices to store in memory.}
   \label{fig:ipriorstorage}
 \end{figure}
 
@@ -231,9 +231,7 @@ Defining $\bR_k$ and $\bS_k$ as the kernel matrices with $(i,j)$ entries $r_k(x_
   \bH_\eta^2 = \lambda_k^2\bR_k^2 + \lambda_k \myoverbrace{\big(\bR_k\bS_k + (\bR_k\bS_k)^\top \big)}{\bU_k} + \bS_k^2.
 \]
 
-\vspace{-1em}
 Consider now the full data log-likelihood for $\lambda_k$, $k=1,\dots,p$, conditionally dependent on the rest of the unknown parameters $\lambda_{-k} = \{\lambda_1,\dots,\lambda_p\} \backslash \{ \lambda_k \}$ and $\psi$:
-\vspace{-0.15em}
 \begin{align}
   L(\lambda_k|\by,\bw,\lambda_{-k},\psi)
   &= \const 
@@ -245,13 +243,13 @@ Consider now the full data log-likelihood for $\lambda_k$, $k=1,\dots,p$, condit
   - \lambda_k^2 \, \half[\psi] \tr(\bR_k^2 \bw\bw^\top)
   + \lambda_k  \left( 
   \psi \tilde\by^\top \bR_k \bw - \half[\psi] \tr(\bU_k \bw\bw^\top)
-  \right). \nonumber \vspace{-0.25em}
+  \right). \nonumber 
 \end{align}
 Notice that the above likelihood is an exponential family distribution with the natural parameterisation $\beta = (-\lambda_k^2, \lambda_k)$ and sufficient statistics $T_1$ and $T_2$ defined by
 \[
   T_1 = \half[\psi] \tr(\bR_k^2 \bw\bw^\top)
   \hspace{0.5cm}\text{and}\hspace{0.5cm}
-  T_2 =  \psi\tilde\by^\top \bR_k \bw - \half[\psi]\tr(\bU_k^2 \bw\bw^\top).\vspace{-0.2em}
+  T_2 =  \psi\tilde\by^\top \bR_k \bw - \half[\psi]\tr(\bU_k^2 \bw\bw^\top).
 \]
 This likelihood is maximised at $\hat\lambda_k = T_2/2T_1$, but of course, the variables $w_1,\dots,w_n$ are never observed.
 As per the exponential family EM routine, replace occurrences of $\bw$ and $\bw\bw^\top$ with their respective conditional expectations, i.e. $\bw\mapsto\E[\bw|\by] = \wtilde$ and $\bw\bw^\top\mapsto\E[\bw\bw^\top|\by] = \tilde\bV_w + \wtilde\wtilde^\top$ as defined in \cref{eq:posteriorw}.
@@ -265,6 +263,7 @@ The M-step takes at most $O(n^2)$ time to compute.
 As a remark, it is not necessary that $h_\lambda$ is the full ANOVA RKKS; any of the examples 1--3 in \cref{sec:efficientEM1} can be estimated using this method, since they are seen as special cases of the ANOVA decomposition.
 %This is also true if we decide to drop any of the terms in the ANOVA kernel.
 
+\vspace{0.5em}
 \begin{algorithm}[hbt]
 \caption{Exponential family EM for ANOVA-type I-prior models}\label{alg:EM2}
 \begin{algorithmic}[1]
@@ -291,6 +290,9 @@ As a remark, it is not necessary that $h_\lambda$ is the full ANOVA RKKS; any of
     \EndProcedure
     \State $t \gets t+1$
   \EndWhile
+  \Statex
+  \State $\{ \hat\lambda_1,\dots,\hat\lambda_p, \hat\psi \} \gets \{ \lambda_1^{(t)},\dots,\lambda_p^{(t)}, \psi^{(t)} \}$
+  \State \textbf{return} Estimates $\hat\lambda_1,\dots,\hat\lambda_p, \hat\psi$
 \end{algorithmic}
 \end{algorithm}
 
@@ -300,7 +302,7 @@ As a remark, it is not necessary that $h_\lambda$ is the full ANOVA RKKS; any of
   If we were so compelled to assign a normal prior on each of the $\lambda_k$'s, then the conditionally dependent log-likelihood of $\lambda_k$, $L(\lambda_k|\by,\bw,\lambda_{-k},\psi)$, would have a normal prior log-density involving $\lambda_k$ added on.
   Importantly, viewed as a posterior log-density for $\lambda_k$, the $\lambda_k$ is normally distributed.
   The exponential family EM is thus easily modified to compute maximum a posteriori (MAP) estimates (or penalised ML estimates) of the scale parameters.
-  With diffuse priors on $\lambda_k$, MAP estimates are in fact ML estimates.
+%  With diffuse priors on $\lambda_k$, MAP estimates are in fact ML estimates.
 \end{remark}
 
 \begin{remark}

@@ -12,7 +12,7 @@ str(cattle)
 ## ---- cows.first ----
 # Model 1: weight ~ f(time)
 set.seed(456)
-(mod1 <- iprior(weight ~ time, cattle, kernel = "fbm", method = "mixed"))
+(mod1 <- iprior(weight ~ time, cattle, kern = "fbm", method = "mixed"))
 
 ## ---- cows.rest ----
 # Model 2: weight ~ f(time) + f(treatment) + f(time dependent treatment)

@@ -152,7 +152,7 @@ Specifically, when the error precision is of the form $\bPsi = \diag(\psi_1,\dot
   \tilde\bW_{jj} \big)
 \end{align*}
 
-\vspace{-0.5em}
+\vspace{-0.25em}
 The bulk of the computational effort required to evaluate $Q(\theta)$ stems from the trace involving the second moments of $\bw$, and the fact that $\bH_\eta^2$ needs to be reevaluated each time $\theta = \{\balpha,\eta\}$ changes.
 As discussed previously, each E-step takes $O(n^3m)$ time to compute the required first and second (approximate) posterior moments of $\bw$.
 Once this is done, we can use the `front-loading of the kernel matrices' trick described in \cref{sec:efficientEM1}, which effectively renders the evaluation of $Q$ to be linear in $\theta$ (after an initial $O(n^2)$ procedure at the beginning).
@@ -167,14 +167,14 @@ As in the normal linear model, we employ a sequential update of the parameters (
 \end{align}
 equated to zero, where $\bh_\eta(x_i) \in \bbR^n$ is the $i$'th row of the kernel matrix $\bH_\eta$.
 We now present the update equations for the parameters.
-\vspace{-0.5em}
+\vspace{-0.25em}
 
 \subsubsection{Update for kernel parameters $\eta$}
 
 When only ANOVA RKHS scale parameters are involved, then the conditional solution of $\eta$ to \cref{eq:vemeta} can be found in closed-form, much like in the exponential family EM algorithm described in \cref{sec:expfamEM} \colp{\mypageref{sec:expfamEM}}.
 Under the same setting as in that subsection, assume that only $\eta = \{\lambda_1,\dots,\lambda_p\}$ need be estimated, and for each $k=1,\dots,p$, we can decompose the kernel matrix as $\bH_\eta = \lambda_k \bR_k + \bS_k$ and its square as $\bH_\eta^2 = \lambda_k^2 \bR_k^2 + \lambda_k \bU_k + \bS_k^2$.
 As a follow-on from \cref{eq:vemeta}, the conditional solution for $\lambda_k$ given the rest of the parameters is obtained by solving
-\vspace{-0.5em}
+%\vspace{-0.5em}
 \begin{align*}
   \frac{\partial}{\partial\lambda_k}Q(\lambda_k|\balpha,\blambda_{-k})
   ={}& -\half \sum_{i,j=1}^m \psi_{ij} \tr \left( (2\lambda_k\bR_k^2 + \bU_k) \tilde\bW_{ij} \right) 
@@ -285,6 +285,11 @@ In our experience, multiple random starts alleviates this issue for the I-probit
     \Statex
     \State Calculate ELBO $\cL^{(t+1)}$
     \State $t \gets t + 1$
+    \Statex
+    \State $\{ \tilde q(\by^*), \tilde q(\bw), \hat\theta \} \gets \{ \tilde q^{(t)}(\by^*), \tilde q^{(t)}(\bw), \theta^{(t)} \}$ 
+    \State \textbf{return} Variational densities $\{ \tilde q(\by^*), \tilde q(\bw) \}$
+    \State \textbf{return} Estimates $\{ \hat\balpha, \hat\eta \}$
+    \State \textbf{return} ELBO $\cL_q(\theta) = \cL^{(t)}$    
   \EndWhile
 \end{algorithmic}
 \end{algorithm}

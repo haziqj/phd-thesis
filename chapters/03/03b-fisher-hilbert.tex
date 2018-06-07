@@ -14,19 +14,20 @@ We discuss a generalisation of the concept of differentiability from real-valued
 \end{definition}
 
 \begin{remark}
-  Since $\d \funder(x)$ is a bounded, linear operator, by \cref{thm:boundcont}, it is also continuous. 
+  Since $\d \funder(x)$ is a bounded, linear operator, by \cref{thm:boundcont} \colp{\mypageref{thm:boundcont}}, it is also continuous. 
 \end{remark}
 
 \begin{remark}
   While the Fréchet derivative is most commonly defined as the derivative of functions between Banach spaces,  the definition itself also applies to Hilbert spaces, since complete inner product spaces are also complete normed spaces.
   Since our main focus are RKHSs and RKKSs, i.e. spaces with Hilbertian topology (recall that RKKSs are endowed with the topology of its associated Hilbert space), it is beneficial to present the material using Hilbert spaces.
-  We appeal to the works of \citet[Definition 3.6.5]{balakrishnan1981applied} and \citet[Section 6]{bouboulis2011extension} in this regard.
+  We appeal to the works of \citet[Definition 3.6.5]{balakrishnan1981applied} and \citet[§6]{bouboulis2011extension} in this regard.
 \end{remark}
 
 \begin{remark}
   The use of the open subset $\cU$ in the definition above for the domain of the function $\funder$ is so that the notion of $\funder$ being differentiable is possible even without having it defined on the entire space $\cV$.
 \end{remark}
 
+\pagebreak
 The intuition here is similar to that of regular differentiability, in that the linear operator $T$ well approximates the change in $\funder$ at $x$ (the numerator), relative to the change in $x$ (the denominator)---the fact that the limit exists and is zero, it must mean that the numerator converges faster to zero than the denominator does.
 In Landau notation, we have the familiar expression $\funder(x+v) = \funder(v) + \d \funder(x)(v) + o(v)$, that is, the derivative of $\funder$ at $x$ gives the best linear approximation to $\funder$ near $x$.
 Note that the limit in the definition is meant in the usual sense of convergence of functions with respect to the norms of $\cV$ and $\cW$.
