@@ -54,6 +54,14 @@ Supplementaries & Appendices
 
 - No change.
 
+Review before submission
+
+- Abstract and keywords.
+- No. of words.
+- Clean up TOC, TOL, TOF, etc.
+- Clean up R code before publishing
+- Clean up LaTeX source
+
 Circle back to later if have time
 
 - Truncated normal plots.

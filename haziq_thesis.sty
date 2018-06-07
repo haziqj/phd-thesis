@@ -73,14 +73,14 @@
 \usepackage{xr}  % Cross-referencing between files
 
 % Show labels in margins. See https://tex.stackexchange.com/questions/45634/printing-labels-along-with-equation-numbers
-\usepackage{seqsplit}
-\usepackage{xstring}
-\usepackage[notref,notcite]{showkeys}
-\renewcommand*\showkeyslabelformat[1]{%
-\noexpandarg%
-\StrSubstitute{#1}{ }{~}[\TEMP]%
-\parbox[c]{0.85\marginparwidth}{\raggedright\singlespacing\normalfont\small\ttfamily\expandafter\seqsplit\expandafter{\TEMP}}
-}
+%\usepackage{seqsplit}
+%\usepackage{xstring}
+%\usepackage[notref,notcite]{showkeys}
+%\renewcommand*\showkeyslabelformat[1]{%
+%\noexpandarg%
+%\StrSubstitute{#1}{ }{~}[\TEMP]%
+%\parbox[c]{0.85\marginparwidth}{\raggedright\singlespacing\normalfont\small\ttfamily\expandafter\seqsplit\expandafter{\TEMP}}
+%}
 
 % Git info
 \usepackage[maxdepth=8,mark,raisemark=0.9323\paperheight]{gitinfo2}
@@ -322,29 +322,36 @@
 % List of figures, tables, symbols, and abbreviations
 \newcommand{\hLists}{
   \newpage
+  \cleardoublepage
   \renewcommand{\listfigurename}{Figures}
   \listoffigures
   \addcontentsline{toc}{chapter}{Figures}
   
   \newpage
+  \cleardoublepage
   \renewcommand{\listtablename}{Tables}  
   \listoftables
   \addcontentsline{toc}{chapter}{Tables}
   
   \newpage
+  \cleardoublepage
   \renewcommand{\listtheoremname}{Theorems}  
   \listoftheorems[ignoreall,onlynamed={theorem,lemma,corollary, proposition},numwidth=2.7em]
   \addcontentsline{toc}{chapter}{Theorems}
   
   \newpage
+  \cleardoublepage
   \renewcommand{\listtheoremname}{Definitions}
   \listoftheorems[ignoreall,show={definition}, numwidth=2.7em]
   \addcontentsline{toc}{chapter}{Definitions}   
         
   \begingroup
+    \cleardoublepage
     \singlespacing
     \hnomenclature
     \addcontentsline{toc}{chapter}{Nomenclature}   
+    
+    \cleardoublepage
     \printabbreviations[title={Abbreviations},style=long,nogroupskip, nonumberlist,nopostdot]
     \glsaddall[types=abbreviations]
   \endgroup
@@ -382,7 +389,6 @@
     \listoftodos[To-do list]
     \tableofcontents
     \hLists
-    \input{nomenclature}
   }
 }
 
