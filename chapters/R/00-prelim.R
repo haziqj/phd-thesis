@@ -27,15 +27,20 @@ ggplot2::theme_set(theme_bw())
 
 # knitr settings
 chapter.no <- substr(current_input(), start = 0, stop = 2)
-knitr::opts_chunk$set(fig.align = "center", prompt = TRUE,
+knit_hooks$set(myspacing = function(before, options, envir) {
+  if (before) return("\\singlespacing")
+})  # single spacing for code chunks, need to set knitr::opts_chunk$set()
+knit_hooks$set(document = function(x) {
+  sub("\\usepackage[]{color}", "\\usepackage{xcolor}", x, fixed = TRUE)
+})  # use xcolor package instead
+knitr::opts_chunk$set(fig.align = "center", prompt = TRUE, myspacing = TRUE,
                       fig.path = paste0("figure/", chapter.no, "-"))
 knitr::knit_theme$set("bclear")
 options(prompt = "R> ", continue = "+  ", width = 70,
         knitr.table.format = "latex")
-knit_hooks$set(myspac = function(before, options, envir) {
-  if (before) return("\\singlespacing")
-})
-# need to set knitr::opts_chunk$set(myspac = TRUE)
+
+
+# need to set knitr::opts_chunk$set(myspacing = TRUE)
 
 # BibLaTeX with Biber backend
 system(paste("biber", sub("\\.Rnw$", "", current_input())))

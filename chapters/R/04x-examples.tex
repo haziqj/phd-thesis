@@ -1,4 +1,4 @@
-\documentclass[showframe,11pt,twoside,openright]{report}\usepackage[]{graphicx}\usepackage[]{color}
+\documentclass[showframe,11pt,twoside,openright]{report}\usepackage[]{graphicx}\usepackage{xcolor}
 %% maxwidth is the original width if it is less than linewidth
 %% otherwise use linewidth (to make sure the graphics do not exceed the margin)
 \makeatletter
@@ -59,7 +59,7 @@
   \externaldocument{../01/.texpadtmp/chapter1}
   \externaldocument{../02/.texpadtmp/chapter2}
   \externaldocument{../03/.texpadtmp/chapter3}
-  \externaldocument{../04/.texpadtmp/chapter4}  % remove this
+  \externaldocument{../04/.texpadtmp/chapter4}
   \externaldocument{../appendix/.texpadtmp/appendix}
 \fi
 
@@ -86,7 +86,7 @@ It is expected that the concentration of the control material remains stable as 
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlkwd{data}\hlstd{(IGF,} \hlkwc{package} \hlstd{=} \hlstr{"nlme"}\hlstd{)}
 \hlstd{R> }\hlkwd{head}\hlstd{(IGF)}
 \end{alltt}
@@ -110,13 +110,9 @@ The data were collected with the aim of identifying possible trends in control v
 \citet{pinheiro2000mixed} remarks that this is not considered a longitudinal problem because different samples were used at each measurement.
 
 We shall  model the IGF data set using the I-prior methodology using the ANOVA-decomposed regression function
-\begingroup
-\setlength{\abovedisplayskip}{8pt}
-\setlength{\belowdisplayskip}{8pt}
 \[
   f(\texttt{age}, \texttt{Lot}) = f_1(\texttt{age}) + f_2(\texttt{Lot}) + f_{12}(\texttt{age}, \texttt{Lot})
 \]
-\endgroup
 where $f_1$ lies in the linear RKHS $\cF_1$, $f_2$ in the Pearson RKHS $\cF_2$ and $f_{12}$ in the tensor product space $\cF_{12} = \cF_1 \otimes \cF_2$.
 The regression function $f$ then lies in the RKHS $\cF = \cF_1 \oplus \cF_2 \oplus \cF_{12}$ with kernel equal to the sum of the kernels from each of the RKHSs.
 The explanation here is that the \code{conc} levels are assumed to be related to both \code{age} and \code{Lot}, and in particular, the contribution of \code{age} on \code{conc} varies with each individual \code{Lot}.
@@ -126,12 +122,12 @@ The command to fit the I-prior model using the EM algorithm is
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlstd{mod.iprior} \hlkwb{<-} \hlkwd{iprior}\hlstd{(conc} \hlopt{~} \hlstd{age} \hlopt{*} \hlstd{Lot, IGF,} \hlkwc{method} \hlstd{=} \hlstr{"em"}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
-## ========================================
-## Converged after 57 iterations.
+## =========================================
+## Converged after 58 iterations.
 \end{verbatim}
 \begin{alltt}
 \hlstd{R> }\hlkwd{summary}\hlstd{(mod.iprior)}
@@ -146,31 +142,32 @@ The command to fit the I-prior model using the EM algorithm is
 ## 
 ## Residuals:
 ##    Min. 1st Qu.  Median 3rd Qu.    Max. 
-## -4.4889 -0.3798 -0.0090  0.2563  4.3973 
+## -4.4890 -0.3798 -0.0090  0.2563  4.3972 
 ## 
 ## Hyperparameters:
-##           Estimate   S.E.      z P[|Z>z|]    
-## lambda[1]   0.0000 0.0002 -0.004    0.997    
-## lambda[2]   0.0007 0.0030  0.238    0.812    
-## psi         1.4576 0.1366 10.672   <2e-16 ***
+##           Estimate    S.E.      z P[|Z>z|]    
+## lambda[1]   0.0000  0.0002  0.004    0.997    
+## lambda[2]  -0.0007  0.0030 -0.239    0.811    
+## psi         1.4577  0.1366 10.672   <2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Closed-form EM algorithm. Iterations: 57/100 
-## Converged to within 1e-08 tolerance. Time taken: 2.882966 secs
+## Closed-form EM algorithm. Iterations: 58/100 
+## Converged to within 1e-08 tolerance. Time taken: 3.553403 secs
 ## Log-likelihood value: -291.9033 
-## RMSE of prediction: 0.8273639 (Training)
+## RMSE of prediction: 0.8273565 (Training)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\singlespacing\end{kframe}\begin{figure}
 
 {\centering \includegraphics[width=\maxwidth]{figure/04-IGF_mod_iprior_plot-1} 
 
 }
 
-\caption[Plot of fitted regression line for the I-prior model on the IGF data set, separated into each of the 10 lots]{Plot of fitted regression line for the I-prior model on the IGF data set, separated into each of the 10 lots.}\label{fig:IGF.mod.iprior.plot}
+\caption[Plot of fitted regression line for the I-prior model on the IGF data set]{Plot of fitted regression line for the I-prior model on the IGF data set, separated into each of the 10 lots.}\label{fig:IGF.mod.iprior.plot}
 \end{figure}
 
 
@@ -182,7 +179,6 @@ We conclude that neither \code{age} nor \code{Lot} has a linear effect on the \c
 The plot of the fitted regression line in \cref{fig:IGF.mod.iprior.plot} does show an almost horizontal line for each \code{Lot}.
 
 The standard random effects model, as explored by \citet{davidian1995nonlinear} and \citet{pinheiro2000mixed}, is
-%
 \begin{align*}
   \begin{gathered}
     \texttt{conc}_{ij} = \beta_{0j} + \beta_{1j}\texttt{age}_{ij} + \epsilon_{ij} \\
@@ -203,13 +199,12 @@ The standard random effects model, as explored by \citet{davidian1995nonlinear} 
     \epsilon_{ij} \sim \N(0, \sigma^2) \\
   \end{gathered}
 \end{align*}
-%
 for $i=1,\dots,n_j$ and the index $j$ representing the 10 \code{Lots}.
 Fitting this model using \code{lmer}, we can test for the significance of the fixed effect $\beta_0$, for which we find that it is not ($p$-value = 0.627), and arrive at the same conclusion as in the I-prior model.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlstd{(mod.lmer} \hlkwb{<-} \hlkwd{lmer}\hlstd{(conc} \hlopt{~} \hlstd{age} \hlopt{+} \hlstd{(age} \hlopt{|} \hlstd{Lot), IGF))}
 \end{alltt}
 \begin{verbatim}
@@ -245,7 +240,7 @@ One of the eigenvalues was found to be negative, so the covariance matrix is non
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlkwd{eigen}\hlstd{(}\hlkwd{VarCorr}\hlstd{(mod.lmer)}\hlopt{$}\hlstd{Lot)}
 \end{alltt}
 \begin{verbatim}
@@ -263,7 +258,8 @@ One of the eigenvalues was found to be negative, so the covariance matrix is non
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[htbp]
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\singlespacing\end{kframe}\begin{figure}[htbp]
 
 {\centering \includegraphics[width=\maxwidth]{figure/04-IGF_plot_beta-1} 
 
@@ -295,7 +291,7 @@ Even so, the conclusions from both models are similar.
 
 \begin{table}[htb]
 \centering
-\caption{A comparison of the estimates for the covariance matrix of the random effects using the I-prior model and the standard random effects model.}
+\caption[A comparison of the estimates for the IGF data set]{A comparison of the estimates for the covariance matrix of the random effects using the I-prior model and the standard random effects model.}
 \label{tab:igf}
 \begin{tabular}{lrr}
 \toprule
@@ -303,7 +299,7 @@ Parameter     & \texttt{iprior} & \texttt{lmer} \\
 \midrule
 $\sigma_0$    & 0.012 & 0.083 \\
 $\sigma_1$    & 0.000 & 0.008 \\
-$\rho_{01}$   & 0.690& -1.000 \\
+$\rho_{01}$   & -0.691& -1.000 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -318,7 +314,7 @@ The variable names have been renamed for convenience.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlkwd{data}\hlstd{(cattle,} \hlkwc{package} \hlstd{=} \hlstr{"jmcm"}\hlstd{)}
 \hlstd{R> }\hlkwd{names}\hlstd{(cattle)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"id"}\hlstd{,} \hlstr{"time"}\hlstd{,} \hlstr{"group"}\hlstd{,} \hlstr{"weight"}\hlstd{)}
 \hlstd{R> }\hlstd{cattle}\hlopt{$}\hlstd{id} \hlkwb{<-} \hlkwd{as.factor}\hlstd{(cattle}\hlopt{$}\hlstd{id)}  \hlcom{# convert to factors}
@@ -344,17 +340,16 @@ Instead, it suffices to assume that they lie in an appropriate function class.
 For this example, we assume that the function class is the fBm RKHS, i.e. we assume a smooth effect of time on weight.
 The growth curves form a multidimensional (or functional) response equivalent to a ``wide'' format of representing repeated measures data. In our analysis using the \pkg{iprior} package, we used the ``long'' format and thus our (unidimensional) sample size $n$ is equal to $60$ cows $\times$ $11$ repeated measurements.
 We also have two covariates potentially influencing growth, namely the cow subject \code{id} and also treatment \code{group}. The regression model can then be thought of as
-%
 \begin{align*}
   \begin{gathered}
     \text{\code{weight}} = \alpha + f(\text{\code{id}}, \, \text{\code{group}}, \, \text{\code{time}}) + \epsilon \\
     \epsilon \sim \N(0, \psi^{-1}).
   \end{gathered}
 \end{align*}
-%
+
 \begin{table}[t!]
 \centering
-\caption{A brief description of the five models fitted using I-priors.}
+\caption[A brief description of the five models fitted for the cows data set]{A brief description of the five models fitted using I-priors.}
 \label{tab:cowmodel}
 \begin{tabular}{lp{6cm}l}
 \toprule
@@ -376,7 +371,7 @@ Model & Explanation & Formula (\verb@weight ~ ...@) \\
 
 We assume iid errors, and in addition to a smooth effect of \code{time}, we further assume a nominal effect of both cow \code{id} and treatment \code{group} using the Pearson RKHS.
 In the \pkg{iprior} package, factor type objects are treated with the Pearson kernel automatically, and the only \code{model} option we need to specify is the \code{kernel = "fbm"} option for the \code{time} variable.
-We have opted not to estimate the Hurst coefficient in the interest of computational time, and instead left it at the default value of 1/2.
+We shall use a default Hurst coefficient of 1/2 for the fBm kernel.
 \cref{tab:cowmodel} explains the five models we have fitted.
 
 The simplest model fitted was one in which the growth curves do not depend on the treatment effect or individual cows.
@@ -390,9 +385,8 @@ Here is the code and output for fitting the first model:
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlcom{# Model 1: weight ~ f(time)}
-\hlstd{R> }\hlkwd{set.seed}\hlstd{(}\hlnum{456}\hlstd{)}
 \hlstd{R> }\hlstd{(mod1} \hlkwb{<-} \hlkwd{iprior}\hlstd{(weight} \hlopt{~} \hlstd{time, cattle,} \hlkwc{kern} \hlstd{=} \hlstr{"fbm"}\hlstd{,} \hlkwc{method} \hlstd{=} \hlstr{"mixed"}\hlstd{))}
 \end{alltt}
 \begin{verbatim}
@@ -428,8 +422,8 @@ Here is the code and output for fitting the first model:
 & 16.33
 & 1 \\
 2 & \code{id * time}
-& -2791.42
-& 16.39
+& -2789.26
+& 16.31
 & 2 \\
 3 & \code{group * time}
 & -2295.16
@@ -449,7 +443,7 @@ Here is the code and output for fitting the first model:
 
 The results of the model fit are summarised in \cref{tab:cowresults}. We can test for a treatment effect by testing Model 4 against the alternative that Model 2 is true.
 The log-likelihood ratio test statistic is
-$D = -2(-2791.42 - (-2270.85)) = 1041.14$, which has an asymptotic chi-squared distribution with $3 - 2 = 1$ degree of freedom.
+$D = -2(-2789.26 - (-2270.85)) = 1036.81$, which has an asymptotic chi-squared distribution with $3 - 2 = 1$ degree of freedom.
 The $p$-value for this likelihood ratio test is less than $10^{-6}$, so we conclude that Model 4 is significantly better.
 
 We can next investigate whether the treatment effect differs among cows by comparing Models 5 and 4.
@@ -458,7 +452,8 @@ We conclude that treatment does indeed have an effect on growth, and that the tr
 A plot of the fitted regression curves onto the cow data set is shown in \cref{fig:cows.plot}.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[htb]
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\singlespacing\end{kframe}\begin{figure}[htb]
 
 {\centering \includegraphics[width=\maxwidth]{figure/04-cows_plot-1} 
 
@@ -483,7 +478,8 @@ We used the version made available in the dataframe \code{tecator} from the \pro
 }
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[htb]
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\singlespacing\end{kframe}\begin{figure}[htb]
 
 {\centering \includegraphics[width=11cm]{figure/04-tecator_data-1} 
 
@@ -511,7 +507,7 @@ Our first modelling attempt is to fit a linear effect by regressing the response
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlcom{# Model 1: Canonical RKHS (linear)}
 \hlstd{R> }\hlstd{(mod1} \hlkwb{<-} \hlkwd{iprior}\hlstd{(}\hlkwc{y} \hlstd{= fat.train, absorp.train))}
 \end{alltt}
@@ -534,7 +530,7 @@ The direct optimisation method has been used, and while both models converged re
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlcom{# Model 2: Polynomial RKHS (quadratic)}
 \hlstd{R> }\hlstd{mod2} \hlkwb{<-} \hlkwd{iprior}\hlstd{(}\hlkwc{y} \hlstd{= fat.train, absorp.train,} \hlkwc{kernel} \hlstd{=} \hlstr{"poly2"}\hlstd{,}
 \hlstd{+  }               \hlkwc{est.offset} \hlstd{=} \hlnum{TRUE}\hlstd{)}
@@ -557,7 +553,7 @@ For both models, the \code{stop.crit} was relaxed and set to \code{1e-3} for qui
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlcom{# Model 4: fBm RKHS (default Hurst = 0.5)}
 \hlstd{R> }\hlstd{(mod4} \hlkwb{<-} \hlkwd{iprior}\hlstd{(}\hlkwc{y} \hlstd{= fat.train, absorp.train,} \hlkwc{kernel} \hlstd{=} \hlstr{"fbm"}\hlstd{,}
 \hlstd{+  }                \hlkwc{method} \hlstd{=} \hlstr{"em"}\hlstd{,} \hlkwc{control} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{stop.crit} \hlstd{=} \hlnum{1e-3}\hlstd{)))}
@@ -574,7 +570,7 @@ For both models, the \code{stop.crit} was relaxed and set to \code{1e-3} for qui
 \end{knitrout}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlcom{# Model 5: fBm RKHS (estimate Hurst)}
 \hlstd{R> }\hlstd{(mod5} \hlkwb{<-} \hlkwd{iprior}\hlstd{(fat.train, absorp.train,} \hlkwc{kernel} \hlstd{=} \hlstr{"fbm"}\hlstd{,} \hlkwc{method} \hlstd{=} \hlstr{"mixed"}\hlstd{,}
 \hlstd{+  }                \hlkwc{est.hurst} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{control} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{stop.crit} \hlstd{=} \hlnum{1e-3}\hlstd{)))}
@@ -603,7 +599,7 @@ We see that starting from eight different initial values, direct optimisation le
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlcom{# Model 6: SE kernel}
 \hlstd{R> }\hlstd{(mod6} \hlkwb{<-} \hlkwd{iprior}\hlstd{(fat.train, absorp.train,} \hlkwc{est.lengthscale} \hlstd{=} \hlnum{TRUE}\hlstd{,}
 \hlstd{+  }                \hlkwc{kernel} \hlstd{=} \hlstr{"se"}\hlstd{,} \hlkwc{control} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{restarts} \hlstd{=} \hlnum{TRUE}\hlstd{,}
@@ -614,14 +610,16 @@ We see that starting from eight different initial values, direct optimisation le
 ## ======================================================================
 ## Log-likelihood from random starts:
 ##     Run 1     Run 2     Run 3     Run 4     Run 5     Run 6     Run 7 
-## -231.5440 -680.4636 -680.4636 -680.4637 -680.4637 -231.5440 -231.5440 
+## -231.5440 -680.4637 -680.4637 -231.5440 -231.5440 -231.5440 -231.5440 
+##     Run 8 
+## -231.5440 
 ## Continuing on Run 6 
 ## final  value 115.771932 
 ## converged
 ## Log-likelihood value: -231.544 
 ## 
 ##      lambda lengthscale         psi 
-##    96.11515     0.09269     6.15426
+##    96.11708     0.09269     6.15432
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -634,7 +632,7 @@ The \code{predict()} method for \code{ipriorMod} objects also return the test MS
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlkwd{predict}\hlstd{(mod1,} \hlkwc{newdata} \hlstd{=} \hlkwd{list}\hlstd{(absorp.test),} \hlkwc{y.test} \hlstd{= fat.test)}
 \end{alltt}
 \begin{verbatim}
@@ -658,9 +656,9 @@ The I-prior models also give much better test RMSE than Gaussian process regress
 
 % \renewcommand{\TPTminimum}{0.5\linewidth}
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
-\begin{table}[b!]
+\begin{table}[htbp]
 \centering
-\caption{A summary of the root mean squared error (RMSE) of prediction for the I-prior models and various other methods in literature conducted on the Tecator data set. Values for the methods under \emph{Others} were obtained from the corresponding references cited earlier.}
+\caption[A summary of the RMSE of prediction for the Tecator data set]{A summary of the root mean squared error (RMSE) of prediction for the I-prior models and various other methods in literature conducted on the Tecator data set. Values for the methods under \emph{Others} were obtained from the corresponding references cited earlier.}
 \label{tab:tecator}
 \begin{threeparttable}
 % \begin{tabular}{@{}p{\textwidth}@{}}
@@ -695,9 +693,9 @@ The I-prior models also give much better test RMSE than Gaussian process regress
 \hspace{0.5em} Linear
 & 0.18
 & 2.36 \\
-\hspace{0.5em} Smooth (SE-7.04)
+\hspace{0.5em} Smooth (SE-7.28)
 & 0.17
-& 2.10 \\
+& 2.07 \\
 \\
 \emph{Others} \\
 %\hspace{0.5em} Linear functional regression\tnote{a}       && 2.78 \\
@@ -730,13 +728,13 @@ The I-prior models also give much better test RMSE than Gaussian process regress
 
 We investigate the use of the Nystr\"om method of approximating the kernel matrix in estimating I-prior models.
 Let us revisit the data set generated by \cref{eq:examplesmoothingdata} described in \cref{sec:compareestimation}.
-The features of this regression function are two large bumps at the centres of the mixed Gaussian PDFs, and also a small bump right after $x>4.5$ caused by the additional exponential function.
+The features of this regression function are two large bumps at the centres of the mixed Gaussian pdfs, and also a small bump right after $x>4.5$ caused by the additional exponential function.
 The true regression function tends to positive infinity as $x$ increases, and to zero as $x$ decreases.
 Samples of $(x_i,y_i)$, $i=1,\dots,2000$ have been generated by the built-in \code{gen_smooth()} function, of which the first few lines of the data are shown below.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlstd{dat} \hlkwb{<-} \hlkwd{gen_smooth}\hlstd{(}\hlkwc{n} \hlstd{=} \hlnum{2000}\hlstd{,} \hlkwc{xlim} \hlstd{=} \hlkwd{c}\hlstd{(}\hlopt{-}\hlnum{1}\hlstd{,} \hlnum{5.5}\hlstd{),} \hlkwc{seed} \hlstd{=} \hlnum{1}\hlstd{)}
 \hlstd{R> }\hlkwd{head}\hlstd{(dat)}
 \end{alltt}
@@ -756,7 +754,7 @@ One could fit the regression model using all available data points, with an I-pr
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlstd{(mod.full} \hlkwb{<-} \hlkwd{iprior}\hlstd{(y} \hlopt{~} \hlstd{X, dat,} \hlkwc{kernel} \hlstd{=} \hlstr{"fbm"}\hlstd{,}
 \hlstd{+  }                    \hlkwc{control} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{silent} \hlstd{=} \hlnum{TRUE}\hlstd{)))}
 \end{alltt}
@@ -769,11 +767,11 @@ One could fit the regression model using all available data points, with an I-pr
 \end{kframe}
 \end{knitrout}
 
-To implement the Nystr\"om method, the option \code{nystrom = 50} was added to the function call, which uses 50 randomly selected data points for the Nystr\"om approximation.
+To implement the Nystr\"om method, the option \code{nystrom = 50} was added to the  function call, which uses 50 randomly selected data points for the Nystr\"om approximation.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlstd{(mod.nys} \hlkwb{<-} \hlkwd{iprior}\hlstd{(y} \hlopt{~} \hlstd{X, dat,} \hlkwc{kernel} \hlstd{=} \hlstr{"fbm"}\hlstd{,} \hlkwc{nystrom} \hlstd{=} \hlnum{50}\hlstd{,}
 \hlstd{+  }                   \hlkwc{control} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{silent} \hlstd{=} \hlnum{TRUE}\hlstd{)))}
 \end{alltt}
@@ -787,7 +785,8 @@ To implement the Nystr\"om method, the option \code{nystrom = 50} was added to t
 \end{knitrout}
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{figure}[t!]
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\singlespacing\end{kframe}\begin{figure}[htbp]
 
 {\centering \includegraphics[width=0.785\textwidth]{figure/04-nystrom_plot-1} 
 \includegraphics[width=0.785\textwidth]{figure/04-nystrom_plot-2} 
@@ -801,11 +800,11 @@ To implement the Nystr\"om method, the option \code{nystrom = 50} was added to t
 \end{knitrout}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
+\singlespacing\begin{alltt}
 \hlstd{R> }\hlkwd{get_time}\hlstd{(mod.full);} \hlkwd{get_size}\hlstd{(mod.full,} \hlstr{"MB"}\hlstd{);} \hlkwd{get_prederror}\hlstd{(mod.full)}
 \end{alltt}
 \begin{verbatim}
-## 12.10819 mins
+## 14.75346 mins
 ## 128.2 MB
 ## Training RMSE 
 ##      2.054232
@@ -814,7 +813,7 @@ To implement the Nystr\"om method, the option \code{nystrom = 50} was added to t
 \hlstd{R> }\hlkwd{get_time}\hlstd{(mod.nys);} \hlkwd{get_size}\hlstd{(mod.nys);} \hlkwd{get_prederror}\hlstd{(mod.nys)}
 \end{alltt}
 \begin{verbatim}
-## 1.287808 secs
+## 1.312222 secs
 ## 982.2 kB
 ## Training RMSE 
 ##      2.171928
@@ -827,7 +826,7 @@ The log-likelihood is also different, but this is attributed to information loss
 Nevertheless, we see from \cref{fig:nystrom.plot} that the estimated regression functions are quite similar in both the full model and the approximated model.
 The main difference is that the the Nystr\"om method was not able to extrapolate the right hand side of the plot well, because it turns out that there were no data points used from this region.
 This can certainly be improved by using a more intelligent sampling scheme.
-The full model took a little over 12 minutes to converge, while the Nystr\"om method took seconds without compromising too much on root mean squared error of predictions.
+The full model took a little over 14 minutes to converge, while the Nystr\"om method took seconds without compromising too much on root mean squared error of predictions.
 Storage savings is significantly higher with the Nystr\"om method as well.
 
 \end{document}

@@ -175,13 +175,13 @@ Although front-loading of kernel matrices increase storage requirements, this is
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.831\textwidth]{figure/04-iprior_size}
+  \includegraphics[width=0.83\textwidth]{figure/04-iprior_size}
   \caption[Storage cost of front-loading the kernel matrices.]{Storage cost of front-loading the kernel matrices for varying number of ANOVA components $p=1,\dots,5$ and sample sizes. Solid lines indicate actual values, while dotted lines are (linear) extrapolations. Storage requirements increases exponentially, since for $p$ ANOVA components, there are $2^{p+1}$ kernel matrices to store in memory.}
   \label{fig:ipriorstorage}
 \end{figure}
 
 \begin{remark}
-  The sign of the scale parameters itself are not identified in the model (this is easily seen when having a single scale parameter in the model since the scale is squared when it appears in the likelihood) but \emph{relative signs of the scale parameters with respect to each other} is.
+  The sign of the scale parameters itself are not identified in the model (this is easily seen when having a single scale parameter in the model since the scale is squared when it appears in the likelihood) but the \emph{relative signs of the scale parameters with respect to each other} is.
 \end{remark}
 
 
@@ -226,7 +226,7 @@ Now, we have
   s_k = \sum_{l=1}^{\abs{\cS_k}} \xi_{lk} a_{lk},   
 \]
 as real-valued functions defined over $\cX\times\cX$.
-Defining $\bR_k$ and $\bS_k$ as the kernel matrices with $(i,j)$ entries $r_k(x_i,x_j)$ and $s_k(x_i,x_j)$ respectively, for $i,j=1,\dots,n$, we have that
+Defining $\bR_k$ and $\bS_k$ to be the kernel matrices with $(i,j)$ entries $r_k(x_i,x_j)$ and $s_k(x_i,x_j)$ respectively, for $i,j=1,\dots,n$, we have that
 \[
   \bH_\eta^2 = \lambda_k^2\bR_k^2 + \lambda_k \myoverbrace{\big(\bR_k\bS_k + (\bR_k\bS_k)^\top \big)}{\bU_k} + \bS_k^2.
 \]

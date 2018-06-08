@@ -9,7 +9,7 @@
   \externaldocument{../01/.texpadtmp/chapter1}
   \externaldocument{../02/.texpadtmp/chapter2}
   \externaldocument{../03/.texpadtmp/chapter3}
-  \externaldocument{../04/.texpadtmp/chapter4}  % remove this
+  \externaldocument{../04/.texpadtmp/chapter4}
   \externaldocument{../appendix/.texpadtmp/appendix}
 \fi
 
@@ -41,7 +41,7 @@ RIA is an in vitro assay technique which is used to measure concentration of ant
 When an RIA is run, control samples at known concentrations obtained from a particular lot are included for the purpose of assay quality control.
 It is expected that the concentration of the control material remains stable as the machine is used, up to a maximum of about 50 days, at which point  control samples from a new batch is used to avoid degradation in assay performance.
 
-<<IGF.data>>=
+<<IGF.data, myspacing = TRUE>>=
 @
 
 \footnotetext{This data is available in the \proglang{R} package \pkg{nlme} \citep{nlme}.}
@@ -51,13 +51,9 @@ The data were collected with the aim of identifying possible trends in control v
 \citet{pinheiro2000mixed} remarks that this is not considered a longitudinal problem because different samples were used at each measurement.
 
 We shall  model the IGF data set using the I-prior methodology using the ANOVA-decomposed regression function
-\begingroup
-\setlength{\abovedisplayskip}{8pt}
-\setlength{\belowdisplayskip}{8pt}
 \[
   f(\texttt{age}, \texttt{Lot}) = f_1(\texttt{age}) + f_2(\texttt{Lot}) + f_{12}(\texttt{age}, \texttt{Lot})
 \]
-\endgroup
 where $f_1$ lies in the linear RKHS $\cF_1$, $f_2$ in the Pearson RKHS $\cF_2$ and $f_{12}$ in the tensor product space $\cF_{12} = \cF_1 \otimes \cF_2$.
 The regression function $f$ then lies in the RKHS $\cF = \cF_1 \oplus \cF_2 \oplus \cF_{12}$ with kernel equal to the sum of the kernels from each of the RKHSs.
 The explanation here is that the \code{conc} levels are assumed to be related to both \code{age} and \code{Lot}, and in particular, the contribution of \code{age} on \code{conc} varies with each individual \code{Lot}.
@@ -65,9 +61,9 @@ This gives the intended effect of a linear mixed-effects model, which is thought
 We first fit the model using the \pkg{iprior} package, and then compare the results with the standard random effects model using the \proglang{R} command \code{lme4::lmer()}.
 The command to fit the I-prior model using the EM algorithm is
 
-<<IGF.mod.iprior, cache = TRUE>>=
+<<IGF.mod.iprior, cache = TRUE, myspacing = TRUE>>=
 @
-<<IGF.mod.iprior.plot, echo = FALSE, fig.cap = "Plot of fitted regression line for the I-prior model on the IGF data set, separated into each of the 10 lots.", cache = TRUE, fig.height = 3.9>>=
+<<IGF.mod.iprior.plot, echo = FALSE, fig.cap = "Plot of fitted regression line for the I-prior model on the IGF data set, separated into each of the 10 lots.",  fig.scap = "Plot of fitted regression line for the I-prior model on the IGF data set", cache = TRUE, fig.height = 3.9>>=
 @
 
 To make inference on the covariates, we look at the scale parameters \code{lambda}.
@@ -76,7 +72,6 @@ We conclude that neither \code{age} nor \code{Lot} has a linear effect on the \c
 The plot of the fitted regression line in \cref{fig:IGF.mod.iprior.plot} does show an almost horizontal line for each \code{Lot}.
 
 The standard random effects model, as explored by \citet{davidian1995nonlinear} and \citet{pinheiro2000mixed}, is
-%
 \begin{align*}
   \begin{gathered}
     \texttt{conc}_{ij} = \beta_{0j} + \beta_{1j}\texttt{age}_{ij} + \epsilon_{ij} \\
@@ -97,11 +92,10 @@ The standard random effects model, as explored by \citet{davidian1995nonlinear} 
     \epsilon_{ij} \sim \N(0, \sigma^2) \\
   \end{gathered}
 \end{align*}
-%
 for $i=1,\dots,n_j$ and the index $j$ representing the 10 \code{Lots}.
 Fitting this model using \code{lmer}, we can test for the significance of the fixed effect $\beta_0$, for which we find that it is not ($p$-value = 0.627), and arrive at the same conclusion as in the I-prior model.
 
-<<IGF.mod.lmer, cache = TRUE>>=
+<<IGF.mod.lmer, cache = TRUE, myspacing = TRUE>>=
 @
 
 However, we notice that the package reports a perfect negative correlation between the random effects, $\sigma_{01}$.
@@ -109,12 +103,12 @@ This indicates a potential numerical issue when fitting the model---a value of e
 We can inspect the eigenvalues of the covariance matrix for the random effects to check that they are indeed non-positive definite.
 One of the eigenvalues was found to be negative, so the covariance matrix is non-positive definite.
 
-<<IGF.mod.lmer.eigen, cache = TRUE>>=
+<<IGF.mod.lmer.eigen, cache = TRUE, myspacing = TRUE>>=
 @
 
-<<IGf.prep.plot, cache = TRUE, include = FALSE>>=
+<<IGf.prep.plot, cache = TRUE, include = FALSE, myspacing = TRUE>>=
 @
-<<IGF.plot.beta, echo = FALSE, fig.width = 7, fig.height = 3.65, fig.cap = "A comparison of the estimates for random intercepts and slopes (denoted as points) using the I-prior model and the standard random effects model. The dashed vertical lines indicate the fixed effect values.", fig.pos = "htbp">>=
+<<IGF.plot.beta, echo = FALSE, fig.width = 7, fig.height = 3.8, fig.cap = "A comparison of the estimates for random intercepts and slopes (denoted as points) using the I-prior model and the standard random effects model. The dashed vertical lines indicate the fixed effect values.", fig.pos = "htbp">>=
 @
 
 Degenerate covariance matrices often occur in models with a large number of random coefficients, and in cases where values of the variance components are estimated at the boundary.
@@ -137,7 +131,7 @@ Even so, the conclusions from both models are similar.
 
 \begin{table}[htb]
 \centering
-\caption{A comparison of the estimates for the covariance matrix of the random effects using the I-prior model and the standard random effects model.}
+\caption[A comparison of the estimates for the IGF data set]{A comparison of the estimates for the covariance matrix of the random effects using the I-prior model and the standard random effects model.}
 \label{tab:igf}
 \begin{tabular}{lrr}
 \toprule
@@ -170,17 +164,16 @@ Instead, it suffices to assume that they lie in an appropriate function class.
 For this example, we assume that the function class is the fBm RKHS, i.e. we assume a smooth effect of time on weight.
 The growth curves form a multidimensional (or functional) response equivalent to a ``wide'' format of representing repeated measures data. In our analysis using the \pkg{iprior} package, we used the ``long'' format and thus our (unidimensional) sample size $n$ is equal to $60$ cows $\times$ $11$ repeated measurements.
 We also have two covariates potentially influencing growth, namely the cow subject \code{id} and also treatment \code{group}. The regression model can then be thought of as
-%
 \begin{align*}
   \begin{gathered}
     \text{\code{weight}} = \alpha + f(\text{\code{id}}, \, \text{\code{group}}, \, \text{\code{time}}) + \epsilon \\
     \epsilon \sim \N(0, \psi^{-1}).
   \end{gathered}
 \end{align*}
-%
+
 \begin{table}[t!]
 \centering
-\caption{A brief description of the five models fitted using I-priors.}
+\caption[A brief description of the five models fitted for the cows data set]{A brief description of the five models fitted using I-priors.}
 \label{tab:cowmodel}
 \begin{tabular}{lp{6cm}l}
 \toprule
@@ -202,7 +195,7 @@ Model & Explanation & Formula (\verb@weight ~ ...@) \\
 
 We assume iid errors, and in addition to a smooth effect of \code{time}, we further assume a nominal effect of both cow \code{id} and treatment \code{group} using the Pearson RKHS.
 In the \pkg{iprior} package, factor type objects are treated with the Pearson kernel automatically, and the only \code{model} option we need to specify is the \code{kernel = "fbm"} option for the \code{time} variable.
-We have opted not to estimate the Hurst coefficient in the interest of computational time, and instead left it at the default value of 1/2.
+We shall use a default Hurst coefficient of 1/2 for the fBm kernel.
 \cref{tab:cowmodel} explains the five models we have fitted.
 
 The simplest model fitted was one in which the growth curves do not depend on the treatment effect or individual cows.
@@ -214,7 +207,7 @@ All models were fitted using the \code{mixed} estimation method.
 Compared to the EM algorithm alone, we found that the combination of direct optimisation with the EM algorithm fits the model about six times faster for this data set due to slow convergence of EM algorithm.
 Here is the code and output for fitting the first model:
 
-<<cows.first, echo = TRUE, cache = TRUE, cache.lazy = FALSE>>=
+<<cows.first, echo = -2, cache = TRUE, cache.lazy = FALSE>>=
 @
 <<cows.rest, cache = TRUE, include = FALSE>>=
 @
@@ -266,7 +259,7 @@ As these models have the same number of parameters, we can simply choose the one
 We conclude that treatment does indeed have an effect on growth, and that the treatment effect differs among cows.
 A plot of the fitted regression curves onto the cow data set is shown in \cref{fig:cows.plot}.
 
-<<cows.plot, echo = FALSE, fig.height = 2.91, fig.width = 6.6, fig.cap = "A plot of the I-prior fitted regression curves from Model 5. In this model, growth curves differ among cows and by treatment effect (with an interaction between cows and treatment effect), thus producing these 60 individual lines, one for each cow, split between their respective treatment groups (A or B).", fig.pos = "htb">>=
+<<cows.plot, echo = FALSE, fig.height = 3.5, fig.width = 7, fig.cap = "A plot of the I-prior fitted regression curves from Model 5. In this model, growth curves differ among cows and by treatment effect (with an interaction between cows and treatment effect), thus producing these 60 individual lines, one for each cow, split between their respective treatment groups (A or B).", fig.pos = "htb">>=
 @
 
 \subsection{Regression with a functional covariate}
@@ -356,9 +349,9 @@ The I-prior models also give much better test RMSE than Gaussian process regress
 
 % \renewcommand{\TPTminimum}{0.5\linewidth}
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
-\begin{table}[b!]
+\begin{table}[htbp]
 \centering
-\caption{A summary of the root mean squared error (RMSE) of prediction for the I-prior models and various other methods in literature conducted on the Tecator data set. Values for the methods under \emph{Others} were obtained from the corresponding references cited earlier.}
+\caption[A summary of the RMSE of prediction for the Tecator data set]{A summary of the root mean squared error (RMSE) of prediction for the I-prior models and various other methods in literature conducted on the Tecator data set. Values for the methods under \emph{Others} were obtained from the corresponding references cited earlier.}
 \label{tab:tecator}
 \begin{threeparttable}
 % \begin{tabular}{@{}p{\textwidth}@{}}
@@ -428,7 +421,7 @@ The I-prior models also give much better test RMSE than Gaussian process regress
 
 We investigate the use of the Nystr\"om method of approximating the kernel matrix in estimating I-prior models.
 Let us revisit the data set generated by \cref{eq:examplesmoothingdata} described in \cref{sec:compareestimation}.
-The features of this regression function are two large bumps at the centres of the mixed Gaussian PDFs, and also a small bump right after $x>4.5$ caused by the additional exponential function.
+The features of this regression function are two large bumps at the centres of the mixed Gaussian pdfs, and also a small bump right after $x>4.5$ caused by the additional exponential function.
 The true regression function tends to positive infinity as $x$ increases, and to zero as $x$ decreases.
 Samples of $(x_i,y_i)$, $i=1,\dots,2000$ have been generated by the built-in \code{gen_smooth()} function, of which the first few lines of the data are shown below.
 
@@ -440,12 +433,12 @@ One could fit the regression model using all available data points, with an I-pr
 <<nystrom.mod.full, cache = TRUE>>=
 @
 
-To implement the Nystr\"om method, the option \code{nystrom = 50} was added to the function call, which uses 50 randomly selected data points for the Nystr\"om approximation.
+To implement the Nystr\"om method, the option \code{nystrom = 50} was added to the  function call, which uses 50 randomly selected data points for the Nystr\"om approximation.
 
 <<nystrom.mod, cache = TRUE>>=
 @
 
-<<nystrom.plot, echo = FALSE, fig.show = "hold", out.width = "0.785\\textwidth", fig.width = 6.5, fig.height = 3.95, fig.cap = 'Plot of predicted regression function for the full model (top) and the Nystr\\"om approximated method (bottom). For the Nystr\\"om plot, the data points that were active are shown by circles with bold outlines.', cache = TRUE, fig.pos = "t!">>=
+<<nystrom.plot, echo = FALSE, fig.show = "hold", out.width = "0.785\\textwidth", fig.width = 6.5, fig.height = 3.94, fig.cap = 'Plot of predicted regression function for the full model (top) and the Nystr\\"om approximated method (bottom). For the Nystr\\"om plot, the data points that were active are shown by circles with bold outlines.', cache = TRUE, fig.pos = "htbp">>=
 @
 <<nystrom.size, cache = TRUE>>=
 @

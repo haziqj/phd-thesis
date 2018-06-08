@@ -245,7 +245,7 @@ The predictors $x_1,\dots,x_n$ have been sampled roughly from the interval $(-1,
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.8\textwidth]{figure/04-example_data}
-  \caption{A plot of the sampled data points according to equation \cref{eq:examplesmoothingdata}, with the true regression function superimposed.}
+  \caption[A plot of the toy data set for regression]{A plot of the sampled data points according to  \cref{eq:examplesmoothingdata}, with the true regression function superimposed.}
   \label{fig:examplesmoothingdata}
 \end{figure}
 
@@ -256,7 +256,7 @@ These two methods are implemented in the \pkg{iprior} package.
 A full Bayesian treatment is possible, and we use the \pkg{rstan} implementation of \proglang{Stan} to perform Hamiltonian Monte Carlo sampling of the posterior densities.
 A vague prior choice for $\lambda$ and $\psi$ are prescribed, namely
 \[
-  \lambda,\psi \iid \N_{\geq 0}(0,100),
+  \lambda,\psi \iid \N_+(0,100),
 \]
 where $\N_+(0,\sigma^2)$ represents the \emph{folded-normal} distribution\footnote{The random variable $X \sim \N_+(\mu,\sigma^2)$ has the density $p(x) = \phi(x|\mu,\sigma^2)\ind(x \geq 0)$.}\footnote{Note that a single scale parameter $\lambda$ is not identified in sign, and is thus constrained to the positive reals. This is applicable in both likelihood-based and Bayesian methods.}.
 We have also set an improper prior density $p(\alpha) \propto \const$ for the intercept.
