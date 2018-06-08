@@ -6,7 +6,7 @@ cache/
 
 *.Rhistory
 
-*.RData
+*.RData*
 
 *.history
 
@@ -49,3 +49,4 @@ chapters/R/cache.zip
 *concordance.tex
 
 *.mw
+
