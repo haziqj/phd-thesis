@@ -109,9 +109,12 @@ As much as possible, and unless otherwise stated, the following conventions are 
   $x \otimes y$ & The tensor product of $x$ and $y$ which are elements of a vector space \\
   $\cF \otimes \cG$ & The tensor product space of two vector spaces \\
   $\cF \oplus \cG$ & The direct sum (or tensor sum) of two vector spaces \\
-  $\d f(x)$, $\d^2 f(x)$  & The first and second Fréchet differentials of $f$ at $x$ \\
-  $\partial_v f(x)$, $\partial_v^2 f(x)$  & The first and second Gâteaux differentials of $f$ at $x$ in the direction $v$ \\  
-  $\nabla f(x)$, $\nabla^2 f(x)$  & The gradient and Hessian of $f$ at $x$ in the direction $v$ ($f$ is a mapping of a Hilbert space)  \\    
+  $\d f(x)$  & The first Fréchet differential of $f$ at $x$ \\
+  $\d^2 f(x)$  & The second Fréchet differential of $f$ at $x$ \\  
+  $\partial_v f(x)$  & The first Gâteaux differential of $f$ at $x$ in the direction $v$ \\  
+  $\partial_v^2 f(x)$  & The second Gâteaux differential of $f$ at $x$ in the direction $v$ \\    
+  $\nabla f(x)$ & The gradient of $f$ at $x$ ($f$ is a mapping between Hilbert spaces)  \\    
+  $\nabla^2 f(x)$  & The Hessian of $f$ at $x$ ($f$ is a mapping between Hilbert spaces)  \\      
 \end{longtable}
 
 \noindent\textbf{Matrix and vector operations}
@@ -157,7 +160,7 @@ As much as possible, and unless otherwise stated, the following conventions are 
   $\phi(\bx|\bmu,\bSigma)$  & The  pdf of $\N_d(\bmu,\bSigma)$\\  
   $\MN_{n,m}(\bmu,\bSigma,\bPsi)$  & Matrix normal distribution with mean $\bmu$ and row variances $\bSigma\in\bbR^{n\times n}$ and column variances $\bPsi\in\bbR^{m\times m}$ \\  
   $\tN(\mu,\sigma^2,a,b)$ & Truncated univariate normal distribution with mean $\mu$ and variance $\sigma^2$ restricted to the interval $(a,b)$ \\
-  $\N_+(0,1)$ & The half-normal distribution with variance $\sigma^2$   \\    
+  $\N_+(0,1)$ & The half-normal distribution   \\    
   $\N_+(0,\sigma^2)$ & The folded-normal distribution with variance $\sigma^2$   \\  
   $\tN_d(\bmu,\bSigma,\cA)$  & Truncated $d$-dimensional multivariate normal distribution with mean vector $\bmu$ and covariance matrix $\bSigma$ restricted to the set $\cA$ \\  
   $\Gamma(s,r)$ & Gamma distribution with shape $s$ and rate $r$ parameters  \\  
