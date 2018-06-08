@@ -347,10 +347,11 @@ This thesis is structured as follows:
         (s4)  edge [-latex, thick, dashed] (ch4)
         (s4)  edge [-latex, thick, dashed] (ch5)
         (s3)  edge [-latex, thick, dashed] (ch5)
-        (apx)  edge [-latex, thick, dashed, shorten >=5.85cm] ($(ch3.east) + (0,1.15cm)$);
+        (apx)  edge [-latex, thick, dashed, shorten >=5.85cm] ($(ch3.east) + (0,1.15cm)$)
+        ($(s3.south) + (-0.7cm,0cm)$) edge [bend left=25,thick,latex-,dashed]  ($(s2.south) + (0.5cm,0cm)$);
 
 \end{tikzpicture}
-  \vspace{0.5em}
+%  \vspace{0.5em}
   \caption[Schematic representation of the organisation of the chapters of this thesis]{Schematic representation of the organisation of the chapters of this thesis. Solid lines indicate requisite relevances, while dashed lines indicate supporting and supplementary relevances. Chapters indicated by \textbf{\color{lseblu} blue} boxes are theoretical in nature, while those in \textbf{\color{lsedpr} purple} are methodological.}
 \end{figure}
 

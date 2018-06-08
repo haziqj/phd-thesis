@@ -3,15 +3,19 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Structure
-\usepackage[centering]{geometry}
+\usepackage{geometry}
+\newlength{\mytopbotmargin}
+\setlength{\mytopbotmargin}{32.5mm}
+\newlength{\myrightmargin}
+\setlength{\myrightmargin}{23mm}
 \geometry{%
   a4paper,
   left=40mm,
-  right=23mm,
-  top=30mm,
-  bottom=35mm,
+  right=\myrightmargin,
+  top=\mytopbotmargin,
+  bottom=\mytopbotmargin,
 %  footskip=10mm,
-  marginparwidth=25mm,
+  marginparwidth=\myrightmargin,
   marginparsep=0mm,
   bindingoffset=0mm
  }
@@ -21,22 +25,26 @@
 \usepackage{import}
 \usepackage{morewrites}  % https://tex.stackexchange.com/questions/289734/special-package-combination-gives-no-room-for-new-write
 \usepackage[all]{nowidow}  % https://tex.stackexchange.com/questions/4152/how-do-i-prevent-widow-orphan-lines
+\usepackage{calc}
 
 % Footers
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \renewcommand{\headrulewidth}{0pt}
 \fancyhf{}
-\renewcommand{\chaptermark}[1]{%
-  \markboth{#1}{}}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection~#1}}
-\fancyfoot[RO]{\small\nouppercase{\rightmark}\begin{tikzpicture}[remember picture,overlay]\node [anchor=west,xshift=-21mm,yshift=72.81pt] at (current page.south east) {\small\thepage};  \end{tikzpicture}}
-\fancyfoot[LE]{\small\nouppercase{\leftmark}\begin{tikzpicture}[remember picture,overlay]\node [anchor=east,xshift=21mm,yshift=72.81pt] at (current page.south west) {\small\thepage};  \end{tikzpicture}}
+\newlength{\numlength}
+\setlength{\numlength}{\mytopbotmargin - \footskip + 3.2254pt}
+\newlength{\numwidth}
+\setlength{\numwidth}{\myrightmargin - 4.5mm}
+\fancyfoot[RO]{\small\nouppercase{\rightmark}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small\thepage};  \end{tikzpicture}}
+\fancyfoot[LE]{\small\nouppercase{\leftmark}\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small\thepage};  \end{tikzpicture}}
 
 \fancypagestyle{plain}{%
   \fancyhf{}
-  \fancyfoot[RO]{\begin{tikzpicture}[remember picture,overlay]\node [anchor=west,xshift=-21mm,yshift=72.81pt] at (current page.south east) {\small\thepage};  \end{tikzpicture}}
-  \fancyfoot[LE]{\begin{tikzpicture}[remember picture,overlay]\node [anchor=east,xshift=21mm,yshift=72.81pt] at (current page.south west) {\small\thepage};  \end{tikzpicture}}
+  \fancyfoot[RO]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small\thepage};  \end{tikzpicture}}
+  \fancyfoot[LE]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small\thepage};  \end{tikzpicture}}
 }
 % https://tex.stackexchange.com/questions/195106/page-numbers-on-the-side-of-the-page
 
@@ -83,18 +91,8 @@
 %}
 
 % Git info
-\usepackage[maxdepth=8,mark,raisemark=0.9323\paperheight]{gitinfo2}
-\renewcommand{\gitMark}{Branch:\;\gitBranch\,@\,\gitAbbrevHash{}~\textbullet{}~Change:\;\gitAuthorIsoDate~\textbullet{}~haziqj}
-\makeatletter
-\def\gitMarkFormat{%
-  \color{gray}\small\ttfamily
-  \if@twoside%
-    \ifodd\thepage\hspace{1.5cm}\else\hspace{-1.5cm}\fi
-  \else
-    \hspace{1.5cm}
-  \fi
-}
-\makeatother
+\usepackage[maxdepth=8]{gitinfo2}
+\fancyhead[C]{\color{gray}\small\ttfamily [git] \textbullet{} Branch:\;\gitBranch\,@\,\gitAbbrevHash{}~\textbullet{}~Change:\;\gitAuthorIsoDate~\textbullet{}~haziqj}
 
 % Colour-blind safe pallete
 \definecolor{colblu}{RGB}{0,114,178}

@@ -62,7 +62,7 @@ Review before submission
 - Clean up R code before publishing
 - Clean up LaTeX source
 
-Circle back to later if have time
+Circle back to later if have time or think these necessary
 
 - Truncated normal plots.
 - Google map for ozone data example.
