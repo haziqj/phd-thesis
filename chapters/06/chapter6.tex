@@ -546,7 +546,7 @@ We note that the effect size for SO\textsubscript{2} is slightly larger under an
 \subsection{Ozone data set}
 \label{sec:ozone}
 \vspace{-0.5em}
-In this section, we replicate the Bayesian variable selection analysis of the Ozone dataset done by \citet{Casella2006} which appeared initially in \citet{Breiman1985}, and also show how Bayesian variable selection can help select important interaction terms. 
+In this section, we replicate the Bayesian variable selection analysis of the Ozone dataset done by \citet[abbr. C\&M]{Casella2006} which appeared initially in \citet[abbr. B\&F]{Breiman1985}, and also show how Bayesian variable selection can help select important interaction terms. 
 The data consists of daily ozone readings and various meteorological quantities, and the aim was to see which of these quantities contributed to the ozone concentration. 
 The variables considered are explained in \cref{tab:ozone}. 
 
@@ -562,7 +562,7 @@ $y$      & Daily maximum one-hour-average ozone reading (ppm) at Upland, CA \\
 $X_1$    & Month: $1 = \text{January}, \dots, 12 = \text{December}$\\
 $X_2$    & Day of month: $1,2,\dots$ \\
 $X_3$    & Day of week: $1 = \text{Monday}, \dots, 7 = \text{Sunday}$ \\
-$X_4$    & 500-millibar pressure height (m) measured at Vandenberg AFB \\
+$X_4$    & 500-millibar pressure height (m) measured at Vandenberg Air Force Base \\
 $X_5$    & Wind speed (mph) at Los Angeles International Airport (LAX) \\
 $X_6$    & Humidity (\%) at LAX \\
 $X_7$    & Temperature ($^\circ$F) measured at Sandberg, CA \\
@@ -581,11 +581,11 @@ Out of these 203, we randomly set aside 25 to use for validation, thus the $n$ u
 The training and test set were repeated multiple times and results averaged in order to make a comparison to the unknown training and test set used in the other studies.
 Out-of-sample prediction RMSE were obtained, as well as the coefficient of determination $R^2$.
 
-\citeauthor{Casella2006} removed the variables $X_{11}$ and $X_{12}$ before running their selection model, citing multicollinearity causing ill-conditioned design matrices. 
+C\&M removed the variables $X_{11}$ and $X_{12}$ before running their selection model, citing multicollinearity causing ill-conditioned design matrices. 
 Upon inspection, there are indeed correlations among the variables as high as 0.93 for some of them, but not enough to cause rank deficiency in the design matrix and a degenerate $\XTX$ matrix.
 The correlations $\Corr(X_7,X_{11}) =0.91$ and $\Corr(X_{11},X_{12}) = 0.93$ seemed to drive the decision to drop the two variables, and while it is a valid concern, we will conduct variable selection on the full set of 12 variables.
 We can then see the performance of I-priors in the presence of multicollinearity in this real-world data set. 
-On another note, the variables $X_1$, $X_2$ and $X_3$ were presumably intended to be categorical as in modelling seasonality in a time series data, but these were treated as continuous, as did \citeauthor{Casella2006}. 
+On another note, the variables $X_1$, $X_2$ and $X_3$ were presumably intended to be categorical as in modelling seasonality in a time series data, but these were treated as continuous, as did C\&M. 
 The results are compared in \cref{tab:ozoneres}.
 
 \begin{table}[htb]
@@ -607,12 +607,21 @@ What we found was that the model selected using the I-prior does better in terms
 The average posterior model probability for $X_1,X_6,X_{11}$ as found by the I-prior was 0.722\footnotemark. 
 One thing to note is that the I-prior model selected the variable $X_{11}$ instead of its highly correlated proxy $X_7$, which is what C\&M selected.
 These two variables are temperature measurements at different locations in California.
-As C\&M excluded $X_{11}$ from the model search it was of course never considered in their model selection process, and because we included it in ours, the variable selection method was able to consider both variables together and decide on the more appropriate one. 
+As C\&M excluded $X_{11}$ from the model search it was of course never considered in their model selection process, and because we included it in ours, the variable selection model was able to consider both variables together and decide on the more appropriate one. 
 
-Interestingly, it turns out that Sandberg, CA (location of temperature measurement for $X_7$) is about 121km away from Upland, CA (location of ozone reading), but El Monte, CA (location of temperature measurement for $X_{11}$) is only 35km away from Upland, CA.
+Interestingly, the distance as the crow flies between Sandberg, CA (location of temperature measurements for $X_7$) and Upland, CA (location of ozone readings) is roughly 121 km, but El Monte, CA (location of temperature measurements for $X_{11}$) is just 35 km away from Upland, CA.
 It stands to reason that $X_{11}$ provides more geographical reliability than $X_7$.
 Unless there is a strong insistence on deleting variables beforehand, we might not know for sure whether the variable was rightfully removed from consideration, as this example seems to prove.
 Out of curiosity, running the variable selection model on the reduced variable space as C\&M did, we arrive at the same results as theirs.
+
+\begin{figure}[htb]
+  \centering
+  \vspace{6pt}
+  \includegraphics[width=\textwidth]{figure/06-ozone_map}
+  \caption[Locations of the various points of interest in California, USA, related to the ozone measurements]{Locations\footnotemark~of the various points of interest in California, USA, related to the ozone measurements.}
+  \label{fig:aerobic-densplot       }
+\end{figure}
+\footnotetext{Map tiles by \href{http://stamen.com/}{Stamen Design}, under \href{https://creativecommons.org/licenses/by/3.0/legalcode}{CC BY 3.0}. Data by \href{http://openstreetmap.org/}{OpenStreetMap}, under \href{https://creativecommons.org/licenses/by-sa/3.0/legalcode}{CC BY-SA 3.0}. Created using the \pkg{ggmap} package \citep{ggmap} in \proglang{R}.}
 
 \footnotetext{Since the total model space used was different between our method, C\&M and B\&F, it does not make sense to compare posterior model probabilities which we obtained. C\&M reported a model probability of 0.491 for their model, but this model was not selected at all using the I-prior.}
 

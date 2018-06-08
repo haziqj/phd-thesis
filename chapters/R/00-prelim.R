@@ -80,7 +80,7 @@ move_files_to_chapter <- function() {
 delete_files <- function() {
   file.types <- c("*.bbl", "*.bcf", "*.glo", "*.glo-abr", "*.idx", "*.ilg",
                   "*.ind", "*.ist", "*.log", "*.run.xml", "*.slo", "*.pdf",
-                  "*.synctex.gz", "*concordance.tex", "*.mw")
+                  "*.synctex.gz", "*concordance.tex", "*.mw", "*.aux", "*.tex")
   for (i in seq_along(file.types)) {
     file.remove(dir(pattern = file.types[i], full.names = TRUE))
   }
