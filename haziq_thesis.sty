@@ -38,13 +38,13 @@
 \setlength{\numlength}{\mytopbotmargin - \footskip + 3.2254pt}
 \newlength{\numwidth}
 \setlength{\numwidth}{\myrightmargin - 4.5mm}
-\fancyfoot[RO]{\small\nouppercase{\rightmark}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small\thepage};  \end{tikzpicture}}
-\fancyfoot[LE]{\small\nouppercase{\leftmark}\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small\thepage};  \end{tikzpicture}}
+\fancyfoot[RO]{\textsc\small\nouppercase{\textsc{\rightmark}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small\textsc{\thepage}};  \end{tikzpicture}}
+\fancyfoot[LE]{\small\nouppercase{\textsc{\leftmark}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small\textsc{\thepage}};  \end{tikzpicture}}
 
 \fancypagestyle{plain}{%
   \fancyhf{}
-  \fancyfoot[RO]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small\thepage};  \end{tikzpicture}}
-  \fancyfoot[LE]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small\thepage};  \end{tikzpicture}}
+  \fancyfoot[RO]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small\textsc{\thepage}};  \end{tikzpicture}}
+  \fancyfoot[LE]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small\textsc{\thepage}};  \end{tikzpicture}}
 }
 % https://tex.stackexchange.com/questions/195106/page-numbers-on-the-side-of-the-page
 
