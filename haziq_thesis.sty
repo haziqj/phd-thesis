@@ -29,6 +29,9 @@
 \usepackage{morewrites}  % https://tex.stackexchange.com/questions/289734/special-package-combination-gives-no-room-for-new-write
 \usepackage[all]{nowidow}  % https://tex.stackexchange.com/questions/4152/how-do-i-prevent-widow-orphan-lines
 
+% Git info
+\usepackage[maxdepth=8]{gitinfo2}
+
 % Footers
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -42,9 +45,9 @@
 \setlength{\numwidth}{\myrightmargin - 4.5mm}
 \fancyfoot[RO]{\textsc\small\nouppercase{\textsc{\rightmark}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small\textsc{\thepage}};  \end{tikzpicture}}
 \fancyfoot[LE]{\small\nouppercase{\textsc{\leftmark}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small\textsc{\thepage}};  \end{tikzpicture}}
+\fancyhead[C]{\color{gray}\small\ttfamily [git] \textbullet{} Branch:\;\gitBranch\,@\,\gitAbbrevHash{}~\textbullet{}~Change:\;\gitAuthorIsoDate~\textbullet{}~haziqj}
 
 \fancypagestyle{plain}{%
-  \fancyhf{}
   \fancyfoot[RO]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small\textsc{\thepage}};  \end{tikzpicture}}
   \fancyfoot[LE]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small\textsc{\thepage}};  \end{tikzpicture}}
 }
@@ -92,9 +95,7 @@
 %\parbox[c]{0.85\marginparwidth}{\raggedright\singlespacing\normalfont\small\ttfamily\expandafter\seqsplit\expandafter{\TEMP}}
 %}
 
-% Git info
-\usepackage[maxdepth=8]{gitinfo2}
-\fancyhead[C]{\color{gray}\small\ttfamily [git] \textbullet{} Branch:\;\gitBranch\,@\,\gitAbbrevHash{}~\textbullet{}~Change:\;\gitAuthorIsoDate~\textbullet{}~haziqj}
+
 
 % Colour-blind safe pallete
 \definecolor{colblu}{RGB}{0,114,178}
