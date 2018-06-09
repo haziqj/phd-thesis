@@ -5,8 +5,10 @@
 % Structure
 \usepackage{calc}
 \usepackage{geometry}
-\newlength{\mytopbotmargin}
-\setlength{\mytopbotmargin}{32.5mm}
+\newlength{\mytopmargin}
+\setlength{\mytopmargin}{30mm + 1.25mm}
+\newlength{\mybotmargin}
+\setlength{\mybotmargin}{35mm - 1.25mm}
 \newlength{\myrightmargin}
 \setlength{\myrightmargin}{23mm + 1.5mm}
 \newlength{\myleftmargin}
@@ -15,8 +17,8 @@
   a4paper,
   left=\myleftmargin,
   right=\myrightmargin,
-  top=\mytopbotmargin,
-  bottom=\mytopbotmargin,
+  top=\mytopmargin,
+  bottom=\mybotmargin,
 %  footskip=10mm,
   marginparwidth=\myrightmargin,
   marginparsep=0mm,
@@ -40,16 +42,16 @@
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection~#1}}
 \newlength{\numlength}
-\setlength{\numlength}{\mytopbotmargin - \footskip + 3.2254pt}
+\setlength{\numlength}{\mybotmargin - \footskip + 3.2254pt}
 \newlength{\numwidth}
 \setlength{\numwidth}{\myrightmargin - 4.5mm}
-\fancyfoot[RO]{\textsc\small\nouppercase{\textsc{\rightmark}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small\textsc{\thepage}};  \end{tikzpicture}}
-\fancyfoot[LE]{\small\nouppercase{\textsc{\leftmark}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small\textsc{\thepage}};  \end{tikzpicture}}
-\fancyhead[C]{\color{gray}\small\ttfamily [git] \textbullet{} Branch:\;\gitBranch\,@\,\gitAbbrevHash{}~\textbullet{}~Change:\;\gitAuthorIsoDate~\textbullet{}~haziqj}
+\fancyfoot[RO]{\small\nouppercase{\textsc{\rightmark}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+\fancyfoot[LE]{\small\nouppercase{\textsc{\leftmark}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+%\fancyhead[C]{\color{gray}\small\ttfamily [git] \textbullet{} Branch:\;\gitBranch\,@\,\gitAbbrevHash{}~\textbullet{}~Change:\;\gitAuthorIsoDate~\textbullet{}~haziqj}
 
 \fancypagestyle{plain}{%
-  \fancyfoot[RO]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small\textsc{\thepage}};  \end{tikzpicture}}
-  \fancyfoot[LE]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small\textsc{\thepage}};  \end{tikzpicture}}
+  \fancyfoot[RO]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+  \fancyfoot[LE]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small{\textsc{\thepage}}};  \end{tikzpicture}}
 }
 % https://tex.stackexchange.com/questions/195106/page-numbers-on-the-side-of-the-page
 
@@ -283,7 +285,7 @@
     \setcounter{chapter}{#1-1}
     \chapter{#2}
     %0.475, 0.8175
-    \placetextbox{0.5155}{0.859}{
+    \placetextbox{0.5085}{0.8625}{
       Haziq Jamil \\[-0.3em]
       {\it\small Department of Statistics} \\[-0.35em]
       {\it\small London School of Economics and Political Science} \\[-0.35em]
