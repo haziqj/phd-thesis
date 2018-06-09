@@ -103,7 +103,7 @@ A polynomial construction based on a particular RKHS building block is considere
 For example, using the canonical RKHS in the polynomial construction would allow us to easily add higher order effects of the covariates $x \in \cX$.
 In particular, we only require a single scale parameter in polynomial kernel construction.
 
-\begin{definition}[The polynomial RKKS]
+\begin{definition}[Polynomial RKKS]
   Let $\cX$ be a Hilbert space.
   The kernel function $\hXXR$ obtained through the $d$-degree polynomial construction of linear kernels is
   \[
@@ -334,7 +334,7 @@ The main idea is to construct a RKKS such that the functions that lie in them wi
 The bulk of the work has been done, and in fact we know exactly how this ANOVA RKKS should be structured---it is the space as specified in \cref{eq:funcanovaspace}. 
 The ANOVA RKKS will be constructed by a similar manipulation of the individual kernels representing the RKHS building blocks.
 
-\begin{definition}[The ANOVA RKKS]\label{def:anovarkks}
+\begin{definition}[ANOVA RKKS]\label{def:anovarkks}
   For $k=1,\dots,p$, let $\cF_k$ be centred RKHSs of functions over the set $\cX_k$ with kernel $h_k:\cX_k\times\cX_k\to\bbR$. 
   Let $\lambda_k, k=1,\dots,p$ be real-valued scale parameters.
   The ANOVA RKKS of functions $f:\cX_1\times\cdots\times\cX_p\to\bbR$ is specified by the ANOVA kernel, defined by

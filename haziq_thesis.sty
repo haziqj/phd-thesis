@@ -52,10 +52,58 @@
 \fancypagestyle{plain}{%
 %  \fancyfoot[RO]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
 %  \fancyfoot[LE]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small{\textsc{\thepage}}};  \end{tikzpicture}}
-\fancyfoot[RO]{\small\nouppercase{\textsc{\rightmark}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+\fancyfoot[RO]{\small\nouppercase{\textsc{\leftmark}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
 \fancyfoot[LE]{\small\nouppercase{\textsc{\leftmark}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small{\textsc{\thepage}}};  \end{tikzpicture}}
 }
 % https://tex.stackexchange.com/questions/195106/page-numbers-on-the-side-of-the-page
+
+\fancypagestyle{chapterone}{%
+\fancyfoot[RO]{\small{\textsc{Chapter one}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+}
+
+\fancypagestyle{chaptertwo}{%
+\fancyfoot[RO]{\small{\textsc{Chapter two}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+}
+
+\fancypagestyle{chapterthree}{%
+\fancyfoot[RO]{\small{\textsc{Chapter three}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+}
+
+\fancypagestyle{chapterfour}{%
+\fancyfoot[RO]{\small{\textsc{Chapter four}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+}
+
+\fancypagestyle{chapterfive}{%
+\fancyfoot[RO]{\small{\textsc{Chapter five}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+}
+
+\fancypagestyle{chaptersix}{%
+\fancyfoot[RO]{\small{\textsc{Chapter six}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+}
+
+\fancypagestyle{chapterseven}{%
+\fancyfoot[RO]{\small{\textsc{Chapter seven}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+}
+
+\fancypagestyle{chaptersone}{%
+\fancyfoot[RO]{\small{\textsc{Supplementary one}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+}
+
+\fancypagestyle{chapterstwo}{%
+\fancyfoot[RO]{\small{\textsc{Supplementary two}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+}
+
+\fancypagestyle{chaptersthree}{%
+\fancyfoot[RO]{\small{\textsc{Supplementary three}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+}
+
+\fancypagestyle{chaptersfour}{%
+\fancyfoot[RO]{\small{\textsc{Supplementary four}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+}
+
+\fancypagestyle{chapterapx}{%
+\fancyfoot[RO]{\small{\textsc{Appendix \thechapter}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+}
 
 % Typeset and appearance
 \usepackage[english]{babel}   % manages structure of paper better
@@ -98,8 +146,6 @@
 %\StrSubstitute{#1}{ }{~}[\TEMP]%
 %\parbox[c]{0.85\marginparwidth}{\raggedright\singlespacing\normalfont\small\ttfamily\expandafter\seqsplit\expandafter{\TEMP}}
 %}
-
-
 
 % Colour-blind safe pallete
 \definecolor{colblu}{RGB}{0,114,178}
@@ -396,7 +442,8 @@
   }
 }
 
-% Cleverref needs to be loaded last
+% Cleverref needs to be loaded last
+\usepackage{nameref}
 \usepackage[capitalise,noabbrev,nameinlink]{cleveref}
 \Crefname{misc}{Miscellanea}{Miscellanea}
 \Crefname{supchap}{Supplementary Chapter}{Supplementary Chapter}
@@ -410,21 +457,21 @@
 \newcommand{\mypageref}[1]{{{\color{lsedpr}p.} \pageref{#1}}}
 
 % Page intentionally left blank
-%\makeatletter
-%\def\cleardoublepage{\clearpage\if@twoside%
-%    \ifodd\c@page\else
-%    \vspace*{\fill}
-%%    \vspace{3cm}
-%    \hfill
-%%    \begin{center}
-%%    \emph{This page intentionally left blank.}
-%%    \end{center}
-%%    \vspace{\fill}
-%    \thispagestyle{empty}
-%    \newpage
-%    \if@twocolumn\hbox{}\newpage\fi\fi\fi
-%}
-%\makeatother
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside%
+    \ifodd\c@page\else
+    \vspace*{\fill}
+%    \vspace{3cm}
+    \hfill
+%    \begin{center}
+%    \emph{This page intentionally left blank.}
+%    \end{center}
+%    \vspace{\fill}
+    \thispagestyle{empty}
+    \newpage
+    \if@twocolumn\hbox{}\newpage\fi\fi\fi
+}
+\makeatother
 % https://tex.stackexchange.com/questions/290802/page-intentionally-left-blank-with-twoside-openright/308522
 
 %\usepackage[fontsize=10.5]{scrextend}  % place here due to conflict

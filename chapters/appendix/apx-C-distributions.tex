@@ -3,16 +3,17 @@ Of interest are probability density functions, first and second moments, and ent
 Note that in this part of the appendix, boldface notation for matrix and vectors are not used.
 
 \section{Multivariate normal distribution}
-\label{apx:fishermultinormal}
 
-Let $X\in\bbR^d$ be distributed according to a multivariate normal (Gaussian) distribution with mean $\mu \in \bbR^d$ and covariance matrix $\Sigma \in\bbR^d$ (a square, symmetric, positive-definite matrix).
-We say that $X\sim\N_d(\mu,\Sigma)$.
-Then,
-\begin{itemize}
-  \item \textbf{Pdf}. $p(X|\mu,\Sigma) = (2\pi)^{-d/2}|\Sigma|^{-1/2}\exp\big(-\half (X-\mu)^\top\Sigma^{-1}(X-\mu)\big)$.
-  \item \textbf{Moments}. $\E X=\mu$, $\E [XX^\top] = \Sigma + \mu \mu^\top$.
-  \item \textbf{Entropy}. $H(p) = \half \log \abs{2\pi e \Sigma} = \half[d](1 + \log 2\pi) + \half\log\abs{\Sigma}$.
-\end{itemize}
+\begin{definition}[Multivariate normal distribution]
+  Let $X\in\bbR^d$ be distributed according to a multivariate normal (Gaussian) distribution with mean $\mu \in \bbR^d$ and covariance matrix $\Sigma \in\bbR^d$ (a square, symmetric, positive-definite matrix).
+  We say that $X\sim\N_d(\mu,\Sigma)$.
+  Then,
+  \begin{itemize}
+    \item \textbf{Pdf}. $p(X|\mu,\Sigma) = (2\pi)^{-d/2}|\Sigma|^{-1/2}\exp\big(-\half (X-\mu)^\top\Sigma^{-1}(X-\mu)\big)$.
+    \item \textbf{Moments}. $\E X=\mu$, $\E [XX^\top] = \Sigma + \mu \mu^\top$.
+    \item \textbf{Entropy}. $H(p) = \half \log \abs{2\pi e \Sigma} = \half[d](1 + \log 2\pi) + \half\log\abs{\Sigma}$.
+  \end{itemize}
+\end{definition}
 
 For $d=1$, i.e. $X$ is univariate, then its pdf is $p(X|\mu,\sigma^2) = \frac{1}{\sigma}\phi \left( \frac{X-\mu}{\sigma} \right)$, and its cdf is $F(X|\mu,\sigma^2) = \Phi \left( \frac{X-\mu}{\sigma} \right)$, where $\phi(\cdot)$ and $\Phi(\cdot)$ are the pdf and cdf of a univariate standard normal distribution.
 In the special case that $\Sigma = \diag(\sigma_1^2,\dots,\sigma_d^2)$, then the components of $X=(X_1,\dots,X_d)^\top$ are independently distributed according to $X_i\sim\N(\mu_i,\sigma_i^2)$.
@@ -83,7 +84,7 @@ In the special case that $\Sigma = \diag(\sigma_1^2,\dots,\sigma_d^2)$, then the
 
 Frequently, in Bayesian statistics especially, the following identities will be useful in deriving posterior distributions involving multivariate normals.
 
-\begin{lemma}
+\begin{lemma}\label{apx:fishermultinormal}
   Let $x,b\in\bbR^d$ be a vector, $X,B\in\bbR^{n\times d}$ a matrix, and $A \in \bbR^{d \times d}$ a symmetric, invertible matrix.
   Then,
   \begin{align*}
@@ -204,13 +205,16 @@ as required.  \qedhere
 \label{apx:matrixnormal}
 
 The matrix normal distribution is an extension of the Gaussian distribution to matrices.
-Let $X\in\bbR^{n \times m}$ matrix, and let $X$ follow a matrix normal distribution with mean $\mu\in\bbR^{n \times m}$ and row and column variances $\Sigma \in \bbR^{n \times n}$ and $\Psi \in \bbR^{m \times m}$ respectively, which we denote by $X\sim\MN_{n,m}(\mu,\Sigma,\Psi)$.
-Then,
-\begin{itemize}
-  \item \textbf{Pdf}. $p(X|\mu,\Sigma,\Psi) = (2\pi)^{-nm/2}|\Sigma|^{-m/2}|\Psi|^{-n/2} e^{-\half \tr \big(\Psi^{-1}(X-\mu)^\top\Sigma^{-1}(X-\mu)\big)}$.
-  \item \textbf{Moments}. $\E X=\mu$, $\Var(X_{i \bigcdot }) = \Psi$ for $i=1,\dots,n$, and $\Var(X_{\bigcdot j}) = \Sigma$ for $j=1,\dots,m$. 
-  \item \textbf{Entropy}. $H(p) = \half \log \abs{2\pi e (\Psi \otimes \Sigma)} = \half[nm](1 + \log 2\pi) + \half\log\abs{\Sigma}^m\abs{\Psi}^n$.
-\end{itemize}
+
+\begin{definition}[Matrix normal distribution]
+  Let $X\in\bbR^{n \times m}$ matrix, and let $X$ follow a matrix normal distribution with mean $\mu\in\bbR^{n \times m}$ and row and column variances $\Sigma \in \bbR^{n \times n}$ and $\Psi \in \bbR^{m \times m}$ respectively, which we denote by $X\sim\MN_{n,m}(\mu,\Sigma,\Psi)$.
+  Then,
+  \begin{itemize}
+    \item \textbf{Pdf}. $p(X|\mu,\Sigma,\Psi) = (2\pi)^{-nm/2}|\Sigma|^{-m/2}|\Psi|^{-n/2} e^{-\half \tr \big(\Psi^{-1}(X-\mu)^\top\Sigma^{-1}(X-\mu)\big)}$.
+    \item \textbf{Moments}. $\E X=\mu$, $\Var(X_{i \bigcdot }) = \Psi$ for $i=1,\dots,n$, and $\Var(X_{\bigcdot j}) = \Sigma$ for $j=1,\dots,m$. 
+    \item \textbf{Entropy}. $H(p) = \half \log \abs{2\pi e (\Psi \otimes \Sigma)} = \half[nm](1 + \log 2\pi) + \half\log\abs{\Sigma}^m\abs{\Psi}^n$.
+  \end{itemize}
+\end{definition}
 
 \begin{lemma}[Equivalence between matrix and multivariate normal]
   $X\sim\MN_{n,m}(\mu,\Sigma,\Psi)$ if and only if $\vecc X\sim \N_{nm}(\vecc\mu,\Psi \otimes \Sigma)$.
@@ -246,28 +250,31 @@ Some useful properties of the matrix normal distribution are listed:
 \section{Truncated univariate normal distribution}
 \label{apx:truncuninorm}
 
-Let $X \sim \N(\mu,\sigma^2)$ with the random variable $X$ restricted to the interval $(a,b) \subset \bbR$.
-Then we say that $X$ follows a truncated normal distribution, and we denote this by $X\sim\tN(\mu,\sigma^2,a,b)$.
-Let $\alpha = (a-\mu)/\sigma$, $\beta = (b-\mu)/\sigma$, and $C = \Phi(\beta) - \Phi(\alpha)$.
-Then,
-\begin{itemize}
-  \item \textbf{Pdf}. $p(X|\mu,\sigma,a,b) = C^{-1} (2\pi\sigma^2)^{-1/2}e^{-\frac{1}{2\sigma^2} (X-\mu)^2} = \sigma C^{-1} \phi(\frac{X-\mu}{\sigma})$.
-  \item \textbf{Moments}. 
-  \vspace{-1.2em}
-  \begin{gather*}
-    \E X = \mu + \sigma \frac{\phi(\alpha) - \phi(\beta)}{C} \\
-    \E X^2 = \sigma^2 + \mu^2 + \sigma^2  \frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{C}   + 2\mu\sigma \frac{\phi(\alpha) - \phi(\beta)}{C} \\
-    \Var X = \sigma^2 \left[ 1 +  \frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{C} - \left(\frac{\phi(\alpha) - \phi(\beta)}{C}\right)^2 \right]
-  \end{gather*}
-  \item \textbf{Entropy}.
-  \begin{align*}
-    H(p) 
-    &= \half\log 2\pi e\sigma^2 + \log C + \frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{2C} \\
-    &= \half\log 2\pi e\sigma^2 + \log C + \frac{1}{2\sigma^2}\cdot \myoverbrace{\sigma^2\frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{C}}{\Var X -\sigma^2 + (\E X - \mu)^2} \\
-    &= \half\log 2\pi \sigma^2 + \log C + \frac{1}{2\sigma^2}\E [X - \mu]^2 
-  \end{align*}
-  because $\Var X + (\E X - \mu)^2 = \E X^2 - \cancel{(\E X)^2} + \cancel{(\E X)^2} + \mu^2 - 2\mu\E X.$
-\end{itemize}
+\begin{definition}[Truncated univariate normal distribution]
+  Let $X \sim \N(\mu,\sigma^2)$ with the random variable $X$ restricted to the interval $(a,b) \subset \bbR$.
+  Then we say that $X$ follows a truncated normal distribution, and we denote this by $X\sim\tN(\mu,\sigma^2,a,b)$.
+  Let $\alpha = (a-\mu)/\sigma$, $\beta = (b-\mu)/\sigma$, and $C = \Phi(\beta) - \Phi(\alpha)$.
+  Then,
+  \begin{itemize}
+    \item \textbf{Pdf}. $p(X|\mu,\sigma,a,b) = C^{-1} (2\pi\sigma^2)^{-1/2}e^{-\frac{1}{2\sigma^2} (X-\mu)^2} = \sigma C^{-1} \phi(\frac{X-\mu}{\sigma})$.
+    \item \textbf{Moments}. 
+    \vspace{-1.2em}
+    \begin{gather*}
+      \E X = \mu + \sigma \frac{\phi(\alpha) - \phi(\beta)}{C} \\
+      \E X^2 = \sigma^2 + \mu^2 + \sigma^2  \frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{C}   + 2\mu\sigma \frac{\phi(\alpha) - \phi(\beta)}{C} \\
+      \Var X = \sigma^2 \left[ 1 +  \frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{C} - \left(\frac{\phi(\alpha) - \phi(\beta)}{C}\right)^2 \right]
+    \end{gather*}
+    \item \textbf{Entropy}.
+    \begin{align*}
+      H(p) 
+      &= \half\log 2\pi e\sigma^2 + \log C + \frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{2C} \\
+      &= \half\log 2\pi e\sigma^2 + \log C + \frac{1}{2\sigma^2}\cdot \myoverbrace{\sigma^2\frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{C}}{\Var X -\sigma^2 + (\E X - \mu)^2} \\
+      &= \half\log 2\pi \sigma^2 + \log C + \frac{1}{2\sigma^2}\E [X - \mu]^2 
+    \end{align*}
+    because $\Var X + (\E X - \mu)^2 = \E X^2 - \cancel{(\E X)^2} + \cancel{(\E X)^2} + \mu^2 - 2\mu\E X.$
+  \end{itemize}
+
+\end{definition}
 
 For binary probit models, the distributions that come up are one-sided truncations at zero, i.e. $\tN(\mu,\sigma^2,0,+\infty)$ (upper tail/positive part) and $\tN(\mu,\sigma^2,-\infty,0)$ (lower tail/negative part), for which their moments are of interest.
 As an aside, if $\mu = 0$ then the truncation $\tN(0,\sigma^2,0,+\infty) \equiv \N_+(0,\sigma^2)$ is called the \emph{folded-normal} distribution.
@@ -288,12 +295,14 @@ The latter algorithm is inspired by the Ziggurat algorithm \citep{marsaglia2000z
 \section{Truncated multivariate normal distribution}
 \label{apx:truncmultinorm}
 
-Consider the restriction of $X\sim \N_d(\mu,\Sigma)$ to a convex subset\footnote{A convex subset is a subset of a space that is closed under convex combinations. In Euclidean space, for every pair of points in a convex set, all the points that lie on the straight line segment which joins the pair of points are also in the set.}~$\cA \subset \bbR^d$.
-Call this distribution the truncated multivariate normal distribution, and denote it $X \sim \tN_d(\mu,\Sigma,\cA)$.
-The pdf is $p(X|\mu,\Sigma,\cA) = C^{-1}\phi(X|\mu,\Sigma)\ind[X\in\cA]$, where
-\[
-  C = \int_\cA \phi(x|\mu,\Sigma) \dint x = \Prob(X \in \cA).
-\] 
+\begin{definition}[Truncated multivariate normal distribution]
+  Consider the restriction of $X\sim \N_d(\mu,\Sigma)$ to a convex subset\footnote{A convex subset is a subset of a space that is closed under convex combinations. In Euclidean space, for every pair of points in a convex set, all the points that lie on the straight line segment which joins the pair of points are also in the set.}~$\cA \subset \bbR^d$.
+  Call this distribution the truncated multivariate normal distribution, and denote it $X \sim \tN_d(\mu,\Sigma,\cA)$.
+  The pdf is $p(X|\mu,\Sigma,\cA) = C^{-1}\phi(X|\mu,\Sigma)\ind[X\in\cA]$, where
+  \[
+    C = \int_\cA \phi(x|\mu,\Sigma) \dint x = \Prob(X \in \cA).
+  \] 
+\end{definition}
 
 Generally speaking, there are no closed-form expressions for $\E g(X)$ for any well-defined functions $g$ on $X$.
 One strategy to obtain values such as $\E X$ (mean), $\E X^2$ (second moment) and $E \log p(X)$ (entropy) would be Monte Carlo integration.
@@ -431,15 +440,18 @@ We present some results that we have not previously seen before elsewhere.
 %
 \section{Gamma distribution}
 \label{apx:gammadist}
+\vspace{-0.2em}
 
-\vspace{-0.3em}
-For $X\in\bbR_{\geq 0}$, let $X$ be distributed according to the gamma distribution with shape $s$ and rate $r$, denoted $X\sim\Gamma(s,r)$. 
-Then,
-\begin{itemize}
-  \item \textbf{Pdf}. $p(X) = \Gamma(s)^{-1} r^s X^{s-1} e^{-rX}$.
-  \item \textbf{Moments}. $\E X=s/r$, $\Var X = s/r^2$.
-  \item \textbf{Entropy}. $H(p)=s - \log r + \log \Gamma(s) + (1-s)\psi(s)$.
-\end{itemize}
+\begin{definition}[Gamma distribution]
+  For $X\in\bbR_{\geq 0}$, let $X$ be distributed according to the gamma distribution with shape $s$ and rate $r$, denoted $X\sim\Gamma(s,r)$. 
+  Then,
+  \begin{itemize}
+    \item \textbf{Pdf}. $p(X) = \Gamma(s)^{-1} r^s X^{s-1} e^{-rX}$.
+    \item \textbf{Moments}. $\E X=s/r$, $\Var X = s/r^2$.
+    \item \textbf{Entropy}. $H(p)=s - \log r + \log \Gamma(s) + (1-s)\psi(s)$.
+  \end{itemize}
+\end{definition}
+
 In the above, $\Gamma(\cdot) = \Gamma_1(\cdot)$ and $\psi(\cdot) = \psi_1(\cdot)$ are the gamma and digamma functions, defined by
 \[
   \Gamma(a) = 
@@ -453,34 +465,40 @@ and
   \psi(a) = \frac{\partial}{\partial a}\log \Gamma(a) = \frac{\partial\Gamma(a)/\partial a}{\Gamma(a)}.
 \]
 Often, the gamma distribution is parameterised according to shape $s$ and scale $\sigma = 1/r$ parameters, $X\sim\Gamma(s,\sigma)$.
-\vspace{-0.6em}
+\vspace{-0.5em}
 
 \section{Inverse gamma distribution}
 \label{def:invgam}
+\vspace{-0.2em}
 
-\vspace{-0.3em}
-For $X\in\bbR_{\geq 0}$, a random variable $X$ distributed according to an inverse gamma distribution with parameters $s$ (shape) and $\sigma$ (scale) is denoted by $X\sim\Gamma^{-1}(s,\sigma)$.
-Then,
-\begin{itemize}
-  \item \textbf{Pdf}. $p(X) = \Gamma(s)^{-1} \sigma^s  X^{-(s+1)} e^{-\sigma/X}$.
-  \item \textbf{Moments}. $\E X=\sigma/(s-1)$, $\Var X = \sigma^2\big((s-1)^2(s-2) \big)^{-1}$.
-  \item \textbf{Entropy}. $H(p)= s + \log \big(\sigma\Gamma(s)\big) - (1+s)\psi(s)$.
-\end{itemize}
-with $\Gamma(\cdot)$ and $\psi(\cdot)$ representing the gamma and digamma functions respectively, as defined in \cref{apx:gammadist}.
+\begin{definition}[Inverse gamma distribution]
+  For $X\in\bbR_{\geq 0}$, a random variable $X$ distributed according to an inverse gamma distribution with parameters $s$ (shape) and $\sigma$ (scale) is denoted by $X\sim\Gamma^{-1}(s,\sigma)$.
+  Then,
+  \begin{itemize}
+    \item \textbf{Pdf}. $p(X) = \Gamma(s)^{-1} \sigma^s  X^{-(s+1)} e^{-\sigma/X}$.
+    \item \textbf{Moments}. $\E X=\sigma/(s-1)$, $\Var X = \sigma^2\big((s-1)^2(s-2) \big)^{-1}$.
+    \item \textbf{Entropy}. $H(p)= s + \log \big(\sigma\Gamma(s)\big) - (1+s)\psi(s)$.
+  \end{itemize}
+  with $\Gamma(\cdot)$ and $\psi(\cdot)$ representing the gamma and digamma functions respectively, as defined in \cref{apx:gammadist}.
+\end{definition}
 
 \begin{lemma}
-  If $X$ has a Gamma distribution with shape and rate $s$ and $r$, then $1/X \sim \Gamma^{-1}(s,r)$.
+  If $X\sim\Gamma(s,r)$ (shape and rate parameterisation), then $1/X \sim \Gamma^{-1}(s,r)$.
 \end{lemma}
 
 \begin{proof}
   Let $Y=1/X$.
   Then the pdf of $Y$ is
+  \begingroup
+  \setlength{\abovedisplayskip}{8pt}
+  \setlength{\belowdisplayskip}{5pt}  
   \begin{align*}
     p_Y(Y) 
     &= p_X(1/Y) \left\vert \frac{\partial}{\partial Y} (1/Y) \right\vert \\
     &= \Gamma(s)^{-1} r^s (1/Y)^{s-1} e^{-r/Y} (1/Y^2) \\
     &= \Gamma(s)^{-1} r^s Y^{-(s+1)} e^{-r/Y}
   \end{align*}
+  \endgroup  
   which is the pdf of an inverse gamma with shape $s$ and scale $r$.
 \end{proof}
 

@@ -18,6 +18,7 @@
 \begin{document}
 \hChapterStandalone[6]{Bayesian variable selection using I-priors}
 \label{chapter6}
+\thispagestyle{chaptersix}
 
 Earlier in \cref{sec:various-regression} \colp{\mypageref{sec:various-regression}}, we saw that model \cref{eq:model1} subject to normal assumptions \cref{eq:model1ass}, model assumptions \ref{ass:A1}--\ref{ass:A3}, and $f$ belonging to the canonical RKHS of functions over $\cX \equiv \bbR^p$ yields the standard multiple regression model
 \begin{align}\label{eq:linmod}
@@ -429,7 +430,7 @@ The sample correlations of interest are shown in Figure \cref{fig:aerobic-cor}.
 
 \begin{table}[htb]
 \centering
-\caption{Results for variable selection of the Aerobic data set. Note that the Bayes factors reported are the Bayes factors comparing any of the models to Model 1 (base model).}
+\caption[Results for variable selection of the Aerobic data set]{Results for variable selection of the Aerobic data set. Note that the Bayes factors reported are the Bayes factors comparing any of the models to Model 1 (base model).}
 \label{tab:aerobic}
 \begin{tabular}{lrrrrrr}
 \toprule
@@ -616,7 +617,7 @@ Out of curiosity, running the variable selection model on the reduced variable s
 
 \begin{figure}[htb]
   \centering
-  \vspace{6pt}
+  \vspace{3pt}
   \includegraphics[width=\textwidth]{figure/06-ozone_map}
   \caption[Locations of the various points of interest in California, USA, related to the ozone measurements]{Locations\footnotemark~of the various points of interest in California, USA, related to the ozone measurements.}
   \label{fig:aerobic-densplot       }
