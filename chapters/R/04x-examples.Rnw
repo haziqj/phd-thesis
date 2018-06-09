@@ -23,6 +23,9 @@ knitr::read_chunk("04-05-igf.R")
 @
 <<prelim, include = FALSE>>=
 @
+<<include = FALSE>>=
+knitr::opts_chunk$set(myspacing = TRUE)  # single spacing for code chunks
+@
 
 \begin{document}
 

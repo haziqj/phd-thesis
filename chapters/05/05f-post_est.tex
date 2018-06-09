@@ -41,11 +41,11 @@ From here, step three would be to extract class information of data point $x_\te
     \hat\sigma_{jk}(x_\text{new}) & \text{if } j \neq k. \\
   \end{cases}
 \end{equation*}
-The predicted class is inferred from the latent variables via
+The predicted class is inferred from the latent variables using
 \[
   \hat y_{\text{new}} = \argmax_k \hat\mu_k(x_\new), 
 \]
-while the probabilities for each class are obtained via integration of a multivariate normal density, as per \cref{eq:pij}:
+while the probabilities for each class are obtained by way of integration of a multivariate normal density, as per \cref{eq:pij}:
 \begin{align}
   \hat p_{\text{new},j} 
   &=  \idotsint\displaylimits_{\{y^*_j > y^*_k | \forall k \neq j \}} \phi(y_{1}^*, \dots, y_{m}^*|\hat\bmu_\new, \hat\bV_{\new}) \dint y_{1}^* \cdots \dint y_{m}^*.

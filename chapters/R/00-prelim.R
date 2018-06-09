@@ -33,7 +33,7 @@ knit_hooks$set(myspacing = function(before, options, envir) {
 knit_hooks$set(document = function(x) {
   sub("\\usepackage[]{color}", "\\usepackage{xcolor}", x, fixed = TRUE)
 })  # use xcolor package instead
-knitr::opts_chunk$set(fig.align = "center", prompt = TRUE, myspacing = TRUE,
+knitr::opts_chunk$set(fig.align = "center", prompt = TRUE,
                       fig.path = paste0("figure/", chapter.no, "-"))
 knitr::knit_theme$set("bclear")
 options(prompt = "R> ", continue = "+  ", width = 70,

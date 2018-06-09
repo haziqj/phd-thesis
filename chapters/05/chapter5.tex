@@ -43,10 +43,15 @@ The probability mass function (pmf) of $y_i$ is given by
   p(y_i) = p_{i1}^{[y_i = 1]} \cdots p_{im}^{[y_i = m]},
 \end{equation*}
 where the notation $[\cdot]$ refers to the Iverson bracket\footnote{$[A]$ returns 1 if the proposition $A$ is true, and 0 otherwise. The Iverson bracket is a generalisation of the Kronecker delta.}. 
-The dependence of the class probabilities on the covariates is specified through the relationship
+As a side note, when there are only two possibilities for each outcome $y_i$, i.e. $m=2$, we have the Bernoulli distribution.
+The class probabilities are made to depend on the covariates through the relationship
+\begingroup
+\setlength{\abovedisplayskip}{9pt}
+\setlength{\belowdisplayskip}{8pt}
 \[
   g(p_{i1},\dots,p_{im}) = \big(\alpha_1 + f_1(x_i), \dots, \alpha_m + f_m(x_i)\big),
 \]
+\endgroup
 where $g:[0,1]^m\to\bbR^m$ is some specified link function.
 As we will see later, an underlying normal regression model as in \cref{eq:model1} subject to \cref{eq:model1ass} naturally implies a \emph{probit} link function.
 %, that is, $g$ is the inverse cumulative distribution function (cdf) of a standard normal distribution (or more precisely, a function that \emph{involves} the standard normal cdf).
@@ -58,15 +63,15 @@ With an I-prior assumed on the $f_j$'s, we call this method of probit regression
 
 Due to the nature of the model assumptions, unfortunately the posterior distribution of the regression functions cannot be found in closed form.
 In particular, marginalising the I-prior from the joint likelihood involves a high-dimensional intractable integral (c.f. equation \ref{eq:intractablelikelihood2}).
-Similar problems are encountered in mixed logistic or probit multinomial models \citep{breslow1993approximate,mcculloch2000bayesian} and also Gaussian process classification \citep{neal1999,rasmussen2006gaussian}.
-In these models, Laplace approximation for maximum likelihood estimation or Markov chain Monte Carlo (MCMC) methods for Bayesian estimation are used. 
-We instead explore a \emph{variational approximation} to the marginal log-likelihood, and thus, to the posterior density of the regression function.
+Similar problems are encountered in mixed logistic or probit multinomial models \citep{breslow1993approximate,mcculloch2000bayesian} and also in Gaussian process classification \citep{neal1999,rasmussen2006gaussian}.
+In these models, Laplace approximation for maximum likelihood (ML) estimation or Markov chain Monte Carlo (MCMC) methods for Bayesian estimation are used. 
+We instead explore a \emph{variational approximation} to the marginal log-likelihood, and by extension, to the posterior density of the regression functions.
 The main idea is to replace the difficult posterior distribution with an approximation that is tractable to be used within an EM framework.
-As such, the computational work derived in the previous section is applicable for estimation of I-probit models as well.
+As such, the computational work derived in the previous section is applicable for the estimation of I-probit models as well.
 
-As in the normal I-prior model, the I-probit model estimated using a \emph{variational EM} algorithm is seen as an empirical Bayes method of estimation, since the model parameters are replaced with their ML estimates.
+As in the normal I-prior model, the I-probit model estimated using a \emph{variational EM algorithm} is seen as an empirical Bayes method of estimation, since the model parameters are replaced with their (pseudo) ML estimates.
 It is emphasised again, that working in such a semi-Bayesian framework allows fast estimation of the model in comparison to traditional MCMC, yet provides us with the conveniences that come with Bayesian machinery.
-For example, inferences around log-odds is usually cumbersome for probit models, but a credibility interval can easily be obtained by resampling methods from the posterior distribution of the regression function, which as we shall see, is approximated to be normally distributed.
+For example, inferences around log odds is usually cumbersome for probit models, but a credibility interval can easily be obtained by resampling methods from the posterior distribution of the regression function, which, as we shall see, is approximated to be normally distributed.
 
 By choosing appropriate RKHSs/RKKSs for the regression functions, we are able to fit a multitude of binary and multinomial models, including multilevel or random-effects models, linear and non-linear classification models, and even spatio-temporal models.
 Examples of these models applied to real-world data is shown in  \cref{sec:iprobiteg}.
@@ -152,9 +157,9 @@ However, a variational Bayes route has its cons:
 \begin{enumerate}
   \item \textbf{Tedious derivations}. As the parameters now have a distribution $\theta = \{\balpha,\eta,\bPsi\} \sim q(\balpha,\eta,\bPsi)$, quantities such as
   \begin{itemize}
-    \item $\E(\log \vert \bPsi \vert)$;
-    \item $\E(\bH_\eta^2)$; and
-    \item $\tr \E\big( (\by^*-\bone_n\balpha^\top - \bH_\eta\bw)\bPsi (\by^*-\bone_n\balpha^\top - \bH_\eta\bw)^\top \big)$,
+    \item $\E[\log \vert \bPsi \vert]$;
+    \item $\E[\bH_\eta^2]$; and
+    \item $\tr \E\big[ (\by^*-\bone_n\balpha^\top - \bH_\eta\bw)\bPsi (\by^*-\bone_n\balpha^\top - \bH_\eta\bw)^\top \big]$,
   \end{itemize}
   among others, will need to be derived for the variational inference algorithm, and these can be tricky to compute.
   
