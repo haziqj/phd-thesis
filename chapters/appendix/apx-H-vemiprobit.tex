@@ -146,9 +146,9 @@ and
 We will often refer to $\tilde\bw$ as the $n\times m$ matrix constructed by filling in its entries with $\vecc \tilde\bw$ column-wise (akin to the opposite of vectorisation).
 This way, the $\tilde\bw$ contains posterior mean values arranged by class $j=1,\dots,m$ column-wise, and by observations $i=1,\dots,n$ row-wise.
 Ideally, we do not want to work with the $nm \times nm$ matrix $\bV_w$, since its inverse is expensive to compute.
-Refer to \cref{sec:complxiprobit} for details.
+Refer to \cref{sec:complxiprobit} \colp{\mypageref{sec:complxiprobit}} for details.
 
-In the case of the I-probit model, where $\bPsi = \diag(\psi_1,\dots,\psi_m)$, then the covariance matrix takes a simpler form.
+In the case of the independent I-probit model, where $\bPsi = \diag(\psi_1,\dots,\psi_m)$, then the covariance matrix takes a simpler form.
 Specifically, it has the block diagonal structure:
 \begin{align*}
   \tilde\bV_w
@@ -179,7 +179,7 @@ The mean $\vecc \tilde\bw$ is
   &\big(\psi_m\tilde\bV_{w_{m}}\bH_\eta(\tilde\by^*_{\bigcdot m} - \alpha_m\bone_n)\big)^\top
   }{}^\top.
 \end{align*}
-Therefore, we can consider the distribution of $\bw = (\bw_{\bigcdot 1},\dots,\bw_{\bigcdot m})$ columnwise, and each are normally distributed with mean and variance
+Therefore, we can consider the distribution of $\bw = (\bw_{\bigcdot 1},\dots,\bw_{\bigcdot m})$ column-wise, and each are normally distributed with mean and variance
 \[
   \tilde\bw_{\bigcdot j} = \psi_j\tilde\bV_{w_{j}}\bH_\eta(\tilde\by^*_{\bigcdot j} - \alpha_j\bone_n)
   \hspace{0.5cm}\text{and}\hspace{0.5cm}

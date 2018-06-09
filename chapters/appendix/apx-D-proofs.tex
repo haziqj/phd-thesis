@@ -1,18 +1,20 @@
-We present the proof for \cref{thm:contruncn} related to the conically truncated independent multivariate normal distribution, which we had not encountered in the literature.
+We present the proof for \cref{thm:contruncn} related to the conically truncated multivariate normal distribution with an independent covariance matrix structure, which we had not encountered in the literature.
+\vspace{-0.25em}
 
 \section{Proof of \cref{thm:contruncn}: Pdf}
 
 Using the fact that $\int p(x) \dint x = 1$, and that
-  \begin{align*}
-    \idotsint & [x_i < x_j, \forall i \neq j] \cdot \prod_{i=1}^d \phi(x_i|\mu_i, \sigma_i^2) \dint x_1 \cdots \dint x_d \\
-    =&  \idotsint \ind[x_i < x_j, \forall i \neq j] \prod_{i=1}^d \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma_i} \right) \right] \dint x_1 \cdots \dint x_d \\
-    =&  \idotsint \ind[x_i < x_j, \forall i \neq j] \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right)\mathop{\prod_{i=1}^d}_{i \neq j} \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma_i} \right) \right] \dint x_1 \cdots \dint x_d \\    
-    =& \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{x_j - \mu_i}{\sigma_i} \right) \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right) \dint x_j  \\
-    =& \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j z + \mu_j - \mu_i}{\sigma_i} \right) \phi(z) \dint z \\
-    \phantom{=}&\phantom{==} {\color{grymath} (\text{by using the standardisation } z = (x_j - \mu_j) / \sigma_j)} \displaybreak \\    
-    =& \E_Z \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j}{\sigma_i}Z + \frac{\mu_j - \mu_i}{\sigma_i} \right) \bigg] 
-  \end{align*}
-  the proof follows directly.
+\vspace{-0.25em}
+\begin{align*}
+  \idotsint & [x_i < x_j, \forall i \neq j] \cdot \prod_{i=1}^d \phi(x_i|\mu_i, \sigma_i^2) \dint x_1 \cdots \dint x_d \\
+  =&  \idotsint \ind[x_i < x_j, \forall i \neq j] \prod_{i=1}^d \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma_i} \right) \right] \dint x_1 \cdots \dint x_d \\
+  =&  \idotsint \ind[x_i < x_j, \forall i \neq j] \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right)\mathop{\prod_{i=1}^d}_{i \neq j} \left[ \frac{1}{\sigma_i} \phi \left( \frac{x_i-\mu_i}{\sigma_i} \right) \right] \dint x_1 \cdots \dint x_d \\    
+  =& \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{x_j - \mu_i}{\sigma_i} \right) \frac{1}{\sigma_j} \phi \left( \frac{x_j-\mu_j}{\sigma_j} \right) \dint x_j  \\
+  =& \int \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j z + \mu_j - \mu_i}{\sigma_i} \right) \phi(z) \dint z \\
+  \phantom{=}&\phantom{==} {\color{grymath} (\text{by using the standardisation } z = (x_j - \mu_j) / \sigma_j)} \displaybreak \\    
+  =& \E_Z \bigg[ \mathop{\prod_{i=1}^d}_{i \neq j} \Phi \left(\frac{\sigma_j}{\sigma_i}Z + \frac{\mu_j - \mu_i}{\sigma_i} \right) \bigg] 
+\end{align*}
+the proof follows directly.
 
 \section{Proof of \cref{thm:contruncn}: Moments}
 
@@ -122,7 +124,7 @@ And similarly, for the $j$'th component
 %  &= \mu_i + C^{-1} \E [\phi(\cdots) \prod \cdots]
 %\end{align*}
 
-Lastly, we use the following result in the derivation above.
+Lastly, we used the following result in the derivation above.
 \begin{lemma}\label{lem:EZgZ}
   Let $Z \sim \N(0,1)$. Then for all $m \in \{\bbN \, | \, m > 1\}$ and $(\mu, \sigma) \in \bbR \times \bbR^+$, 
   \[

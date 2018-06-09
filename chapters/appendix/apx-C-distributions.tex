@@ -1,5 +1,5 @@
-This is a reference relating to the multivariate normal,  matrix normal, truncated univariate and multivariate normal, which are collated from various sources for convenience.
-Of interest are probability density functions, first and second moments, and entropy \colp{\cref{def:entropy}, page \pageref{def:entropy}}.
+This appendix is intended as a reference relating to the multivariate normal,  matrix normal, truncated univariate and multivariate normal, gamma and inverse gamma distributions, which are collated from various sources for convenience.
+Of interest are their probability density functions, first and second moments, and entropy \colp{\cref{def:entropy}, page \pageref{def:entropy}}.
 Note that in this part of the appendix, boldface notation for matrix and vectors are not used.
 
 \section{Multivariate normal distribution}
@@ -204,8 +204,6 @@ as required.  \qedhere
 \section{Matrix normal distribution}
 \label{apx:matrixnormal}
 
-The matrix normal distribution is an extension of the Gaussian distribution to matrices.
-
 \begin{definition}[Matrix normal distribution]
   Let $X\in\bbR^{n \times m}$ matrix, and let $X$ follow a matrix normal distribution with mean $\mu\in\bbR^{n \times m}$ and row and column variances $\Sigma \in \bbR^{n \times n}$ and $\Psi \in \bbR^{m \times m}$ respectively, which we denote by $X\sim\MN_{n,m}(\mu,\Sigma,\Psi)$.
   Then,
@@ -215,6 +213,9 @@ The matrix normal distribution is an extension of the Gaussian distribution to m
     \item \textbf{Entropy}. $H(p) = \half \log \abs{2\pi e (\Psi \otimes \Sigma)} = \half[nm](1 + \log 2\pi) + \half\log\abs{\Sigma}^m\abs{\Psi}^n$.
   \end{itemize}
 \end{definition}
+
+The matrix normal distribution is simply an extension of the Gaussian distribution to matrices.
+A matrix normal random variable can be expressed as a multivariate normal random variable.
 
 \begin{lemma}[Equivalence between matrix and multivariate normal]
   $X\sim\MN_{n,m}(\mu,\Sigma,\Psi)$ if and only if $\vecc X\sim \N_{nm}(\vecc\mu,\Psi \otimes \Sigma)$.
@@ -298,22 +299,22 @@ The latter algorithm is inspired by the Ziggurat algorithm \citep{marsaglia2000z
 \begin{definition}[Truncated multivariate normal distribution]
   Consider the restriction of $X\sim \N_d(\mu,\Sigma)$ to a convex subset\footnote{A convex subset is a subset of a space that is closed under convex combinations. In Euclidean space, for every pair of points in a convex set, all the points that lie on the straight line segment which joins the pair of points are also in the set.}~$\cA \subset \bbR^d$.
   Call this distribution the truncated multivariate normal distribution, and denote it $X \sim \tN_d(\mu,\Sigma,\cA)$.
-  The pdf is $p(X|\mu,\Sigma,\cA) = C^{-1}\phi(X|\mu,\Sigma)\ind[X\in\cA]$, where
+  The pdf is $p(X|\mu,\Sigma,\cA) = C^{-1}\phi(X|\mu,\Sigma)\ind(X\in\cA)$, where
   \[
     C = \int_\cA \phi(x|\mu,\Sigma) \dint x = \Prob(X \in \cA).
   \] 
 \end{definition}
 
-Generally speaking, there are no closed-form expressions for $\E g(X)$ for any well-defined functions $g$ on $X$.
-One strategy to obtain values such as $\E X$ (mean), $\E X^2$ (second moment) and $E \log p(X)$ (entropy) would be Monte Carlo integration.
-If $X^{(1)},\dots,X^{(T)}$ are samples from $X\sim\tN_d(\mu,\Sigma,\cA)$, then $\widehat{\E g(X)} = \frac{1}{T} \sum_{i=1}^T g(X^{(i)})$.
+Generally speaking, there are no closed-form expressions for $\E [g(X)]$ for any well-defined functions $g$ on $X$.
+One strategy to obtain values such as $\E X$ (mean), $\E X^2$ (second moment) and $E [\log p(X)]$ (entropy) would be Monte Carlo integration.
+If $X^{(1)},\dots,X^{(T)}$ are samples from $X\sim\tN_d(\mu,\Sigma,\cA)$, then $\widehat{\E g(X)} = \frac{1}{T} \sum_{t=1}^T g(X^{(t)})$.
 
 Sampling from a truncated multivariate normal distribution is described by \citet{robert1995simulation}, who used a Gibbs-based approach, which we now describe.
 %\citet{damien2001sampling}.
 %In the latter, the authors explore a simple Gibbs-based approach that is easy to implement in practice.
 Assume that the one-dimensional slices of $\cA$ 
 \[
-  \cA_k(X_{-j}) = \{X_j | (X_1,\dots,X_{j-1},X_j, X_{j+1},\dots,X_d) \in \cA \}
+  \cA_k(X_{-j}) = \{X_j \,|\, (X_1,\dots,X_{j-1},X_j, X_{j+1},\dots,X_d) \in \cA \}
 \]
 are readily available so that the bounds or anti-truncation region of $X_j$ given the rest of the components $X_{-j}$ are known to be $(x_j^-, x_j^+)$.
 Using properties of the normal distribution, the full conditionals of $X_j$ given $X_{-j}$ is
@@ -452,7 +453,7 @@ We present some results that we have not previously seen before elsewhere.
   \end{itemize}
 \end{definition}
 
-In the above, $\Gamma(\cdot) = \Gamma_1(\cdot)$ and $\psi(\cdot) = \psi_1(\cdot)$ are the gamma and digamma functions, defined by
+In the above, $\Gamma(\cdot)$ and $\psi(\cdot)$ are the gamma and digamma functions respectively, defined by
 \[
   \Gamma(a) = 
   \begin{cases}
@@ -501,6 +502,3 @@ Often, the gamma distribution is parameterised according to shape $s$ and scale 
   \endgroup  
   which is the pdf of an inverse gamma with shape $s$ and scale $r$.
 \end{proof}
-
-
-
