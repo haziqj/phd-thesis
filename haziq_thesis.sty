@@ -50,8 +50,10 @@
 %\fancyhead[C]{\color{gray}\small\ttfamily [git] \textbullet{} Branch:\;\gitBranch\,@\,\gitAbbrevHash{}~\textbullet{}~Change:\;\gitAuthorIsoDate~\textbullet{}~haziqj}
 
 \fancypagestyle{plain}{%
-  \fancyfoot[RO]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
-  \fancyfoot[LE]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+%  \fancyfoot[RO]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+%  \fancyfoot[LE]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+\fancyfoot[RO]{\small\nouppercase{\textsc{\rightmark}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+\fancyfoot[LE]{\small\nouppercase{\textsc{\leftmark}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small{\textsc{\thepage}}};  \end{tikzpicture}}
 }
 % https://tex.stackexchange.com/questions/195106/page-numbers-on-the-side-of-the-page
 
@@ -298,8 +300,7 @@
 \newcommand{\hPrintBibliography}{
   \begingroup
     \singlespacing
-%    \renewcommand{\UrlFont}{\footnotesize\tt}
-    \AtNextBibliography{\small}
+%    \AtNextBibliography{\small}
     \printbibliography
   \endgroup
   \addcontentsline{toc}{chapter}{Bibliography}
@@ -339,7 +340,7 @@
   \newpage
   \cleardoublepage
   \renewcommand{\listtheoremname}{Theorems}  
-  \listoftheorems[ignoreall,onlynamed={theorem,lemma,corollary, proposition},numwidth=2.7em]
+  \listoftheorems[ignoreall,onlynamed={theorem,lemma,corollary,proposition},numwidth=2.7em]
   \addcontentsline{toc}{chapter}{Theorems}
   
   \newpage

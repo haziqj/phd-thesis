@@ -1,4 +1,4 @@
-\documentclass[11pt,twoside,openright,showframe]{report}
+\documentclass[11pt,twoside,openright]{report}
 \usepackage{haziq_thesis}  
 \usepackage{haziq_maths}
 \usepackage{haziq_glossary}
@@ -10,7 +10,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% TITLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\input{chapters/titlepage/titlepage}
+\subimport{chapters/titlepage/}{titlepage}
 %{\let\newpage\relax\maketitle}  % if need some text before the title use this
 %\pagenumbering{roman}
 
@@ -19,22 +19,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setcounter{page}{2}
 \cleardoublepage  % dedication
-\vspace*{0.75cm}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.35\textwidth]{figure/bismillah}
-\end{figure}
-\vspace*{0.75cm}
-\begin{center}
-  \textit{To my parents.}
-\end{center}
+\subimport{chapters/frontmatter/}{frontmatter}
 
-%\begingroup
-%\let\chapter\stdchapter
-  \chapter*{Abstract} \input{chapters/frontmatter/abstract}
-  \chapter*{Declaration} \input{chapters/frontmatter/declaration}
-  \chapter*{Acknowledgements} \input{chapters/frontmatter/acknowledgments}
-%\endgroup
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% TOC & VARIOUS LISTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -66,7 +52,6 @@
 \chapter{Summary}
 \input{chapters/07/chapter7}
 
-\small
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% SUPPLEMENTARY CHAPTERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

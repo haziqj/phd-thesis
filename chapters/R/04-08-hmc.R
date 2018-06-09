@@ -1,5 +1,6 @@
 # Chapter 4
 # Hamiltonian Monte Carlo example
+chapter.no <- "04"
 
 sho <- function(t, y, parameters) {
   x <- y[1]
@@ -101,7 +102,7 @@ pp <- function(no = 1) {
   }
 }
 
-ww <- 6; hh <- 4.5
+ww <- 6; hh <- 5
 pdf("figure/04-phase1.pdf", width = ww, height = hh)
 pp(1)
 dev.off()

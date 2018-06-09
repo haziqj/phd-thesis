@@ -32,7 +32,9 @@
 \end{tikzpicture}
 }
 
-\newcommand{\energyemEstep}[1][2.15]{
+\newcommand{\vemscale}{1.85}
+
+\newcommand{\energyemEstep}[1][\vemscale]{
 \begin{tikzpicture}
   % Draw all levels
   \draw[draw=none] (0,8/#1) -- node[above] {EM (E-step)} (5,8/#1);  % new top
@@ -53,7 +55,7 @@
 \end{tikzpicture}
 }
 
-\newcommand{\energyemMstepfade}[1][2.15]{
+\newcommand{\energyemMstepfade}[1][\vemscale]{
 \begin{tikzpicture}[opacity=0.25]
   % Draw all levels
   \draw[level,colred] (0,8/#1) -- node[above] {\color{black!99} EM (M-step)} (5,8/#1);  % new top
@@ -74,7 +76,7 @@
 }
 
 
-\newcommand{\energyemMstep}[1][2.15]{
+\newcommand{\energyemMstep}[1][\vemscale]{
 \begin{tikzpicture}
   % Shaded region
   \fill[colred!10] (0,6.5/#1) rectangle (5,8/#1);
@@ -97,7 +99,7 @@
 \end{tikzpicture}
 }
 
-\newcommand{\energyvbEstep}[1][2.15]{
+\newcommand{\energyvbEstep}[1][\vemscale]{
 \begin{tikzpicture}
   % Draw all levels
   \draw[draw=none] (0,8/#1) -- node[above] {VEM (E-step)} (5,8/#1);  % new top
@@ -118,7 +120,7 @@
 \end{tikzpicture}
 }
 
-\newcommand{\energyvbMstepa}[1][2.15]{
+\newcommand{\energyvbMstepa}[1][\vemscale]{
 \begin{tikzpicture}
   % Shaded region
   \fill[colred!10] (0,6.5/#1) rectangle (5,8/#1);  
@@ -141,7 +143,7 @@
 \end{tikzpicture}
 }
 
-\newcommand{\energyvbMstepb}[1][2.15]{
+\newcommand{\energyvbMstepb}[1][\vemscale]{
 \begin{tikzpicture}
   % Shaded region
   \fill[colred!10] (0,6.5/#1) rectangle (5,7.25/#1);  
@@ -165,7 +167,7 @@
 \end{tikzpicture}
 }
 
-\newcommand{\energyvbMstepc}[1][2.15]{
+\newcommand{\energyvbMstepc}[1][\vemscale]{
 \begin{tikzpicture}
   % Draw all levels
   \draw[draw=none] (0,8/#1) -- node[above] {\color{black} VEM (M-step)---scenario C} (5,8/#1);  % new top

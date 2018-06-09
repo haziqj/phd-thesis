@@ -84,7 +84,7 @@ We present three possible avenues to achieve this aim, namely the Laplace approx
 
 The focus here is to obtain the posterior density $p(\bw|\by) \propto p(\by|\bw)p(\bw) =: e^{R(\bw)}$ which has normalising constant equal to the marginal density of $\by$, $p(\by) = \int e^{R(\bw)} \dint \bw$, as per \cref{eq:intractablelikelihood2}.
 Note that the dependence of the pdfs on $\theta$ is implicit, but is dropped for clarity.
-Laplace's method \citep[§4.1.1, pp. 777--778]{kass1995bayes} entails expanding a Taylor series for $R$ about its posterior mode $\hat\bw = \argmax_\bw p(\by|\bw)p(\bw)$, which gives the relationship
+Laplace's method \citep[sec. 4.1.1, pp. 777--778]{kass1995bayes} entails expanding a Taylor series for $R$ about its posterior mode $\hat\bw = \argmax_\bw p(\by|\bw)p(\bw)$, which gives the relationship
 \begin{align*}
   R(\bw) 
   &= R(\hat\bw) + 

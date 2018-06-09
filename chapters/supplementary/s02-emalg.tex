@@ -123,8 +123,8 @@ Now, the ML estimate for $\bfeta$  is obtained by solving
   \frac{\partial}{\partial\bfeta}\log p(\by|\bfeta)
   &= \frac{1}{p(\by|\bfeta)} \cdot \frac{\partial}{\partial\bfeta}  p(\by|\bfeta) \nonumber \\
   &= \frac{1}{p(\by|\bfeta)} \cdot \frac{\partial}{\partial\bfeta} \left( \int p(\by,\bw|\bfeta) \dint \bw \right) \nonumber \\
-  &= \frac{1}{p(\by|\bfeta)} \cdot \int \left( \frac{\partial}{\partial\bfeta} p(\by,\bw|\bfeta) \right) \dint \bw \nonumber \\
-  &= \frac{1}{p(\by|\bfeta)} \cdot \int \left( p(\by,\bw|\bfeta) \frac{\partial}{\partial\bfeta} \log p(\by,\bw|\bfeta) \right) \dint \bw \nonumber \\
+  &= \frac{1}{p(\by|\bfeta)}  \int \left( \frac{\partial}{\partial\bfeta} p(\by,\bw|\bfeta) \right) \dint \bw \nonumber \\
+  &= \frac{1}{p(\by|\bfeta)}  \int \left( p(\by,\bw|\bfeta) \frac{\partial}{\partial\bfeta} \log p(\by,\bw|\bfeta) \right) \dint \bw \nonumber \\
   &= \int \left( \bT(\by,\bw) - \frac{\partial}{\partial\bfeta} A^*(\bfeta) \right) p(\bw|\by,\bfeta) \dint \bw \nonumber \\
   &= \E_\bw \big[ \bT(\by,\bw) | \by \big] - \frac{\partial}{\partial\bfeta} A^*(\bfeta) \label{eq:expEM2}
 \end{align}
@@ -134,7 +134,7 @@ So the only difference between the first order condition of \cref{eq:expEM1} and
 %but this is not an issue: by the law of total expectations, $\E\bT(\bz) = \E \bT(\by,\bw) = \E \big[ \E_\bw[\bT(\by,\bw)|\by] \big]$
 %so solving $\bT(\bz) = \E \bT(\bz)$ for $\btheta$ is not possible without some manipulation.
 
-A useful identity to know is that $\frac{\partial}{\partial\bfeta} A^*(\bfeta) = \E_\bz[ \bT(\bz)]$ \citep[Theorem 3.4.2 \& Exercise 3.32(a)]{casella2002statistical}, which can be expressed in terms of the original parameters $\btheta$.
+A useful identity to know is that $\frac{\partial}{\partial\bfeta} A^*(\bfeta) = \E_\bz[ \bT(\bz)]$ \citep[Thm. 3.4.2 \& Exer. 3.32(a)]{casella2002statistical}, which can be expressed in terms of the original parameters $\btheta$.
 As a consequence, solving for the ML estimate for $\btheta$ from the FOC equations \cref{eq:expEM2} is possible without having to deal with the derivative of $A^*$ with respect to the natural parameters.
 Having said this, an analytical solution in $\btheta$ may not exist, because the relationship of $\btheta$ could be implicit in the set of equations $\E_\bw \big[ \bT(\bw,\by) | \by, \btheta \big] = \E_{\by,\bw}\left[ \bT(\by,\bw) | \btheta \right]$.
 One way around this is to employ an iterative procedure, as detailed in \cref{alg:EM3}.

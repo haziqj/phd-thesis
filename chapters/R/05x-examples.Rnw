@@ -308,7 +308,7 @@ The numbers in each row indicate the instances of a predicted class, while the n
 
 Comparisons to other methods that had been used to analyse this data set is given in \cref{tab:vowel.tab}.
 In particular, the I-probit model is compared against 1) linear regression; 2) logistic linear regression; 3) linear and quadratic discriminant analysis; 4) decision trees; 5) neural networks; 6) $k$-nearest neighbours; and 7) flexible discriminant analysis.
-All of these methods are described in further detail in \citet[Ch.4 \& 12, Table 12.3]{friedman2001elements}.
+All of these methods are described in further detail in \citet[chs. 4 \& 12, Table 12.3]{friedman2001elements}.
 The I-probit model using both the fBm-0.5 and SE kernel offers one of the best out-of-sample classification error rates (\Sexpr{iprior::dec_plac(mod.se$test$error.rate, 1)}\%) of all the methods compared.
 The linear I-probit model is seen to be comparable to logistic regression, linear and quadratic discrimant analysis, and also decision trees.
 It also provides significant improvement over multiple linear regression.

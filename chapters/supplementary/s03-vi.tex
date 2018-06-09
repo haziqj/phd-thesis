@@ -79,7 +79,7 @@ In this case, the task is to find optimal mean and variance parameters of a norm
   \vspace{-1em}
   \caption[Schematic view of variational inference]{Schematic view of variational inference\footnotemark. The aim is to find the closest distribution $q$ (parameterised by a variational parameter $\nu$) to $p$ in terms of KL divergence within the set of variational distributions, represented by the ellipse.}
 \end{figure}
-\footnotetext{Reproduced from the talk by David Blei entitled `Variational Inference: Foundations and Innovations', 2017. URL: \url{https://simons.berkeley.edu/talks/david-blei-2017-5-1}.}
+\footnotetext{Reproduced from the talk by David Blei entitled ``Variational Inference: Foundations and Innovations'', 2017. URL: \url{https://simons.berkeley.edu/talks/david-blei-2017-5-1}.}
 
 The second type of constraint, and the one considered in this thesis, is simply an assumption that the approximate posterior $q$ factorises into $M$ disjoint factors.
 Partition $\bw$ into $M$ disjoint groups $\bw = (w_{[1]},\dots,w_{[M]})$.
@@ -123,7 +123,7 @@ where expectation of the joint log density of $\by$ and $\bw$ is taken with resp
 For further details, refer to \citet[eq. 10.9, p. 466]{bishop2006pattern}.
 
 In practice, rather than an explicit calculation of the normalising constant, one simply needs to inspect \cref{eq:qtilde} to recognise it as a known log-density function, which is the case when exponential family distributions are considered.
-That is, suppose that each complete conditional $p(w_{[k]}|\bw_{-k}, \by)$, where $\bw_{-k} = \{w_{[i]} | i \neq k\}$, follows an exponential family distribution
+That is, suppose that each complete conditional $p(w_{[k]}|\bw_{-k}, \by)$, where $\bw_{-k} = \{w_{[i]} \,|\, i \neq k\}$, follows an exponential family distribution
 \[
   p(w_{[k]}| \bw_{-k}, \by ) 
   = B(w_{[k]})\exp \big(\ip{\zeta_k(\bw_{-k}, \by) , w_{[k]}} - A(\zeta_k) \big).
@@ -137,7 +137,7 @@ Then, from \cref{eq:qtilde},
 \end{align*}
 is also in the same exponential family.
 In situations where there is no closed form expression for $\tilde q$, then one resorts to sampling methods such as a Metropolis random walk to estimate quantities of interest.
-This stochastic step within a deterministic algorithm has been explored before in the context of a Monte Carlo EM algorithm---see \citet[§4, pp. 537--538]{meng1997algorithm} and references therein.
+This stochastic step within a deterministic algorithm has been explored before in the context of a Monte Carlo EM algorithm---see \citet[sec. 4, pp. 537--538]{meng1997algorithm} and references therein.
 
 One notices that the optimal mean-field variational densities for each component are coupled with one another, in the sense that the distribution $\tilde q_k$ depends on the moments of the rest of the components $\bw_{-k}$.
 For very simple problems, an exact solution for each $\tilde q_k$ can be found, but usually, the way around this is to employ an iterative procedure.
@@ -175,7 +175,7 @@ We will see how the EM algorithm relates to minimising the KL divergence between
   \caption[Illustration of the decomposition of the log likelihood.]{Illustration\footnotemark~of the decomposition of the log-likelihood into $\cL(q,\theta)$ and $\KL(q \Vert p)$. The quantity $\cL(q,\theta)$ is a lower bound for the log-likelihood.}
   \label{fig:loglikdecomp}
 \end{figure}
-\footnotetext{Reproduced from \citet[Figure 9.11]{bishop2006pattern}.}
+\footnotetext{Reproduced from \citet[Fig. 9.11]{bishop2006pattern}.}
 
 As we did in deriving \cref{eq:varbound}, we decompose the (marginal) log-likelihood as
 \begin{align*}

@@ -1,6 +1,10 @@
-\documentclass[11pt,twoside,openright]{report}
-\usepackage{../../haziq_thesis}
-%\usepackage{pagegrid} 
+\documentclass[11pt,twoside,openright,showframe]{report}
+\usepackage{standalone}
+\standalonetrue
+\ifstandalone
+  \usepackage{../../haziq_thesis}
+  \usepackage{pagegrid} 
+\fi 
  
 \begin{document}
 
@@ -8,7 +12,7 @@
   \singlespacing
   \begin{center}
     
-    \vspace*{5mm}
+    \vspace*{6.25mm}
      
     \includegraphics[width=0.31\textwidth]{figure/lse_coat_of_arms_1024}
     \vspace{15.2mm}
