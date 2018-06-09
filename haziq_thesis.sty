@@ -3,14 +3,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Structure
+\usepackage{calc}
 \usepackage{geometry}
 \newlength{\mytopbotmargin}
 \setlength{\mytopbotmargin}{32.5mm}
 \newlength{\myrightmargin}
-\setlength{\myrightmargin}{23mm}
+\setlength{\myrightmargin}{23mm + 1.5mm}
+\newlength{\myleftmargin}
+\setlength{\myleftmargin}{40mm - 1.5mm}
 \geometry{%
   a4paper,
-  left=40mm,
+  left=\myleftmargin,
   right=\myrightmargin,
   top=\mytopbotmargin,
   bottom=\mytopbotmargin,
@@ -25,7 +28,6 @@
 \usepackage{import}
 \usepackage{morewrites}  % https://tex.stackexchange.com/questions/289734/special-package-combination-gives-no-room-for-new-write
 \usepackage[all]{nowidow}  % https://tex.stackexchange.com/questions/4152/how-do-i-prevent-widow-orphan-lines
-\usepackage{calc}
 
 % Footers
 \usepackage{fancyhdr}
@@ -441,3 +443,4 @@
        {\addspace\texttt{\mkbibbrackets{\thefield{eprintclass}}}}}}
 \makeatother
 
+\usepackage[nodayofweek]{datetime}

@@ -60,10 +60,5 @@ Review before submission
 - No. of words.
 - Clean up TOC, TOL, TOF, etc.
 - Clean up R code before publishing
-- Clean up LaTeX source
+- Clean up LaTeX source and .sty
 
-Circle back to later if have time or think these necessary
-
-- Truncated normal plots.
-- Google map for ozone data example.
-- Add Bernoulli and categorical dist to appendix.
