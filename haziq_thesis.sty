@@ -260,7 +260,7 @@
 \usepackage[abbreviations,counter=chapter,nopostdot=false,symbols,autoseeindex=true,indexcrossrefs=true]{glossaries-extra}
 %\renewcommand*{\glossarypreamble}{\emph{Numbers refer to the \textbf{chapter} where the entry was referenced.}}
 \makeglossaries
-%\makeindex[columns=2]
+\makeindex[columns=2]
 
 % Create new macro \indx and \newabbreviationindex
 \newcommand{\indx}[1]{{#1}\index{#1}}
@@ -281,8 +281,8 @@
 % Automatically index the location of entry in the glossary
 % for those entries that are in the "abbreviation" category
 % and use "textbf" as the encap:
-\glssetcategoryattribute{abbreviation}{indexname}{textbf}
-\glssetcategoryattribute{abbreviation}{dualindex}{true}
+%\glssetcategoryattribute{abbreviation}{indexname}{textbf}
+%\glssetcategoryattribute{abbreviation}{dualindex}{true}
 
 % Only index first use for the glossary location lists
 % (doesn't affect the indexing from "dualindex" attribute):
@@ -428,7 +428,7 @@
     \hPrintBibliography
     {\hypersetup{allcolors=.} %pdfborder=0 0 0  
       \hLists
-%      \printindex
+      \printindex
     }
   \fi
 }

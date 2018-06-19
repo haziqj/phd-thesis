@@ -21,12 +21,14 @@
 \label{chapter1}
 \thispagestyle{chapterone}
 
-Regression\index{regression} analysis is undoubtedly one of the most important tools available at a practitioner's disposal to understand the relationship between one or more explanatory variables $x$, and the independent variable of interest, $y$.
+\index{regression}
+Regression analysis is undoubtedly one of the most important tools available at a practitioner's disposal to understand the relationship between one or more explanatory variables $x$, and the independent variable of interest, $y$.
 This relationship is usually expressed as $y \approx f(x|\theta)$, where $f$ is called the \emph{regression function}, and this is   dependent on one or more parameters denoted by $\theta$.
 Regression analysis concerns the estimation of said regression function, and once a suitable estimate $\hat f$ has been found, post-estimation procedures such as prediction and inference surrounding $f$ or $\theta$, may be performed.
 
+\index{I-prior}
 Estimation of the regression function may be done in many ways.
-This thesis concerns the use of \emph{I-priors}\index{I-priors} \citep{bergsma2017}, in a semi-Bayesian\index{Bayes} manner, for regression modelling.
+This thesis concerns the use of \emph{I-priors} \citep{bergsma2017}, in a semi-Bayesian manner, for regression modelling.
 The I-prior is an objective, entropy-maximising prior for the regression function which makes use of its Fisher information.
 The essence of regression modelling using I-priors is introduced briefly below, but as the development of I-priors is fairly recent, we dedicate two full chapters (\cref{chapter2,chapter3}) to describe the concept fully.
 
@@ -39,51 +41,63 @@ In addition to introducing the statistical model of interest and  motivating the
 \section{Regression models}
 \label{sec:introregmod}
 
+\index{normal!regression model}
 For subject $i \in \{1,\dots,n\}$, assume a real-valued response $y_i$ has been observed, as well as a row vector of $p$ covariates $x_i = (x_{i1},\dots,x_{ip})$, where each $x_{ik}$ belongs to some set $\cX_k$, for $k = 1,\dots,p$.
 Let $\cS = \{(y_1, x_1), \dots, (y_n,x_n)\}$ denote this observed sample of size $n$.
-Consider then the following regression\index{regression} model, which stipulates the dependence of the $y_i$ on the $x_i$:
+Consider then the following regression model, which stipulates the dependence of the $y_i$'s on the $x_i$'s:
 \begin{align}\label{eq:model1}
   y_i = \alpha + f(x_i) + \epsilon_i,
 \end{align}
 where $f$ is some regression function to be estimated, and $\alpha$ is an intercept.
-Additionally, it is assumed that the errors $\epsilon_i$ are normally distributed according to
+Additionally, it is assumed that the errors $\epsilon_i$ are zero-meaned and normally distributed according to
 \begin{align}\label{eq:model1ass}
-  (\epsilon_1, \dots, \epsilon_n)^\top \sim \N_n(0, \bPsi^{-1}).
+  (\epsilon_1, \dots, \epsilon_n)^\top \sim \N_n(\bzero, \bPsi^{-1}),
 \end{align}
 where $\bPsi = (\psi_{ij})_{i,j=1}^n$ is the precision matrix.
-We shall often refer to model \cref{eq:model1} subject to \cref{eq:model1ass} as the \emph{normal regression model}\index{normal!regression model}.
+We shall often refer to model \cref{eq:model1} subject to \cref{eq:model1ass} as the \emph{normal regression model}.
 The choice of multivariate normal errors is not only a convenient one (as far as distributional assumptions go), but one that is motivated by the principle of maximum entropy \citep{jaynes1957a,jaynes1957b,jaynes2003probability}.
 
 Interestingly, a wide variety of statistical models can be captured by the seemingly humble normal regression model, simply by varying the form of the regression function $f$.
 For instance, when $f$ can be parameterised linearly as $f(x_i) = x_i^\top \beta$, $\beta \in \bbR^p$, we then have the ordinary linear regression---a staple problem in statistics and other quantitative fields.
 
-We might also have data that is separated naturally into groups or levels by design, for example, data from stratified\index{stratified} sampling, students within schools, or longitudinal\index{longitudinal!measurements} measurements over time.
-In such a case, we might want to consider a regression function with additive\index{additive} components
+\index{longitudinal!model}
+\index{multilevel!model}
+\index{additive!model}
+We might also have data that is separated naturally into groups or levels by design, for example, data from stratified sampling, students within schools, or longitudinal measurements over time.
+In such cases, we might want to consider a regression function with additive components
 \[
   f(x_i^{(j)}, j) = f_1(x_i^{(j)}) + f_2(j) + f_{12}(x_i^{(j)}, j)
 \]
 where $x_i^{(j)}$ denotes the $p$-dimensional $i$'th observation for group $j\in\{1,\dots,m\}$.
-Again, assuming a linear parameterisation, this is recognisable as the standard multilevel\index{multilevel} or random-effects linear model \citep{skrondal2012multilevel}, with $f_2$ representing the varying intercept via $f_2(j) = \alpha_{j}$, $f_{12}$ representing the varying slopes via $f_{12}(x_{ij},j) = x_{i}^\top \beta_{j}$, with $\beta_j \in \bbR^p$, and $f_1$ representing the fixed-effects linear component $x_i^\top\beta$ as above.
+Again, assuming a linear parameterisation, this is recognisable as the standard multilevel or random-effects linear model \citep{skrondal2012multilevel}, with $f_2$ representing the varying intercept via $f_2(j) = \alpha_{j}$, $f_{12}$ representing the varying slopes via $f_{12}(x_{ij},j) = x_i^{(j)\top} u_{j}$,  $u_j \in \bbR^p$, and $f_1$ representing the fixed-effects linear component $ x_i^{(j)\top} \beta$ as in the linear model above.
 
+\index{parametric!model}
+\index{nonparametric!model}
+\index{smoothing!model}
 Moving on from linear models, smoothing models may be of interest as well.
 A myriad of models exist for this type of problem, with most classed as nonparametric regression \citep{wassermann2006all}, and the more popular ones include LOcal regrESSion (LOESS), kernel regression, and smoothing splines \citep{wahba1990spline}.
 Semiparametric regression models, on the other hand, combines the linear component of a regression model with a non-parameteric component.
 
+\index{functional!regression}
 Further, the regression problem is made more intriguing when the set of covariates $\cX$ is functional---in which case the linear regression model aims to estimate coefficient functions $\beta:\cT \to \bbR$ from the model
 \[
   y_i = \int_\cT x_i(t)\beta(t) \dint t + \epsilon_i.
 \]
-Nonparametric and semiparametric regression with functional covariates \citep{ramsay2005functional} have also been widely explored.
+Nonparametric and semiparametric regression with functional covariates have also been widely explored \citep{ramsay2005functional}.
 Models of this nature still fall under the remit of the normal regression model by selecting a regression functional with domain over the functional covariates.
 
 \section{Vector space of functions}
 
-It would be beneficial to prescribe some sort of structure for which estimation of the regression function can be carried out easily and reliably. 
+\index{RKHS}
+\index{RKKS}
+\index{kernel}
+It would be beneficial to prescribe some sort of structure for which estimation of the regression function can be carried out methodically and reliably. 
 This needed structure is given to us by assuming that our regression function $f$ for the normal model lies in some reproducing kernel Hilbert or Kreĭn space (RKHS/RKKS) $\cF$ equipped with the reproducing kernel $h:\cX \times \cX \to \bbR$.
 Often, the reproducing kernel (or simply kernel, for short) is shaped by one or more parameters which we shall denote by $\eta$.
 Correspondingly, the kernel is rightfully denoted $h_\eta$ to indicate the dependence of the parameters on the kernels, though where this is seemingly obvious, might be omitted.
 For I-prior modelling, which is the focus of this thesis, we make the assumption that our regression function lies in a RKKS $\cF$.
 
+\index{feature!map}
 RKKSs, and more popularly RKHSs, provide a geometrical advantage to learning algorithms: projections of the inputs to a richer and more informative (and usually higher dimensional) \emph{feature space}, where learning is more likely to be successful, need not be figured out explicitly.
 Instead, \emph{feature maps} are implicitly calculated by the use of kernel functions. 
 This is known as the ``kernel trick'' in the machine learning literature \citep{hofmann2008kernel}, and it has facilitated the success of kernel methods for learning, particularly in algorithms with inner products involving the transformed inputs. 
@@ -95,6 +109,9 @@ This would allow us to fit the various models described earlier within this RKHS
 
 \section{Estimating the regression function}
 
+\index{least squares}
+\index{risk functional}
+\index{ML}
 Having decided on a vector space $\cF$, we now turn to the task of choosing the best $f \in \cF$ that fits the data sample $\cS$.
 `Best' here could mean a great deal of things, such as choosing $f$ which minimises an empirical risk measure\footnotemark~defined by
 \begin{equation*}
@@ -113,9 +130,12 @@ More appropriately, the risk functional $\text{R}(f) = \int \Lambda(y,f(x)) \din
 Often the true probability measure is not known, so the empirical risk measure is used instead.
 }
 
+\index{regularisation}
+\index{regularisation!Tikhonov}
+\index{ML!penalised}
 The ML estimator of $f$ typically interpolates the data if the dimension of $\cF$ is at least $n$, so is of little use.
 The most common method to overcome this issue is \emph{Tikhonov regularisation}, whereby a regularisation term is added to the risk function, with the aim of imposing a penalty on the complexity of $f$. 
-In particular, smoothness assumptions on $f$ can be represented by using its \gls*{rkhs} norm $\norm{\cdot}_\cF:\cF \to \bbR$ as the regularisation term\footnotemark. 
+In particular, smoothness assumptions on $f$ can be represented by using its RKHS norm $\norm{\cdot}_\cF:\cF \to \bbR$ as the regularisation term\footnotemark. 
 Therefore, the solution to the regularised least squares problem---call this $f_{\text{reg}}$---is the minimiser of the mapping from $\cF$ to $\bbR$ defined by
 \begin{equation}\label{eq:penfunctional}
   f \mapsto 
@@ -136,9 +156,12 @@ even if $\cF$ is infinite dimensional.
 This simplifies the original minimisation problem from a search for $f$ over a possibly infinite-dimensional domain, to a search for the optimal coefficients $w_i$ in $n$ dimensions.
 
 \footnotetext{
-Concrete notions of complexity penalties can be introduced if $\cF$ is a normed space, though RKHSs are typically used as it gives great conveniences (see Chapter 2).  
+Concrete notions of complexity penalties can be introduced if $\cF$ is a normed space, though RKHSs are typically used as it gives great conveniences.  
 }
 
+\index{Gaussian process!regression}
+\index{kernel!matrix}
+\index{Gram matrix|see {kernel matrix}}
 Tikhonov regularisation also has a well known Bayesian interpretation, whereby the regularisation term encodes prior information about the function $f$. 
 For the normal regression model with $f \in \cF$, an RKHS, it can be shown that $f_{\text{reg}}$ is the posterior mean of $f$ given a \emph{Gaussian process prior} \citep{rasmussen2006gaussian} with mean $f_0$ and covariance kernel $\Cov\big(f(x_i),f(x_j)\big) = \lambda h(x_i, x_j)$. 
 The exact solution for the coefficients $\bw := (w_1,\dots,w_n)^\top$ are in fact $\bw = \big(\bH + \bPsi^{-1}\big)^{-1}(\by - \bff_0)$, where $\bH = \big(h(x_i,x_j) \big)_{i,j=1}^n$ (often referred to as the Gram matrix or kernel matrix) and $(\by - \bff_0) = (y_1 - f_0(x_1), \dots, y_n - f_0(x_n))^\top$.
@@ -146,23 +169,25 @@ The exact solution for the coefficients $\bw := (w_1,\dots,w_n)^\top$ are in fac
 \section{Regression using I-priors}
 \label{sec:introregiprior}
 
+\index{I-prior!model}
 Building upon the Bayesian interpretation of regularisation, \citet{bergsma2017} proposes an original prior distribution for the regression function such that its realisations admit the form for the solution given in the representer theorem.
 The \emph{I-prior} for the regression function $f$ in \cref{eq:model1} subject to \cref{eq:model1ass} and $f\in\cF$, a RKKS with kernel $h_\eta$, is defined as the distribution of a random function of the form \cref{eq:repform} when the $w_i$ are distributed according to 
 \[
   (w_1,\dots,w_n)^\top \sim \N_n(\bzero,\bPsi),
 \]
-where $\bzero$ is a length $n$ vector of zeroes.
+where $\bzero$ is a length $n$ vector of zeroes, and $\bPsi$ is the error precision matrix.
 As a result, we may view the I-prior for $f$ as having the Gaussian process distribution
 \begin{align}\label{eq:iprior}
-  \bff := \big(f(x_1),\dots,f(x_n) \big)^\top \sim \N_n(\bff_0, \bH_\eta\bPsi\bH_\eta)
+  \bff := \big(f(x_1),\dots,f(x_n) \big)^\top \sim \N_n(\bff_0, \bH_\eta\bPsi\bH_\eta),
 \end{align}
-%
-with $\bH_{\eta}$ an $n \times n$ matrix with $(i,j)$ entries equal to $h_\eta(x_i,x_j)$, and $\bff_0$ a vector containing the $f_0(x_i)$'s.
+with $\bH_{\eta}$ an $n \times n$ matrix with $(i,j)$ entries equal to $h_\eta(x_i,x_j)$, and $\bff_0$ a vector containing the $f_0(x_i)$'s, $i=1,\dots,n$.
 The covariance matrix of this multivariate normal prior is related to the Fisher information for $f$, and hence the name I-prior---the `I' stands for information.
 Furthermore, the I-prior happens to be an entropy-maximising prior, subject to certain constraints.
 \cref{chapter3} contains details of the derivation of I-priors for the normal regression model.
 
-As with \gls*{gpr}, the function $f$ is estimated by its posterior mean.
+\index{Gaussian process!regression}
+\index{I-prior!posterior distribution}
+As with Gaussian process regression (GPR), the function $f$ is estimated by its posterior mean.
 For the normal model, the posterior distribution for the regression function conditional on the responses $\by = (y_1,\dots,y_n)$,
 \begin{equation}
   p(\bff|\by) = \frac{p(\by|\bff)p(\bff)}{\int p(\by|\bff)p(\bff) \dint \bff} \, ,
@@ -171,7 +196,7 @@ can easily be found, and it is in fact normally distributed.
 The posterior mean for $f$ evaluated at a point $x \in \cX$ is given by
 \vspace{-0.3em}
 \begin{equation}\label{eq:postmean}
-  \E\big[f(x)\big|\by\big] 
+  \E\big(f(x) \big| \by\big) 
   = f_0(x) + \bh_\eta^\top(x) \,
   \myoverbrace{\bPsi\bH_\eta \big(\bH_\eta\bPsi\bH_\eta + \bPsi^{-1}\big)^{-1} (\by -\bff_0 )}{\tilde \bw}
 \end{equation}
@@ -179,7 +204,8 @@ where we have defined $\bh_\eta(x)$ to be the vector of length $n$ with entries 
 Incidentally, the elements of the $n$-vector $\tilde \bw$ defined in \cref{eq:postmean} are the posterior means of the random variables $w_i$ in the formulation \cref{eq:repform}.
 The point-evaluation posterior variance for $f$ is given by
 \begin{align}\label{eq:postvar}
-  \Var\big[f(x)\big|\by\big] = \bh_\eta^\top(x)\big( \bH_\eta\bPsi\bH_\eta + \bPsi^{-1} \big)^{-1} \bh_\eta^\top(x).
+  \Var\big(f(x) \big| \by\big) = 
+  \bh_\eta^\top(x)\big( \bH_\eta\bPsi\bH_\eta + \bPsi^{-1} \big)^{-1} \bh_\eta^\top(x).
 \end{align}
 Prediction for a new data point $x_\new \in \cX$ then concerns obtaining the \emph{posterior predictive distribution}
 \[
@@ -187,7 +213,7 @@ Prediction for a new data point $x_\new \in \cX$ then concerns obtaining the \em
 \]
 where we had defined $f_\new := f(x_\new)$.
 This is again a normal distribution in the case of the normal model, with similar mean and variance as in \cref{eq:postmean}. 
-For a derivation, see \cref{sec:ipriorestimation} in \cref{chapter4} for details.
+For a derivation, see \cref{sec:ipriorestimation} \colp{\mypageref{sec:ipriorestimation}} in \cref{chapter4} for details.
 %These are of course well known results in Gaussian process literature---see, for example, the aforementioned text by \citet{rasmussen2006gaussian} for details.
 
 %\footnotetext{
@@ -214,22 +240,24 @@ The I-prior methodology has the following advantages:
 
   \item \textbf{Simple estimation procedure.}
   
-  Estimation of model parameters using the aforementioned methods are very simple to implement, barring any computational and numerical hurdles, which will be discussed.
+  Estimation of model parameters using the aforementioned methods are very simple to implement, barring any computational and numerical hurdles, which shall be discussed in \cref{chapter4}.
 
   \item \textbf{Parsimonious specification.}
   
   I-prior models are most typically specified using only  RKHS scale parameters and the error precision.
   This encourages parsimony in model building; for example, smoothing models can be fitted using only two parameters, while linear multilevel models can be fitted with notably fewer parameters than the standard versions.
   
-  \item \textbf{Prevents over-fitting and under-smoothing.}
+  \item \textbf{Prevents overfitting and undersmoothing.}
   
+  \index{overfit}
+  \index{undersmooth}
   As alluded to earlier, any function $f$ that passes through the data points is a least squares solution.
-  Regularising the problem with the use of I-priors prevents overfitting, with the added advantage that the posterior solution under an I-prior does not tend to under smooth as much as Tikhonov regularisation does \citep{bergsma2017}.
-  Under smoothing can adversely impact the estimate of $f$, and in real terms might even show features and artefacts that are not really there.
+  Regularising the problem with the use of I-priors prevents overfitting, with the added advantage that the posterior solution under an I-prior does not tend to undersmooth as much as Tikhonov regularisation does \citep{bergsma2017}.
+  Undersmoothing can adversely impact the estimate of $f$, and in real terms might even show features and artefacts that are not really there.
   
   \item \textbf{Better prediction.}
   
-  Empirical studies and real-data examples show that predictive performance of I-priors are comparative to, and often better than, other leading state-of-the-art models, including the closely related \gls*{gpr}.
+  Empirical studies and real-data examples show that predictive performance of I-priors are comparative to, and often better than, other leading state-of-the-art models, including the closely related GPR.
 
   \item \textbf{Straightforward inference.}
   
