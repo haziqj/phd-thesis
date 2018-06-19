@@ -1,12 +1,18 @@
+\index{RKKS}
+\index{Kreĭn space}
 %To state the obvious, multiplication of a kernel by a negative scalar results in a negative definite function.
 %Such actions arise when building new function spaces from existing ones, such as via a polynomial-type or ANOVA-type construction, as we will see later in \cref{sec:constructrkks}.
 %Do we forfeit all the nice properties of RKHS?
 %As it turns out no, for the most relevant parts anyway.
-In this section, we review elementary Kreĭn and reproducing kernel Kreĭn space theory, and comment on the similarity and differences between it and RKHSs.
+In this section, we review elementary Kreĭn and reproducing kernel Kreĭn space (RKKS) theory, and comment on the similarity and differences between it and RKHSs.
 Kreĭn spaces are linear spaces endowed with a Hilbertian topology, characterised by an inner product which is non-positive.
 %To quote \citet{ong2004learning}, Kreĭn spaces are inner product spaces endowed with a Hilbertian topology, yet their inner product is no longer positive. 
 
 \begin{definition}[Negative and indefinite inner products]
+  \index{negative definite}
+  \index{negative definite|seealso{inner product}}
+  \index{inner product!negative-definite}
+  \index{inner product!indefinite}
   Let $\ip{\cdot,\cdot}_\cF$ be an inner product of a vector space $\cF$, as per \cref{def:innerprod}.
   An inner product is said to be \emph{negative-definite} if for all $f\in\cF$, $\ip{f,f}_\cF \leq 0$.
   It is \emph{indefinite} if it is neither positive- nor negative-definite.
@@ -25,7 +31,10 @@ Kreĭn spaces are linear spaces endowed with a Hilbertian topology, characterise
   Any Hilbert space is also a Kreĭn space, which is seen by taking $\cF_- = \{0\}$ in the above \cref{def:krein}.
 \end{remark}
 
-
+\index{fundamental projection}
+\index{positive subspace}
+\index{negative subspace}
+\index{Hilbert space!associated Hilbert space}
 Let $P$ be the projection of the Kreĭn space $\cF$ onto $\cF_+$, and $Q=I-P$ the projection onto $\cF_-$, where $I$ is the identity map.
 These are caleld the \emph{fundamental projections} of $\cF$.
 We shall refer to $\cF_+$ as the \emph{positive subspace}, and $\cF_-$ as the \emph{negative subspace}.
@@ -47,6 +56,7 @@ There is then a notion of an \emph{associated Hilbert space}.
 %  and hence $\ip{f,f'}_{\cF} = \ip{f_+,f_+'}_{\cF_+} - \ip{f_-,f_-'}_{\cF_-}$.
 \end{definition}
 
+\index{fundamental symmetry}
 The associated Hilbert space can be found via the linear operator $J = P - Q$ called the \emph{fundamental symmetry}.
 %, which satisfies $J = J^{-1} = J^\top$.
 That is, a Kreĭn space $\cF$ can be turned into its associated Hilbert space by using the positive-definite inner product of the associated Hilbert space as $\ip{f,f'}_{\cF_\cH} = \ip{f,Jf'}_\cF$, for all $f,f'\in\cF$.
@@ -54,23 +64,24 @@ The converse is true too: starting from a Hilbert space $\cF_\cH$ and an operato
 
 We realise that for a Kreĭn space $\cF$, $|\ip{f,f}_\cF| \leq \norm{f}^2_{\cF_\cH}|$ for all $f\in\cF$ (we say that $\cF_\cH$ majorises the $\cF$), and in fact it is the smallest Hilbert space to do so.
 The strong topology on $\cF$ is defined to be the topology arising from the norm of $\cF_\cH$, and this does not depend on the decomposition chosen \citep{ong2004learning}.
-Now, we define a RKKS.
+Now, we define an RKKS.
 
 \begin{definition}[Reproducing kernel Kreĭn space]
   A Krein space $\cF$ of real-valued functions $f:\mathcal X \rightarrow \mathbb R$ on a non-empty set $\mathcal X$ is called a \emph{reproducing kernel Krein space} if the evaluation functional $\delta_x: f \mapsto f(x)$ is continuous on $\cF$, $\forall x \in \cX$, endowed with its strong topology (i.e. the topology of its associated Hilbert space $\cF_\cH$).
 \end{definition}
 
+\index{RKKS!uniqueness}
 One might wonder whether the uniqueness theorem \colp{\cref{thm:rkhsunique}} holds for RKKS.
 Indeed, for every RKKS $\cF$ of functions over a set $\cX$, there corresponds a unique reproducing kernel $\hXXR$.
 
 \begin{lemma}[Uniqueness of kernel for RKKS]
-  Let $\cF$ be a RKKS of functions over a set $\cX$, with $\cF = \cF_+ \ominus \cF_-$.
+  Let $\cF$ be an RKKS of functions over a set $\cX$, with $\cF = \cF_+ \ominus \cF_-$.
   Then, $\cF_+$ and $\cF_-$ are both RKHS with kernel $h_+$ and $h_-$, and the kernel $h = h_+ - h_-$ is a unique, symmetric, reproducing kernel for $\cF$.  
 \end{lemma}
 
 \begin{proof}
-  Since $\cF$ is a RKKS, evaluation functionals are continuous on $\cF$ with respect to topology of the associated Hilbert space $\cF_\cH = \cF_+ \oplus \cF_-$.
-  Therefore, $\cF_\cH$ is a RKHS, and so too are $\cF_+$ and $\cF_-$ with respective kernels $h_+$ and $h_-$.
+  Since $\cF$ is an RKKS, evaluation functionals are continuous on $\cF$ with respect to topology of the associated Hilbert space $\cF_\cH = \cF_+ \oplus \cF_-$.
+  Therefore, $\cF_\cH$ is an RKHS, and so too are $\cF_+$ and $\cF_-$ with respective kernels $h_+$ and $h_-$.
   
   Furthermore, $h(\cdot,x) \in\cF$ since $h_+(\cdot,x) \in\cF_+$ and $h_-(\cdot,x) \in\cF_-$ for some $x\in\cX$.
   Then, for any $f\in\cF$,
@@ -94,6 +105,7 @@ Indeed, for every RKKS $\cF$ of functions over a set $\cX$, there corresponds a 
 %  Regardless, we shall keep referring to them as kernels for brevity.
 \end{remark}
 
+\index{Moore-Aronszajn}
 The analogue of the Moore-Aronszajn theorem holds partially for RKKS, up to uniqueness.
 That is, there is \emph{at least} one associated RKKS with kernel $\hXXR$ if and only if $h$ can be decomposed as the difference between two positive kernels $h_+$ and $h_-$ over $\cX$, i.e. $h=h_+-h_-$.
 The proof of this statement is rather involved, so is omitted in the interest of maintaining coherence to the discussion at hand.
@@ -104,7 +116,7 @@ This subject has been studied by various authors; one may refer to works by \cit
 %\end{lemma}
 %
 %\begin{proof}
-%  The existence and (non-)uniqueness of a RKKS associated with a kernel $h$ relies on the ability to complete the span of $h(\cdot,x)$, much like in the proof of the Moore-Aronszajn theorem.
+%  The existence and (non-)uniqueness of an RKKS associated with a kernel $h$ relies on the ability to complete the span of $h(\cdot,x)$, much like in the proof of the Moore-Aronszajn theorem.
 %  As it turns out, this is rather involved, so is omitted in the interest of maintaining coherence to the discussion at hand.
 %  This subject has been studied by various authors, one may refer to a proof of this lemma in works by \citet[Theorem 2 \& Example in Section 4]{alpay1991some}, and \citet[Theorem 2.28]{mary2003hilbertian}.
 %\end{proof}

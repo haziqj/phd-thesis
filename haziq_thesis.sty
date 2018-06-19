@@ -428,7 +428,10 @@
     \hPrintBibliography
     {\hypersetup{allcolors=.} %pdfborder=0 0 0  
       \hLists
-      \printindex
+      \begingroup
+        \singlespacing
+        \printindex
+      \endgroup
     }
   \fi
 }

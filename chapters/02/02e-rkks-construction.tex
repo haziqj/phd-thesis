@@ -7,13 +7,13 @@ To be more flexible in the specification of these new function spaces, we do not
 \subsection{Sums, products and scaling of RKHS}
 
 Sums of positive definite kernels are also positive definite kernels, and the product of positive definite kernel is a positive definite kernel.
-They each, in turn, are associated with a RKHS that is defined by the sum of kernels and product of kernels, respectively.
+They each, in turn, are associated with an RKHS that is defined by the sum of kernels and product of kernels, respectively.
 The two lemmas below formalise these two facts. 
 
 \begin{lemma}[Sum of kernels]\label{thm:sumkernels}
   If $h_1$ and $h_2$ are positive-definite kernels on $\cX_1$ and $\cX_2$ respectively, then $h = h_1 + h_2$ is a positive-definite kernel on $\cX_1 \times \cX_2$.
   Moreover, denote $\cF_1$ and $\cF_2$ the RKHS defined by $h_1$ and $h_2$ respectively.
-  Then $\cF = \cF_1 \oplus \cF_2$ is a RKHS defined by $h = h_1 + h_2$, where
+  Then $\cF = \cF_1 \oplus \cF_2$ is an RKHS defined by $h = h_1 + h_2$, where
   \[
     \cF_1 \oplus \cF_2 = \{ f:\cX_1\times\cX_2 \to\bbR \,|\, f = f_1 + f_2, f_1\in\cF_1 \text{ and } f_2\in\cF_2 \}.
   \]
@@ -31,7 +31,7 @@ The two lemmas below formalise these two facts.
 \begin{lemma}[Products of kernels]\label{thm:prodkernels}
   Let $\cF_1$ and $\cF_2$ be two RKHS of functions over $\cX_1$ and $\cX_2$, with respective reproducing kernels $h_1$ and $h_2$.
   Then, $h = h_1 h_2$ is a kernel on $\cX_1 \times \cX_2$.
-  Moreover, the tensor product space $\cF_1 \otimes \cF_2$ is a RKHS with reproducing kernel $h$.
+  Moreover, the tensor product space $\cF_1 \otimes \cF_2$ is an RKHS with reproducing kernel $h$.
 \end{lemma}
 
 \begin{proof}
@@ -57,13 +57,14 @@ The two lemmas below formalise these two facts.
   Again, for the remainder of the statement in the lemma, we refer to \citet[Theorem 13]{berlinet2011reproducing}.
 \end{proof}
 
+\index{Hadamard product}
 A familiar fact from linear algebra is realised here from \cref{thm:sumkernels,thm:prodkernels}: 
 %1) Multiplying a positive definite matrix by a positive constant results in a positive definite matrix; 
-1) the addition of positive (semi-)definite matrices is a positive-definite matrix; and 
+1) the addition of positive-(semi)definite matrices is a positive-(semi)definite matrix; and 
 2) the \emph{Hadamard product}\footnotemark~of two positive (semi-)definite matrices is a positive (semi-)definite matrix.
 \footnotetext{The Hadamard product is an element-wise multiplication of two matrices $\bA$ and $\bB$ of identical dimensions, denoted $\bA \circ \bB$. That is, $(\bA \circ \bB)_{ij} = \bA_{ij}\bB_{ij}$.}
 
-The scale of a RKHS of functions $\cF$ over a set $\cX$ with kernel $h$ may be arbitrary.
+The scale of an RKHS of functions $\cF$ over a set $\cX$ with kernel $h$ may be arbitrary.
 To resolve this issue, a scale parameter $\lambda\in\bbR$ for the kernel $h$ may be introduced, which will typically need to be estimated from the data. 
 If $h$ is a positive definite-kernel on $\cX\times\cX$, and $\lambda \geq 0$ a scalar, then this yields a scaled RKHS $\cF_\lambda = \{\lambda f \,|\, f \in \cF \}$ with reproducing kernel $\lambda h$, where $\cF$ is the RKHS defined by $h$.
 
@@ -72,7 +73,7 @@ Especially when considering sums and products of scaled RKHSs, having negative s
 The resulting kernels from summation and/or multiplication with negative kernels may no longer be positive definite, and in such cases, they give rise to RKKSs instead.
 
 \begin{remark}
-  Recall that a RKKS $\cF$ of functions over $\cX$ can be uniquely decomposed as the difference between two RKHSs $\cF_+$ and $\cF_-$, and its associated Hilbert space $\cF_\cH$ is the RKHS $\cF_+ \oplus \cF_-$.
+  Recall that an RKKS $\cF$ of functions over $\cX$ can be uniquely decomposed as the difference between two RKHSs $\cF_+$ and $\cF_-$, and its associated Hilbert space $\cF_\cH$ is the RKHS $\cF_+ \oplus \cF_-$.
   It is important to note that both $\cF$ and $\cF_\cH$ contain identical functions over $\cX$, but different topologies.
   That is to say, functions that are close with respect to the norm of $\cF$ may not be close to each other in the norm of $\cF_\cH$.
 \end{remark}
@@ -104,6 +105,11 @@ For example, using the canonical RKHS in the polynomial construction would allow
 In particular, we only require a single scale parameter in polynomial kernel construction.
 
 \begin{definition}[Polynomial RKKS]
+  \index{polynomial!kernel/RKKS}
+  \index{degree}
+  \index{offset}
+  \index{degree|seealso{polynomial}}
+  \index{offset|seealso{polynomial}}
   Let $\cX$ be a Hilbert space.
   The kernel function $\hXXR$ obtained through the $d$-degree polynomial construction of linear kernels is
   \[
@@ -121,7 +127,7 @@ Write
 %  \, \ip{x,x'}_\cX^k.
 \end{align*}
 Evidently, as the name suggests, this is a polynomial involving the canonical kernel.
-In particular, each of the $k$-powered kernels (i.e., $\ip{x,x'}_\cX^k$) defines a RKHS of their own (since these are merely products of kernels), and therefore the sum of these $k$-powered kernels define the polynomial RKHS.
+In particular, each of the $k$-powered kernels (i.e., $\ip{x,x'}_\cX^k$) defines an RKHS of their own (since these are merely products of kernels), and therefore the sum of these $k$-powered kernels define the polynomial RKHS.
 
 The offset parameter influences trade-off between the higher-order versus lower-order terms in the polynomial.
 It is sometimes known as the bias term.
@@ -145,6 +151,7 @@ It is sometimes known as the bias term.
 \subsection{The ANOVA RKKS}
 \label{sec:anovarkks}
 
+\index{ANOVA}
 We find it useful to begin this subsection by spending some time to elaborate on the classical \gls*{anova} decomposition, and the associated notions of main effects and interactions.
 This will go a long way in understanding the thinking behind constructing an \gls*{anova}-like RKKS of functions.
 
@@ -185,6 +192,8 @@ By definition, $AAf = A^2f = Af$, because averaging a constant returns that cons
 We must have that $Af_t = A(I - A)f = Af - A^2f = 0$.
 The choice of A is arbitrary, as is the choice of restriction, so long as it satisfies the condition that $Af_t = 0$.
 
+\index{power set}
+\index{operator!averaging}
 The multiway ANOVA can be motivated in a similar fashion. 
 Let $x = (x_1,\dots,x_p) \in \prod_{k=1}^p \cX_k$, and consider functions that map $\prod_{k=1}^p \cX_k$ to $\bbR$.
 Let $A_j$ be an averaging operator on $\cX_k$ that averages the $k$'th component of $x$ from the active argument list, i.e. $A_kf$ is constant on the $\cX_k$ axis but not necessarily an overall constant function.
@@ -196,6 +205,7 @@ where we had denoted $\cP_p = \cP(\{1,\dots,p\})$ to be the power set of $\{1,\d
 The summands $f_\cK$ will compose of the overall effect, main effects, two-way interaction terms, and so on.
 Each of the terms will satisfy the condition $A_kf_\cK = 0, \forall k \in \cK \in \cP_p \backslash \{\}$.
 
+\index{ANOVA!two-way}
 \begin{example}[Two-way ANOVA decomposition]
   Let $p=2$, $\cX_1=\{1,\dots,m_1\}$, and $\cX_2=\{1,\dots,m_2\}$.
   The power set $\cP_2$ is $\big\{ \{\}, \{1\}, \{2\}, \{1,2\} \big\}$.
@@ -229,6 +239,8 @@ Each of the terms will satisfy the condition $A_kf_\cK = 0, \forall k \in \cK \i
 
 \subsubsection{Functional ANOVA decomposition}
 
+\index{ANOVA!multiway}
+\index{ANOVA!functional}
 Let us now extend the ANOVA decomposition idea to a general function $f:\cX\to\bbR$ in some vector space $\cF$.
 We shall jump straight into the multiway ANOVA analogue for functional decomposition, and to that end, consider $x=(x_1,\dots,x_p) \in \prod_{k=1}^p \cX_k =: \cX$ a measurable space, where each of the spaces $\cX_k$ has measure $\nu_k$, and $\nu=\nu_1\times\cdots\times\nu_p$ is the product measure on $\cX$.
 In the following, denote by $\cF_k$ the vector space of functions over the set $\cX_k$, $k=1,\dots,p$, and $\cF_\emptyset$ the vector space of constant functions.
@@ -259,6 +271,7 @@ We must then also have, as before, that $A_kf_\cK = 0, \forall k \in \cK \in \cP
 For the one-way functional ANOVA decomposition in \cref{eq:functionalanova1}, it must be that $f_1$ is a zero-mean function.
 As for the two-way ANOVA, it is the case that $\int_{\cX_k} f_\cK(x_1,x_2) \dint\nu_k(x_k) = 0, k=1,2$, and $\cK \in \big\{ \{1\}, \{2\}, \{1,2\} \big\}$ \citep{durrande2013anova}.
 
+\index{tensor!product space}
 This is highly suggestive as to what the ANOVA decomposition of the space $\cF$ should look like in general.
 Starting with $p=1$, any $f \in \cF$ can be decomposed as a sum of a constant plus a zero mean function, so we have the
 %geometric --- initially it was orthogonal decomposition
@@ -330,11 +343,12 @@ For the constant term, main effects, and two-way interaction terms, the familiar
 \subsubsection{The ANOVA kernel}
 
 At last, we come to the section of deriving the ANOVA RKKS, and, rest assured, the preceding long build-up will prove to not be in vain.
-The main idea is to construct a RKKS such that the functions that lie in them will have the ANOVA representation in \cref{eq:functionalanova2}.
+The main idea is to construct an RKKS such that the functions that lie in them will have the ANOVA representation in \cref{eq:functionalanova2}.
 The bulk of the work has been done, and in fact we know exactly how this ANOVA RKKS should be structured---it is the space as specified in \cref{eq:funcanovaspace}. 
 The ANOVA RKKS will be constructed by a similar manipulation of the individual kernels representing the RKHS building blocks.
 
 \begin{definition}[ANOVA RKKS]\label{def:anovarkks}
+  \index{ANOVA!kernel/RKKS}
   For $k=1,\dots,p$, let $\cF_k$ be centred RKHSs of functions over the set $\cX_k$ with kernel $h_k:\cX_k\times\cX_k\to\bbR$. 
   Let $\lambda_k, k=1,\dots,p$ be real-valued scale parameters.
   The ANOVA RKKS of functions $f:\cX_1\times\cdots\times\cX_p\to\bbR$ is specified by the ANOVA kernel, defined by
@@ -351,7 +365,7 @@ Expanding out equations \cref{eq:anovarkks}, we see that it is in fact a sum of 
   &+ \cdots + \prod_{j=1}^p \lambda_j h_j(x_j,x_j').
 \end{align*}
 It is now clear from this expansion that the ANOVA RKKS yields functions that resemble those with the ANOVA representation in \cref{eq:functionalanova2}:
-the mean value of the function stems from the `1', i.e. it lies in a RKHS of constant functions; the main effects are represented by the sum of the individual kernels; the two-way interaction terms are represented by the second-order kernel interactions; and so on.
+the mean value of the function stems from the `1', i.e. it lies in an RKHS of constant functions; the main effects are represented by the sum of the individual kernels; the two-way interaction terms are represented by the second-order kernel interactions; and so on.
 
 %One thing to note is that restricting the $\lambda$ parameters to the positive orthant might give unsatisfactory results---what if the effect of two functions are in truth opposing one another?
 %These are handled through opposing signs of their respective scale parameters, thus  the need for working in RKKSs.
@@ -374,9 +388,9 @@ The selective exclusion of certain interactions characterises many interesting s
 Excluding certain terms of the ANOVA RKKS is equivalent to setting the scale parameter for those relevant components to be zero, i.e. they play no role in the decomposition of the function.
 With this in mind, the ANOVA RKKS then gives us an objective way of model-building, from linear regression, to multilevel models, longitudinal models, and so on.
 
-Finally, we note that the functional ANOVA decomposition of a RKKS is orthogonal.
+Finally, we note that the functional ANOVA decomposition of an RKKS is orthogonal.
 Without loss of generality, assume that all scale parameters are positive.
-For $p=1$, we have that $\cF = \cF_\emptyset \oplus \cF_1$, where each of $\cF_\emptyset$ and $\cF_1$ is a RKHS.
+For $p=1$, we have that $\cF = \cF_\emptyset \oplus \cF_1$, where each of $\cF_\emptyset$ and $\cF_1$ is an RKHS.
 From \cref{thm:sumkernels}, the squared norm of $\cF$ is given by
 \[
   \norm{f}_\cF^2 = \norm{f_\emptyset}^2_{\cF_\emptyset} + \norm{f_1}^2_{\cF_1},
