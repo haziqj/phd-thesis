@@ -110,7 +110,6 @@
 \usepackage[]{xcolor}  % options: usenames, dvipsnames, svgnames, table
 \usepackage{soul}  % for highlighting text
 \usepackage{url}
-\usepackage{hyperref}  % hyperref setup at the bottom
 \usepackage{footmisc}  % ability to reuse footnotes 
 % https://tex.stackexchange.com/questions/40072/incompatibility-between-footmisc-option-multiple-and-hyperref/62091#62091
 
@@ -304,6 +303,10 @@
 %  {\glsletentryfield{#1}{#2}{long}}%
 %  {\glsletentryfield{#1}{#2}{sort}}%
 %}
+
+% Load everything before hyperref to avoid conflicts
+\usepackage{hyperref}  % hyperref setup at the bottom
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% MY THESIS SPECIFIC MACROS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -7,12 +7,13 @@ Furthermore, storage requirements for I-priors models are similar to that of GPR
 
 \subsection[The Nystrom approximation]{The Nyström approximation}
 
+\index{Nystrom method@Nyström method}
+\index{Woodbury matrix identity}
 The shared computational issues of I-prior and GPR models allow us to delve into machine learning literature, which is rich in ways to resolve these issue, as summarised by \citet{quinonero2005unifying}.
 One such method is to exploit low rank structures of kernel matrices.
 The idea is as follows.
 Let $\bQ$ be a matrix with rank $q < n$, and suppose that $\bQ\bQ^\top$ can be used sufficiently well to represent the kernel matrix $\bH_\eta$.
 Then
-%
 \[
   (\psi\bH_\eta^2 + \psi^{-1}\bI_n)^{-1} \approx
   \psi\left[
@@ -20,8 +21,7 @@ Then
   \bQ\left( \big(\psi^2\bQ^\top\bQ\big)^{-1} +\bQ^\top\bQ \right)^{-1} \bQ^\top
   \right],
 \]
-%
-obtained via the Woodbury matrix identity, is potentially a much cheaper operation which scales $O(nq^2)$: $O(q^3)$ to do the inversion, and $O(nq)$ to do the multiplication (because typically the inverse is premultiplied to a vector).
+obtained via the Woodbury matrix identity, is potentially a much cheaper operation which scales $O(nq^2)$---$O(q^3)$ to do the inversion, and $O(nq)$ to do the multiplication (because typically the inverse is premultiplied to a vector).
 When using the linear kernel for a low-dimensional covariate then the above method is exact ($\bQ = \bX$, where $\bX$ is the design matrix).
 This fact is clearly demonstrated by the equivalence of the $p$-dimensional linear model implied by \cref{eq:ipriorcanonical} with the $n$-dimensional I-prior model using the canonical RKHS.
 If $p \ll n$ then certainly using the linear representation is much more efficient.
@@ -45,7 +45,7 @@ Without loss of generality, reorder the rows and columns of $\bH_\eta$ so that t
 %
 In other words, the data points indexed by $\cQ$ forms the smaller $q\times q$ kernel matrix $\bA$. 
 Let $\bA = \bV_q\bU_q\bV_q^\top = \sum_{i=1}^q u_i^{(q)}\bv_i^{(q)}\bv_i^{(q)\top}$ be the eigendeceomposition of $\bA$.
-The Nyström method provides the formulae for $\tilde u_i$ and $\tilde\bv_i$ \citep[sec. 8.1, equations 8.2 and 8.3]{rasmussen2006gaussian} as
+The Nyström method provides the formulae for $\tilde u_i$ and $\tilde\bv_i$ \citep[sec. 8.1, eq. 8.2 and 8.3]{rasmussen2006gaussian} as
 \begin{align*}
   \tilde u_i &:= \frac{n}{q} u_i^{(q)} \in \bbR \\
   \tilde \bv_i &:= \sqrt{\frac{q}{n}} \frac{1}{u_i^{(q)}}
@@ -83,7 +83,7 @@ An additional step is required to obtain an orthogonal version of the Nyström d
    \end{pmatrix}
    \bA^{-\half}\bR\hat\bU^{-\half} \in \bbR^n \times \bbR^m,
  \]
- then we have that $\bH_\eta \approx \hat\bV\hat\bU\hat\bV^\top$ such that $\hat\bV\hat\bV^\top = \bI_n$ \citep[Appx. A]{fowlkes2004spectral}.
+ then we have that $\bH_\eta \approx \hat\bV\hat\bU\hat\bV^\top$ such that $\hat\bV\hat\bV^\top = \bI_n$ \citep[appx. A]{fowlkes2004spectral}.
  Estimating I-prior models with the Nystr\"om method including the orthogonalisation step takes roughly $O(nm^2)$ time and $O(nm)$ storage.
   
 The issue of selecting the subset $\cQ$ remains.
@@ -96,6 +96,7 @@ For a brief review of more sophisticated methods of selecting $\cQ$, see \citet[
 \subsection{Front-loading kernel matrices for the EM algorithm}
 \label{sec:efficientEM1}
 
+\index{kernel matrix!front loading|(}
 The evaluation of the $Q$ function in \cref{eq:QfnEstep} is $O(n^3)$, because a change in the values of $\theta$ requires evaluating $\bSigma_\theta = \psi\bH_\eta^2 + \psi^{-1}\bI_n$, for which squaring $\bH_\eta$ takes the bulk of the computational time.
 This is disadvantageous because, a Newton or quasi-Newton algorithm used for the M-step would require multiple evaluations of $Q$ in order to complete an EM update.
 
@@ -173,6 +174,8 @@ On the bright side, once the kernel matrices are stored in hard memory, the \pkg
 A practical situation where this might be useful is when we would like to repeat the EM at various initial values.
 Although front-loading of kernel matrices increase storage requirements, this is manageable in practice in modern computer systems for sample sizes of $n \leq 5,000$, and there is a clear advantage of doing so.
 
+\index{kernel matrix!front loading|)}
+
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.83\textwidth]{figure/04-iprior_size}
@@ -184,9 +187,9 @@ Although front-loading of kernel matrices increase storage requirements, this is
   The sign of the scale parameters itself are not identified in the model (this is easily seen when having a single scale parameter in the model since the scale is squared when it appears in the likelihood) but the \emph{relative signs of the scale parameters with respect to each other} is.
 \end{remark}
 
-
 \subsection{The exponential family EM algorithm}
 \label{sec:expfamEM}
+\index{EM algorithm!exponential family}
 
 In the original EM paper by \citet{dempster1977maximum}, the EM algorithm was demonstrated to be easily administered to complete data likelihoods belonging to the exponential family for which the maximum likelihood estimates are easily computed.
 If this is the case, then the M-step simply involves replacing the unknown sufficient statistics in the ML estimates with their \emph{conditional expectations}.
@@ -216,7 +219,7 @@ where $r_k$ and $s_k$ are both functions over $\cX\times\cX$, defined respective
 The reason for splitting $h_\lambda$ like this will become apparently momentarily.
 
 Programmatically, this looks complicated to implement in software, but in fact it is not.
-Consider again the instruction list $\cQ$ for the ANOVA RKKS (Example 3, \cref{sec:efficientEM1}).
+Consider again the instruction list $\cQ$ for the ANOVA RKKS \colp{Example 3, \cref{sec:efficientEM1}}.
 We can split this list into two: $\cR_k$ as those elements of $\cQ$ which involve the index $k$, and $\cS_k$ as those elements of $\cQ$ which do not involve the index $k$.
 Let $\zeta_k$, $e_k$ be the sets of $\lambda$ and $h$ after applying the instructions of $\cR_k$, and let $\xi_k$ and $a_k$ be the sets of $\lambda$ and $h$ after application of the instruction list $\cS_k$.
 Now, we have 
@@ -231,6 +234,9 @@ Defining $\bR_k$ and $\bS_k$ to be the kernel matrices with $(i,j)$ entries $r_k
   \bH_\eta^2 = \lambda_k^2\bR_k^2 + \lambda_k \myoverbrace{\big(\bR_k\bS_k + (\bR_k\bS_k)^\top \big)}{\bU_k} + \bS_k^2.
 \]
 
+\index{log-likelihood!full data|see{complete data}}
+\index{log-likelihood!complete data}
+\index{likelihood|see{log-likelihood}}
 Consider now the full data log-likelihood for $\lambda_k$, $k=1,\dots,p$, conditionally dependent on the rest of the unknown parameters $\lambda_{-k} = \{\lambda_1,\dots,\lambda_p\} \backslash \{ \lambda_k \}$ and $\psi$:
 \begin{align}
   L(\lambda_k|\by,\bw,\lambda_{-k},\psi)
@@ -296,6 +302,9 @@ As a remark, it is not necessary that $h_\lambda$ is the full ANOVA RKKS; any of
 \end{algorithmic}
 \end{algorithm}
 
+\index{maximum a posteriori|see{MAP estimate}}
+\index{MAP estimate}
+\index{penalised likelihood}
 \begin{remark}
   Another compelling reason to use \cref{alg:EM2} is conjugacy of the exponential family of distributions.
   Realise that $\lambda_k|\by,\bw,\lambda_{-k},\psi$ is in fact normally distributed, with mean and variance given by $T_2/2T_1$ and $1/2T_1$ respectively.

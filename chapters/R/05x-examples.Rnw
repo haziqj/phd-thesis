@@ -33,6 +33,7 @@ Code for replication is provided at \url{http://myphdcode.haziqj.ml}.
 All of these examples had assumed a fixed error precision $\bPsi = \bI_m$.
 
 \subsection{Predicting cardiac arrhythmia}
+\index{classification!binary|(}
 
 Statistical learning tools are being used in the field of medicine as a means to aid medical diagnosis of diseases.
 In this example, factors determining the presence or absence of heart diseses are studied.
@@ -120,7 +121,10 @@ It can be seen that the fBm I-probit model also outperform the more popular mach
 It came second only to random forests, an ensemble learning method, which is also generally faster to train than Gaussian process-like regressions such as I-prior models.
 The time complexity of a random forest algorithm is $O(pqn\log(n))$ \citep{louppe2014understanding}, where $p$ is the number of variables used for training, $q$ is the number of random decision trees, and $n$ is the number of observations.
 
+\index{classification!binary|)}
+
 \subsection{Meta-analysis of smoking cessation}
+\index{meta-analysis|(}
 
 Conider the smoking cessation data set, as described in \citet{skrondal2004generalized}.
 It contains observations from 27 separate smoking cessation studies in which participants are subjected to either a nicotine gum treatment or a placebo.
@@ -250,7 +254,10 @@ This can perhaps be attributed to some shrinkage of the estimated probabilities 
 The credibility intervals for the log odds ratios in the forest plot of \cref{fig:smoke.forest.plot} are also noticeably narrower under an I-prior compared to the fitted multilevel model.
 One explanation is that empirical Bayes estimates, such as the I-probit estimates under a variational EM framework, tend to underestimate the variability in the estimates because the variability in the parameters are ignored when point estimates are used, compared to distributions in a true Bayesian estimation framework.
 
+\index{meta-analysis|)}
+
 \subsection{Multiclass classification: Vowel recognition data set}
+\index{classification!multiclass|(}
 <<vowel.data, include = FALSE>>=
 @
 <<vowel.mod.can, include = FALSE>>=
@@ -351,7 +358,10 @@ It also provides significant improvement over multiple linear regression.
   \end{tabular}
 \end{table}
 
+\index{classification!multiclass|)}
+
 \subsection{Spatio-temporal modelling of bovine tuberculosis in Cornwall}
+\index{spatio-temporal model|(}
 <<data.btb, include = FALSE, cache = TRUE>>=
 @
 <<plot.btb.prep, include = FALSE, cache = TRUE>>=
@@ -481,6 +491,8 @@ In addition, coloured dotted lines are displayed to indicate the ``decision boun
 The most evident change is seen to the spatial distribution of spoligotype 12, with the decision boundary giving it a large area in years 1996 and earlier, but this steadily shrunk over the years.
 Spoligotype 9, which is most commonly seen in the east of Cornwall, seems to have made its way down to the south-west over the years.
 The other two spoligotypes seem to be rather constant over the years.
+
+\index{spatio-temporal model|)}
 
 \end{document}
 

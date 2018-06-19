@@ -1,9 +1,11 @@
+\index{Hilbert space!Fisher information}
 We extend the idea beyond thinking about parameters as merely numbers in the usual sense, to abstract objects in Hilbert spaces. 
 This generalisation allows us to extend the concept of Fisher information to regression functions in RKKSs later.
 The score and Fisher information is derived in a familiar manner, but extra care is required when taking derivatives with respect to elements in Hilbert spaces.  
 We discuss a generalisation of the concept of differentiability from real-valued functions of a single, real variable, as is common in calculus, to functions between Hilbert spaces.
 
 \begin{definition}[Fréchet derivative]\label{def:frechet}
+  \index{Frechet derivative@Fréchet derivative|(}
   Let $\cV$ and $\cW$ be two Hilbert spaces, and $\cU \subseteq \cV$ be an open subset.
   A function $\funder :\cU\to\cW$ is called \emph{Fréchet differentiable} at $x \in \cU$ if there exists a bounded, linear operator $T:\cV\to\cW$ such that 
   \[
@@ -28,6 +30,7 @@ We discuss a generalisation of the concept of differentiability from real-valued
 \end{remark}
 
 \pagebreak
+\index{Landau notation}
 The intuition here is similar to that of regular differentiability, in that the linear operator $T$ well approximates the change in $\funder$ at $x$ (the numerator), relative to the change in $x$ (the denominator)---the fact that the limit exists and is zero, it must mean that the numerator converges faster to zero than the denominator does.
 In Landau notation, we have the familiar expression $\funder(x+v) = \funder(v) + \d \funder(x)(v) + o(v)$, that is, the derivative of $\funder$ at $x$ gives the best linear approximation to $\funder$ near $x$.
 Note that the limit in the definition is meant in the usual sense of convergence of functions with respect to the norms of $\cV$ and $\cW$.
@@ -54,6 +57,8 @@ To make sense of the space on the right-hand side, consider the following argume
 To summarise, there is an isomorphism between the space on the right-hand side and the space $\L(\cV \times \cV, \cW)$ of all continuous, bilinear maps from $\cV$ to $\cW$.
 The second derivative $\d^2 \funder(x)$ is therefore a bounded, symmetric, bilinear operator from $\cV\times\cV$ to $\cW$.
 
+\index{Frechet derivative@Fréchet derivative|)}
+\index{Gateaux derivative@Gâteaux derivative|(}
 Another closely related type of differentiability is the concept of \emph{Gâteaux differentials}, which is the formalism of functional derivatives in calculus of variations.
 Let $\cV$, $\cW$ and $\cU$ be as before, and consider the function $\funder :\cU\to\cW$.
 
@@ -106,6 +111,7 @@ Nevertheless, the reasons we bring up Gâteaux derivatives is because it is usua
 On the other hand, Gâteaux differentiability does not necessarily imply Fréchet differentiability.
 A sufficient condition for Fréchet differentiability is  that the Gâteaux derivative is continuous at the point of differentiation, i.e. the map $\partial \funder : \cU \to (\cV;\cW)$ is continuous at $x\in\cU$.
 In other words, if $\partial \funder(x)$ is a bounded linear operator and the convergence in \cref{eq:frecimplygat} is uniform with respect to all $v$ such that $\norm{v}_\cV=1$, then $\d \funder(x)$ exists and $\d \funder(x) = \partial \funder(x)$ \citep[p. 57 \& 66]{tapia1971diff}.
+\index{Gateaux derivative@Gâteaux derivative|)}
 
 Consider now the function $\d \funder(x):\cV\to\cW$ and suppose that $\funder$ is twice Fréchet differentiable at $x\in\cU$, i.e. $\d \funder(x)$ is Fréchet differentiable at $x\in\cU$ with derivative $\d^2 \funder(x):\cV\times\cV \to \cW$.
 Then, $\d \funder(x)$ is also Gâteaux differentiable at the point $x$ and the two differentials coincide.
@@ -123,6 +129,8 @@ Again, let $\cU \subseteq \cV$ be an open subset, and let $\funder :\cU\to\bbR$ 
 We define the gradient as follows.
 
 \begin{definition}[Gradients in Hilbert space]
+  \index{gradient!Hilbert space}
+%  \index{Hilbert space!gradient|see{gradient}}
   The \emph{gradient} of $\funder$ is the operator $\nabla \funder : \cU \to \cV$ defined by $\nabla \funder = U^{-1} \circ \d \funder$.
   Thus, for $x \in \cU$, the gradient of $\funder$ at $x$, denoted $\nabla \funder(x)$, is the unique element of $\cV$ satisfying
   \[
@@ -152,6 +160,7 @@ Since $\nabla \funder$ is continuous, its Fréchet and Gâteaux differentials co
 Letting $\cV$, $\cW$ and $\cU$ be as before, we now define the Hessian for the function $\funder :\cU \to \cW$.
 
 \begin{definition}[Hessian]
+  \index{Hessian!Hilbert space}
   The Fréchet derivative of the gradient of $\funder$ is known as the \emph{Hessian} of $\funder$.
   Denoted $\nabla^2 \funder$, it is the mapping $\nabla^2 \funder : \cU \to \L(\cV;\cV)$ defined by $\nabla^2 \funder  = \d \nabla \funder$, and it satisfies
   \[
@@ -265,9 +274,11 @@ It would seem that $\E[- \nabla^2 L(\theta|Y)(b)]$ is an operator from $\Theta$ 
 Therefore, $\cI(\theta) = \E[- \nabla^2 L(\theta|Y)]$.
 \end{proof}
 
+\index{bilinear!form}
+\index{operator!tensor product}
 The Fisher information $\cI(\theta)$ for $\theta$, much like the covariance operator, can be viewed in one of three ways: 
 \begin{enumerate}
-  \item As its general form, i.e. an element in $\Theta\otimes\Theta$;
+  \item As its general form, i.e. an element in the tensor product space $\Theta\otimes\Theta$;
   \item As an operator $\cI(\theta):\Theta\to\Theta$ defined by $\cI(\theta)(b) = \E[- \nabla^2 L(\theta|Y)](b)$; and finally
   \item As a bilinear form $\cI(\theta):\Theta\times\Theta\to\bbR$ defined by $\cI(\theta)(b,b') = \ip{-\E \nabla^2 L(\theta|Y)(b), b'}_\Theta$ $= \E [-\d^2 L(\theta|Y)(b,b') ]$.
 \end{enumerate}

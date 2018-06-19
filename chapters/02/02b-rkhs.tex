@@ -33,7 +33,7 @@ To begin, we consider a fundamental linear functional on a Hilbert space of func
 
 \begin{definition}[Evaluation functional]
   \index{evaluation functional}
-  \index{Dirac|see{evaluation functional}}
+  \index{Dirac functional|see{evaluation functional}}
   Let $\mathcal F$ be a vector space of functions $f:\mathcal X \rightarrow \mathbb R$, defined on a non-empty set $\mathcal X$. 
   For a fixed $x \in \mathcal X$, the functional $\delta_x:\mathcal F \rightarrow \mathbb R$ as defined by $\delta_x(f) = f(x)$ is called the (Dirac) evaluation functional at $x$.
 \end{definition}
@@ -83,7 +83,7 @@ RKHSs are particularly well behaved in this respect, compared to other Hilbert s
 
 %The continuity condition also represents the weakest condition required for both the existence of an inner product and the evaluation of every function in $\cF$ at every point in the domain $\cX$.
 
-\index{Riesz representation}
+\index{Riesz representation theorem}
 While the continuity condition by definition is what makes an RKHS, it is neither easy to check this condition in practice, nor is it intuitive as to the meaning of its name.
 In fact, there isn't even any mention of what a reproducing kernel actually is.
 In order to benefit from the desirable continuity property of RKHS, we should look at this from another, more intuitive, perspective. 
@@ -192,7 +192,7 @@ The rest of this section is a consideration of these assertions, addressed by th
 
 \begin{theorem}[RKHS uniqueness]\label{thm:rkhsunique}
   \index{RKHS!uniqueness}
-  \index{inequality!Cauchy-Schwarz}
+  \index{Cauchy-Schwarz inequality}
   Let $\cF$ be a Hilbert space of functions over $\cX$.
   $\cF$ is an RKHS if and only if $\cF$ has a reproducing kernel $\hXXR$, and that $h$ is unique to $\cF$.
 \end{theorem}
@@ -222,7 +222,7 @@ The rest of this section is a consideration of these assertions, addressed by th
 \end{proof}
 
 \begin{theorem}[Moore-Aronszajn]\label{thm:moorea}
-  \index{Moore-Aronszajn}
+  \index{Moore-Aronszajn theorem}
   If $\hXXR$ is a positive-definite function then there exists a unique RKHS whose reproducing kernel is $h$.
 \end{theorem}
 

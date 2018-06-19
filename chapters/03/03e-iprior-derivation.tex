@@ -1,3 +1,4 @@
+\index{maximum entropy}
 In the introductory chapter \colp{\cref{chapter1}}, we discussed that unless the regression function $f$ is regularised (for instance, using some prior information), the ML estimator of $f$ is likely to be inadequate.
 In choosing a prior distribution for $f$, we appeal to the principle of maximum entropy \citep{jaynes1957a,jaynes1957b,jaynes2003probability}, which states that the probability distribution which best represents the current state of knowledge is the one with largest entropy.
 In this section, we aim to show the relationship between the Fisher information for $f$ and its maximum entropy prior distribution.
@@ -6,6 +7,7 @@ Let $(\Theta,D)$ be a metric space and let $\nu = \nu_D$ be a volume measure ind
 In addition, assume $\nu$ is a probability measure over $\Theta$ so that $(\Theta,\cB(\Theta),\nu)$ is a Borel probability space.
 
 \begin{definition}[Entropy]\label{def:entropy}
+  \index{entropy}
   Denote by $p$ a probability density over $\Theta$ relative to $\nu$.
   Suppose that $\int p\log p \dint \nu < \infty$, i.e. $p \log p$ is Lebesgue integrable and belongs to the space $\text{L}^1(\Theta,\nu)$.
   The entropy of a distribution $p$ over $\Theta$ relative to a measure $\nu$ is defined as
@@ -14,6 +16,7 @@ In addition, assume $\nu$ is a probability measure over $\Theta$ so that $(\Thet
   \end{align}
 \end{definition}
 
+\index{variational!calculus}
 In deriving the maximum entropy distribution, we will need to maximise the functional $H$ with respect to $p$.
 Typically, this is done using calculus of variations techniques, and standard calculations \colp{\cref{apx:funcder}, \mypageref{apx:funcder}} reveal that the functional derivative of $H(p)$ with respect to $p$, denoted $\partial H/\partial p$, is equal to $- 1 - \log p$. 
 We now present another well known result from information theory, regarding the form of the maximum entropy distribution.
@@ -22,7 +25,8 @@ We now present another well known result from information theory, regarding the 
   Let $(\Theta,D)$ be a metric space, $\nu=\nu_D$ be a volume measure induced by $D$, and $p$ be a probability density function on $\Theta$.
   The entropy maximising density $\tilde p$, which satisfies
   \[
-    \argmax_{p\in\L^2(\Theta,\nu)} H(p) = - \int_\Theta \tilde p(\theta) \log \tilde p(\theta) \dint\nu(\theta),
+    \argmax_{p\in\L^2(\Theta,\nu)} 
+    \left\{ H(p) = - \int_\Theta  p(\theta) \log  p(\theta) \dint\nu(\theta) \right\},
   \]
   subject to the constraints
   \begin{align*}
@@ -66,6 +70,7 @@ We now present another well known result from information theory, regarding the 
   Now, if $\Theta \equiv \bbR^m$ and $\nu$ is the Lebesgue measure, then $D(\theta,\theta_0)^2 = \norm{\theta-\theta_0}_{\bbR^m}^2$, so $\tilde p$ is recognised as a multivariate normal density centred at $\theta_0$ with identity covariance matrix.
 \end{proof}
 
+\index{I-prior!theorem|(}
 Returning to the normal regression model of \cref{eq:model1} subject to \cref{eq:model1ass}, we shall now derive the maximum entropy prior for $f$ in some RKKS $\cF$.
 One issue that we have is that the set $\cF$ is potentially ``too big'' for the purpose of estimating $f$, that is, for certain pairs of functions $\cF$, the data do not allow an assessment of whether one is closer to the truth than the other.
 In particular, the data do not contain information to distinguish between two functions $f$ and $g$ in $\cF$ for which $f(x_i) = g(x_i), i=1,\dots,n$.
@@ -80,12 +85,12 @@ We now state and prove the main I-prior theorem.
   Let $\nu$ be a volume measure induced by the norm $\norm{\cdot}_{\cF_n} = \sqrt{\ip{\cdot,\cdot}_{\cF_n}}$.
   With $f_0 \in \cF$, let $\cD_0$ be the class of distributions $p$ such that 
   \[
-    \E\big[\norm{f-f_0}^2_{\cF_n}\big] = \int_{\cF_n} \norm{f-f_0}^2_{\cF_n} \, p(f) \dint \nu(f) = \const
+    \E\big(\norm{f-f_0}^2_{\cF_n}\big) = \int_{\cF_n} \norm{f-f_0}^2_{\cF_n} \, p(f) \dint \nu(f) = \const
   \]
   Denote by $\tilde p$ the density of the entropy maximising distribution among the class of distributions within $\cD_0$.
   Then, $\tilde p$ is Gaussian over $\cF$ with mean $f_0$ and covariance function equal to the reproducing kernel of $\cF_n$, i.e.
   \[
-    \Cov\big[f(x),f(x')\big] = h_n(x,x').
+    \Cov\big(f(x),f(x')\big) = h_n(x,x').
   \]
   We call $\tilde p$ the \emph{I-prior} for $f$.
 \end{theorem}
@@ -126,20 +131,20 @@ We now state and prove the main I-prior theorem.
     &= \langle f_0,f' \rangle_{\cF} + 
     \E \left[ \sum_{i=1}^n w_i \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF} \right] \\
     &= \langle f_0,f' \rangle_{\cF} + 
-     \sum_{i=1}^n \cancelto{0}{\E [w_i]} \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF} \\
+     \sum_{i=1}^n \cancelto{0}{\E w_i} \left\langle  h(\cdot,x_i), f' \right\rangle_{\cF} \\
     &= \langle f_0,f' \rangle_{\cF},
   \end{align*}
   so $\mu \equiv f_0$. 
   
   Following \cref{def:covoper} \colp{\mypageref{def:covoper}}, the covariance between two evaluation functionals of $f$ is shown to satisfy 
   \begin{align*}
-    \Cov\big[f(x),f(x')\big] 
-    &= \Cov\big[\ip{f,h(\cdot,x)}_{\cF}, \ip{f,h(\cdot,x')}_{\cF} \big] \\
+    \Cov\big(f(x),f(x')\big)
+    &= \Cov\big(\ip{f,h(\cdot,x)}_{\cF}, \ip{f,h(\cdot,x')}_{\cF} \big) \\
     &= \E\big[\ip{f-f_0,h(\cdot,x)}_{\cF}\ip{f-f_0,h(\cdot,x')}_{\cF} \big].
   \end{align*}
   Then, making use of the reproducing property of $h$ for $\cF$, we have that
   \begin{align*}
-    \Cov\big[f(x),f(x')\big]
+    \Cov\big(f(x),f(x')\big)
     &= \E \left[ 
     \left\langle \sum_{i=1}^n h(\cdot,x_i)w_i, h(\cdot,x) \right\rangle_{\cF} 
     \left\langle \sum_{j=1}^n h(\cdot,x_j)w_j, h(\cdot,x') \right\rangle_{\cF} 
@@ -165,3 +170,4 @@ Equivalently, this may be written as a Gaussian process-like prior
   \big(f(x_1),\dots,f(x_n) \big)^\top \sim \N(\bff_0,\bH_\eta\bPsi\bH_\eta),
 \end{align}
 where $\bff_0 = \big(f_0(x_1),\dots,f_0(x_n) \big)^\top$ is the vector of prior mean functional evaluations, and $\bH_\eta = \big(h_\eta(x_i,x_j)\big)_{i,j=1}^n$ is the kernel matrix.
+\index{I-prior!theorem|)}

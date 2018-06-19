@@ -1,10 +1,13 @@
+\index{regression}
 In the introductory chapter \colp{\cref{sec:introregmod}}, we described several interesting regression models.
 The goal of this section is to formulate the I-prior model that describes each of these models.
 This is done by carefully choosing the RKHS/RKKS $\cF$ of real functions over a set $\cX$ to which the regression function $f$ belongs.
 Without loss of generality and for simplicity, assume a prior mean of zero for the I-prior distribution.
 
 \subsection{Multiple linear regression}
+\index{linear regression|(}
 
+\index{canonical!kernel/RKHS}
 Let $\cX\equiv \bbR^p$ be equipped with the regular Euclidean dot product, and $\cF_\lambda$ be the scaled canonical RKHS of functions over $\cX$ with kernel $h_\lambda(\bx,\bx') = \lambda \bx^\top\bx'$, for any two $\bx,\bx'\in\bbR^p$. 
 Then, an I-prior on $f$ implies that 
 \begin{align*}
@@ -54,10 +57,11 @@ This approach is disadvantageous when $p$ is large, in which case there would be
   See \cref{misc:gprior} for a discussion.
 \end{remark}
 
-
+\index{linear regression|)}
 
 \subsection{Multilevel linear modelling}
 \label{sec:multilevelmodels}
+\index{multilevel model|(}
 
 Let $\cX\equiv\bbR^p$, and suppose that alongside the covariates, there is information on group levels $\cM= \{1,\dots,m\}$ for each unit $i$.
 That is, every observation for unit $i$ is known to belong to a specific group $j$, and we write $\bx_i^{(j)}$ to indicate this.
@@ -65,6 +69,8 @@ Let $n_j$ denote the sample size for cluster $j$, and the overall sample size be
 When modelled linearly with the responses $y_i^{(j)}$, the model is known as a multilevel (linear) model, although it is known by many other names: random-effects models, random coefficient models, hierarchical models, and so on.
 As this model is seen as an extension of linear models, applications are plenty, especially in research designs for which the data varies at more than one level.
 
+\index{ANOVA}
+\index{canonical!kernel/RKHS}
 Consider a functional ANOVA decomposition of the regression function as follows:
 \begin{align}\label{eq:anovamultilevel}
   f(\bx_i^{(j)}, j) = \alpha + f_1(\bx_i^{(j)}) + f_2(j) + f_{12}(\bx_i^{(j)}, j).  
@@ -142,7 +148,10 @@ In addition, one may add flexibility to the model in two possible ways:
 %  If $\iota:(i,j)\mapsto k$ is a function which maps the dual index set $(i,j)$ to the single index set $k\in\{1,\dots,n\}$, then the multilevel regression function can be expressed as the regression function in model \cref{eq:model1}.
 %\end{remark}
 
+\index{multilevel model|)}
+
 \subsection{Longitudinal modelling}
+\index{longitudinal model|(}
 
 Longitudinal or panel data observes covariate measurements $x_i\in\cX$ and responses $y_i(t)\in\bbR$ for individuals $i=1,\dots,n$ across a time period $t \in \{1,\dots,T\} =: \cT$. 
 Often, the time indexing set $\cT$ may be unique to each individual $i$, so measurements for unit $i$ happens across a time period $\{t_{i1},\dots,t_{iT_i} \} =: \cT_i$---this is known as an unbalanced panel.
@@ -158,6 +167,12 @@ In reality, the I-prior induces time dependence of the observations via the kern
 Additionally, the random vectors $\bepsilon_i$ and $\bepsilon_{i'}$ are assumed to be independent for any two distinct $i,i'\in\{1,\dots,n\}$.
 %, in which case, $y_i(t)$ are viewed as multidimensional responses.
 
+\index{ANOVA}
+\index{canonical!kernel/RKHS}
+\index{polynomial!kernel/RKHS}
+\index{Pearson!kernel/RKHS}
+\index{fBm!kernel/RKHS}
+\index{SE!kernel/RKHS}
 Motivated by a functional ANOVA decomposition, we obtain
 \begin{align}\label{eq:longitudinalanova}
 \begin{split}
@@ -168,22 +183,30 @@ Motivated by a functional ANOVA decomposition, we obtain
 \end{align}
 where $\alpha$ is an overall constant, and each of the ANOVA component functions belongs to the appropriate (tensor product) space as described in \cref{sec:anovarkks} \colp{\mypageref{sec:anovarkks}}.
 $\cF_1$ is the Pearson RKHS, but choices for $\cF_2$ and $\cF_3$ are plentiful.
-In fact, any of the RKHS/RKKS described in Chapter 3 can be used to either model a linear dependence (canonical RKHS), nominal dependence (Pearson RKHS), polynomial dependence (polynomial RKKS) or smooth dependence (fBm or SE RKHS) on the $x_i$'s and $t$'s on $f$.
+In fact, any of the RKHS/RKKS described in \cref{chapter3} can be used to either model a linear dependence (canonical RKHS), nominal dependence (Pearson RKHS), polynomial dependence (polynomial RKKS) or smooth dependence (fBm or SE RKHS) on the $x_i$'s and $t$'s on $f$.
+
+\index{longitudinal model|)}
 
 \subsection{Classification}
 \label{sec:naiveclass}
+\index{classification!naive@naïve|(}
 \input{05a-naive}
+\index{classification!naive@naïve|)}
 
 \subsection{Smoothing models}
+\index{smoothing model|(}
 
+\index{fBm}
 Single- and multi-variable smoothing models can be fitted under the I-prior methodology using the fBm RKHS.
 In standard kernel based smoothing methods, the squared exponential kernel is often used, and the corresponding RKHS contains analytic functions.
 There are several attractive properties of using the fBm RKHS, and for one-dimensional smoothing, these are discussed below.
 
+\index{centring, RKHS}
+\index{empirical distribution}
 Assume that, up to a constant, the regression function lies in the scaled, centred fBm RKHS $\cF$ of functions over $\cX \equiv \bbR$ with Hurst index $1/2$.
 Thus, with a centring with respect to the empirical distribution $\Prob_n$ of $\{x_1,\dots,x_n\}$ and using the absolute norm on $\bbR$, $\cF$ has kernel
 \[
-  h_\lambda(x,x') = \frac{\lambda}{2n^2} \sum_{i=1}^n\sum_{j=1}^n \big( \abs{x-x_i} + \abs{x'-x_j} - \abs{x-x'} - \abs{x_i-x_j} \big).
+  h_\lambda(x,x') = \frac{\lambda}{2n^2} \sum_{i=1}^n\sum_{j=1}^n \Big( \abs{x-x_i} + \abs{x'-x_j} - \abs{x-x'} - \abs{x_i-x_j} \Big).
 \]
 As proven by \citet[Section 10]{van2008reproducing}, $\cF$ contains absolutely continuous functions possessing a square integrable weak derivative satisfying $f(0)=0$.
 The norm is given by $\norm{f}^2_\cF = \int \dot f^2 \dint x$.
@@ -203,12 +226,13 @@ Under the I-prior with an iid assumption on the errors, the $w_i$'s are zero mea
 The I-prior for $f$ is piecewise linear with knots at $x_1,\dots,x_n$, and the same holds true for the posterior mean.
 The implication is that the I-prior automatically adapts to irregularly spaced $x_i$: in any region where there are no observations, the resulting smoother is linear.
 This is explained by the reduced Fisher information about the derivative of the regression curve in regions with no observation.
+\index{Brownian bridge}
 
 In \citet{bergsma2017}, it is shown that the covariance function for $\beta$ is 
 \[
-  \Cov\big[\beta(x),\beta(x') \big] = n \big( \min\{\Prob_n(X < x), \Prob_n(X_n < x') \} -  \Prob_n(X < x) \Prob_n(X_n < x') \big) 
+  \Cov\big(\beta(x),\beta(x') \big) = n \big( \min\{\Prob_n(X < x), \Prob_n(X_n < x') \} -  \Prob_n(X < x) \Prob_n(X_n < x') \big) 
 \]
-From this, notice that $\Var \big[\beta(x)\big] = \Prob_n(X_n < x)\big(1 - \Prob_n(X_n < x) \big)$, which shows an automatic boundary correction: close to the boundary there is little Fisher information on the derivative of the regression function $\beta(x)$, so the prior variance is small.
+From this, notice that $\Var \big(\beta(x)\big) = \Prob_n(X_n < x)\big(1 - \Prob_n(X_n < x) \big)$, which shows an automatic boundary correction: close to the boundary there is little Fisher information on the derivative of the regression function $\beta(x)$, so the prior variance is small.
 This will lead to more shrinkage of the posterior derivative of $f$ towards the derivative of the prior mean $f_0$.
 
 %\[
@@ -243,8 +267,11 @@ The Hurst parameter $\gamma \in (0,1)$ of the fBm RKHS can also be treated as a 
   Unlike I-priors however, cubic spline smoothers do not have automatic boundary corrections, and typically the additional assumption is made that the smoothing curve is linear at the boundary knots.
 \end{remark}
 
+\index{smoothing model|)}
+
 \subsection{Regression with functional covariates}
 \label{sec:regfunctionalcov}
+\index{functional regression|(}
 
 Suppose that we have functional covariates $x$ in the real domain, and that $\cX$ is a set of differentiable functions.
 If so, it is reasonable to assume that $\cX$ is a Hilbert-Sobolev space with inner product
@@ -264,6 +291,8 @@ For discretised observations at non-regular intervals $\{t_1,\dots,t_T\}$ then a
 \[
   \langle x,x' \rangle_\cX \approx \sum_{i=1}^{T-1} \frac{(z_{t_{i+1}} - z_{t_i})(z'_{t_{i+1}} - z_{t_i}')}{t_{i+1} - t_{i}}.
 \]
+
+\index{functional regression|)}
 
 %\subsection{Structural equation modelling}
 %

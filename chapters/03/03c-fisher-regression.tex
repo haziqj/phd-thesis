@@ -1,3 +1,4 @@
+\index{regression}
 We are now equipped to derive the Fisher information for our regression function.
 For convenience, we restate the regression model and its assumptions.
 The regression model relating response variables $y_i \in \bbR$ and the covariates $x_i \in \cX $, for $i=1,\dots,n$ is
@@ -75,6 +76,8 @@ The above lemma gives the form of the Fisher information for $f$ in a rather abs
 Consider the following example of applying \cref{thm:fisherregf} to obtain the Fisher information for a standard linear regression model.
 
 \begin{example}[Fisher information for linear regression]
+  \index{inner product!dot product}
+  \index{outer product|seealso{tensor product}}
   As before, suppose model \cref{eq:model1} subject to \cref{eq:model1ass} and $f\in\cF$, a RKHS.
   For simplicity, we assume iid errors, i.e. $\bPsi = \psi \bI_n$.
   Let $\cX = \bbR^p$, and the feature space $\cV = \bbR^p$ be equipped with the usual dot product $\ip{\cdot,\cdot}_\cV:\cV \otimes \cV \to \bbR$ defined by $v^\top v$.

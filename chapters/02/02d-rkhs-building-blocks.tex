@@ -39,7 +39,7 @@ The space $\cF$ can be equipped with a norm to form an RKHS, as shown in the fol
 \subsection{The canonical (linear) RKHS}
 
 \index{canonical!kernel/RKHS}
-\index{Riesz representation}
+\index{Riesz representation theorem}
 Consider a function space $\cF$ over $\cX$ which consists of functions of the form $f_\beta:\cX\to\bbR$, $f_\beta: x \mapsto \ip{x,\beta}_\cX$ for some $\beta\in\bbR$.
 Suppose that $\cX \equiv \bbR^p$, then $\cF$ consists of the linear functions $f_\beta(x) = x^\top\beta$.
 More generally, if $\cX$ is a Hilbert space, then its continuous dual consists of elements of the form $f_\beta = \ip{\cdot,\beta}_\cX$ by the Riesz representation theorem.
@@ -128,14 +128,14 @@ Suppose $B_\gamma(t)$ is a continuous-time Gaussian process on $[0,T]$, i.e. for
 $B_\gamma(t)$ is said to be a \emph{fractional Brownian motion} (fBm) if $\E [B_\gamma(t)] = 0$ for all $t \in [0,T]$ and 
 \vspace{-0.5em}
 \[
-  \Cov\big[ B_\gamma(t),B_\gamma(s) \big] = \half\big( |t|^{2\gamma} + |s|^{2\gamma} - |t-s|^{2\gamma} \big) \hspace{1cm} \forall t,s \in [0,T],
+  \Cov\big( B_\gamma(t),B_\gamma(s) \big) = \half\big( |t|^{2\gamma} + |s|^{2\gamma} - |t-s|^{2\gamma} \big) \hspace{1cm} \forall t,s \in [0,T],
 \]
 where $\gamma \in (0,1)$ is called the \emph{Hurst index}, \emph{Hurst parameter} or even \emph{Hurst coefficient}.
 Introduced by \citet{mandelbrot1968fractional}, fBms are a generalisation of Brownian motion.
 The Hurst parameter plays two roles: 1) it describes the raggedness of the resultant motion, with higher values leading to smoother motion; and 2) it determines the type of process the fBm is, as past increments of $B_\gamma(t)$ are weighted by $(t-s)^{\gamma-1/2}$.
 When $\gamma=1/2$ exactly, the fBm is a standard Brownian motion and its increments are independent; when $\gamma > 1/2$ (resp. $\gamma < 1/2$) its increments are positively (resp. negatively) correlated.
 
-\index{identity!polarisation}
+\index{polarisation identity}
 \index{feature map/space}
 Now, let $\cX$ be a Hilbert space. 
 \citet[Theorem 3]{schoenberg1937} has shown that, for $0 < \gamma\leq 1$, there exists a Hilbert space $\cV$ and a function $\phi_\gamma:\cX\to\cV$ such that $\forall x,x' \in \cX$,
@@ -197,7 +197,7 @@ Unlike realisations of actual fBm paths with Hurst index $\gamma$, which are wel
 \end{proposition}
 
 \begin{proof}
-  \index{inequality!Cauchy-Schwarz}
+  \index{Cauchy-Schwarz inequality}
   For some $f \in \cF$ we have $f(x) = \ip{f,h(\cdot,x)}_\cF$ by the reproducing property of the kernel $h$ of $\cF$.
   It follows from the Cauchy-Schwarz inequality that for any $x,x'\in\cX$,
   \begin{align*}

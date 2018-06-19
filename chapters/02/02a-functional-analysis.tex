@@ -37,8 +37,8 @@ This is defined below.
 	\end{itemize}
 \end{definition}
 
-\index{inequality!triangle}
-\index{inequality!Cauchy-Schwarz}
+\index{triangle inequality}
+\index{Cauchy-Schwarz inequality}
 \index{parallelogram law}
 \index{polarisation identity}
 The subadditivity property is also known as the \emph{triangle inequality}.
@@ -95,7 +95,7 @@ For Hilbert spaces, each closed subspace is also complete, and thus a Hilbert sp
 Although, as a remark, not every Hilbert subspace need be closed, and therefore complete. 
 
 \index{operator!linear|see{linear map}}
-\index{operator!bilinear}
+\index{operator!bilinear|see{bilinear map}}
 \index{linear!map}
 \index{linear!functional}
 \index{bilinear!map}
@@ -127,8 +127,8 @@ To establish terminology, we define linear and bilinear maps (operators).
 An interesting property of these operators to look at, besides linearity, is whether or not they are \emph{continuous}.
 
 \begin{definition}[Continuity]\label{def:continuity}
-  \index{continuity}
-  \index{continuity!uniform}
+  \index{continuous}
+  \index{continuous!uniform}
   Let $\cF$ and $\cG$ be two Hilbert spaces.
   A function $A:\cF\to\cG$ is said to be \emph{continuous at $g\in\cF$}, if for every $\epsilon>0$, $\exists \delta=\delta(\epsilon,g)>0$ such that
   \[
@@ -142,7 +142,7 @@ Continuity in the sense of linear operators here means that a convergent sequenc
 For a particular linear operator, the evaluation functional, this means that closeness in norm implies pointwise closeness---this relates to RKHSs, which is discussed in \cref{sec:rkhstheory}.
 There is an even stronger notion of continuity called  \emph{Lipschitz continuity}.
 
-\index{continuity!Lipschitz}
+\index{continuous!Lipschitz}
 \begin{definition}[Lipschitz continuity]
   Let $\cF$ and $\cG$ be two Hilbert spaces.  
   A function $A:\cF\to\cG$ is \emph{Lipschitz continuous} if $\exists M >0$ such that $\forall f,f'\in\cF$,
@@ -156,6 +156,7 @@ Clearly, Lipschitz continuity implies uniform continuity: choose $\delta = \delt
 A continuous, linear operator is also one that is bounded.
 
 \index{operator!bounded}
+\index{bounded}
 \begin{definition}[Bounded operator]\label{def:boundedop}
   The linear operator $A:\mathcal F \rightarrow \mathcal G$ between two Hilbert spaces $\cF$ and $\cG$ is said to be \emph{bounded} if there exists some $M>0$ such that
   \[
@@ -198,9 +199,9 @@ take any $A\in\cF^\vee$; since $A$ is finite-dimensional, it is bounded, and the
 For infinite-dimensional Hilbert spaces, this is not so, but in any case, we will only be considering the continuous dual space in this thesis.
 The following result is an important one, which states that continuous linear functionals of an inner product space are nothing more than inner products.
 
-\index{Riesz-Fréchet|see{Riesz representation}}
-\index{Riesz representation}
+\index{Riesz-Fréchet theorem|see{Riesz representation theorem}}
 \begin{theorem}[Riesz-Fréchet]
+  \index{Riesz representation theorem}
   Let $\cF$ be a Hilbert space.
   Every element $A$ of the continuous dual space $\cF^*$, i.e. all continuous linear functionals $A:\cF\to\bbR$, can be uniquely written in the form $\ip{\cdot,g}_\cF =: A_g \in \cF^*$, for some $g\in\cF$. 
   Moreover, $\norm{g}_\cF = \norm{A_g}_{\cF^*}$.
@@ -216,7 +217,7 @@ The following result is an important one, which states that continuous linear fu
 \end{remark}
 
 \index{isometry}
-\index{isomorphic}
+\index{isomorphism}
 The notion of isometry (transformation that preserves distance) is usually associated with metric spaces; two metric spaces being isometric means that they identical as far as their metric properties are concerned.
 For Hilbert spaces (and more generally, for normed spaces), there is an analogous concept as well in \emph{isometric isomorphism} (a bijective isometry), such that two Hilbert spaces being isometrically isomorphic imply that they have exactly the same geometric structure, but may very well contain fundamentally different objects.
 
@@ -242,7 +243,7 @@ Implicitly, this means that $\cF^*$ is a Hilbert space as well.
 \index{orthogonal!projection}
 \index{orthogonal!complement}
 \index{orthogonal!decomposition}
-\index{identity!polarisation}
+\index{polarisation identity}
 Another important type of mapping is the mapping $P$ of an element in $\cF$ onto a closed subspace $\cG\subset\cF$, such that $Pf \in \cG$ is closest to $f$.
 This mapping is called the \emph{orthogonal projection}, due to the fact that such projections yield perpendicularity in the sense that $\ip{f-Pf,g}_\cF = 0$ for any $g\in\cG$.
 Consequently, we see that $\norm{f}_\cF^2 = \norm{Pf}_\cF^2 + \norm{f-Pf}_\cF^2$ from the polarisation identity.
@@ -367,8 +368,9 @@ For $x_1,y_1\in\cH_1$ and $x_2,y_2\in\cH_2$, these are:
   3) as a bilinear mapping $\bA:\bbR^n \times \bbR^m \to \bbR$ in the form of $\bA(y_1,y_2) = y_1^\top\bA y_2 = y_1^\top x_1 x_2^\top y_2 = (y_1^\top x_1)(y_2^\top x_2)$, for some $y_1\in\bbR^n$ and $y_2\in\bbR^m$, arising often in the study of quadratic forms.
 \end{remark}
 
-\index{sigma algebra|see{Borel}}
-\index{Borel}
+\index{sigma algebra|seealso{Borel space}}
+\index{sigma algebra}
+\index{Borel space}
 For the last part of this introductory section on functional analysis, we discuss measures on Hilbert spaces, and in particular, a probability measure.
 Let $\cH$ be a real Hilbert space. 
 As discussed earlier, we can define a metric on $\cH$ using $D(x,x') = \norm{x-x'}_\cH$, where the norm on $\cH$ is the norm induced by the inner product.

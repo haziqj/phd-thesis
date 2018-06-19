@@ -13,6 +13,7 @@ For $j=1,\dots,m$, we model
 The idea here being that we attempt to model the class responses $y_{ij}$ using class-specific regression functions $f_j$, and the class responses are assumed to be independent among individuals, but may or may not be correlated among classes for each individual.
 The class correlations are manifest themselves in the variance of the errors $\bPsi^{-1}$, which is an $m\times m$ matrix.
 
+\index{ANOVA}
 Denote the regression function $f$ in \cref{eq:naiveclassmod} on the set $\cX\times\cM$ as $f(x_i,j) = \alpha_j + f_j(x_i)$.
 This regression function corresponds to an ANOVA decomposition of the spaces $\cF_\cM$ and $\cF_\cX$ of functions over $\cM$ and $\cX$ respectively. 
 That is, $\cF = \cF_\cM \oplus (\cF_\cM \otimes \cF_\cX)$ is a decomposition into the main effects of `class', and an interaction effect of the covariates for each class.
@@ -22,7 +23,7 @@ Then, the ANOVA RKKS $\cF$ possesses the reproducing kernel $h_\eta:(\cX \times 
   h_\eta\big( (x,j), (x',j') \big) = a(j,j') + a(j,j')b_\eta(x,x').  
 \end{align}
 The kernel $b_\eta$ may be any of the kernels described in this thesis, ranging from the linear kernel, to the fBm kernel, or even an ANOVA kernel.
-Choices for $a:\cM \times \cM \to \bbR$ include 
+Choices for $a:\cM \times \cM \to \bbR$ include \index{Pearson!kernel/RKHS} \index{identity kernel}
 \begin{enumerate}
   \item \textbf{The Pearson kernel} (as defined in \cref{def:pearson}, \mypageref{def:pearson}). With $J\sim\Prob$, a probability measure over $\cM$,
   \[
