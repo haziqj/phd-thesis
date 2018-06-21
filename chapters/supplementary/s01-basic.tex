@@ -1,6 +1,7 @@
+\index{frequentist}
 Statistics concerns what can be learned from data \citep{davison2003statistical}.
 A statistical model comprises of a probabilistic component which drives the data generative process, in addition to a systematic or deterministic component, which sets it apart from pure mathematical models.
-Real-valued observations $\by := \{y_1,\dots,y_n\}$ are treated as realisations from an assumed probability distribution with parameters $\theta = (\theta_1,\dots,\theta_p)^\top \in \Theta$.
+Real-valued observations $\by := \{y_1,\dots,y_n\}$ are treated as realisations from an assumed probability distribution with parameters $\theta = (\theta_1,\dots,\theta_p)^\top \in \Theta \subseteq \bbR^p$.
 The crux of statistical inference is to estimate $\theta$ given the observed values, so that this optimised value may be used in the model to make deductions.
 We describe the \emph{frequentist} and \emph{Bayesian} paradigms for parameter estimation.
 
@@ -9,6 +10,8 @@ We describe the \emph{frequentist} and \emph{Bayesian} paradigms for parameter e
 In the frequentist setting, the \emph{likelihood} function, or simply likelihood, is a function of the parameters $\theta$ which measures the plausibility of the parameter value given the observed data to fit a statistical model.
 It is defined as the mapping $\theta \mapsto p(\by|\theta)$, where $p(\by|\theta)$ is the probability density function (or in the case of discrete observations, the probability mass function) of the modelled distribution of the observations.
  
+\index{ML}
+\index{log-likelihood}
 It is logical to consider the parameter set which provides the largest likelihood value,
 \begin{equation}\label{eq:ml}
   \hat\theta_{\text{ML}} = \argmax_\theta p(\by|\theta).
@@ -16,6 +19,7 @@ It is logical to consider the parameter set which provides the largest likelihoo
 The value $\hat\theta$ is referred to as the \emph{maximum likelihood estimate} for $\theta$.
 For convenience, the \emph{log-likelihood} function $L(\theta) = \log p(\by|\theta)$ is maximised instead; as the logarithm is a monotonically increasing function, the maximiser of the log-likelihood function is exactly the maximiser of the likelihood function itself.
 
+\index{gradient-based method}
 When ML estimates are unable to be found in closed-form, the maximisation problem of \cref{eq:ml} requires iterative, numerical methods to find the maximum.
 These methods are often \emph{gradient-based} methods, algorithms that make use of the gradient of the objective function to be optimised.
 Examples include Newton's method, Fisher's scoring, quasi-Newton methods, gradient descent, and conjugate gradient methods.
@@ -23,9 +27,12 @@ As the name suggests, these methods require evaluation of gradients or approxima
 Depending on the situation, gradients or Hessians can be expensive or inconvenient to compute or approximate.
 In cases of multi-modality of the objective function, the algorithms can potentially converge to a local optima, as it is known that the algorithms are quite sensitive to starting locations.
 
+\index{efficiency}
+\index{Cramer-Rao lower bound@Cramér-Rao lower bound}
 Besides invariance, the ML estimate comes with the attractive limiting property $\surd{n}(\hat\theta_{\text{ML}} - \theta_{\text{true}}) \xrightarrow{\text{dist.}} \N_p\big(0,\cI(\theta)^{-1}\big)$ \citep{casella2002statistical} as sample size $n\to\infty$, where $\cI(\theta)$ is the Fisher information for $\theta$.
-Other asymptotic properties of the ML estimate include consistency, i.e. $\Prob(\Vert \hat\theta_{\text{ML}} - \theta_{\text{true}}\Vert > \epsilon) \xrightarrow{\text{prob.}} 0$ for any $\epsilon>0$, and efficiency, i.e. it achieves the Cramér-Rao lower bound $\Var[\theta_{\text{ML}}] \geq \cI(\theta)^{-1}$.
+Other asymptotic properties of the ML estimate include consistency, i.e. $\Prob(\Vert \hat\theta_{\text{ML}} - \theta_{\text{true}}\Vert > \epsilon) \xrightarrow{\text{prob.}} 0$ for any $\epsilon>0$, and efficiency, i.e. it achieves the Cramér-Rao lower bound $\Var(\theta_{\text{ML}}) \geq \cI(\theta)^{-1}$.
 
+\index{likelihood ratio test}
 As the likelihood measures the plausibility of a parameter value given the data, it can be used to compare two competing models.
 Let $\Theta_0 = \{\theta \,|\, \theta_{d+1} = \theta_{d+1,0},\dots,\theta_{p} = \theta_{p,0} \}$ be the set of parameters with restrictions on the last $d$ components of $\theta$.
 The \emph{likelihood ratio test} statistic for testing the null hypothesis $\text{H}_0: \theta \in \Theta_0$ against the alternative $\text{H}_1: \theta \notin \Theta_0$ is
@@ -42,6 +49,8 @@ Overfitting is an oft cited problem of maximum likelihood.
 
 \section{Bayesian estimation}
 
+\index{subjective Bayes}
+\index{objective Bayes}
 The \emph{Bayesian} approach to estimating $\theta$ takes a different outlook, in that it supplements what is already known from the data with additional information in the form of prior beliefs about the parameters.
 This usually means treating the parameters as random, following some distribution dictated by a \emph{prior density} $p(\theta)$.
 There are many ways of categorising different types of priors.
@@ -64,7 +73,9 @@ The \emph{posterior mean}
 \end{equation}
 is normally taken to be the point estimate for $\theta$, with its uncertainty usually reported in the form of a \emph{credible interval}: if $\theta_k$ is the $k$'th component of $\theta$, then a $(1-\alpha) \times 100\%$ credible interval for $\theta_k$ is $(\theta_k^l, \theta_k^u)$, where  $\Prob( \theta_k^l \leq \theta_k \leq \theta_k^u ) = (1-\alpha) \times 100\%$.
 Under a quadratic loss function, $\tilde\theta$ minimises the expected loss $\E[(\theta - \theta_{\text{true}})^2 ]$ \citep[sec. 4.4.2, Result 3]{berger2013statistical}, and is hence also viewed as the \emph{minimum mean squared error} (MMSE) estimator.
+\index{minimum mean squared error}
 
+\index{MCMC}
 On a practical note, integration over the parameter space may be intractable, for instance, the model consists of a large number of parameters for which we would like the posterior mean of, or the marginalising integral cannot be found in closed form.
 Markov chain Monte Carlo (MCMC) methods are the standard way of approximating such integrals, by way of random sampling from the posterior.
 The sample $\{\theta^{(1)},\dots,\theta^{(T)} \}$ is then manipulated in a way to derive its approximation.
@@ -74,22 +85,26 @@ In the case of the posterior mean,
 \end{equation}
 gives an approximation, and its $(1-\alpha) \times 100\%$ credible interval can be approximated using the lower $\alpha/2\times 100\%$ and upper $(1-\alpha/2)\times 100\%$ quantile of the sample.
 
+\index{evidence|see{model evidence}}
+\index{model evidence}
 The normalising constant is the marginal likelihood over the distribution of the parameters, $p(\by) = \int p(\by|\theta) p(\theta) \dint \theta$.
 The quantity $p(\by)$ is also known as the \emph{model evidence}, or simply, \emph{evidence}.
 As its name suggests, model evidence is used as a measure of how much support there is for a particular model.
 As such, it is used as a basis for model comparison.
 Let $p(\by|M_0)$ and $p(\by|M_1)$ be the model evidence for two competing models $M_0$ and $M_1$ respectively.
-Define the \emph{Bayes factor} for comparing model $M_0$ against an alternative model $M_1$ as
+Define the \emph{Bayes factor} for comparing model $M_0$ against an alternative model $M_1$ as\index{Bayes factor}
 \begin{equation}
   \BF(M_0,M_1) = \frac{p(\by|M_0)}{p(\by|M_1)}.
 \end{equation}
 Values of $\BF(M_0,M_1) < 1$ would suggest that the data provides more evidence for model $M_1$ over $M_0$.
 
-Note that the model evidence is free of $\theta$ because the parameters have been marginalised out, or put another way, considered in entirety and averaged over all possible values of $\theta$ drawn from its prior density.
+Note that the model evidence is free of $\theta$ because all of the parameters have been marginalised out, or put another way, considered in entirety and averaged over all possible values of $\theta$ drawn from its prior density.
 Thus, model comparison using Bayes factors differs from the frequentist likelihood ratio comparison in that it does not depend on any one particular set of values for the parameters.
 
 \section{Maximum a posteriori estimation}
 
+\index{maximum a posteriori estimate|see{MAP estimate}}
+\index{MAP estimate}
 One may also find the value of $\theta$ which maximises the posterior,
 \begin{equation}\label{eq:mapest}
   \hat\theta_{\text{MAP}} = \argmax_\theta p(\by|\theta)p(\theta),
@@ -97,7 +112,7 @@ One may also find the value of $\theta$ which maximises the posterior,
 which is the mode of the posterior distribution.
 This quantity is known as the \emph{maximum a posteriori} (MAP) estimate. 
 It is different from the ML estimate in that the maximisation objective is augmented with with the prior density for $\theta$.
-In this sense, MAP estimation can be seen as regularisation of the ML estimation procedure, whereby a `penalty' term is added to avoid overfitting.
+In this sense, MAP estimation can be seen as regularisation of the ML estimation procedure, whereby a ``penalty'' term is added to avoid overfitting.
 
 MAP estimation is often criticised for not being representative of Bayesian methods.
 That is, MAP estimation returns a point estimate with no apparent way of quantifying its uncertainty.
@@ -106,7 +121,7 @@ If $\theta$ is a random variable with density $p(\theta)$, then the pdf of $\xi 
 \begin{equation}\label{eq:pdftransform}
   p_\xi(\xi) = p_\theta\big(g^{-1}(\xi)\big) \left\vert \frac{\d }{\d \xi} g^{-1}(\xi) \right\vert.
 \end{equation}
-The second term in \cref{eq:pdftransform} is called the \emph{Jacobian (determinant)}.
+The second term in \cref{eq:pdftransform} is called the \emph{Jacobian (determinant)}.\index{Jacobian}
 Therefore, a different parameterisation of $\theta$ will impact the location of the maximum because of the introduction of the Jacobian into the optimisation objective \cref{eq:mapest}.
 
 \section{Empirical Bayes}
@@ -138,7 +153,7 @@ This paves the way for using the \emph{maximum marginal likelihood} estimate
   \hat\eta = \argmax_\eta p(\by|\eta) 
 \end{equation}
 in place of $\eta$ in the equation of \cref{eq:empbayes1}.
-This procedure is also coined \emph{maximum likelihood type-II} \citep{bishop2006pattern}, and is commonly referred to as such in the machine learning literature.
+This procedure is also coined \emph{maximum likelihood type-II} \citep{bishop2006pattern}, and is commonly referred to as such in the machine learning literature. \index{ML!Type-II}
 It is also commonplace in statistics, especially in random-effects or latent variable models which employ a maximum likelihood procedure such as EM algorithm.
 
 As a remark, estimation of $\eta$ itself can be made to conform to Bayesian philosophy, i.e., by placing priors on it and inferring $\eta$ through its posterior.

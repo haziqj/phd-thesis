@@ -1,3 +1,4 @@
+\index{variational inference}
 Consider a statistical model parameterised by $\btheta = (\theta_1,\dots,\theta_p)^\top$ for which we have observations $\by := \{y_1,\dots,y_n\}$, but also some latent variables $\bw$.
 Typically, in such models, there is a want to to evaluate the integral 
 \begin{equation}\label{eq:varint2} 
@@ -97,6 +98,7 @@ Landing the correct choice of factorisation is rather experimental, as the aim i
 In a model with both latent variables and random parameters (in a Bayesian setting), then a good starting point would be to factorise the latent variables and parameters.
 \end{remark}
 
+\index{ELBO}
 Let us denote the distributions which minimise the Kullback-Leibler divergence (maximise the variational lower bound) by the use of tildes.
 The impact of the mean-field factorisation on the ELBO is inspected:
 \begin{align*}
@@ -131,7 +133,7 @@ That is, suppose that each complete conditional $p(w_{[k]}|\bw_{-k}, \by)$, wher
 Then, from \cref{eq:qtilde},
 \begin{align*}
   \tilde q(w_{[k]})
-  &\propto \exp\big(\E_{-k}\log p(w_{[k]}| \bw_{-k}, \by) \big) \\
+  &\propto \exp \left( \E_{-k} \left[ \log p(w_{[k]}| \bw_{-k}, \by) \right] \right) \\
   &= \exp \Big(\log B(w_{[k]}) + \E \ip{\zeta_k(\bw_{-k}, \by) , w_{[k]}} - \E [ A(\zeta_k) ] \Big) \\
   &\propto B(w_{[k]})\exp \E\ip{\zeta_\xi(\bw_{-k}, \by) , w_{[k]}}
 \end{align*}
@@ -142,6 +144,7 @@ This stochastic step within a deterministic algorithm has been explored before i
 One notices that the optimal mean-field variational densities for each component are coupled with one another, in the sense that the distribution $\tilde q_k$ depends on the moments of the rest of the components $\bw_{-k}$.
 For very simple problems, an exact solution for each $\tilde q_k$ can be found, but usually, the way around this is to employ an iterative procedure.
 The \emph{coordinate ascent mean-field variational inference} (CAVI) algorithm cycles through each of the distributions in turn, updating them in sequence starting with arbitrary distributions as initial values.
+\index{coordinate ascent variational inference (CAVI)}
 
 \begin{algorithm}[H]
 \caption{The CAVI algorithm}\label{alg:cavi}
@@ -149,7 +152,7 @@ The \emph{coordinate ascent mean-field variational inference} (CAVI) algorithm c
     \State \textbf{initialise} Variational factors $q_k(w_{[k]})$
     \While{ELBO $\cL(q)$ not converged}
       \For{$k = 1,\dots,M$}
-        \State $\tilde q_k(w_{[k]}) \gets \const \times \exp \left( \E_{-k}\log p(\by,\bw) \right)$ \Comment{from \cref{eq:qtilde}}
+        \State $\tilde q_k(w_{[k]}) \gets \const \times \exp \E_{-k}\left[ \log p(\by,\bw) \right]$ \Comment{from \cref{eq:qtilde}}
       \EndFor
       \State $\cL(q) \gets \E_{\bw \sim \prod_k\tilde q_k}\log p(\by, \bw) + \sum_{k=1}^m H\big[ q_k(w_{[k]})\big]$ \Comment{Update ELBO}
     \EndWhile
@@ -163,7 +166,7 @@ The algorithm terminates when there is no more significant improvement in the EL
 A simple solution would be to restart the CAVI at multiple initial values, and the solution giving the highest ELBO is the distribution that is closest to the true posterior.
 
 \section{Variational EM algorithm}
-\label{sec:varEM}
+\label{sec:varEM}\index{variational EM algorithm}
 \input{energy}
 
 Consider again the latent variable setup described in \cref{schap:em}, in which the goal is to maximise the (marginal) log-likelihood of the parameters $\theta$ of the model, after integrating out the latent variables, as given by \cref{eq:varint}.
@@ -211,7 +214,7 @@ At this stage, we have the equality
 
 The term on the left is recognised as the $Q$ function of the E-step
 \[
-  Q(\theta) = Q(\theta|\theta^{(t)}) = \E_\bw\left[ \log p(\by,\bw|\theta) \,\big|\, \by,\theta^{(t)} \right],
+  Q(\theta) = Q(\theta|\theta^{(t)}) = \E_\bw\left( \log p(\by,\bw|\theta) \,\big|\, \by,\theta^{(t)} \right),
 \]
 while the term on the left is an entropy term which does not depend on $\theta$.
 Thus, minimising the KL divergence, or maximising the lower bound $\cL$ with respect to $q$, corresponds to the E-step in the EM algorithm.
@@ -271,7 +274,7 @@ Under a normal posterior, its mean is used as a point estimate, which coincides 
 However, since the output of variational inference are posterior densities instead of a single point estimate, one is able to obtain posterior standard deviations or credibility intervals about the parameters, something which is not so straightforward under a variational EM or even EM framework.
 
 Derivation of the CAVI algorithm and ELBO for specific models is certainly more tedious than the derivation of the variational EM algorithm.
-Often, quantities that are required in the derivation include $\E[\theta]$, $\E[\theta^2]$, $\E[\theta^{-1}]$, $\E[\log \theta]$ or any other moment of some function of $\theta$, where expectations are taken under the approximating $q$ posterior density.
+Often, quantities that are required in the derivation include $\E(\theta)$, $\E(\theta^2)$, $\E(\theta^{-1})$, $\E(\log \theta)$ or any other moment of some function of $\theta$, where expectations are taken under the approximating $q$ posterior density.
 For certain distributions $q(\theta)$ these quantities can be awkward to compute, and may need approximating themselves.
 
 The computational time and storage requirements of variational methods is virtually the same as EM algorithm \citep{beal2003variational,blei2017variational}.
@@ -283,7 +286,7 @@ In variational inference or variational EM, the updating step for the factors in
 for each of the factors of the approximate posterior $q(\bw) = \prod_{k=1}^M q_k(w_{[k]})$.
 In the EM algorithm E-step, one obtains the $Q$ function
 \begin{equation}\label{eq:emEstep1}
-  Q(\theta|\theta^{(t)}) = \E_{\bw}[\log p(\by,\bw)|\by,\theta^{(t)}].
+  Q(\theta|\theta^{(t)}) = \E_{\bw}\big( \log p(\by,\bw)|\by,\theta^{(t)} \big).
 \end{equation}
 We can see that in both equations \cref{eq:viEstep1} and \cref{eq:emEstep1}, there is a need to compute the expectation of the joint log density, but the difference between the variational inference and EM or variational EM lies in the M-step.
 In variational inference one seeks a distribution, while in EM or variational EM one seeks a point estimate (posterior mode) of this distribution.

@@ -1,3 +1,6 @@
+\index{EM algorithm}
+\index{expectation-maximisation algorithm|see{EM algorithm}}
+\index{expectation conditional maximisation algorithm|see{ECM algorithm}}
 Often times, there are unobserved, random variables $\bw=\{w_1,\dots,w_n\}$ that are assumed to make up the data generative process, prescribed in the statistical model through the \emph{joint pdf} $p(\by,\bw|\theta)$.
 Examples of models that include latent variables are plenty: Gaussian mixture models, latent class analysis, factor models, random coefficient models, and so on.
 In order to obtain ML estimates through a direct maximisation of the likelihood, it is necessary to first marginalise out the latent variables via
@@ -9,6 +12,7 @@ In order to obtain ML estimates through a direct maximisation of the likelihood,
 \end{equation}
 and obtain the \emph{marginal likelihood}.
 Note that the integral is replaced by a summation over all possible values in the case of discrete latent variables $\bw$.
+\index{marginal likelihood}
 
 Direct maximisation of the marginal (log-)likelihood might not be favourable due to intractability in obtaining ML solutions.
 The form of the marginal likelihood might might not be conducive for closed-form estimates to be found, necessitating the use of numerical, gradient-based methods which is subject to its own undesirable quirks.
@@ -18,6 +22,8 @@ It is usually the case that if the latent variables $\bw$ were somehow known, es
 That is, the solution to $\argmax_\theta \log p(\by,\bw|\theta)$ can be obtained in a simple manner.
 The expectation-maximisation algorithm \citep{dempster1977maximum}, commonly known as the EM algorithm, is an iterative procedure which exploits the fact that the so-called \emph{complete data likelihood} is easier to work with.
 Correspondingly, in EM terminology, the marginal likelihood is referred to as the \emph{incomplete data likelihood}.
+\index{log-likelihood!complete data}
+\index{log-likelihood!incomplete data}
 
 We describe a derivation of both a general EM algorithm and an EM algorithm for models whose data generative pdf belongs to an exponential family of pdfs. 
 Interestingly, the EM algorithm can be modified to obtain maximum a posteriori estimates or penalised log-likelihood solutions.
@@ -99,10 +105,11 @@ As seen in the argument above, this requirement is sufficient for a guaranteed i
 
 \section{Exponential family EM algorithm}
 \label{apx:expem}
+\index{EM algorithm!exponential family}
 
 Consider the density function $p(\cdot|\btheta)$ of the complete data $\bz = \{\by,\bw\}$, which depends on parameters $\btheta = (\theta_1,\dots,\theta_s)^\top \in\Theta\subseteq\bbR^s$, belonging to an exponential family of distributions.
 This density takes the form $p(\bz|\btheta) = B(\bz) \exp \big( \ip{\bfeta(\btheta), \bT(\bz)} -  A(\btheta) \big)$, where $\bfeta:\bbR^s \mapsto \bbR$ is a link function,  $\bT(\bz) = \big(T_1(\bz),\dots,T_s(\bz)\big)^\top \in \bbR^s$ are the sufficient statistics of the distribution, and $\ip{\cdot,\cdot}$ is the usual Euclidean dot product.
-It is often easier to work in the \emph{natural parameterisation} of the exponential family distribution
+It is often easier to work in the \emph{natural parameterisation} of the exponential family distribution \index{exponential family}
 \begin{align}\label{eq:pdfexpfamnat}
   p(\bz|\bfeta) = B(\bz) \exp \big( \ip{\bfeta, \bT(\bz)} -  A^*(\bfeta) \big)
 \end{align}
@@ -166,6 +173,7 @@ a similar condition to \cref{eq:expEM2} when obtaining ML estimate of $\bfeta$.
 Thus, $Q_t$ is maximised by the solution to line 4 in  \cref{alg:EM3}.
 
 \section{Bayesian EM algorithm}
+\index{EM algorithm!Bayesian}
 
 A simple modification of the EM algorithm can be done to obtain maximum a posteriori estimates, or maximum penalised likelihood estimates.
 Under a Bayesian framework, a prior is assigned on the model parameters, $\theta\sim p(\theta)$.
