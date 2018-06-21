@@ -28,10 +28,10 @@ For the regression model \cref{eq:model1} subject to \cref{eq:model1ass}, stated
   (\epsilon_1,\dots,\epsilon_n) \sim \N_n(\bzero,\bPsi^{-1}) \tag{from \ref{eq:model1ass}} \\
   i = 1,\dots,n, \nonumber
 \end{gather}
-and it is assumed that the regression function $f$ lies in some reproducing kernel Hilbert or Krein space $\cF$ with kernel $h_\eta$ defined over the set of covariates $\cX$.
+and it is assumed that the regression function $f$ lies in some reproducing kernel Hilbert or Kreĭn space (RKHS/RKKS) $\cF$ with kernel $h_\eta$ defined over the set of covariates $\cX$.
 In \cref{chapter2}, we built a primer on basic functional analysis, and described various interesting RKHS/RKKS for regression modelling.
 
-We then ascertained the form of the Fisher information for $f$, treated as a parameter of the model to be estimated, and from \cref{thm:fisherreglinfunc}, it is
+We then ascertained the form of the Fisher information for $f$, treated as a parameter of the model to be estimated, and from \cref{thm:fisherreglinfunc} \colp{\mypageref{thm:fisherreglinfunc}}, it is
 \begin{align*}
   \cI\big(f(x),f(x') \big) 
   &= \sum_{i,j=1}^n \psi_{ij} h_\eta(x,x_i) h_\eta(x',x_j) \\
@@ -52,7 +52,7 @@ and is written equivalently as the Gaussian process prior
 where $\bH_\eta=\big( h_\eta(x_i,x_j) \big)_{i,j=1}^n$.
 
 In \cref{chapter4}, we looked how the I-prior model has wide-ranging applications, from multilevel modelling, to longitudinal modelling, and modelling with functional covariates.
-Estimation was conducted mainly using a simple EM algorithm, although direct optimisation and fully Bayesian estimation using MCMC is also possible.
+Estimation was conducted mainly using a simple EM algorithm, although direct optimisation and fully Bayesian estimation using Markov chain Monte Carlo is also possible.
 In the case of polytomous responses, we used a latent variable framework in \cref{chapter5} to assign I-priors to latent propensities which drive the outcomes under a probit-transform scheme. 
 An extension of the EM algorithm was considered, in which the E-step was replaced with variational inference, so as to overcome the intractability brought about by the conditional distributions.
 For both continuous and categorical response I-prior models, we find advantages of using I-priors, namely that model building and estimation is simple, inference  straightforward, and predictions comparable, if not better, to similar state-of-the-art techniques.
@@ -83,23 +83,23 @@ We give a summary of the novel contributions of this thesis.
   
   \item \textbf{Efficient estimation methods for normal I-prior models}. 
   The preferred estimation method for normal I-prior models for stability is the EM algorithm.
-  Implementing the EM algorithm can be computationally costly, due to the squaring and inversion of the kernel matrices in the $Q$ function in \cref{eq:QfnEstep}.
-  Unfortunately, not much can be done about the inversion part, but we explored some ways to perform the squaring methodically.
-  Combining a `front-loading method' of the kernel matrices (\cref{sec:efficientEM1}) and an exponential family ECM (expectation conditional maximisation) algorithm \citep{meng1993maximum}, the estimation procedure is streamlined.
+  Implementing the EM algorithm can be computationally costly, due to the squaring and inversion of the kernel matrices in the $Q$ function in \cref{eq:QfnEstep} on {\color{\mycitecolour}page} \pageref{eq:QfnEstep}.
+  Unfortunately, not much can be done about the inversion, but we explored systematic ways in which to perform the squaring.
+  Combining a `front-loading method' of the kernel matrices (\cref{sec:efficientEM1}, \mypageref{sec:efficientEM1}) and an exponential family ECM (expectation conditional maximisation) algorithm \citep{meng1993maximum}, the estimation procedure is streamlined.
   Our computational work culminated in the publicly available and well-documented \proglang{R} package \pkg{iprior} \citep{jamil2017iprior} published on CRAN.
   
   \item \textbf{Methodological extension of I-priors to categorical responses}.
-  Extension of the I-prior methodology to fit categorical responses is of great interest.
-  We proposed a latent variable framework, for which there corresponds latent propensities corresponding to each category of the observed response variable.
+  An extension of the I-prior methodology to fit categorical responses was studied.
+  We proposed a latent variable framework, in which there corresponds latent propensities for each category of the observations.
   Instead of modelling the responses directly, the latent propensities are modelled using an I-prior, and class probabilities obtained using a normal integral.
   We named this model the I-probit model.
-  The challenge of estimation is overcoming said integral, and we used a variational EM algorithm in which the E-step uses a variational approximation to intractable conditional density.
-  The variational EM algorithm was preferred over a fully Bayesian variational inference algorithm for two reasons: 1) the work done in the continuous case EM algorithm applies directly; and 2) prior specification for hyperparameter can be dispensed with.
-  Classification, meta-analysis and spatio-temporal modelling are specific examples of the applications of the I-probit models.
+  The challenge of estimation was overcoming said integral, and we used a variational EM algorithm in which the E-step uses a variational approximation to intractable conditional density.
+  The variational EM algorithm was preferred over a fully Bayesian variational inference algorithm for two main reasons: 1) the work done in the normal I-prior EM algorithm applies directly; and 2) prior specification for hyperparameters can be dispensed with.
+  Classification, meta-analysis and spatio-temporal modelling are specific examples of the applications of I-probit models.
   
   \item \textbf{Some distributional results for truncated normals}. 
-  In deriving the variational algorithm, some properties related to the conically truncated multivariate independent normal distribution (as defined in \cref{apx:truncmultinorm}) were required.
-  A small contribution of ours was to derive the closed-form expressions for its first and second moments, and its entropy (\cref{thm:contruncn}).
+  In deriving the variational algorithm, some properties related to the conically truncated multivariate independent normal distribution (as defined in \cref{apx:truncmultinorm}, \mypageref{apx:truncmultinorm}) were required.
+  A small contribution of ours was to derive the closed-form expressions for its first and second moments, and its entropy (\cref{thm:contruncn}, \mypageref{thm:contruncn}).
   We have only seen closed-form expressions of the mean of such a distribution being used before \citep{girolami2006variational} but not for the variance, nor an explicit derivation of these quantities.
     
   \item \textbf{Bayesian variable selection under collinearity}. 
@@ -116,10 +116,11 @@ In closing, we briefly discuss several questions which remain open during the co
 
 \begin{itemize}
   \item \textbf{Initialisation of EM or gradient-based methods}.
-  \cref{fig:ipriorridge} indicates the impact that starting values can have on gradient-based optimisation.
+  \cref{fig:ipriorridge} \colp{\mypageref{fig:ipriorridge}} indicates the impact that starting values can have on gradient-based optimisation.
   One can end up at a local optima on one of the two ridges.
-  Usually, one of the ridges will have a higher maximum than the other, but it is not clear how to direct the algorithm in the direction of the `correct' ridge.
+  Usually, one of the ridges will have a higher maximum than the other, but it is not clear how to direct the algorithm in the direction of the ``correct'' ridge.
   
+  \index{Tecator data set}
   Importantly, the interpretation of a flat ridge in the likelihood is that there is insufficient information coming  from the data to inform parameter estimation.
   In the EM algorithm, estimation is usually characterised by a fast increase in likelihood in the first few steps (as it climbs up the ridge), and then later iterations only improve the likelihood ever so slightly (as it moves along the ridge in search of the maximum).
   In some real-data cases (e.g. Tecator data set), we noticed that the EM sequence veers to the boundary of the parameter space, where the likelihood is infinite (e.g. $L(\psi) \to \infty$ as $\psi\to 0,\infty$).
@@ -127,8 +128,8 @@ In closing, we briefly discuss several questions which remain open during the co
   Ill-posed problems similar to this are resolved by adding penalty terms to the log-likelihood.
   As to what penalty terms are appropriate remains an open question.
   
-  \item \textbf{Standard errors for variational approximation}. 
-  Under a variational scheme, the log-likelihood function $L(\theta)$ is replaced with the ELBO $\cL_q(\theta)$ which serves as a  conservative approximation to it. 
+  \item \textbf{Standard errors for variational approximation}. \index{variational!standard error}
+  Under a variational scheme, the log-likelihood function $L(\theta)$ is replaced with the evidence lower bound (ELBO) $\cL_q(\theta)$ which serves as a  conservative approximation to it. 
   The question we have is whether the approximation degrades the asymptotic properties of the estimators obtained via variational inference?
   In particular, are the standard errors obtained from the information matrix involving $\cL_q(\theta)$ reliable?
   This question has also been posed by \citet{hall2011asymptotic,bickel2013asymptotic,chen2017use}.
@@ -146,7 +147,7 @@ In closing, we briefly discuss several questions which remain open during the co
   However, is there a difference between the behaviour of the probit and logistic model?
   We know that there is a difference between the logistic and normal distribution, especially in scaling and behaviour in the tails, but do these affect the outcome of I-prior models?
   
-  \item \textbf{Consistency of I-prior Bayesian variable selection}.
+  \item \textbf{Consistency of I-prior Bayesian variable selection}.\index{Bayesian variable selection!consistency}
   We wondered about model selection consistency for I-priors in Bayesian variable selection.
   That is, assuming that model $M_\text{true}$ is behind the true data generative process, do
   \[

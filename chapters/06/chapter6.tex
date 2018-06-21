@@ -20,6 +20,7 @@
 \label{chapter6}
 \thispagestyle{chaptersix}
 
+\index{linear regression}
 Earlier in \cref{sec:various-regression} \colp{\mypageref{sec:various-regression}}, we saw that model \cref{eq:model1} subject to normal assumptions \cref{eq:model1ass}, model assumptions \ref{ass:A1}--\ref{ass:A3}, and $f$ belonging to the canonical RKHS of functions over $\cX \equiv \bbR^p$ yields the standard multiple regression model
 \begin{align}\label{eq:linmod}
   \begin{gathered}
@@ -30,7 +31,7 @@ Earlier in \cref{sec:various-regression} \colp{\mypageref{sec:various-regression
 In this chapter, we use the notation $\sigma^2 = \psi^{-1}$ to denote the error variance.
 Furthermore, an I-prior on the regression coefficient entails prescribing the following normal prior the $\beta_k$'s:
 \[
-  \bbeta := (\beta_1,\dots,\beta_p)^\top \sim \N (\bzero,  \kappa \sigma^2 \XTX).
+  \bbeta := (\beta_1,\dots,\beta_p)^\top \sim \N_p (\bzero,  \kappa \sigma^2 \XTX).
 \]
 This follows from \cref{eq:ipriorcanonical} after a slight reparameterisation of the RKHS scale parameter $\kappa \mapsto \lambda^2/\sigma^4$. 
 Throughout this chapter, we assume that the columns of the design matrix $\bX = (X_1,\dots,X_p)$ have been standardised, so that a single RKHS scale parameter is sufficient for the $p$ covariates.
@@ -43,11 +44,15 @@ Model selection is indeed a huge topic to cover fully.
 We broadly classify variable selection into three categories: 1) (pairwise) model comparison using some criterion; 2) shrinkage to induce sparsity; and 3) Bayesian model selection.
 We understand that different categorisations and indeed categories of model selection exist in the literature, but our focus is on the discussion of the three types as mentioned.
 
-Model selection criteria, both from a frequentist and Bayesian standpoint, can either be of a predictive nature ($R^2$, mean squared error of prediction (MSEP), $C_p$ \citep{mallows1973some}, $k$-fold cross-validation MSEP, etc.), or a likelihood-based information criterion (likelihood ratios, Bayes factors, Akaike information criterion (AIC, \cite{akaike1973}), Bayesian information criterion (BIC, \cite{schwarz1978estimating}), etc.).
+\index{model selection}
+Model selection criteria, both from a frequentist and Bayesian standpoint, can either be of a predictive nature ($R^2$, mean squared error of prediction (MSEP), $C_p$ \citep{mallows1973some}, $k$-fold cross-validation MSEP, etc.), or a likelihood-based information criterion (likelihood ratios, Bayes factors, Akaike information criterion (AIC, \cite{akaike1973}), Bayesian information criterion (BIC, \cite{schwarz1978estimating}, etc.).
 Selecting a model based on either of these criteria requires comparison of all $2^p$ criteria, which is not feasible for large $p$.
 Typically, these criteria are used in conjunction with step-wise procedures such as forward-selection or backward-deletion to restrict attention to a smaller number of potential subsets \citep{George1993,miller2002subset}.
 
-On the other hand, regularised least squares regression (ridge regression \citep{hoerl1970ridge}, Lasso \citep{tibshirani1996regression}, or a convex combination of the two via elastic nets \citep{zou2005regularization}, etc.) provides additional information to the regression model in order to provide a sparse solution to linear system of equations in $\bbeta$.
+\index{regularisation}
+\index{Lasso}
+\index{ridge regression}
+On the other hand, regularised least squares regression (ridge regression \citep{hoerl1970ridge}, Lasso \citep{tibshirani1996regression}, or a convex combination of the two via elastic nets \citep{zou2005regularization}, etc.) provide additional information to the regression model in order to provide a sparse solution to linear system of equations in $\bbeta$.
 These methods are proven to be popular as they are fast and perform exceptionally well in many situations, even in cases where $p > n$.
 Additionally, the Lasso produces solutions for $\bbeta$ which are exactly zero.
 However, the Lasso in general produces estimates which are biased towards zero, are inconsistent, and have no valid standard errors \citep{friedman2001elements,kyung2010penalized}.
@@ -58,13 +63,14 @@ The term adaptive shrinkage has been used for the method in which hyper-priors a
 The idea is to adaptively shape the prior depending on the importance of the variable in the regression model.
 Bayesian shrinkage includes the task of specifying tuning parameters, which could potentially affect chain mixing in a Markov chain Monte Carlo method (MCMC) procedure (which is often used).
 
+\index{Bayesian model selection}
 Bayesian model selection is probabilistic in nature: a priori, one assigns probabilities over the set of models, and then after observing the data, posterior model probabilities (PMPs) are used to discern which of the models was likeliest to have been behind the data generative process of the observed responses.
 Of course, with large  $p$ then calculation of all $2^p$ posterior model probabilities to ascertain which is highest will be a challenge, if not impossible.
 But, as with most Bayesian applications, MCMC can be applied as a practical means of overcoming this intractability.
 This stochastic approach to variable selection was pioneered by \citet{George1993}, and studied by others such as \citet{Kuo1998,dellaportas2002bayesian,Ntzoufras2008}.
-Unlike shrinkage methods, Bayesian model selection is able to quantify the amount of times a variable `enters the model' (inclusion probabilities), and thereby measuring its worth as a  predictor.
+Unlike shrinkage methods, Bayesian model selection is able to quantify the amount of times a variable ``enters the model'' (inclusion probabilities), and thereby measuring its worth as a  predictor.
 
-
+\index{Bayesian model averaging}
 Note that, in addition to model probabilities and inclusion probabilities, estimates of regression coefficients are obtained simultaneously in Bayesian variable selection.
 When several competing models have high posterior probabilities, regression coefficients from each model, or indeed any quantity of interest, may be combined and weighted using their posterior model probabilities, a technique known as \emph{Bayesian model averaging} \citep{madigan1994model,hoeting1999bayesian}.
 Averaging over a set of models takes into account the uncertainty surrounding model selection, which other standard statistical procedures ignore upon selection of a single model from which to do inference.
@@ -86,6 +92,7 @@ From a finite set of models $\cM = \{M_1,\dots,M_K\}$, pairs of data $\{(y_1,\bx
 Having observed only this data set, the goal is to infer which of the models had generated the data, and consequently obtain estimates for the parameters.
 It is perhaps most natural to ponder which of the models is most likely to be the ``true'' one given the data presented, and thus, this natural way of thinking leads one to the concept of \emph{model probabilities}.
 From a Bayesian perspective in particular, \emph{posterior model probabilities} allow us to quantify the certainty to which any model is behind the data generative process, after taking into account relevant evidence (observation of the data) and prior beliefs about model and parameter uncertainty.
+\index{model probabilities}
 
 Let $p(M_1),\dots,p(M_K)$ be prior probabilities assigned to the model space $\cM$, and $p(\Theta_k|M_k)$ be the prior on the parameters of model $M_k$.
 For any model $M_k \in \cM$, the posterior model probability for model $m$ is
@@ -101,6 +108,7 @@ where
 is known as the marginal likelihood, or \emph{evidence}, for model $M_k$.
 As a remark, the prior distributions for the parameters do not necessarily need to depend on the model, so we might have that $p(\Theta_k|M_k)=p(\Theta_k)$.
 A natural strategy for model selection is to select the model such that $p(M_k|\by)$ is largest (the \emph{highest probability model}, HPM), but several models rather than just a single one may be reported to convey model uncertainty \citep{Chipman2001}.
+\index{highest probability model}
 
 Note, that models may be pairwise compared based on these posterior model probabilities, for which the posterior odds
 \vspace{-0.9em}
@@ -113,6 +121,8 @@ Note, that models may be pairwise compared based on these posterior model probab
 provide a point summary for comparing model $M_k$ against model $M_0$.
 The first term on the right hand side is the Bayes factor for comparing any model $M_k \in \cM$ to another model $M_0 \in \cM$, and is denoted by $\text{BF}(M_k,M_0)$.
 Thus, model selection based on posterior model probabilities can be formalised as the Bayesian alternative to classical hypothesis testing using Bayes factors \citep{kass1995bayes}.
+\index{Bayes factor}
+\index{Bayesian hypothesis test}
 
 The issue that is faced with Bayesian model selection is that all posterior model probabilities must be calculated in order for a full comparison to be made.
 When the model space is very large, this can prove to be an insurmountable task.
@@ -123,6 +133,7 @@ In the coming sections, we shall see that this problem is alleviated by the use 
 \section{The Bayesian variable selection model}
 \label{sec:bvs-iprior}
 
+\index{Bayesian variable selection}
 We shall loosely refer to a model as a subset of variables selected from the full set of variables $\{ X_1, \dots, X_p \}$. 
 It would be useful to be able to index each of these $2^p$ possible models somehow, and we achieve this by the use of indicator variables $\gamma \in \{0,1\}^p$.
 Let $\gamma_j = 1$ if the variable $X_j$ is selected, and $\gamma_j = 0$ otherwise, for $j=1,\dots,p$.
@@ -140,7 +151,7 @@ Hence, in addition to the usual model parameters ($\bbeta,\sigma,\alpha$), we ar
 The priors for the parameters are described below:
 
 \begin{itemize}
-  \item \textbf{Model indicators $\gamma_j$}. An independent Bernoulli prior is specified for the model indicators
+  \item \textbf{Model indicators $\gamma_j$}. An independent Bernoulli prior is specified for the model indicators \index{model indicator}
   \begin{equation}\label{eq:priorgamma}
     p(\gamma) = \prod_{j=1}^p \pi_j^{\gamma_j}(1-\pi_j)^{1-\gamma_j}.
   \end{equation}
@@ -153,7 +164,7 @@ The priors for the parameters are described below:
   As such, prior choices for the regression coefficients can be any of the usual priors on $\bbeta$, including 
   \begin{itemize}
     \item the independent prior $\bbeta\sim\N_p(\bzero,c^2\bI_p)$ for some choice of $c$ (e.g. $c=10$);
-    \item the $g$-prior $\bbeta|\sigma,g \sim\N_p(\bzero,g\sigma^2(\XTX)^{-1})$ for some $g$ either chosen a priori or estimated (Bayes or empirical Bayes); or
+    \item the $g$-prior $\bbeta|\sigma,g \sim\N_p(\bzero,g\sigma^2(\XTX)^{-1})$ for some $g$ either chosen a priori or estimated (Bayes or empirical Bayes); or \index{g-prior@$g$-prior}
     \item the I-prior $\bbeta|\sigma,\kappa \sim \N_p(\bzero,\kappa\sigma^2\XTX)$, which is the focus of this chapter.
   \end{itemize}
   
@@ -168,7 +179,8 @@ With this in mind, we may choose large values of $A$ (e.g. 100) and small values
 Note that as $c,d \to 0$ in the inverse gamma distribution we get the Jeffreys prior\footnote{The Jeffreys prior for a parameter $\theta$ is defined as $p(\theta) \propto \vert \cI(\theta) \vert^{1/2}$ \citep{jeffreys1946invariant}.} for scale parameters.
 
 \begin{remark}
-  The BVS model \cref{eq:km} together with the choice of Bernoulli priors on $\gamma$ and a normal prior $\N_p(\bzero,\bV_\beta)$ for $\bbeta$ can be seen a \emph{spike-and-slab} prior for linear regression models, a mixture of a point mass at zero and a normal density \citep{mitchell1988bayesian,geweke1996variable}.
+  \index{spike-and-slab}
+  The BVS model \cref{eq:km} together with the choice of Bernoulli priors on $\gamma$ and a normal prior $\N_p(\bzero,\bV_\beta)$ for $\bbeta$ can be seen a \emph{spike-and-slab prior} prior for linear regression models, a mixture of a point mass at zero and a normal density \citep{mitchell1988bayesian,geweke1996variable}.
   Write $\btheta = (\gamma_1\beta_1,\dots,\gamma_p\beta_p)^\top$, which are interpreted as the `model-specific regression coefficients'.
   Then, the prior on $\btheta$ is equivalently written
   \[
@@ -185,6 +197,7 @@ Note that as $c,d \to 0$ in the inverse gamma distribution we get the Jeffreys p
 
 \section{Gibbs sampling for the I-prior BVS model}
 
+\index{Gibbs sampler}
 The Bayesian variable selection model can be estimated using Gibbs sampling, as demonstrated originally by \citet{Kuo1998}.
 In this section, we describe the Gibbs sampling procedure to obtain posterior samples of the parameters.
 For the I-prior specifically, the joint density of the responses and the priors is 
@@ -197,8 +210,9 @@ Let us denote $\Theta=\{\alpha,\bbeta,\gamma,\sigma^2,\kappa\}$ to be the full s
 Starting with suitable initial values $\Theta^{(0)}$, we then proceed to obtain samples $\Theta^{(1)}, \dots, \Theta^{(T)}$ by sampling each parameter from the conditional posterior density of that parameter given the rest of the parameters.
 A suggested set of initial values are the maximum likelihood (ML) estimates of $\Theta$ or the posterior mean estimate of $\Theta$ under the full model $\gamma=(1,\dots,1)$ after an initial MCMC run.
 
-The Gibbs conditional densities are straightforward to obtain on account of model conjugacy (details of derivation are in \cref{apx:gibbsbvs}, \mypageref{apx:gibbsbvs}).
-We start with $\bbeta$: the conditional density of $\bbeta$ given $\alpha,\gamma,\sigma^2,\kappa$ is multivariate normal with mean $\tilde \bB(\by-\alpha\bone_n)$ and covariance matrix $\sigma^2\tilde \bB$, where $\tilde \bB = \bX_\gamma^\top \bX_\gamma + (\kappa \XTX)^{-1}$, and $\bX_\gamma = (\gamma_1X_1 \cdots \gamma_pX_p)$.
+The Gibbs conditional densities are straightforward to obtain on account of model conjugacy (details of the derivation are given in \cref{apx:gibbsbvs}, \mypageref{apx:gibbsbvs}).
+We start with $\bbeta$. 
+The conditional density of $\bbeta$ given $\alpha,\gamma,\sigma^2,\kappa$ is multivariate normal with mean $\tilde \bB(\by-\alpha\bone_n)$ and covariance matrix $\sigma^2\tilde \bB$, where $\tilde \bB = \bX_\gamma^\top \bX_\gamma + (\kappa \XTX)^{-1}$, and $\bX_\gamma = (\gamma_1X_1 \cdots \gamma_pX_p)$.
 Interestingly, when $X_j$ is dropped from the model ($\gamma_j=0$), the posterior mean and variance for $j$'th component of $\bbeta$ is entirely informed by the prior \citep{Kuo1998}.
 The data-driven I-prior incorporates information from the covariates into the prior, which then informs the posterior.
 In a similar manner, the conditional density for the intercept $\alpha$ is found to be $\N\big( \sum_{i=1}^n(y_i - \bx_i^\top\btheta) / \tilde A,\sigma^2\tilde A \big)$, where $\tilde A = n + A^{-1}$ and $A$ is the prior variance for $\alpha$.
@@ -211,10 +225,12 @@ The (conditional) posterior samples of $\gamma=(\gamma_1,\dots,\gamma_p)$ are ob
     v_j = (1-\pi_j) \exp\left( - \frac{1}{2\sigma^2} \Vert \by - \alpha \bone_n - \bX\btheta_j^{[0]} \Vert^2 \right).
   \end{gathered}
 \end{align*}
-Here, we have used the notation $\btheta_j^{[1]}$ to indicate the vector $\btheta$ with the $j$'th component replaced by $\bbeta_j$, and $\btheta_j^{[0]}$ to indicate the vector $\btheta$ with the $j$th component replaced by 0.
+Here, we have used the notation $\btheta_j^{[1]}$ to indicate the vector $\btheta$ with the $j$'th component replaced by $\bbeta_j$, and $\btheta_j^{[0]}$ to indicate the vector $\btheta$ with the $j$'th component replaced by 0.
 Values of 1 for $\gamma$ are more likely to be sampled when the ratio $u_j / v_j$ is greater than the prior odds $\pi_j/(1-\pi_j)$.
 Specifically when the prior probabilities $\pi_j$ are all set to be 0.5, then $\gamma_j$ will be more likely to be sampled as `1' if $u_j > v_j$, i.e. if the residual sum of squares (RSS) $\Vert \by - \alpha\bone_n - \bX\btheta \Vert^2$ is \emph{smaller} when the $j$th component is non-zero, compared to the RSS when the $j$'th component of $\btheta$ is zero.
+\index{RSS}
 
+\index{Bayesian hypothesis test}
 We can in fact draw parallels to a Bayesian hypothesis test, with the null hypothesis being $\text{H}_0: \beta_j = 0$ and the alternative being $\text{H}_1: \beta_j \neq 0$, conditional on knowing all other values of the parameters.
 Under $\text{H}_k$, $\by|\Theta \sim\N_n(\alpha \bone_n + \bX\btheta_j^{[k]}, \sigma^2\bI_n )$, $k=0,1$. 
 The conditional Bayes factor comparing the model in the alternative hypothesis $M_1$ to the model in the null hypothesis $M_0$ is therefore
@@ -242,6 +258,8 @@ Here, $\{c_\sigma, d_\sigma\}$ and $\{c_\kappa, d_\kappa\}$ are the shape and sc
 
 \section{Posterior inferences}
 
+\index{posterior model probability}
+\index{posterior inclusion probability}
 Having obtained posterior samples $\Theta^{(t)}=\{\alpha^{(t)},\bbeta^{(t)},\gamma^{(t)},\sigma^{2(t)},\kappa^{(t)} \}$, there are two quantities of interest in relation to model inferences. 
 The first is an estimate of posterior model probabilities, given by
 \begin{align}\label{eq:pmp-prop}
@@ -292,8 +310,10 @@ The uncertainty for this estimate is contained in the standard deviation calcula
 
 \section{Two stage procedure}
 
-The variable selection procedure can be improved by a ``pre-selection'' of variables to trim off unimportant variables which reduces the size of the model space being explored.
-Without appealing to other external pre-selection methods, there is actually information that we could use from Bayesian variable selection models in the form of posterior inclusion probabilities.
+\index{two stage procedure}
+\index{preselection}
+The variable selection procedure can be improved by a ``preselection'' of variables to trim off unimportant variables which reduces the size of the model space being explored.
+Without appealing to other external preselection methods, there is actually information that we could use from Bayesian variable selection models in the form of posterior inclusion probabilities.
 The procedure would work as follows:
 
 \begin{enumerate}
@@ -302,12 +322,13 @@ The procedure would work as follows:
   \item Re-run the Bayesian variable selection model on the set of reduced variables.
 \end{enumerate}
 
+\index{median probability model}
 A natural choice for $\tau$ would be 0.5, and therefore a two-stage approach to Bayesian variable selection can then be motivated as selecting the subset of variables which constitutes what is known as the \emph{median probability model}.
 The median probability model is obtained by selecting all variables with a posterior inclusion probability of greater than or equal to a half.
 \citet{Barbieri2004} show that the median probability model has the property of being optimally predictive (minimises squared error loss for predictions) under certain strict conditions. 
 
-The notion of a two-stage approaches are not new, as many variable selection methods in the literature generally employ a pre-selection method of some kind before running their selection process proper.
-This can be based on subjective preconceptions about which variables to retain, substantive theory, or even an objective pre-selection criterion.
+The notion of a two-stage approaches are not new, as many variable selection methods in the literature generally employ a preselection method of some kind before running their selection process proper.
+This can be based on subjective preconceptions about which variables to retain, substantive theory, or even an objective preselection criterion.
 Two-stage procedures for Bayesian variable selection models have been used in works by \citet{Fouskakis2008} and \citet{Ntzoufras2008}. 
 
 In the simulation studies conducted and observations from real-data examples, this two-stage approach does seem to provide a benefit.
@@ -318,12 +339,14 @@ As a result, information summarised through the posterior inclusion probabilitie
 
 \section{Simulation study}
 
+\index{multicollinearity}
 In this section, we conduct a simulation study to compare the performance of different priors in the Bayesian variable selection framework described above.
 The priors on $\bbeta$ that are compared are those mentioned in \cref{sec:bvs-iprior}, i.e. the I-prior, the independent prior with large prior variance (flat/uninformative prior), and the $g$-prior with $g=n$ (unit information prior, \cite{Ntzoufras2008}).
 We also make a comparison the variable selection performance of the Lasso, which, from a Bayesian perspective, is similar to setting a double-exponential or Laplace priors on the regression coefficients \citep{park2008bayesian}. 
 For clarity, the Lasso model employed in the simulations is of a frequentist regularisation framework as per \citet{tibshirani1996regression}, and is neither a Bayesian variable selection model as described earlier, nor a fully Bayes implementation as per \citet{park2008bayesian}.
 We felt it interesting to compare the Lasso as it is widely used for variable selection of linear models.
 
+\index{SNR|(}
 The experiment is to select from $p=100$ variables of a $n=150$ sample size artificial dataset which has pairwise correlations between the variables. This was inspired by the studies done by \citet{George1993} and \citet{Kuo1998} in their respective papers, albeit on a larger scale (in theirs, $p=30$).
 Five different scenarios were looked at. 
 For each scenario, only $s$ out of 100 variables were selected to form the ``true'' model and generate the responses according to the linear model $\by\sim\N_{100}(\bX\bbeta,\sigma^2 \bI_{150})$. 
@@ -338,6 +361,7 @@ The data generation process is summarised as follows:
 	\item Draw $\by \sim \N_{150}(\bX \bbeta_{\text{true}}, \sigma^2\mathbf I_{150})$, with $\sigma=2$.
 \end{itemize}
 
+\index{false choice (inclusion/exclusion)}
 In each scenario, we are interested in obtaining the highest probability model and counting the number of false choices made in this model after a two-stage procedure of variable selection.
 False choices can either be selecting variables wrongly (false inclusion) or failing to select a variable (false exclusion).
 Each scenario was repeated a total of 100 times to account for variability in the data generation process, and the results averaged. 
@@ -384,6 +408,7 @@ False choices\hspace{0.5cm} & 90\%        & 75\%        & 50\%        & 25\%    
   \label{fig:simres}
 \end{figure}
 
+\index{Lasso}
 The simulation results seem to indicate that the I-prior performs consistently well across all five scenarios, making no more than five false choices out of 100 (i.e. a 95\% correct selection rate) in at least 82\% of the time in the worst scenario.
 We do not observe much difference between the $g$-prior and the independent prior, and while they behave poorly in high SNR scenarios, these two priors seem to perform extremely well in low SNR scenarios.
 A high propensity to drop variables in these scenarios is a likely explanation, which does not necessarily indicate good performance---they perform well by contentiously omitting of a large number of unnecessary variables, especially in a two-stage procedure.
@@ -405,6 +430,8 @@ While the optimal $\pi_j$ corresponds directly to the true SNR (e.g. SNR = 10\% 
 \end{figure}
 \vspace{-1em}
 
+\index{SNR|)}
+
 \section{Examples}
 
 Now, we apply our I-prior Bayesian variable selection model to three real-world data sets that have all been previously analysed in the variable selection literature.
@@ -413,6 +440,7 @@ Reproducible code is available at \url{http://myphdcode.haziqj.ml}.
 In all analyses, a two-stage procedure was conducted for the I-prior model, where each stage consists of obtaining 15,000 MCMC samples (including 5,000 for burn-in).
 
 \subsection{Aerobic data set}
+\index{Aerobic data set}
 
 \begin{figure}[htb]
 	\centering
@@ -426,7 +454,7 @@ A sample of $n=30$ male participants' had their physical fitness measured by mea
 The response variable contains measurement of oxygen uptake rate in mL/kg body weight per minute. 
 The six covariates were the participants' age ($X_1$), weight ($X_2$), time taken to run one mile ($X_3$), resting heart rate ($X_4$), heart rate while running ($X_5$), and maximum heart rate during the exercise ($X_6$). 
 This dataset, although small in size, is interesting to analyse because of the correlations between the variables, mainly due to the measurements being taken during the same exercise test. 
-The sample correlations of interest are shown in Figure \cref{fig:aerobic-cor}.
+The sample correlations of interest are shown in \cref{fig:aerobic-cor}.
 
 \begin{table}[htb]
 \centering
@@ -464,6 +492,7 @@ In \cref{fig:aerobic-densplot}, we can see that the point mass at zero overwhelm
 
 \subsection{Mortality and air pollution data}
 \label{sec:airpollution}
+\index{mortality and air pollution data set}
 
 The next real world application comes from a paper by \citet{McDonald1973}. 
 In it, the effects of air pollution on mortality in a US metropolitan area ($n=60$ and $p=15$) were studied. 
@@ -499,6 +528,8 @@ SO\textsubscript{2}      & Relative population potential of sulphur dioxide \\
 \end{tabular}
 \end{table}
 
+\index{ridge regression}
+\index{Mallows Cp@Mallow's $C_p$}
 This dataset also contains several highly correlated variables which impedes a meaningful regression analysis. 
 When the full model is fitted using ordinary least squares, none of the pollutant effects were found to be significant. 
 Clearly, a variable selection method was required. 
@@ -545,7 +576,7 @@ We note that the effect size for SO\textsubscript{2} is slightly larger under an
 
 \vspace{-0.5em}
 \subsection{Ozone data set}
-\label{sec:ozone}
+\label{sec:ozone}\index{ozone data set}
 \vspace{-0.5em}
 In this section, we replicate the Bayesian variable selection analysis of the Ozone dataset done by \citet[abbr. C\&M]{Casella2006} which appeared initially in \citet[abbr. B\&F]{Breiman1985}, and also show how Bayesian variable selection can help select important interaction terms. 
 The data consists of daily ozone readings and various meteorological quantities, and the aim was to see which of these quantities contributed to the ozone concentration. 
@@ -626,6 +657,7 @@ Out of curiosity, running the variable selection model on the reduced variable s
 
 \footnotetext{Since the total model space used was different between our method, C\&M and B\&F, it does not make sense to compare posterior model probabilities which we obtained. C\&M reported a model probability of 0.491 for their model, but this model was not selected at all using the I-prior.}
 
+\index{interactions}
 We then used the I-prior method to select between the squared terms and all level two interactions, in addition to all the variables, in an effort to improve model prediction. 
 For 12 such variables, the number of variables to select becomes $12 + 12 + 12(12 - 1)/2 = 90$. 
 By doing so, we were able to improve the model to give a slightly better predictive ability.
@@ -652,15 +684,15 @@ C\&M
 \section{Conclusion}
 
 The model selection problem is an important one in statistics, but highly contentious.
-\citet{miller2002subset} writes that many statisticians view model selection as ‘unclean’ or ‘distasteful’, and that ``terms such as ‘fishing expeditions’, ‘torturing the data until they confess’, ‘data mining’, and others are used as descriptions of these practices''. 
-The disagreement with the principle of model selection stems from the belief in the mantra that models should be built by thoughtfully choosing variables which are expected to influence the response by appealing to substantive theory, and not by virtue of optimising some model selection criterion.
+\citet{miller2002subset} writes that many statisticians view model selection as ``unclean'' or ``distasteful', and that ``terms such as `fishing expeditions', `torturing the data until they confess', `data mining', and others are used as descriptions of these practices''. 
+The disagreement with the principle of model selection stems from the belief in the mantra that models should only be built by thoughtfully choosing variables which are expected to influence the response by appealing to substantive theory, and not by virtue of optimising some model selection criterion.
 However, variable selection as an exploratory study is certainly justified by many practical applications, especially when there is a genuine desire to know the most reasonable, parsimonious and interpretable model.
 Through variable selection exercises, we can learn which covariates are important, and which are negligible, in explaining the variation in the response.
 %arguably variable selection from a prescreening as part of data cleanup to remove problematic variables, such as those inducing a high degree of collinearity. how do we know we are deleting the correct variable?
 
 The Bayesian variable selection method that we have seen has the appeal of reducing the problem of model search into one of estimation. 
 At the outset, we aimed to seek a model which: 1) requires little tuning on the part of the user; 2) would work well in the presence of multicollinearity; and 3) is able to work well with little to no prior information. 
-The I-prior on the regression coefficients in \citeauthor{Kuo1998}'s spike-and-slab stochastic search framework achieves this aim.
+The I-prior on the regression coefficients in \citeauthor{Kuo1998}'s  \citeyearpar{Kuo1998} spike-and-slab stochastic search framework achieves this aim.
 
 The attractive feature of a Bayesian approach to variable selection is the ability to simultaneously shrink and select predictors, thereby incorporating model uncertainty in the regressors.
 Sparsification is not ``hard coded'', in the sense that regression coefficients are assigned a value of zero with some positive probability in the posterior.
