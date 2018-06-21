@@ -3,6 +3,7 @@ Of interest are their probability density functions, first and second moments, a
 Note that in this part of the appendix, boldface notation for matrix and vectors are not used.
 
 \section{Multivariate normal distribution}
+\index{distribution!multivariate normal|(}
 
 \begin{definition}[Multivariate normal distribution]
   Let $X\in\bbR^d$ be distributed according to a multivariate normal (Gaussian) distribution with mean $\mu \in \bbR^d$ and covariance matrix $\Sigma \in\bbR^d$ (a square, symmetric, positive-definite matrix).
@@ -111,7 +112,7 @@ Frequently, in Bayesian statistics especially, the following identities will be 
 \newcommand{\dmujtop}{\frac{\partial\mu_\theta^\top}{\partial\theta_j}}
 \newcommand{\dmutwo}{\frac{\partial^2\mu_\theta}{\partial\theta_i\partial\theta_j}}
 
-
+\index{Fisher information!multivariate normal}
 \begin{lemma}
   Let $X\sim\N_p(\mu_\theta,\Sigma_\theta)$, that is, the mean vector $\mu_\theta$ and covariance matrix $\Sigma_\theta$ depends on a real, $q$-dimensional vector $\theta$.
   The Fisher information matrix $U \in \bbR^{q\times q}$ for $\theta$ has $(i,j)$ entries given by
@@ -201,8 +202,11 @@ as required.  \qedhere
 
 \end{proof}
 
+\index{distribution!multivariate normal|)}
+
 \section{Matrix normal distribution}
 \label{apx:matrixnormal}
+\index{distribution!matrix normal|(}
 
 \begin{definition}[Matrix normal distribution]
   Let $X\in\bbR^{n \times m}$ matrix, and let $X$ follow a matrix normal distribution with mean $\mu\in\bbR^{n \times m}$ and row and column variances $\Sigma \in \bbR^{n \times n}$ and $\Psi \in \bbR^{m \times m}$ respectively, which we denote by $X\sim\MN_{n,m}(\mu,\Sigma,\Psi)$.
@@ -248,8 +252,11 @@ Some useful properties of the matrix normal distribution are listed:
   \item \textbf{Iid}. If $X_i \iid \N_m(\mu,\Psi)$ for $i=1,\dots,n$, and we arranged these vectors row-wise into the matrix $X = (X_1^\top,\dots,X_n^\top)^\top \in \bbR^{n\times m}$, then $X \sim \MN(1_n \mu^\top, I_n, \Psi)$.
 \end{itemize}
 
+\index{distribution!multivariate normal|)}
+
 \section{Truncated univariate normal distribution}
 \label{apx:truncuninorm}
+\index{distribution!truncated univariate normal|(}
 
 \begin{definition}[Truncated univariate normal distribution]
   Let $X \sim \N(\mu,\sigma^2)$ with the random variable $X$ restricted to the interval $(a,b) \subset \bbR$.
@@ -292,9 +299,11 @@ Either of these methods will work reasonably well as long as the truncation regi
 Efficient algorithms have been explored which are along the lines of either accept/reject algorithms \citep{robert1995simulation}, Gibbs sampling \citep{damien2001sampling}, or pseudo-random number generation algorithms \citep{chopin2011fast}.
 The latter algorithm is inspired by the Ziggurat algorithm \citep{marsaglia2000ziggurat} which is considered to be the fastest Gaussian random number generator.
 
+\index{distribution!truncated univariate normal|)}
 
 \section{Truncated multivariate normal distribution}
 \label{apx:truncmultinorm}
+\index{distribution!truncated multivariate normal|(}
 
 \begin{definition}[Truncated multivariate normal distribution]
   Consider the restriction of $X\sim \N_d(\mu,\Sigma)$ to a convex subset\footnote{A convex subset is a subset of a space that is closed under convex combinations. In Euclidean space, for every pair of points in a convex set, all the points that lie on the straight line segment which joins the pair of points are also in the set.}~$\cA \subset \bbR^d$.
@@ -415,6 +424,8 @@ We present some results that we have not previously seen before elsewhere.
   See \cref{apx:contrunproof} for the proof.
 \end{proof}
 
+\index{distribution!truncated multivariate normal|)}
+
 %\section{Wishart distribution}
 %
 %Let $X\in\bbR^{m\times m}$ be a symmetric, positive-definite matrix.
@@ -440,7 +451,7 @@ We present some results that we have not previously seen before elsewhere.
 %\]
 %
 \section{Gamma distribution}
-\label{apx:gammadist}
+\label{apx:gammadist}\index{gamma}
 \vspace{-0.2em}
 
 \begin{definition}[Gamma distribution]
@@ -469,7 +480,7 @@ Often, the gamma distribution is parameterised according to shape $s$ and scale 
 \vspace{-0.5em}
 
 \section{Inverse gamma distribution}
-\label{def:invgam}
+\label{def:invgam}\index{inverse gamma}
 \vspace{-0.2em}
 
 \begin{definition}[Inverse gamma distribution]

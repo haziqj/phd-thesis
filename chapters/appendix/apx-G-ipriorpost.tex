@@ -1,3 +1,4 @@
+\index{I-prior!posterior distribution}
 We derive the posterior distribution for the I-prior random effects $\bw = (w_1,\dots,w_n)^\top$, which is related to the I-prior regression function via $f(x_i) = \sum_{k=1}^n h_\eta(x_i,x_k)w_k$, or in matrix terms, $\bff := \big(f(x_1),\dots,f(x_n)\big)^\top  = \bH_\eta\bw$, and $f \in \cF$ an RKHS with kernel $h_\eta$.
 A closely related distribution of interest is the posterior predictive distribution of $y_\new$, the prediction at a new data point $x_\new$.
 We note the similarity of these results with the posterior distributions of Gaussian process regressions \citep{rasmussen2006gaussian}.
@@ -24,13 +25,13 @@ we have that $\bw|\by$ is normally distributed with the required mean and varian
 Alternatively, one could have shown this using standard results of multivariate normal distributions.
 Noting that the covariance between $\by$ and $\bw$ is  %\sim\N_n(\balpha +\bff_0, \bV_y)
 \begin{align*}
-  \Cov[\by,\bw] 
-  &= \Cov[\balpha + \bff_0 + \bH_\eta\bw + \bepsilon, \bw] \\
-  &= \bH_\eta\Cov[\bw,\bw] \\
+  \Cov(\by,\bw)
+  &= \Cov(\balpha + \bff_0 + \bH_\eta\bw + \bepsilon, \bw) \\
+  &= \bH_\eta\Cov(\bw,\bw) \\
   &= \bH_\eta\bPsi 
 %  &= \Cov(\bw,\by),
 \end{align*}
-and that $\Cov[\bw,\by] = \bPsi\bH_\eta = \bH_\eta\bPsi = \Cov[\by,\bw]$ by symmetry, the joint distribution $(\by,\bw)$ is
+and that $\Cov(\bw,\by) = \bPsi\bH_\eta = \bH_\eta\bPsi = \Cov[\by,\bw]$ by symmetry, the joint distribution $(\by,\bw)$ is
 \[
   \begin{pmatrix}
     \by \\
@@ -50,13 +51,13 @@ and that $\Cov[\bw,\by] = \bPsi\bH_\eta = \bH_\eta\bPsi = \Cov[\by,\bw]$ by symm
 \] 
 Thus,
 \begin{align*}
-  \E [\bw|\by] 
+  \E (\bw|\by)
   &= \E \bw + \Cov(\bw,\by) (\Var \by)^{-1} (\by - \E \by) \\
   &= \bPsi\bH_\eta\bV_y^{-1}(\by - \balpha - \bff_0),
 \end{align*}
 and
 \begin{align*}
-  \Var [\bw|\by] 
+  \Var (\bw|\by)
   &= \Var \bw - \Cov(\bw,\by) (\Var \by)^{-1} \Cov(\by,\bw) \\
   &= \bPsi - \bH_\eta\bPsi\bV_y^{-1}\bH_\eta\bPsi \\
   &= \bPsi - \bPsi\bH_\eta \left(\bPsi^{-1} + \bH_\eta\bPsi\bH_\eta \right)^{-1}\bH_\eta\bPsi  \\
@@ -66,9 +67,11 @@ and
 %  &= \left[ \bPsi^{-1} + \bPsi^{-1}\bH_\eta\bPsi \left( \right) \right]^{-1}
 \end{align*}
 as a direct consequence of the Woodbury matrix identity \citep[eq. 156, sec. 3.2.2]{petersen2008matrix}.
+\index{Woodbury matrix identity}
 
 \section{Deriving the posterior predictive distribution}
 \label{apx:postpred}
+\index{I-prior!posterior predictive distribution}
 
 The posterior predictive distribution is obtained in an empirical Bayesian manner, in which the parameters of the model are replaced with their ML estimates (denoted with hats).
 
@@ -88,17 +91,17 @@ Write
       \hat\alpha\bone_n
     \end{pmatrix},
     \begin{pmatrix}
-      v_\new &\Cov[y_\new,\by] \\
-      \Cov[y_\new,\by]^\top &\hat\bV_y \\
+      v_\new &\Cov(y_\new,\by) \\
+      \Cov(y_\new,\by)^\top &\hat\bV_y \\
     \end{pmatrix}
   \right),
 \]
 where 
 \begin{align*}
-  \Cov[y_\new,\by]
-  &= \Cov[f_\new + \epsilon_\new, \bff + \bepsilon] \\
-  &= \Cov[f_\new, \bff) + \Cov(\epsilon_\new, \bepsilon] \\
-  &= \Cov\left[\bh_{\hat\eta}(x_\new)^\top \wtilde,\bH_{\hat\eta}\wtilde \right] + (\sigma_{\new,1},\dots,\sigma_{\new,n}) \\
+  \Cov(y_\new,\by)
+  &= \Cov(f_\new + \epsilon_\new, \bff + \bepsilon) \\
+  &= \Cov(f_\new, \bff) + \Cov(\epsilon_\new, \bepsilon)\\
+  &= \Cov\left(\bh_{\hat\eta}(x_\new)^\top \wtilde,\bH_{\hat\eta}\wtilde \right) + (\sigma_{\new,1},\dots,\sigma_{\new,n}) \\
   &= \bh_{\hat\eta}(x_\new)^\top\hat\bPsi\bH_{\hat\eta} + \bsigma_\new.
 \end{align*}
 The vector of covariances $\bsigma_\new$ between observations $y_1,\dots,y_n$ and the predicted point $y_\new$ would need to be prescribed a priori (treated as extra parameters), or estimated again, which seems excessive.
@@ -106,16 +109,16 @@ Under an iid assumption of the error precisions, then $\bsigma_\new = \bzero$ wo
 
 In any case, using standard multivariate normal results, we get that $y_\new|\by$ is also normally distributed with mean
 \begin{align*}
-  E[y_\new|\by] 
+  \E(y_\new|\by)
   &= \hat\alpha + (\bh_{\hat\eta}(x_\new)^\top\hat\bPsi\bH_{\hat\eta} + \bsigma_\new)\hat\bV_y^{-1}\tilde\by  \\
   &= \hat\alpha + \bh_{\hat\eta}(x_\new)^\top
   \myoverbrace{\bh_{\hat\eta}(x_\new)^\top\hat\bPsi\bH_{\hat\eta}\hat\bV_y^{-1}\tilde\by}{\hat\bw}
   + \bsigma_\new \hat\bV_y^{-1}\tilde\by \\
-  &= \hat\alpha + \E \big[ f(x_\new) |\by \big] + \text{mean correction term}
+  &= \hat\alpha + \E \big( f(x_\new) |\by \big) + \text{mean correction term}
 \end{align*}
 and variance
 \begin{align*}
-  \Var[y_\new|\by] 
+  \Var(y_\new|\by)
   ={}& v_\new - (\bh_{\hat\eta}(x_\new)^\top\hat\bPsi\bH_{\hat\eta} + \bsigma_\new)\hat\bV_y^{-1}(\bh_{\hat\eta}(x_\new)^\top\hat\bPsi\bH_{\hat\eta} + \bsigma_\new)^\top \\
   ={}& \bh_{\hat\eta}(x_\new)^\top \hat\bPsi\hat \bh_{\hat\eta}(x_\new) + \psi^{-1}_\new - \bh_{\hat\eta}(x_\new)^\top\hat\bPsi\bH_{\hat\eta}\hat\bV_y^{-1}\bH_{\hat\eta}\hat\bPsi\bh_{\hat\eta}(x_\new) \\
   &+ \text{variance correction term} \\
@@ -126,5 +129,5 @@ and variance
   \bh_{\hat\eta}(x_\new) + \psi^{-1}_\new \\
   & + \text{variance correction term} \\
   ={}& \bh_{\hat\eta}(x_\new)^\top \hat\bV_y^{-1}\bh_{\hat\eta}(x_\new) + \psi^{-1}_\new + \text{variance correction term} \\
-  ={}& \Var\big[f(x_\new)|\by\big] + \psi^{-1}_\new + \text{variance correction term}.
+  ={}& \Var\big(f(x_\new)|\by\big) + \psi^{-1}_\new + \text{variance correction term}.
 \end{align*}

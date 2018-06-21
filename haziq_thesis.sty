@@ -450,6 +450,16 @@
   }
 }
 
+% Adds the closing stuff/print index (MAIN VERSION)
+\newcommand{\hPrintIndex}{%
+  {\hypersetup{allcolors=.}
+    \begingroup
+      \singlespacing
+      \printindex
+    \endgroup
+  }
+}
+
 % Cleverref needs to be loaded last
 \usepackage{nameref}
 \usepackage[capitalise,noabbrev,nameinlink]{cleveref}

@@ -1,3 +1,4 @@
+\index{variational EM algorithm}
 The two sections that follow detail the derivation of the variational densities used in the E-step of the variational EM algorithm, and also the lower bound (ELBO) used to monitor convergence.
 
 \section{Derivation of the variational densities}
@@ -190,15 +191,15 @@ A quantity that we will be requiring time and again will be $\tr(\bC\E[\bw^\top\
 Using the definition of the trace directly, we get
 \begin{align}
   \tr(\bC\E[\bw^\top\bD\bw ])
-  &= \sum_{i,j=1}^m \bC_{ij} \E[\bw^\top\bD\bw ]_{ij} \nonumber \\
-  &= \sum_{i,j=1}^m \bC_{ij} \E[\bw_{\bigcdot i}^\top\bD\bw_{\bigcdot j} ]. \label{eq:trCEwDw}
+  &= \sum_{i,j=1}^m \bC_{ij} \E(\bw^\top\bD\bw )_{ij} \nonumber \\
+  &= \sum_{i,j=1}^m \bC_{ij} \E(\bw_{\bigcdot i}^\top\bD\bw_{\bigcdot j} ). \label{eq:trCEwDw}
 \end{align}
 The expectation of the univariate quantity $\bw_{\bigcdot i}^\top\bD\bw_{\bigcdot j}$ is inspected below:
 \begin{align*}
-  \E[\bw_{\bigcdot i}^\top\bD\bw_{\bigcdot j}]
+  \E(\bw_{\bigcdot i}^\top\bD\bw_{\bigcdot j})
   &= \tr(\bD \E[\bw_{\bigcdot j}\bw_{\bigcdot i}^\top]) \\
-  &= \tr\big(\bD (\Cov(\bw_{\bigcdot j},\bw_{\bigcdot i}) + \E[\bw_{\bigcdot j}]\E[\bw_{\bigcdot i}]^\top) \big) \\
-  &= \tr\big(\bD (\bV_w[i,j]  + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot i}^\top)\big).
+  &= \tr \left(\bD \Big[\Cov(\bw_{\bigcdot j},\bw_{\bigcdot i}) + \E(\bw_{\bigcdot j}) \E(\bw_{\bigcdot i})^\top \Big] \right) \\
+  &= \tr\left( \bD \Big[ \bV_w[i,j]  + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot i}^\top \Big] \right).
 \end{align*}
 where $\bV_w[i,j] \in \bbR^{n\times n}$ refers to the $(i,j)$'th submatrix block of $\bV_w$.
 Of course, in the independent the I-probit model, this is equal to 
@@ -209,9 +210,8 @@ where $\delta$ is the Kronecker delta.
 Continuing on \cref{eq:trCEwDw} leads us to
 \begin{align*}
   \tr(\bC\E[\bw^\top\bD\bw ])
-  &= \sum_{i,j=1}^m \bC_{ij} \left( 
-  \tr\big(\bD (\delta_{ij}\bV_{w_j}  + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot i}^\top)\big).
-  \right).
+  &= \sum_{i,j=1}^m \bC_{ij} 
+  \tr \left(\bD \Big[ \delta_{ij}\bV_{w_j}  + \tilde\bw_{\bigcdot j}\tilde\bw_{\bigcdot i}^\top \Big] \right).
 \end{align*}
 If $\bC = \diag(c_1,\dots,c_m)$, then
 \begin{align*}
@@ -221,20 +221,21 @@ If $\bC = \diag(c_1,\dots,c_m)$, then
   \tilde\bw_{\bigcdot j}^\top \bD \tilde\bw_{\bigcdot j}
   \right) \\
   &= \sum_{j=1}^m c_j
-  \tr \big( \bD (\tilde\bV_{w_j} + \tilde\bw_{\bigcdot j} \tilde\bw_{\bigcdot j}^\top) \big).
+  \tr \left( \bD \Big[ \tilde\bV_{w_j} + \tilde\bw_{\bigcdot j} \tilde\bw_{\bigcdot j}^\top \Big] \right).
 \end{align*}
 
 \section{Deriving the ELBO expression}
 
+\index{I-probit!ELBO}
 The evidence lower bound (ELBO) expression involves the following calculation:
 \begin{align*}
   \cL_q(\theta) 
   ={}& \idotsint q(\by^*,\bw) 
   \log \frac{p(\by,\by^*,\bw|\theta)}{q(\by^*,\bw)}
   \dint\by^* \dint\bw \dint\theta \\
-  ={}& \E \big[ \log \myoverbrace{p(\by,\by^*,\bw|\theta)}{\text{joint likelihood}} \big]
+  ={}& \E \big[ \log \myoverbrace{p(\by,\by^*,\bw|\theta)}{\text{joint likelihood}} \, \big]
   +
-  (\myoverbrace{-\E \big[ \log q(\by^*,\bw,)}{\text{entropy}}) \big] \\
+  \myoverbrace{-\E \big[ \log q(\by^*,\bw) \big]}{\text{entropy}}  \\
   ={}& \E\bigg[
   \cancel{\sum_{i=1}^n \sum_{j=1}^m \log  p(y_{i}|y_{ij}^*)} + 
   \sum_{i=1}^n \log  p(\by_{i \bigcdot}^*|\balpha,\bw,\bPsi,\eta) +

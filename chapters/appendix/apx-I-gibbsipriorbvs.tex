@@ -1,3 +1,4 @@
+\index{Gibbs sampler}
 The I-prior Bayesian variable selection model has the following hierarchical form:
 \begin{align*}
   \begin{gathered}
@@ -30,7 +31,7 @@ For simplicity, in the following subsections we shall denote by $\Theta$ the ent
 where $\tilde \bB = \bX_\gamma^\top \bX_\gamma + (\kappa \XTX)^{-1}$, and $\bX_\gamma = (\gamma_1X_1 \cdots \gamma_pX_p)$ is the $n \times p$ design matrix $\bX$ with each of the $p$ columns multiplied by the indicator variable $\gamma$.
 This is of course recognised as the log density of a $p$-variate normal distribution with mean and variance
 \[
-  \E[\bbeta|\Theta_{-\bbeta}] = \tilde \bB(y - \alpha \bone_n) \text{ and } \Var[\bbeta|\Theta_{-\bbeta}] = \sigma^2\tilde \bB.
+  \E(\bbeta|\Theta_{-\bbeta}) = \tilde \bB(y - \alpha \bone_n) \text{ and } \Var(\bbeta|\Theta_{-\bbeta}) = \sigma^2\tilde \bB.
  \]
 
 \section{Conditional posterior for $\gamma$}
@@ -56,11 +57,11 @@ For $j=1,\dots,p$, we have used the notation $\theta_j^{[\omega]}$ to mean
 \[
   \btheta_j^{[\omega]} = 
   \begin{cases}
-    (\theta_1,\dots,\theta_{j-1},\beta_j,\theta_{j+1},\dots,\theta_p) &\omega = 1 \\
-    (\theta_1,\dots,\theta_{j-1},0,\theta_{j+1},\dots,\theta_p) &\omega = 0.
+    (\theta_1,\dots,\theta_{j-1},\beta_j,\theta_{j+1},\dots,\theta_p)^\top &\omega = 1 \\
+    (\theta_1,\dots,\theta_{j-1},0,\theta_{j+1},\dots,\theta_p)^\top &\omega = 0.
   \end{cases}
 \]
-Therefore, the conditions distribution for $\gamma_j$ is Bernoulli with success probability 
+Therefore, the conditional distribution for $\gamma_j$ is Bernoulli with success probability 
 \[
   \tilde \pi_j = \frac{u_j}{u_j + v_j}.
 \]

@@ -1,3 +1,4 @@
+\index{g-prior@$g$-prior}
 The I-prior for $\boldsymbol{\beta}$ in a standard linear model resembles the objective $g$-prior \citep{zellner1986assessing} for regression coefficients,
 \[
   \boldsymbol{\beta} \sim \N_p\big(\bzero, g (\bX^\top \bPsi \bX)^{-1} \big),
@@ -18,6 +19,7 @@ With this inner product and from \cref{eq:fisher-linear-functional} \colp{\mypag
 \end{align*}
 and this, rather than the usual $\bX^\top \bPsi \bX$ as the prior covariance matrix for $\boldsymbol{\beta}$, means that the I-prior is in fact the standard $g$-prior.
 
+\index{Mahalanobis distance}
 The metric induced by the inner product is actually the \emph{Mahalanobis distance}, a scale-invariant natural distance if the covariates are measured on different scales.
 To expand on this idea, circle back to the regression function and write it as $f(\bx) = \ip{\bx,\boldsymbol\beta}_\cX$.
 In usual least squares regression, the choice of inner product is irrelevant, so the usual dot product is commonly used (however, as we have seen above, the choice of inner product determines the form of the Fisher information for $\boldsymbol{\beta}$).
