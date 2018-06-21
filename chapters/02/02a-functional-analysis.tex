@@ -65,7 +65,7 @@ A norm needs to satisfy the parallelogram law for an inner product to be properl
 
 \index{metric}
 \index{convergence}
-\index{Cauchy}
+\index{Cauchy sequence}
 The norm $||\cdot||_{\mathcal F}$, in turn, induces a metric (a notion of distance) on $\mathcal F$, i.e. $D(f,g) = ||f-g||_{\mathcal F}$, for $f,g\in\cF$.
 With these notions of distances, one may talk about sequences of functions in $\cF$ which are \emph{convergent}, and sequences whose elements become arbitrarily close to one another as the sequence progresses (\emph{Cauchy}).
 
@@ -77,7 +77,7 @@ With these notions of distances, one may talk about sequences of functions in $\
 	A sequence $\{f_n\}_{n=1}^\infty$ of elements of a normed vector space $(\mathcal F, ||\cdot ||_{\mathcal F})$ is said to be a Cauchy sequence if for every $\epsilon > 0$, $\exists N=N(\epsilon) \in \mathbb N$, such that $\forall n,m > N$, $||f_n - f_m||_{\mathcal F} < \epsilon$.
 \end{definition}
 
-\index{complete vector space}
+\index{vector space!complete}
 \index{Hilbert space}
 \index{Banach space}
 \index{Hilbert space!pre-Hilbert space}
@@ -127,8 +127,10 @@ To establish terminology, we define linear and bilinear maps (operators).
 An interesting property of these operators to look at, besides linearity, is whether or not they are \emph{continuous}.
 
 \begin{definition}[Continuity]\label{def:continuity}
-  \index{continuous}
-  \index{continuous!uniform}
+  \index{continuity}
+  \index{continuity!uniform}
+  \index{uniformly continuous}
+  \index{uniformly continuous|seealso{continuity}}
   Let $\cF$ and $\cG$ be two Hilbert spaces.
   A function $A:\cF\to\cG$ is said to be \emph{continuous at $g\in\cF$}, if for every $\epsilon>0$, $\exists \delta=\delta(\epsilon,g)>0$ such that
   \[
@@ -142,7 +144,9 @@ Continuity in the sense of linear operators here means that a convergent sequenc
 For a particular linear operator, the evaluation functional, this means that closeness in norm implies pointwise closeness---this relates to RKHSs, which is discussed in \cref{sec:rkhstheory}.
 There is an even stronger notion of continuity called  \emph{Lipschitz continuity}.
 
-\index{continuous!Lipschitz}
+\index{Lipschitz continuous|seealso{continuity}}
+\index{Lipschitz continuous}
+\index{continuity!Lipschitz}
 \begin{definition}[Lipschitz continuity]
   Let $\cF$ and $\cG$ be two Hilbert spaces.  
   A function $A:\cF\to\cG$ is \emph{Lipschitz continuous} if $\exists M >0$ such that $\forall f,f'\in\cF$,

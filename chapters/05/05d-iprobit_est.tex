@@ -36,7 +36,7 @@ A schematic diagram depicting the I-probit model is shown in \cref{fig:iprobitda
     \label{fig:iprobitdag}
 \end{figure}
 
-\index{log-likelihood}
+\index{I-probit!log-likelihood}
 The log likelihood function for $\theta$ using all $n$ observations $\{(y_1,x_1),\dots,(y_n,x_n)\}$ is obtained by performing the following integration:
 \begin{align}\label{eq:iprobitlik}
   L(\theta|\by) 
@@ -80,7 +80,7 @@ The challenge of estimation is then to first overcome this intractability by mea
 We present three possible avenues to achieve this aim, namely the Laplace approximation, a variational EM algorithm, and Markov chain Monte Carlo (MCMC) methods.
 
 \subsection{Laplace approximation}
-\index{Laplace's method|(}
+\index{Laplace's method}
 
 The focus here is to obtain the posterior density $p(\bw|\by) \propto p(\by|\bw)p(\bw) =: e^{R(\bw)}$ which has normalising constant equal to the marginal density of $\by$, $p(\by) = \int e^{R(\bw)} \dint \bw$, as per \cref{eq:intractablelikelihood2}.
 Note that the dependence of the pdfs on $\theta$ is implicit, but is dropped for clarity.
@@ -122,10 +122,8 @@ Lastly, as a comment, Laplace's method only approximates the true marginal likel
 In other words, a second order approximation of $R(\bw)$ must be be reliable for Laplace's method to be successful.
 This is typically the case if the posterior distribution is symmetric about the mode and falls quickly in the tails.
 
-\index{Laplace's method|)}
-
 \subsection{Variational EM algorithm}
-\index{variational!EM algorithm|(}
+\index{variational EM algorithm}
 
 We turn to variational methods as a means of approximating the posterior densities of interest and obtain parameter estimates.
 Variational methods are widely discussed in the machine learning literature, but there have been efforts to popularise it in statistics \citep{blei2017variational}.
@@ -196,11 +194,10 @@ and this is maximised with respect to $\theta$ in the M-step to obtain $\theta^{
 The algorithm alternates between the E- and M-step until convergence of the ELBO.
 A full derivation of the variational EM algorithm used by us will be described in \cref{sec:iprobitvar}.
 
-\index{variational!EM algorithm|)}
-
 \subsection{Markov chain Monte Carlo methods}
 
 \index{MCMC}
+\index{HMC}
 Markov chain Monte Carlo (MCMC) methods is the tool of choice for a complete Bayesian analysis of multinomial probit models \citep{mcculloch2000bayesian,nobile1998hybrid,mcculloch2000bayesian}.
 \citet{albert1993bayesian} showed that a data augmentation approach, i.e. the latent variable approach, to probit models can be analysed using exact Bayesian methods, due to the underlying normality structure.
 Paired with corresponding conjugate prior choices, sampling from the posterior is very simple using a Gibbs sampling approach.
@@ -220,7 +217,7 @@ However, with multinomial responses, the arduous task of computing class probabi
 \subsection{Comparison of estimation methods}
 
 \index{classification!binary}
-\index{fBm}
+\index{fBm kernel/RKHS}
 In this subsection, we utilise a toy binary classification data set which has been simulated according to a spiral pattern, as in \cref{fig:exampleiprobit}.
 The predictor variables are $X_1$ and $X_2$, each of which are scaled similarly.
 Following \cref{eq:iprobitbin}, the binary I-probit model that is fitted is
@@ -236,7 +233,7 @@ where $h_\lambda$ is the (scaled) kernel of the fBm-0.5 RKHS $\cF$ to which $f$ 
 
 We carry out the three estimation precodures described above (Laplace's method, variational EM, and Hamiltonian MC) to compare parameter estimates, (training) error rates, and runtime.
 The Laplace and variational EM methods were performed in the \pkg{iprobit} package, while \proglang{Stan} was used to code the Hamiltonian MC sampler.
-Prior choices for the fully Bayesian methods were: 1) a vague folded normal prior $\lambda\sim\N_+(0,100)$ for the RKHS scale parameter, and 2) a diffuse prior for the intercept $p(\alpha) \propto \const$
+Prior choices for the fully Bayesian methods were: 1) a vague folded-normal prior $\lambda\sim\N_+(0,100)$ for the RKHS scale parameter, and 2) a diffuse prior for the intercept $p(\alpha) \propto \const$
 Note that the restriction of $\lambda$ to the positive orthant is required for identifiability.
 The results are presented in \cref{tab:compreiprobit}.
 
@@ -289,6 +286,7 @@ Time taken (s) & >3600                & 5.32         & >1800                    
 \end{figure}
 \index{Brier score}
 
+\index{Laplace's method}
 A plot of the log-likelihood (or ELBO) surface for three methods in \cref{fig:exampleiprobitfit} reveals some insight.
 The variational likelihood has two ridges, with the maxima occurring around the intersection of these two ridges.
 The Laplace likelihood seems to indicate a similar shape---in both the Laplace and variational method, the posterior distribution of $\bw$ is approximated by a Gaussian distribution, with different means and variances.

@@ -16,10 +16,10 @@ Let $\bQ$ be a matrix with rank $q < n$, and suppose that $\bQ\bQ^\top$ can be u
 Then
 \[
   (\psi\bH_\eta^2 + \psi^{-1}\bI_n)^{-1} \approx
-  \psi\left[
+  \psi\left\{
   \bI_n -
-  \bQ\left( \big(\psi^2\bQ^\top\bQ\big)^{-1} +\bQ^\top\bQ \right)^{-1} \bQ^\top
-  \right],
+  \bQ\left[ \big(\psi^{2}\bQ^\top\bQ\big)^{-1} +\bQ^\top\bQ \right]^{-1} \bQ^\top
+  \right\},
 \]
 obtained via the Woodbury matrix identity, is potentially a much cheaper operation which scales $O(nq^2)$---$O(q^3)$ to do the inversion, and $O(nq)$ to do the multiplication (because typically the inverse is premultiplied to a vector).
 When using the linear kernel for a low-dimensional covariate then the above method is exact ($\bQ = \bX$, where $\bX$ is the design matrix).
@@ -96,7 +96,7 @@ For a brief review of more sophisticated methods of selecting $\cQ$, see \citet[
 \subsection{Front-loading kernel matrices for the EM algorithm}
 \label{sec:efficientEM1}
 
-\index{kernel matrix!front loading|(}
+\index{kernel!front loading}
 The evaluation of the $Q$ function in \cref{eq:QfnEstep} is $O(n^3)$, because a change in the values of $\theta$ requires evaluating $\bSigma_\theta = \psi\bH_\eta^2 + \psi^{-1}\bI_n$, for which squaring $\bH_\eta$ takes the bulk of the computational time.
 This is disadvantageous because, a Newton or quasi-Newton algorithm used for the M-step would require multiple evaluations of $Q$ in order to complete an EM update.
 
@@ -174,7 +174,6 @@ On the bright side, once the kernel matrices are stored in hard memory, the \pkg
 A practical situation where this might be useful is when we would like to repeat the EM at various initial values.
 Although front-loading of kernel matrices increase storage requirements, this is manageable in practice in modern computer systems for sample sizes of $n \leq 5,000$, and there is a clear advantage of doing so.
 
-\index{kernel matrix!front loading|)}
 
 \begin{figure}[htb]
   \centering
@@ -236,7 +235,7 @@ Defining $\bR_k$ and $\bS_k$ to be the kernel matrices with $(i,j)$ entries $r_k
 
 \index{log-likelihood!full data|see{complete data}}
 \index{log-likelihood!complete data}
-\index{likelihood|see{log-likelihood}}
+\index{likelihood|seealso{log-likelihood}}
 Consider now the full data log-likelihood for $\lambda_k$, $k=1,\dots,p$, conditionally dependent on the rest of the unknown parameters $\lambda_{-k} = \{\lambda_1,\dots,\lambda_p\} \backslash \{ \lambda_k \}$ and $\psi$:
 \begin{align}
   L(\lambda_k|\by,\bw,\lambda_{-k},\psi)
@@ -302,9 +301,8 @@ As a remark, it is not necessary that $h_\lambda$ is the full ANOVA RKKS; any of
 \end{algorithmic}
 \end{algorithm}
 
-\index{maximum a posteriori|see{MAP estimate}}
 \index{MAP estimate}
-\index{penalised likelihood}
+\index{maximum likelihood!penalised}
 \begin{remark}
   Another compelling reason to use \cref{alg:EM2} is conjugacy of the exponential family of distributions.
   Realise that $\lambda_k|\by,\bw,\lambda_{-k},\psi$ is in fact normally distributed, with mean and variance given by $T_2/2T_1$ and $1/2T_1$ respectively.

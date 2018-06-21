@@ -10,7 +10,8 @@ We describe the \emph{frequentist} and \emph{Bayesian} paradigms for parameter e
 In the frequentist setting, the \emph{likelihood} function, or simply likelihood, is a function of the parameters $\theta$ which measures the plausibility of the parameter value given the observed data to fit a statistical model.
 It is defined as the mapping $\theta \mapsto p(\by|\theta)$, where $p(\by|\theta)$ is the probability density function (or in the case of discrete observations, the probability mass function) of the modelled distribution of the observations.
  
-\index{ML}
+\index{maximum likelihood}
+\index{likelihood}
 \index{log-likelihood}
 It is logical to consider the parameter set which provides the largest likelihood value,
 \begin{equation}\label{eq:ml}
@@ -19,7 +20,7 @@ It is logical to consider the parameter set which provides the largest likelihoo
 The value $\hat\theta$ is referred to as the \emph{maximum likelihood estimate} for $\theta$.
 For convenience, the \emph{log-likelihood} function $L(\theta) = \log p(\by|\theta)$ is maximised instead; as the logarithm is a monotonically increasing function, the maximiser of the log-likelihood function is exactly the maximiser of the likelihood function itself.
 
-\index{gradient-based method}
+\index{gradient!method}
 When ML estimates are unable to be found in closed-form, the maximisation problem of \cref{eq:ml} requires iterative, numerical methods to find the maximum.
 These methods are often \emph{gradient-based} methods, algorithms that make use of the gradient of the objective function to be optimised.
 Examples include Newton's method, Fisher's scoring, quasi-Newton methods, gradient descent, and conjugate gradient methods.
@@ -72,8 +73,8 @@ The \emph{posterior mean}
   \tilde \theta = \int \theta p(\theta|\by) \dint\theta
 \end{equation}
 is normally taken to be the point estimate for $\theta$, with its uncertainty usually reported in the form of a \emph{credible interval}: if $\theta_k$ is the $k$'th component of $\theta$, then a $(1-\alpha) \times 100\%$ credible interval for $\theta_k$ is $(\theta_k^l, \theta_k^u)$, where  $\Prob( \theta_k^l \leq \theta_k \leq \theta_k^u ) = (1-\alpha) \times 100\%$.
-Under a quadratic loss function, $\tilde\theta$ minimises the expected loss $\E[(\theta - \theta_{\text{true}})^2 ]$ \citep[sec. 4.4.2, Result 3]{berger2013statistical}, and is hence also viewed as the \emph{minimum mean squared error} (MMSE) estimator.
-\index{minimum mean squared error}
+Under a quadratic loss function, $\tilde\theta$ minimises the expected loss $\E[(\theta - \theta_{\text{true}})^2 ]$ \citep[sec. 4.4.2, result 3]{berger2013statistical}, and is hence also viewed as the \emph{minimum mean squared error} (MMSE) estimator.
+\index{minimum mean squared error (MMSE) estimate}
 
 \index{MCMC}
 On a practical note, integration over the parameter space may be intractable, for instance, the model consists of a large number of parameters for which we would like the posterior mean of, or the marginalising integral cannot be found in closed form.
@@ -153,7 +154,7 @@ This paves the way for using the \emph{maximum marginal likelihood} estimate
   \hat\eta = \argmax_\eta p(\by|\eta) 
 \end{equation}
 in place of $\eta$ in the equation of \cref{eq:empbayes1}.
-This procedure is also coined \emph{maximum likelihood type-II} \citep{bishop2006pattern}, and is commonly referred to as such in the machine learning literature. \index{ML!Type-II}
+This procedure is also coined \emph{maximum likelihood type-II} \citep{bishop2006pattern}, and is commonly referred to as such in the machine learning literature. \index{maximum likelihood!Type-II}
 It is also commonplace in statistics, especially in random-effects or latent variable models which employ a maximum likelihood procedure such as EM algorithm.
 
 As a remark, estimation of $\eta$ itself can be made to conform to Bayesian philosophy, i.e., by placing priors on it and inferring $\eta$ through its posterior.

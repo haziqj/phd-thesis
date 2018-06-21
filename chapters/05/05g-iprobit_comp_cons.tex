@@ -6,8 +6,7 @@ In addition, we also discuss considerations to take into account if estimation o
 \label{sec:mnint}
 
 \index{Monte Carlo integration}
-\index{GHK simulator|(}
-\index{Geweke-Hajivassiliou-Keane simulator|see{GHK simulator}}
+\index{Geweke-Hajivassiliou-Keane (GHK) simulator}
 The issue at hand here is that for $m>4$, the evaluation of the class probabilities in \cref{eq:pij} is computationally burdensome using classical methods such as quadrature methods \citet{geweke1994alternative}.
 As such, simulation techniques are employed instead.
 The simplest strategy to overcome this is a frequency simulator (otherwise known as Monte Carlo integration): obtain random samples from $\N_{m}\big(\bmu(x_i), \bPsi^{-1}\big)$, and calculate how many of these samples fall within the required  region.
@@ -45,6 +44,7 @@ These are indexed by `$(j)$' because the transformation is dependent on which la
   This is similar to fixing the latent variables of the reference category to zero, and thus, as discussed previously in \cref{sec:iia}, full identification is achieved by fixing one more element of the covariance matrix.
 \end{remark}
 
+\index{Cholesky decomposition}
 For the symmetric and positive definite covariance matrix $\bOmega_{(j)}$, obtain its Cholesky decomposition as $\bOmega_{(j)} = \bL\bL^\top$, where $\bL$ is a lower triangular matrix.
 Then, $\bz = \bnu_{(j)} + \bL\bzeta$, where $\bzeta \sim\N_{m-1}(\bzero,\bI_{m-1})$.
 That is,
@@ -152,8 +152,6 @@ It is better to work on a log-probability scale, so the products in \cref{eq:til
   Note that if $\bPsi$ is in fact diagonal, then the transformed $\bOmega_{(j)} = \bQ\bPsi^{-1}\bQ^\top$ is most certainly not; the components of $\bz$ are  correlated because they are all anchored on the same random variable.
   Thus, direct evaluation of the unidimensional integral in \cref{eq:pij2} using quadrature methods as mentioned at the bottom of {\color{\mycitecolour}page} \pageref{eq:pij2} avoids the Cholesky step and random sampling employed by the GHK method.
 \end{remark}
-
-\index{GHK simulator|)}
 
 %\begin{remark}
 %  The GHK probability simulator relates to the \emph{method of simulated likelihood}.  

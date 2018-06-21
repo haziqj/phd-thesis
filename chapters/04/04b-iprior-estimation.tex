@@ -90,62 +90,67 @@ Thus, assumption \ref{ass:A1} therefore implies that the ML estimate for the int
 
 \subsection{Direct optimisation}
 
-\index{log-likelihood}
-\index{ML}
+\index{I-prior!log-likelihood}
+\index{maximum likelihood!estimate}
 \index{quasi-Newton method}
 \index{quasi-Newton method|seealso{Newton method}}
 Under assumptions \ref{ass:A1}--\ref{ass:A3}, a direct optimisation of the parameters $\theta=\{\eta,\bPsi=\psi\bI_n \}$ using the log-likelihood of $\theta$ is straightforward to implement.
 Denote $\bSigma_\theta := \psi\bH_\eta^2 + \psi^{-1}\bI_n = \bV_y$.
 From \cref{eq:model2}, the marginal log-likelihood of $\theta$ is given by
-%
 \begin{align}
   L(\theta)
   &= \log \int p(\by|\bw,\theta)p(\bw|\theta) \dint \bw \nonumber \\
   &= -\half[n]\log 2\pi - \half\log\vert \bSigma_\theta \vert - \half \tilde\by^\top \bSigma_\theta^{-1} \tilde\by \label{eq:marglogliky},
 \end{align}
-%
 which is the log-likelihood of a zero mean multivariate normal distribution with covariance matrix $\bSigma_\theta$.
 This closed-form expression of the integral \cref{eq:marglogliky} stems from the fact that the (conditional) likelihood and the I-prior are both Gaussian.
 Note that the term `marginal' refers to the fact that we are averaging out the random function represented by $\bw$.
 
-For Gaussian processes, direct optimisation is typically done using the conjugate gradients method in conjunction with a Cholesky decomposition on the covariance kernel to maintain stability \citep{rasmussen2006gaussian}. 
-We opt for a quasi-Newton algorithm with an eigendecomposition of the kernel matrix $\bH_{\eta} = \bV \, \text{diag}(u_1,\dots,u_n) \, \bV^\top$ instead.
+\index{Cholesky decomposition}
+For Gaussian process regression (GPR), direct optimisation is typically done using the conjugate gradients method in conjunction with a Cholesky decomposition on the covariance kernel to maintain stability \citep{rasmussen2006gaussian}. 
+We opt for a quasi-Newton algorithm (L-BFGS algorithm, \cite{nocedal2006numerical}) \index{L-BFGS algorithm} with an eigendecomposition of the kernel matrix $\bH_{\eta} = \bV \, \text{diag}(u_1,\dots,u_n) \, \bV^\top$ instead.
+This procedure is relatively robust to numerical instabilities and is better at ensuring positive definiteness of the covariance kernel.
+%The eigendecomposition is performed using the \pkg{Eigen} \proglang{C++} template library and linked to \pkg{iprior} using \pkg{Rcpp} \citep{eddelbuettel2011rcpp}.
+%The hyperparameters are transformed by the \pkg{iprior} package so that an unrestricted optimisation using the quasi-Newton L-BFGS algorithm provided by \code{optim()} in \proglang R.
+%Note that minimisation is done on the deviance scale, i.e. minus twice the log-likelihood.
 Since $\bH_{\eta}$ is a symmetric matrix, we have that $\bV\bV^\top = \bI_n$, and thus
+\begingroup
+\setlength{\abovedisplayskip}{6pt}
+\setlength{\belowdisplayskip}{8pt}
 \begin{align*}
   \bV_y 
   &= \psi\bV \, \text{diag}(u_1^2,\dots,u_n^2) \, \bV^\top + \psi^{-1} \bV\bV^\top \\
   &= \bV \, \text{diag} (\psi u_1^2 + \psi^{-1},\dots,\psi u_n^2 + \psi^{-1}) \, \bV^\top 
 \end{align*}
+\endgroup
 for which the inverse and log-determinant is easily obtainable.
 To be explicit, the log-likelihood is given by
-\begin{equation}
-  \begin{gathered}
-    L(\theta) 
-    = -\half[n]\log 2\pi 
-    - \half\sum_{i=1}^n\log(\psi u_i^2 + \psi^{-1}) \\
-    \hspace{4.5cm} - \half \tilde\by^\top \bV \, 
-    \text{diag} \left(\frac{1}{\psi u_1^2 + \psi^{-1}},\dots,\frac{1}{\psi u_n^2 + \psi^{-1}}\right) 
-    \, \bV^\top \tilde\by
-  \end{gathered}
-\end{equation}
+\begingroup
+\setlength{\abovedisplayskip}{8pt}
+\setlength{\belowdisplayskip}{6pt}
+  \begin{align}
+    \begin{split}
+      L(\theta) 
+      ={}& -\half[n]\log 2\pi - \half\sum_{i=1}^n\log(\psi u_i^2 + \psi^{-1}) \\
+      &- \half \tilde\by^\top \bV \, \text{diag} \left(\frac{1}{\psi u_1^2 + \psi^{-1}},\dots,\frac{1}{\psi u_n^2 + \psi^{-1}}\right) \, \bV^\top \tilde\by
+    \end{split}
+  \end{align}
+\endgroup
 
-This procedure is relatively robust to numerical instabilities and is better at ensuring positive definiteness of the covariance kernel.
-%The eigendecomposition is performed using the \pkg{Eigen} \proglang{C++} template library and linked to \pkg{iprior} using \pkg{Rcpp} \citep{eddelbuettel2011rcpp}.
-%The hyperparameters are transformed by the \pkg{iprior} package so that an unrestricted optimisation using the quasi-Newton L-BFGS algorithm provided by \code{optim()} in \proglang R.
-%Note that minimisation is done on the deviance scale, i.e. minus twice the log-likelihood.
 The direct optimisation method can be prone to local optima, in which case repeating the optimisation at different starting points and choosing the one which yields the highest likelihood is one way around this.
 On a practical note, parameters are best transformed so that optimisation of these parameters are done on an unrestricted scale (e.g. $\log \psi$).
 
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.73\textwidth]{figure/04-iprior-ridge-2}
+  \includegraphics[width=0.75\textwidth]{figure/04-iprior-ridge-2}
   \caption[A typical log-likelihood surface plot of I-prior models.]{A typical log-likelihood surface plot of I-prior models, in which there are two ridges. The maximum occurs along one of the two ridges, or sometimes at the intersection. Clearly, different initialisations can lead optimisation algorithms to either ridge and possibly converge to a local optima.}
   \label{fig:ipriorridge}
 \end{figure}
 
 \index{Fisher information!Gaussian}
-Let $\bU$ be the Fisher information matrix for $\theta \in\bbR^q$.
-Standard calculations \colp{\cref{apx:fishermultinormal}} show that under the marginal distribution $\tilde\by \sim \N_n\big(\bzero, \bSigma_\theta \big)$, the $(i,j)$'th coordinate of $\bU$ is 
+\index{standard error}
+Let $\bU$ be the Fisher information matrix for $\theta \!\in\!\bbR^q$.
+Standard calculations \colp{\cref{apx:fishermultinormal}, \mypageref{apx:fishermultinormal}} show that under the marginal distribution $\tilde\by \sim \N_n\big(\bzero, \bSigma_\theta \big)$, the $(i,j)$'th coordinate of $\bU$ is 
 \begin{equation}
   u_{ij} = 
   \half \tr\left(
@@ -196,7 +201,7 @@ As $\partial\bSigma_\theta/\partial\psi = \bH_\eta^2 - \psi^{-2}\bI_n$, the solu
   \psi^{(t+1)} = 
   \left\{ \frac{\tr \Wtilde^{(t)}}{\tilde\by^\top\tilde\by + \tr(\bH_\eta^2\Wtilde^{(t)}) - 2\tilde\by^\top\bH_\eta\wtilde^{(t)}} \right\}^{1/2}.
 \end{align}
-We use this fact to form a sequential updating scheme $\eta^{(t)} \to \psi^{(t+1)} \to \eta^{(t+1)} \to \cdots$, and this form of the EM algorithm is known as the \emph{expectation conditional maximisation} algorithm \citep{meng1993maximum}.
+We use this fact to form a sequential updating scheme $\eta^{(t)} \to \psi^{(t+1)} \to \eta^{(t+1)} \to \cdots$, and this form of the EM algorithm is known as the \emph{expectation conditional maximisation} algorithm \citep{meng1993maximum}.\index{ECM algorithm}
 \index{ECM algorithm}
 Now, the solution to \cref{eq:emtheta} can also be found in closed-form given values $\psi$, for many models, but in general, this is not the case. 
 In cases where closed-form solutions do exist for $\eta$, then it is just a matter of iterating the update equations until a suitable convergence criterion is met (e.g. no more sizeable increase in successive log-likelihood values).
@@ -262,7 +267,8 @@ The predictors $x_1,\dots,x_n$ have been sampled roughly from the interval $(-1,
   \label{fig:examplesmoothingdata}
 \end{figure}
 
-\index{fBm}
+\index{fBm kernel/RKHS}
+\index{distribution!folded-normal}
 We attempt to estimate $f_\text{true}$ by a function $f$ belonging to the fBm-0.5 RKHS $\cF_\lambda$, with an I-prior on $f$.
 There are two parameters that need to be estimated: the scale parameter $\lambda$ for the fBm-0.5 RKHS, and the error precision $\psi$.
 These can be estimated using the maximum likelihood methods described above, namely by direct optimisation using a quasi-Newton algorithm, and the EM algorithm.
@@ -272,7 +278,7 @@ A vague prior choice for $\lambda$ and $\psi$ are prescribed, namely
 \[
   \lambda,\psi \iid \N_+(0,100),
 \]
-where $\N_+(0,\sigma^2)$ represents the \emph{folded-normal} distribution\footnote{The random variable $X \sim \N_+(\mu,\sigma^2)$ has the density $p(x) = \phi(x|\mu,\sigma^2)\ind(x \geq 0)$.}\footnote{Note that a single scale parameter $\lambda$ is not identified in sign, and is thus constrained to the positive reals. This is applicable in both likelihood-based and Bayesian methods.}.
+where $\N_+(0,\sigma^2)$ represents the \emph{folded-normal} distribution\footnote{The random variable $X \sim \N_+(\mu,\sigma^2)$ has the density $p(x) = \phi(x|\mu,\sigma^2)\ind(x \geq 0)$.}\footnote{Note that a single scale parameter $\lambda$ is not identified in sign, and is thus constrained to the positive reals. This is applicable in both likelihood-based and Bayesian methods.\index{identifiability}}.
 We have also set an improper prior density $p(\alpha) \propto \const$ for the intercept.
 The advantage of HMC is that efficiency is not dictated by conjugacy, so there is freedom to choose any appropriate prior choice on the parameters.
 

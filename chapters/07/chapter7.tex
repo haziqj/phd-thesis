@@ -20,6 +20,9 @@
 \hChapterStandalone[7]{Summary}
 \thispagestyle{chapterseven}
 
+\index{I-prior}
+\index{nonparametric}
+\index{parametric}
 The work done in this thesis explores the concept of regression modelling using priors with Fisher information covariance kernels (I-priors, \cite{bergsma2017}).
 It is best seen as a flexible regression technique which is able to fit both parametric and nonparametric models, and bears similarity to Gaussian process regression.
 For the regression model \cref{eq:model1} subject to \cref{eq:model1ass}, stated again here for convenience,
@@ -31,6 +34,7 @@ For the regression model \cref{eq:model1} subject to \cref{eq:model1ass}, stated
 and it is assumed that the regression function $f$ lies in some reproducing kernel Hilbert or Kreĭn space (RKHS/RKKS) $\cF$ with kernel $h_\eta$ defined over the set of covariates $\cX$.
 In \cref{chapter2}, we built a primer on basic functional analysis, and described various interesting RKHS/RKKS for regression modelling.
 
+\index{Fisher information!regression function}
 We then ascertained the form of the Fisher information for $f$, treated as a parameter of the model to be estimated, and from \cref{thm:fisherreglinfunc} \colp{\mypageref{thm:fisherreglinfunc}}, it is
 \begin{align*}
   \cI\big(f(x),f(x') \big) 
@@ -128,7 +132,7 @@ In closing, we briefly discuss several questions which remain open during the co
   Ill-posed problems similar to this are resolved by adding penalty terms to the log-likelihood.
   As to what penalty terms are appropriate remains an open question.
   
-  \item \textbf{Standard errors for variational approximation}. \index{variational!standard error}
+  \item \textbf{Standard errors for variational approximation}. \index{variational EM algorithm!standard error}
   Under a variational scheme, the log-likelihood function $L(\theta)$ is replaced with the evidence lower bound (ELBO) $\cL_q(\theta)$ which serves as a  conservative approximation to it. 
   The question we have is whether the approximation degrades the asymptotic properties of the estimators obtained via variational inference?
   In particular, are the standard errors obtained from the information matrix involving $\cL_q(\theta)$ reliable?
@@ -142,7 +146,7 @@ In closing, we briefly discuss several questions which remain open during the co
   Though this is described in \citet[ch. 4]{mclachlan2007algorithm}, we have not seen this implemented widely.
   
   \item \textbf{Comparison of logistic and probit links}.
-  For general binary and multinomial models, the logistic link function sees more prevalent use than its probit counterpart.
+  For general binary and multinomial models, the logistic link function sees more prevalent use than its probit counterpart.\index{probit}\index{logistic}
   Of course, we chose the probit as it has distributional advantages which we can exploit for estimation using variational inference.
   However, is there a difference between the behaviour of the probit and logistic model?
   We know that there is a difference between the logistic and normal distribution, especially in scaling and behaviour in the tails, but do these affect the outcome of I-prior models?

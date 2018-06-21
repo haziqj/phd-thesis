@@ -1,3 +1,4 @@
+\index{I-probit!posterior distribution}
 Post-estimation procedures such as obtaining predictions for a new data point, the credibility interval for such predictions, and model comparison, are of interest.
 These are performed in an empirical Bayes manner using the variational posterior density of the regression function obtained from the output of the variational EM algorithm.
 
@@ -8,17 +9,17 @@ As we know, the variational distribution of $\vecc\bw$ is normally distributed w
 By writing $\vecc \tilde\bw = (\tilde \bw_{\bigcdot 1}, \dots, \tilde \bw_{\bigcdot m})^\top$ to separate out the I-prior random effects per class, we have that $\bw_{\bigcdot j}|\hat\theta \sim \N_n(\tilde \bw_{\bigcdot j}, \tilde\bV_w[j,j])$, and $\Cov(\bw_{\bigcdot j},\bw_{\bigcdot k}) = \tilde\bV_w[j,k]$, where the `$[\cdot,\cdot]$' indexes the $n\times n$ sub-block of the block matrix structured matrix $\bV_w$.
 Thus, for each class $j=1,\dots,m$ and any $x \in \cX$,
 \[
-  f_j(x)|\by,\hat\theta \sim \N\big(\,
+  f_j(x)|\by,\hat\theta \sim \N\Big(\,
   \bh_{\hat\eta}(x)^\top \tilde\bw_{\bigcdot j} \, , \,
   \bh_{\hat\eta}(x)^\top\tilde\bV_w[j,j] \, \bh_{\hat\eta}(x)
-  \big),
+  \Big),
 \]
 and the covariance between the regression functions in two different classes is
 \[
   \Cov\big(f_j(x),f_k(x)|\by,\hat\theta \big) = 
   \bh_{\hat\eta}(x)^\top \tilde\bV_w[j,k] \, \tilde\bh_{\hat\eta}(x).
 \]
-Then, in step two, using the results obtained in the previous chapter in \cref{sec:ipriorpostest} \colp{\mypageref{sec:ipriorpostest}}, we have that the latent propensities $y_{\new,j}^*$ for each class are normally distributed with mean, variance, and covariances
+\index{I-probit!posterior predictive distribution}Then, in step two, using the results obtained in the previous chapter in \cref{sec:ipriorpostest} \colp{\mypageref{sec:ipriorpostest}}, we have that the latent propensities $y_{\new,j}^*$ for each class are normally distributed with mean, variance, and covariances
 \begin{alignat*}{3}
   \E(y_{\new,j}^*|\by,\hat\theta) 
   &= \hat\alpha_j + \E \big( f_j(x_\new) |\by,\hat\theta \big)
@@ -74,6 +75,8 @@ To obtain a statistic of interest, say, a 95\% credibility interval of a functio
 
 \begin{remark}
   \index{bootstrap}
+  \index{variational EM algorithm!standard error}
+  \index{standard error}
   Unfortunately, with the variational EM algorithm, standard errors for the parameters $\theta$ are not so easy to obtain.  
   We could not ascertain as to the availability of an unbiased estimate of the asymptotic covariance matrix for $\theta$ under a variational framework.
   One strategy for obtaining standard errors is bootstrap \citep{chen2017use}:
@@ -98,7 +101,8 @@ To obtain a statistic of interest, say, a 95\% credibility interval of a functio
   The obvious downside to this bootstrap scheme is computational time.
 \end{remark}
 
-\index{empirical Bayes factor}
+\index{Bayes factor!empirical}
+\index{empirical Bayes factor|see{Bayes factor}}
 Finally, a discussion on model comparison, which, in the variational inference literature, is achieved by comparing ELBO values of competing models \citep{beal2003}.
 The rationale is that the ELBO serves as a conservative estimate for the log marginal likelihood, which would allow model selection via (empirical) Bayes factors.
 This stems from the fact that 

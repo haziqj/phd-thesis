@@ -179,7 +179,7 @@ With this in mind, we may choose large values of $A$ (e.g. 100) and small values
 Note that as $c,d \to 0$ in the inverse gamma distribution we get the Jeffreys prior\footnote{The Jeffreys prior for a parameter $\theta$ is defined as $p(\theta) \propto \vert \cI(\theta) \vert^{1/2}$ \citep{jeffreys1946invariant}.} for scale parameters.
 
 \begin{remark}
-  \index{spike-and-slab}
+  \index{spike-and-slab prior}
   The BVS model \cref{eq:km} together with the choice of Bernoulli priors on $\gamma$ and a normal prior $\N_p(\bzero,\bV_\beta)$ for $\bbeta$ can be seen a \emph{spike-and-slab prior} prior for linear regression models, a mixture of a point mass at zero and a normal density \citep{mitchell1988bayesian,geweke1996variable}.
   Write $\btheta = (\gamma_1\beta_1,\dots,\gamma_p\beta_p)^\top$, which are interpreted as the `model-specific regression coefficients'.
   Then, the prior on $\btheta$ is equivalently written
@@ -228,7 +228,7 @@ The (conditional) posterior samples of $\gamma=(\gamma_1,\dots,\gamma_p)$ are ob
 Here, we have used the notation $\btheta_j^{[1]}$ to indicate the vector $\btheta$ with the $j$'th component replaced by $\bbeta_j$, and $\btheta_j^{[0]}$ to indicate the vector $\btheta$ with the $j$'th component replaced by 0.
 Values of 1 for $\gamma$ are more likely to be sampled when the ratio $u_j / v_j$ is greater than the prior odds $\pi_j/(1-\pi_j)$.
 Specifically when the prior probabilities $\pi_j$ are all set to be 0.5, then $\gamma_j$ will be more likely to be sampled as `1' if $u_j > v_j$, i.e. if the residual sum of squares (RSS) $\Vert \by - \alpha\bone_n - \bX\btheta \Vert^2$ is \emph{smaller} when the $j$th component is non-zero, compared to the RSS when the $j$'th component of $\btheta$ is zero.
-\index{RSS}
+\index{residual sum of squares}
 
 \index{Bayesian hypothesis test}
 We can in fact draw parallels to a Bayesian hypothesis test, with the null hypothesis being $\text{H}_0: \beta_j = 0$ and the alternative being $\text{H}_1: \beta_j \neq 0$, conditional on knowing all other values of the parameters.
@@ -440,7 +440,7 @@ Reproducible code is available at \url{http://myphdcode.haziqj.ml}.
 In all analyses, a two-stage procedure was conducted for the I-prior model, where each stage consists of obtaining 15,000 MCMC samples (including 5,000 for burn-in).
 
 \subsection{Aerobic data set}
-\index{Aerobic data set}
+\index{aerobic data set}
 
 \begin{figure}[htb]
 	\centering
@@ -657,7 +657,7 @@ Out of curiosity, running the variable selection model on the reduced variable s
 
 \footnotetext{Since the total model space used was different between our method, C\&M and B\&F, it does not make sense to compare posterior model probabilities which we obtained. C\&M reported a model probability of 0.491 for their model, but this model was not selected at all using the I-prior.}
 
-\index{interactions}
+\index{interaction}
 We then used the I-prior method to select between the squared terms and all level two interactions, in addition to all the variables, in an effort to improve model prediction. 
 For 12 such variables, the number of variables to select becomes $12 + 12 + 12(12 - 1)/2 = 90$. 
 By doing so, we were able to improve the model to give a slightly better predictive ability.

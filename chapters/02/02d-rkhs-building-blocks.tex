@@ -6,7 +6,7 @@ Construction of new function spaces from these building block RKHSs will be disc
 
 \subsection{The RKHS of constant functions}
 
-\index{constant!kernel/RKHS}
+\index{constant kernel/RKHS}
 The vector space of constant functions $\cF$ over a set $\cX$ contains the functions $f:\cX \to \bbR$ such that $f(x) = c_f \in \bbR$, $\forall x \in \cX$.
 These functions would be useful to model an overall average, i.e. an ``intercept effect''.
 The space $\cF$ can be equipped with a norm to form an RKHS, as shown in the following proposition.
@@ -38,7 +38,7 @@ The space $\cF$ can be equipped with a norm to form an RKHS, as shown in the fol
 
 \subsection{The canonical (linear) RKHS}
 
-\index{canonical!kernel/RKHS}
+\index{canonical kernel/RKHS}
 \index{Riesz representation theorem}
 Consider a function space $\cF$ over $\cX$ which consists of functions of the form $f_\beta:\cX\to\bbR$, $f_\beta: x \mapsto \ip{x,\beta}_\cX$ for some $\beta\in\bbR$.
 Suppose that $\cX \equiv \bbR^p$, then $\cF$ consists of the linear functions $f_\beta(x) = x^\top\beta$.
@@ -90,7 +90,7 @@ The origin of a Hilbert space may be arbitrary, in which case a centring may be 
 We define the centred canonical RKHS as follows.
 
 \begin{definition}[Centred canonical RKHS]
-  \index{canonical!centred}
+  \index{canonical kernel/RKHS!centred}
   Let $\cX$ be a Hilbert space, $\Prob$ be a probability measure over $\cX$, and $\mu\in\cX$ be the mean of a random element $X\in\cX$. 
 %  (i.e. $\E\ip{x,x'}_{\cX}  = \ip{\mu,x'}_{\cX}$ for all $x' \in \cX$) with respect to this probability measure.
   Define $(\cX - \mu)'$, the continuous dual space of $\cX - \mu$, to be the \emph{centred canonical RKHS}.
@@ -121,9 +121,10 @@ and since $\E \ip{X,\beta}_\cX = \ip{\mu,\beta}_\cX$ for any $\beta\in\cX$, the 
 \index{Wiener process|see{Brownian motion}}
 Brownian motion, which also goes by the name Wiener process, has been an inquisitive subject in the mathematical sciences, and here, we describe a function space motivated by a generalised version of Brownian motion paths.
 
-\index{fBm!kernel/RKHS}
+\index{fBm kernel/RKHS}
 \index{Hurst}
-\index{Hurst|seealso{fBm}}
+\index{Hurst|seealso{fBm kernel}}
+\index{Gaussian process}
 Suppose $B_\gamma(t)$ is a continuous-time Gaussian process on $[0,T]$, i.e. for any finite set of indices $t_1,\dots,t_k$, where each $t_j \in [0,T]$, $\big(B_\gamma(t_1),\dots,B_\gamma(t_k)\big)$ is a multivariate normal random variable.
 $B_\gamma(t)$ is said to be a \emph{fractional Brownian motion} (fBm) if $\E [B_\gamma(t)] = 0$ for all $t \in [0,T]$ and 
 \vspace{-0.5em}
@@ -157,7 +158,7 @@ we find that the kernel of the RKHS with feature space $\cV$ and feature map $\p
   \]
   which depends on the Hurst coefficient $\gamma \in (0,1)$.
   We shall reference this space as the fBm-$\gamma$ RKHS.
-  \index{fBm!centred}
+  \index{fBm kernel/RKHS!centred}
 \end{definition}
 
 \begin{remark}
@@ -173,7 +174,9 @@ The Hurst coefficient $\gamma$ controls the ``smoothness'' of the functions in t
 We can talk about smoothness in the context of Hölder continuity of functions.
 
 \begin{definition}[Hölder condition]
-  \index{continuous!Hölder}
+  \index{Hölder continuous|seealso{continuity}}
+  \index{Hölder continuous}
+  \index{continuity!Holder@Hölder}
   A function $f$ over a set $(\cX, \norm{\cdot}_\cX)$ is said to be \emph{Hölder continuous} of order $0 <\gamma\leq 1$ if there exists a $C>0$ such that $\forall x,x'\in\cX$,
   \[
     \vert f(x) - f(x') \vert \leq C \norm{x-x'}^\gamma.
@@ -274,7 +277,7 @@ It is a positive definite function, and hence defines an RKHS.
 The definition of the \gls*{SE} RKHS is as follows.
 
 \begin{definition}[Squared exponential RKHS]
-  \index{SE!kernel/RKHS}
+  \index{SE kernel/RKHS}
   The squared exponential (SE) RKHS $\cF$ of functions over some set $\cX \subseteq \bbR^p$ equipped with the 2-norm $\norm{\cdot}_2$ is defined by the positive definite kernel $h_l:\cX\times\cX\to\bbR$ 
   \[
     h_l(x,x') = \exp\left( -\frac{\norm{x-x'}_2^2}{2l^2} \right).
@@ -282,7 +285,10 @@ The definition of the \gls*{SE} RKHS is as follows.
   The real-valued parameter $l > 0$ is called the \emph{lengthscale} parameter, and is a smoothing parameter for the functions in the RKHS.
 \end{definition}
 
-\index{RBF|see{SE}}
+\index{RBF kernel|seealso{SE kernel}}
+\index{Gaussian kernel|seealso{SE kernel}}
+\index{RBF kernel}
+\index{Gaussian kernel}
 It is known by many other names, including the Gaussian kernel, due to its semblance to the kernel of the Gaussian pdf. 
 Especially in the machine learning literature, the term Gaussian radial basis functions (RBF) is used, and commonly the simpler parameterisation $\gamma = (2l^2)^{-1}$ is utilised.
 \citet{duvenaud2014automatic} remarks that ``exponentiated quadratic'' is a more aptly descriptive name for this kernel.
@@ -302,8 +308,9 @@ Their derivation of an orthonormal basis of such an RKHS proved the SE kernel to
 SE kernels are known to be ``universal''. That is, it satisfies the following definition of universal kernels due to \citet{micchelli2006universal}.
 
 \begin{definition}[Universal kernel]
-  \index{kernel!universal}
+  \index{kernel!universality}
   \index{lengthscale}
+  \index{lengthscale|seealso{SE kernel}}
   Let $\text{C}(\cX)$ be the space of all continuous, complex-valued functions $f:\cX\to\bbC$ equipped with the maximum norm $\norm{\cdot}_\infty$, and denote $\cK(\cX)$ as the space of \emph{kernel sections} $ \overline{\text{span}}\{ h(\cdot,x) | x \in \cX \}$, where here, $h$ is a complex-valued kernel function.
   A kernel $h$ is said to be \emph{universal} if given any compact subset $\cZ \subset \cX$, any positive number $\epsilon$ and any function $f \in \text{C}(\cZ)$, there is a function $g \in \cK(\cZ)$ such that $\norm{f-g}_\cZ \leq \epsilon$.
 \end{definition}
@@ -314,7 +321,7 @@ This, together with the convenient computational advantages that the SE kernel b
 In a similar manner to the two previous subsections, we may also derive the \emph{centred} SE RKHS. 
 
 \begin{definition}[Centred SE RKHS]
-  \index{SE!centred}
+  \index{SE kernel/RKHS!centred}
   Let $\cX \subseteq \bbR^p$ be equipped with the 2-norm $\norm{\cdot}_2$, and let $\Prob$ denote the distribution over $\cX$.
   Assuming integrability of $h(x,X)$, for any $x\in\cX$ and a random element $X\in\cX$, the \emph{centred} squared exponential (SE) RKHS (with lengthscale $l$) of functions over $\cX$ is defined by the positive definite kernel $\hXXR$ 
   \[
@@ -335,7 +342,7 @@ Let $\Prob$ be a probability measure over the finite set $\cX$.
 The Pearson RKHS is defined as follows.
 
 \begin{definition}[Pearson RKHS]\label{def:pearson}
-  \index{Pearson!kernel/RKHS}
+  \index{Pearson kernel/RKHS}
   The \emph{Pearson RKHS} is the RKHS of functions over a finite set $\cX$ defined by the reproducing kernel
   \[
     h(x,x') = \frac{\delta_{xx'}}{\Prob(X=x)} - 1,

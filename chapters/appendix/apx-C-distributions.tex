@@ -112,7 +112,7 @@ Frequently, in Bayesian statistics especially, the following identities will be 
 \newcommand{\dmujtop}{\frac{\partial\mu_\theta^\top}{\partial\theta_j}}
 \newcommand{\dmutwo}{\frac{\partial^2\mu_\theta}{\partial\theta_i\partial\theta_j}}
 
-\index{Fisher information!multivariate normal}
+\index{Fisher information!Gaussian}
 \begin{lemma}
   Let $X\sim\N_p(\mu_\theta,\Sigma_\theta)$, that is, the mean vector $\mu_\theta$ and covariance matrix $\Sigma_\theta$ depends on a real, $q$-dimensional vector $\theta$.
   The Fisher information matrix $U \in \bbR^{q\times q}$ for $\theta$ has $(i,j)$ entries given by
@@ -202,7 +202,7 @@ as required.  \qedhere
 
 \end{proof}
 
-\index{distribution!multivariate normal|)}
+%\index{distribution!multivariate normal|)}
 
 \section{Matrix normal distribution}
 \label{apx:matrixnormal}
@@ -252,7 +252,7 @@ Some useful properties of the matrix normal distribution are listed:
   \item \textbf{Iid}. If $X_i \iid \N_m(\mu,\Psi)$ for $i=1,\dots,n$, and we arranged these vectors row-wise into the matrix $X = (X_1^\top,\dots,X_n^\top)^\top \in \bbR^{n\times m}$, then $X \sim \MN(1_n \mu^\top, I_n, \Psi)$.
 \end{itemize}
 
-\index{distribution!multivariate normal|)}
+%\index{distribution!multivariate normal|)}
 
 \section{Truncated univariate normal distribution}
 \label{apx:truncuninorm}
@@ -285,9 +285,9 @@ Some useful properties of the matrix normal distribution are listed:
 \end{definition}
 
 For binary probit models, the distributions that come up are one-sided truncations at zero, i.e. $\tN(\mu,\sigma^2,0,+\infty)$ (upper tail/positive part) and $\tN(\mu,\sigma^2,-\infty,0)$ (lower tail/negative part), for which their moments are of interest.
-As an aside, if $\mu = 0$ then the truncation $\tN(0,\sigma^2,0,+\infty) \equiv \N_+(0,\sigma^2)$ is called the \emph{folded-normal} distribution.
+As an aside, if $\mu = 0$ then the truncation $\tN(0,\sigma^2,0,+\infty) \equiv \N_+(0,\sigma^2)$ is called the \emph{folded-normal} distribution.\index{distribution!folded-normal}
 For the positive one-sided truncation at zero, $C = \Phi(+\infty) - \Phi(-\mu/\sigma) = 1 - \Phi(-\mu/\sigma) = \Phi(\mu/\sigma)$, and for the negative one-sided truncation at zero, $C = \Phi(-\mu/\sigma) - \Phi(-\infty) = 1 - \Phi(\mu/\sigma)$.
-Additionally, if $\sigma=1$, then $\tN(0,1,0,+\infty) \equiv \N_+(0,1)$ is called the \emph{half-normal} distribution.
+Additionally, if $\sigma=1$, then $\tN(0,1,0,+\infty) \equiv \N_+(0,1)$ is called the \emph{half-normal} distribution.\index{distribution!half-normal}
 
 One may simulate random draws from a truncated normal distribution by drawing from $\N(\mu,\sigma^2)$ and discarding samples that fall outside $(a,b)$.
 Alternatively, the inverse-transform method using
@@ -299,7 +299,7 @@ Either of these methods will work reasonably well as long as the truncation regi
 Efficient algorithms have been explored which are along the lines of either accept/reject algorithms \citep{robert1995simulation}, Gibbs sampling \citep{damien2001sampling}, or pseudo-random number generation algorithms \citep{chopin2011fast}.
 The latter algorithm is inspired by the Ziggurat algorithm \citep{marsaglia2000ziggurat} which is considered to be the fastest Gaussian random number generator.
 
-\index{distribution!truncated univariate normal|)}
+%\index{distribution!truncated univariate normal|)}
 
 \section{Truncated multivariate normal distribution}
 \label{apx:truncmultinorm}
@@ -424,7 +424,7 @@ We present some results that we have not previously seen before elsewhere.
   See \cref{apx:contrunproof} for the proof.
 \end{proof}
 
-\index{distribution!truncated multivariate normal|)}
+%\index{distribution!truncated multivariate normal|)}
 
 %\section{Wishart distribution}
 %
@@ -451,7 +451,7 @@ We present some results that we have not previously seen before elsewhere.
 %\]
 %
 \section{Gamma distribution}
-\label{apx:gammadist}\index{gamma}
+\label{apx:gammadist}\index{distribution!gamma}
 \vspace{-0.2em}
 
 \begin{definition}[Gamma distribution]
@@ -464,6 +464,8 @@ We present some results that we have not previously seen before elsewhere.
   \end{itemize}
 \end{definition}
 
+\index{gamma function}
+\index{digamma function}
 In the above, $\Gamma(\cdot)$ and $\psi(\cdot)$ are the gamma and digamma functions respectively, defined by
 \[
   \Gamma(a) = 
@@ -480,7 +482,7 @@ Often, the gamma distribution is parameterised according to shape $s$ and scale 
 \vspace{-0.5em}
 
 \section{Inverse gamma distribution}
-\label{def:invgam}\index{inverse gamma}
+\label{def:invgam}\index{distribution!inverse gamma}
 \vspace{-0.2em}
 
 \begin{definition}[Inverse gamma distribution]

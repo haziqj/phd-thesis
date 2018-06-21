@@ -109,7 +109,7 @@ As seen in the argument above, this requirement is sufficient for a guaranteed i
 
 Consider the density function $p(\cdot|\btheta)$ of the complete data $\bz = \{\by,\bw\}$, which depends on parameters $\btheta = (\theta_1,\dots,\theta_s)^\top \in\Theta\subseteq\bbR^s$, belonging to an exponential family of distributions.
 This density takes the form $p(\bz|\btheta) = B(\bz) \exp \big( \ip{\bfeta(\btheta), \bT(\bz)} -  A(\btheta) \big)$, where $\bfeta:\bbR^s \mapsto \bbR$ is a link function,  $\bT(\bz) = \big(T_1(\bz),\dots,T_s(\bz)\big)^\top \in \bbR^s$ are the sufficient statistics of the distribution, and $\ip{\cdot,\cdot}$ is the usual Euclidean dot product.
-It is often easier to work in the \emph{natural parameterisation} of the exponential family distribution \index{exponential family}
+It is often easier to work in the \emph{natural parameterisation} of the exponential family distribution \index{exponential family distribution}
 \begin{align}\label{eq:pdfexpfamnat}
   p(\bz|\bfeta) = B(\bz) \exp \big( \ip{\bfeta, \bT(\bz)} -  A^*(\bfeta) \big)
 \end{align}

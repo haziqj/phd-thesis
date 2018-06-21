@@ -105,11 +105,11 @@ For example, using the canonical RKHS in the polynomial construction would allow
 In particular, we only require a single scale parameter in polynomial kernel construction.
 
 \begin{definition}[Polynomial RKKS]
-  \index{polynomial!kernel/RKKS}
+  \index{polynomial kernel/RKKS}
   \index{degree}
   \index{offset}
-  \index{degree|seealso{polynomial}}
-  \index{offset|seealso{polynomial}}
+  \index{degree|seealso{polynomial kernel}}
+  \index{offset|seealso{polynomial kernel}}
   Let $\cX$ be a Hilbert space.
   The kernel function $\hXXR$ obtained through the $d$-degree polynomial construction of linear kernels is
   \[
@@ -240,7 +240,7 @@ Each of the terms will satisfy the condition $A_kf_\cK = 0, \forall k \in \cK \i
 \subsubsection{Functional ANOVA decomposition}
 
 \index{ANOVA!multiway}
-\index{ANOVA!functional}
+\index{ANOVA!functional decomposition}
 Let us now extend the ANOVA decomposition idea to a general function $f:\cX\to\bbR$ in some vector space $\cF$.
 We shall jump straight into the multiway ANOVA analogue for functional decomposition, and to that end, consider $x=(x_1,\dots,x_p) \in \prod_{k=1}^p \cX_k =: \cX$ a measurable space, where each of the spaces $\cX_k$ has measure $\nu_k$, and $\nu=\nu_1\times\cdots\times\nu_p$ is the product measure on $\cX$.
 In the following, denote by $\cF_k$ the vector space of functions over the set $\cX_k$, $k=1,\dots,p$, and $\cF_\emptyset$ the vector space of constant functions.
@@ -366,6 +366,7 @@ Expanding out equations \cref{eq:anovarkks}, we see that it is in fact a sum of 
 \end{align*}
 It is now clear from this expansion that the ANOVA RKKS yields functions that resemble those with the ANOVA representation in \cref{eq:functionalanova2}:
 the mean value of the function stems from the `1', i.e. it lies in an RKHS of constant functions; the main effects are represented by the sum of the individual kernels; the two-way interaction terms are represented by the second-order kernel interactions; and so on.
+\index{interaction}
 
 %One thing to note is that restricting the $\lambda$ parameters to the positive orthant might give unsatisfactory results---what if the effect of two functions are in truth opposing one another?
 %These are handled through opposing signs of their respective scale parameters, thus  the need for working in RKKSs.

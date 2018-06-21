@@ -1,5 +1,5 @@
 \index{RKHS}
-\index{continuous!evaluation functional}
+\index{evaluation functional!continuous}
 The introductory section sets us up nicely to discuss the coveted reproducing kernel Hilbert space.
 This is a subset of Hilbert spaces for which its evaluation functionals are continuous (by definition, in fact).
 The majority of this section, apart from defining RKHSs, is an exercise in convincing ourselves that each and every RKHS of functions can be specified solely through its reproducing kernel.
@@ -144,7 +144,7 @@ That is, $\forall a_1, \dots, a_n \in \mathbb R$ and $\forall x_1, \dots, x_n \i
   That is, take $\phi:\cX\to\cV$, $x\mapsto\phi(x)$, where $\cV$ is a Hilbert space.
   Then the kernel is defined as $h(x,x') = \ip{\phi(x),\phi(x')}_\cV$, for any $x,x'\in\cX$.
   The space $\cV$ is known as the \emph{feature space} and the mapping $\phi$ the \emph{feature map}.
-  In many mathematical models involving feature space mappings, elucidation of the feature map and feature space is not necessary, and thus computation  is made simpler by the use of kernels (known as the \emph{kernel trick}---\cite{hofmann2008kernel}).
+  In many mathematical models involving feature space mappings, elucidation of the feature map and feature space is not necessary, and thus computation  is made simpler by the use of kernels (known as the \emph{kernel trick}---\cite{hofmann2008kernel}).\index{kernel!trick}
   Note that kernels defined in this manner are positive definite, while in this thesis, we opt for a more general definition allowing kernels to not necessarily be positive.
   The relevance of this generality will be appreciated when we discuss reproducing kernel Kreĭn spaces in \cref{sec:rkkstheory}.
 \end{remark}

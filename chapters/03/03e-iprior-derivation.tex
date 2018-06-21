@@ -16,7 +16,7 @@ In addition, assume $\nu$ is a probability measure over $\Theta$ so that $(\Thet
   \end{align}
 \end{definition}
 
-\index{variational!calculus}
+\index{variational calculus}
 In deriving the maximum entropy distribution, we will need to maximise the functional $H$ with respect to $p$.
 Typically, this is done using calculus of variations techniques, and standard calculations \colp{\cref{apx:funcder}, \mypageref{apx:funcder}} reveal that the functional derivative of $H(p)$ with respect to $p$, denoted $\partial H/\partial p$, is equal to $- 1 - \log p$. 
 We now present another well known result from information theory, regarding the form of the maximum entropy distribution.
@@ -70,7 +70,7 @@ We now present another well known result from information theory, regarding the 
   Now, if $\Theta \equiv \bbR^m$ and $\nu$ is the Lebesgue measure, then $D(\theta,\theta_0)^2 = \norm{\theta-\theta_0}_{\bbR^m}^2$, so $\tilde p$ is recognised as a multivariate normal density centred at $\theta_0$ with identity covariance matrix.
 \end{proof}
 
-\index{I-prior!theorem|(}
+\index{I-prior!theorem}
 Returning to the normal regression model of \cref{eq:model1} subject to \cref{eq:model1ass}, we shall now derive the maximum entropy prior for $f$ in some RKKS $\cF$.
 One issue that we have is that the set $\cF$ is potentially ``too big'' for the purpose of estimating $f$, that is, for certain pairs of functions $\cF$, the data do not allow an assessment of whether one is closer to the truth than the other.
 In particular, the data do not contain information to distinguish between two functions $f$ and $g$ in $\cF$ for which $f(x_i) = g(x_i), i=1,\dots,n$.
@@ -158,6 +158,7 @@ We now state and prove the main I-prior theorem.
   which is the reproducing kernel for $\cF_n$.
 \end{proof}
 
+\index{I-prior}
 In closing, we reiterate the fact that the I-prior for $f$ in the normal regression model subject to $f$ belonging to some RKKS $\cF$ with kernel $h_\eta$ has the simple representation
 \begin{align}\label{eq:iprior2}
   \begin{gathered}
@@ -170,4 +171,3 @@ Equivalently, this may be written as a Gaussian process-like prior
   \big(f(x_1),\dots,f(x_n) \big)^\top \sim \N(\bff_0,\bH_\eta\bPsi\bH_\eta),
 \end{align}
 where $\bff_0 = \big(f_0(x_1),\dots,f_0(x_n) \big)^\top$ is the vector of prior mean functional evaluations, and $\bH_\eta = \big(h_\eta(x_i,x_j)\big)_{i,j=1}^n$ is the kernel matrix.
-\index{I-prior!theorem|)}

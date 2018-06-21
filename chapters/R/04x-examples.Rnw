@@ -38,7 +38,11 @@ Note that in all of these examples, \ref{ass:A1}--\ref{ass:A3} were assumed.
 \pagebreak
 \subsection{Random effects models}
 \index{random-effects model|see{multilevel model}}
-\index{multilevel model|(}
+\index{multilevel model}
+\index{IGF data set}
+\index{ANOVA!kernel/RKKS}
+\index{canonical kernel/RKHS}
+\index{Pearson kernel/RKHS}
 
 In this section, a comparison between a standard random effects model and the I-prior approach for estimating varying intercept and slopes model is illustrated.
 The example concerns control data\footnotemark\ from several runs of radioimmunoassays (RIA) for the protein insulin-like growth factor (IGF-I) (explained in further detail in \cite[sec. 3.2.1]{davidian1995nonlinear}).
@@ -55,7 +59,7 @@ The data consists of IGF-I concentrations (\code{conc}) from control samples fro
 The data were collected with the aim of identifying possible trends in control values \code{conc} with \code{age}, ultimately investigating whether or not the usage protocol of maximum sample age of 50 days is justified.
 \citet{pinheiro2000mixed} remarks that this is not considered a longitudinal problem because different samples were used at each measurement.
 
-We shall  model the IGF data set using the I-prior methodology using the ANOVA-decomposed regression function
+We shall model the IGF data set using the I-prior methodology using the ANOVA-decomposed regression function
 \[
   f(\texttt{age}, \texttt{Lot}) = f_1(\texttt{age}) + f_2(\texttt{Lot}) + f_{12}(\texttt{age}, \texttt{Lot})
 \]
@@ -149,11 +153,13 @@ $\rho_{01}$   & \Sexpr{dec_plac(corr.iprior, 3)}& \Sexpr{dec_plac(corr.lmer, 3)}
 \end{tabular}
 \end{table}
 
-\index{multilevel model|)}
-
 \subsection{Longitudinal data analysis}
 \label{sec:cows}
-\index{longitudinal model|(}
+\index{longitudinal model}
+\index{cow growth data set}
+\index{ANOVA!kernel/RKKS}
+\index{fBm kernel/RKHS}
+\index{Pearson kernel/RKHS}
 
 We consider a balanced longitudinal data set consisting of weights in kilograms of 60 cows, 30 of which were randomly assigned to treatment group A, and the remaining 30 to treatment group B.
 The animals were weighed 11 times over a 133-day period; the first 10 measurements for each animal were made at two-week intervals and the last measurement was made one week later.
@@ -270,10 +276,14 @@ A plot of the fitted regression curves onto the cow data set is shown in \cref{f
 <<cows.plot, echo = FALSE, fig.height = 3.5, fig.width = 7, fig.cap = "A plot of the I-prior fitted regression curves from Model 5. In this model, growth curves differ among cows and by treatment effect (with an interaction between cows and treatment effect), thus producing these 60 individual lines, one for each cow, split between their respective treatment groups (A or B).", fig.pos = "htb">>=
 @
 
-\index{longitudinal model|)}
-
 \subsection{Regression with a functional covariate}
-\index{functional regression|(}
+\index{functional regression}
+\index{Tecator data set}
+\index{ANOVA!kernel/RKKS}
+\index{canonical kernel/RKHS}
+\index{Pearson kernel/RKHS}
+\index{polynomial kernel/RKKS}
+\index{SE kernel/RKHS}
 
 We illustrate the prediction of a real valued response with a functional covariate using a widely analysed data set for quality control in the food industry.
 The data\footnotemark~contain samples of spectrometric curve of absorbances of 215 pieces of finely chopped meat, along with their water, fat and protein content.
@@ -288,6 +298,11 @@ We used the version made available in the dataframe \code{tecator} from the \pro
 <<tecator.data, echo = FALSE, cache = TRUE, fig.width = 5.5, fig.height = 5.5 * 3.4 / 6, out.width = "11cm", fig.cap = "Sample of spectrometric curves used to predict fat content of meat. For each meat sample the data consists of a 100 channel spectrum of absorbances and the contents of moisture, fat (numbers shown in boxes) and protein measured in percent. The absorbance is $-\\log 10$ of the transmittance measured by the spectrometer. The three contents, measured in percent, are determined by analytic chemistry.", fig.pos = "htb">>=
 @
 
+\index{neural network}
+\index{functional regression}
+\index{additive model}
+\index{least squares!partial}
+\index{kernel smoothing}
 For our analyses and many others' in the literature, the first 172 observations in the data set are used as a training sample for model fitting, and the remaining 43 observations as a test sample to evaluate the predictive performance of the fitted model.
 The focus here is to use the \pkg{iprior} package to fit several I-prior models to the Tecator data set, and calculate out-of-sample predictive error rates.
 We compare the predictive performance of I-prior models against Gaussian process regression and the many other different methods applied on this data set.
@@ -318,7 +333,7 @@ By default, the Hurst coefficient for the fBm RKHS is set to be 0.5.
 However, with the option \code{est.hurst = TRUE}, the Hurst coefficient is included in the estimation procedure.
 We fit models with both a fixed value for Hurst (at 0.5) and an estimated value for Hurst.
 For both of these models, we encountered numerical issues when using the direct optimisation method.
-The L-BFGS algorithm kept on pulling the hyperparameter towards extremely high values, which in turn made the log-likelihood value greater than the machine's largest normalised floating-point number (\code{.Machine$double.xmax = 1.797693e+308}).
+The L-BFGS algorithm \index{L-BFGS algorithm} kept on pulling the hyperparameter towards extremely high values, which in turn made the log-likelihood value greater than the machine's largest normalised floating-point number (\code{.Machine$double.xmax = 1.797693e+308}).
 % Investigating further, it seems that estimates at these large values give poor training and test error rates, though likelihood values here are high (local optima).
 To circumvent this issue, we used the EM algorithm to estimate the fixed Hurst model, and the \code{mixed} method for the estimated Hurst model.
 For both models, the \code{stop.crit} was relaxed and set to \code{1e-3} for quicker convergence, though this did not affect the predictive abilities compared to a more stringent \code{stop.crit}.
@@ -357,6 +372,7 @@ When it comes to out-of-sample test error rates, the cubic model gives the best 
 This is followed closely by the fBm RKHS with estimated Hurst coefficient (fBm-\Sexpr{dec_plac(get_hurst(mod5))}) and also the fBm RKHS with default Hurst coefficient (fBm-0.50).
 The best performing I-prior model is only outclassed by the neural networks of \citet{thodberg1996review}, who also performed model selection using automatic relevance determination (ARD).
 The I-prior models also give much better test RMSE than Gaussian process regression.
+\index{Gaussian process!regression}
 
 % \renewcommand{\TPTminimum}{0.5\linewidth}
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
@@ -428,10 +444,9 @@ The I-prior models also give much better test RMSE than Gaussian process regress
 \end{threeparttable}
 \end{table}
 
-\index{functional regression|)}
-
 \subsection{Using the Nyström method}
 \index{Nystrom method@Nyström method}
+\index{fBm kernel/RKHS}
 
 We investigate the use of the Nystr\"om method of approximating the kernel matrix in estimating I-prior models.
 Let us revisit the data set generated by \cref{eq:examplesmoothingdata} described in \cref{sec:compareestimation}.

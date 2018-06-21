@@ -76,7 +76,11 @@ Code for replication is provided at \url{http://myphdcode.haziqj.ml}.
 All of these examples had assumed a fixed error precision $\bPsi = \bI_m$.
 
 \subsection{Predicting cardiac arrhythmia}
-\index{classification!binary|(}
+\index{classification!binary}
+\index{cardiac arrhythmia data set}
+\index{canonical kernel/RKHS}
+\index{fBm kernel/RKHS}
+\index{SE kernel/RKHS}
 
 Statistical learning tools are being used in the field of medicine as a means to aid medical diagnosis of diseases.
 In this example, factors determining the presence or absence of heart diseses are studied.
@@ -118,6 +122,13 @@ As expected, the lower bound value increases over time until a convergence crite
 
 \end{knitrout}
 
+\index{Gaussian process!classification}
+\index{linear discriminant analysis}
+\index{quadratic discriminant analysis}
+\index{k-nearest neighbours@$k$-nearest neighbours}
+\index{support vector machine}
+\index{Lasso}
+\index{logistic}
 To measure predictive ability, we fit the I-probit models on a random subset of the data and obtain the out-of-sample test error rates from the remaining held-out observations.
 We then compare the results against popular machine learning classifiers, namely: 1) linear and quadratic discriminant analysis (LDA/QDA); 2) $k$-nearest neighbours; 3) support vector machines (SVM) \citep{steinwart2008support}; 4) Gaussian process classification \citep{rasmussen2006gaussian}; 5) random forests \citep{breiman2001random}; 6) nearest shrunken centroids (NSC) \citep{tibshirani2002diagnosis}; and 7) L-1 penalised logistic regression \citep{friedman2001elements}.
 The experiment is set up as follows:
@@ -173,10 +184,12 @@ It can be seen that the fBm I-probit model also outperform the more popular mach
 It came second only to random forests, an ensemble learning method, which is also generally faster to train than Gaussian process-like regressions such as I-prior models.
 The time complexity of a random forest algorithm is $O(pqn\log(n))$ \citep{louppe2014understanding}, where $p$ is the number of variables used for training, $q$ is the number of random decision trees, and $n$ is the number of observations.
 
-\index{classification!binary|)}
-
 \subsection{Meta-analysis of smoking cessation}
 \index{meta-analysis|(}
+\index{smoking cessation data set}
+\index{canonical kernel/RKHS}
+\index{ANOVA!kernel/RKKS}
+\index{Pearson kernel/RKHS}
 
 Conider the smoking cessation data set, as described in \citet{skrondal2004generalized}.
 It contains observations from 27 separate smoking cessation studies in which participants are subjected to either a nicotine gum treatment or a placebo.
@@ -208,7 +221,7 @@ On the whole, there are a total of 5,908
 % study.size[length(study.size)]
 patients, and they are distributed roughly equally among the control and treatment groups (46.3\% and 53.7\% respectively, on average).
 From the box-plots, it is evident that there are more patients who quit smoking in the treatment group as compared to the placebo control group.
-There are various measures of treatment effect size, such as risk ratio or risk differences, but we shall concentrate on \emph{odds ratios} as defined by
+There are various measures of treatment effect size, such as risk ratio or risk differences, but we shall concentrate on \emph{odds ratios} as defined by \index{odds}\index{odds!ratio}
 \[
   \text{odds ratio} = \frac{\text{odds of quitting smoking in \emph{treatment} group}}
   {\text{odds of quitting smoking in \emph{control} group}}.
@@ -304,7 +317,7 @@ The misclassification rate and Brier score indicates good predictive performance
 
 \end{knitrout}
 
-Unlike in the logistic random-effects model, where the log odds ratio can be read off directly from the coefficients, with an I-prior probit model the log odds ratio needs to be calculated manually from the fitted probabilities.
+Unlike in the logistic random-effects model, where the log odds ratio can be read off directly from the coefficients, with an I-prior probit model the log odds ratio needs to be calculated manually from the fitted probabilities. \index{log odds ratio}\index{log odds ratio|seealso{odds ratio}}
 The probabilities of interest are the probabilities of quitting smoking under each treatment group for each study group $k$---call these $p_k(\text{treatment})$ and $p_k(\text{control})$.
 That is,
 \begin{align*}
@@ -324,10 +337,13 @@ This can perhaps be attributed to some shrinkage of the estimated probabilities 
 The credibility intervals for the log odds ratios in the forest plot of \cref{fig:smoke.forest.plot} are also noticeably narrower under an I-prior compared to the fitted multilevel model.
 One explanation is that empirical Bayes estimates, such as the I-probit estimates under a variational EM framework, tend to underestimate the variability in the estimates because the variability in the parameters are ignored when point estimates are used, compared to distributions in a true Bayesian estimation framework.
 
-\index{meta-analysis|)}
-
 \subsection{Multiclass classification: Vowel recognition data set}
-\index{classification!multiclass|(}
+\index{classification!multiclass}
+\index{Deterding data set|see{vowel recognition data set}}
+\index{vowel recognition data set}
+\index{canonical kernel/RKHS}
+\index{fBm kernel/RKHS}
+\index{SE kernel/RKHS}
 
 
 
@@ -436,10 +452,12 @@ It also provides significant improvement over multiple linear regression.
   \end{tabular}
 \end{table}
 
-\index{classification!multiclass|)}
-
 \subsection{Spatio-temporal modelling of bovine tuberculosis in Cornwall}
-\index{spatio-temporal model|(}
+\index{spatio-temporal model}
+\index{BTB data set}
+\index{ANOVA!kernel/RKKS}
+\index{fBm kernel/RKHS}
+\index{Pearson kernel/RKHS}
 
 
 
@@ -607,8 +625,6 @@ In addition, coloured dotted lines are displayed to indicate the ``decision boun
 The most evident change is seen to the spatial distribution of spoligotype 12, with the decision boundary giving it a large area in years 1996 and earlier, but this steadily shrunk over the years.
 Spoligotype 9, which is most commonly seen in the east of Cornwall, seems to have made its way down to the south-west over the years.
 The other two spoligotypes seem to be rather constant over the years.
-
-\index{spatio-temporal model|)}
 
 \end{document}
 

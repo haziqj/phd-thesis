@@ -1,10 +1,11 @@
-\index{I-probit!variational EM algorithm|(}
+\index{variational EM algorithm!I-probit}
 We present an EM algorithm to estimate the I-probit latent variables $\by^*$ and $\bw$, in which the E-step consists of a mean-field variational approximation of the conditional density $p(\by^*,\bw|\by,\theta) = q(\by^*)q(\bw)$.
 As per assumptions $\ref{ass:A4}$, $\ref{ass:A5}$ and $\ref{ass:A6}$, the parameters of the I-probit model consists of $\theta =\{ \balpha = (\alpha_1,\dots,\alpha_m)^\top,\eta \}$.
 
 The algorithm cycles through a variational inference E-step, in which the variational density $q(\by^*,\bw) = \prod_{i=1}^n q(\by^*_{i\bigcdot}) q(\bw)$ is optimised with respect to the Kullback-Leibler divergence $\KL\big( q(\by^*,\bw) \Vert p(\by^*,\bw|\by) \big)$, and an M-step, in which the approximate expected joint density \cref{eq:iprobitQEstep} is maximised with respect to the parameters $\theta$. 
 Convergence is assessed by monitoring the ELBO.
 Apart from the fact that the variational EM algorithm uses approximate conditional distributions and involves matrices $\by^*$ and $\bw$, it is very similar to the EM described in \cref{chapter4}, and as such, the efficient computational work derived there is applicable.
+\index{kernel!front loading}
 
 \subsection{The variational E-step}
 
@@ -160,7 +161,10 @@ The bulk of the computational effort required to evaluate $Q(\theta)$ stems from
 As discussed previously, each E-step takes $O(n^3m)$ time to compute the required first and second (approximate) posterior moments of $\bw$.
 Once this is done, we can use the `front-loading of the kernel matrices' trick described in \cref{sec:efficientEM1}, which effectively renders the evaluation of $Q$ to be linear in $\theta$ (after an initial $O(n^2)$ procedure at the beginning).
 
-As in the normal linear model, we employ a sequential update of the parameters (à la expectation conditional maximisation algorithm) by solving the first order conditions
+As in the normal linear model, we employ a sequential update of the parameters (à la expectation conditional maximisation algorithm) by solving the first order conditions \index{ECM algorithm}
+\begingroup
+\setlength{\abovedisplayskip}{5pt}
+\setlength{\belowdisplayskip}{8pt}
 \begin{align}
   \frac{\partial}{\partial\eta}Q(\eta|\balpha)
   &= -\half \sum_{i,j=1}^m \psi_{ij} \tr \left( \frac{\partial \bH_\eta^2}{\partial\eta} \tilde\bW_{ij} \right) 
@@ -168,9 +172,9 @@ As in the normal linear model, we employ a sequential update of the parameters (
   \frac{\partial}{\partial\balpha}Q(\balpha|\eta)
   &= 2n\bPsi\balpha - 2 \sum_{i=1}^n \bPsi \big(\by_{i\bigcdot}^* - \tilde\bw^\top\bh_\eta(x_i) \big) \label{eq:vemalpha}
 \end{align}
+\endgroup
 equated to zero, where $\bh_\eta(x_i) \in \bbR^n$ is the $i$'th row of the kernel matrix $\bH_\eta$.
 We now present the update equations for the parameters.
-\vspace{-0.25em}
 
 \subsubsection{Update for kernel parameters $\eta$}
 
@@ -209,7 +213,7 @@ In the case of the independent I-probit model, where $\bPsi = \diag(\psi_1,\dots
 
 \begin{remark}
   There is no closed-form solution for $\eta$ when the polynomial kernel is used, or when there are kernel parameters to optimise (e.g. Hurst coefficient or SE kernel lengthscale).
-  In these situations, solutions for $\eta$ are obtained using numerical methods (i.e. employ quasi-Newton methods such as L-BFGS algorithm for optimising $Q(\eta)$).
+  In these situations, solutions for $\eta$ are obtained using numerical methods (i.e. employ quasi-Newton methods such as an L-BFGS algorithm \index{L-BFGS algorithm} for optimising $Q(\eta)$).
 \end{remark}
 
 \subsubsection{Update for intercepts \texorpdfstring{$\balpha$}{$\alpha$}}
@@ -230,6 +234,7 @@ Notice that the evaluation of each component of the posterior depends on knowing
 Similarly, each parameter update is obtained conditional upon the value of the rest of the parameters.
 These circular dependencies are dealt with by way of an iterative updating scheme: with arbitrary starting values for the distributions $q^{(0)}(\by^*)$ and $q^{(0)}(\bw)$, and for the parameters $\theta^{(0)}$, each are updated in turn according to the above derivations.
 
+\index{I-probit!ELBO}
 The updating sequence is repeated until no significant increase in the convergence criterion, the ELBO, is observed.
 The ELBO for the I-probit model is given by the quantity
 \begin{align}
@@ -296,5 +301,3 @@ In our experience, multiple random starts alleviates this issue for the I-probit
   \EndWhile
 \end{algorithmic}
 \end{algorithm}
-
-\index{I-probit!variational EM algorithm|)}
