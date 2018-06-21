@@ -1,3 +1,4 @@
+\index{I-probit!variational EM algorithm|(}
 We present an EM algorithm to estimate the I-probit latent variables $\by^*$ and $\bw$, in which the E-step consists of a mean-field variational approximation of the conditional density $p(\by^*,\bw|\by,\theta) = q(\by^*)q(\bw)$.
 As per assumptions $\ref{ass:A4}$, $\ref{ass:A5}$ and $\ref{ass:A6}$, the parameters of the I-probit model consists of $\theta =\{ \balpha = (\alpha_1,\dots,\alpha_m)^\top,\eta \}$.
 
@@ -7,8 +8,10 @@ Apart from the fact that the variational EM algorithm uses approximate condition
 
 \subsection{The variational E-step}
 
+\index{Kullback-Leibler|see{KL divergence}}
+\index{KL divergence}
 Let $\tilde q(\by^*,\bw)$ be the pdf that minimises the Kullback-Leibler divergence $\KL\big( q \Vert p \big)$ subject to the mean-field constraint $q(\by^*,\bw) = q(\by^*)q(\bw)$.
-By appealing to \citet[equation 10.9, p. 466]{bishop2006pattern}, the optimal mean-field variational density $\tilde q$ for the latent variables $\by^*$ and $\bw$ satisfy
+By appealing to \citet[eq. 10.9, p. 466]{bishop2006pattern}, the optimal mean-field variational density $\tilde q$ for the latent variables $\by^*$ and $\bw$ satisfy
 \begin{align}
   \log \tilde q(\by^*) &= \E_{\bw\sim\tilde q} [\log p(\by,\by^*,\bw)] + \const \label{eq:logqystar} \\
   \log \tilde q(\bw) &= \E_{\by^*\sim\tilde q} [\log p(\by,\by^*,\bw)] + \const \label{eq:logqw}
@@ -103,7 +106,7 @@ Storage requirement is $O(n^2m)$, since we need $\bV_{w_1},\dots,\bV_{w_m}$.
   The variational distribution $q(\bw)$ which approximates $p(\bw|\by)$ is in fact exactly $p(\bw|\by^*)$, the conditional density of the I-prior random effects given the latent propensities.
   By the law of total expectations, 
   \begin{gather*}
-    \E[r(\bw)|\by] = \E_{\by^*}\big[ \E[r(\bw)|\by^*] \,\big|\, \by \big],
+    \E(r(\bw)|\by) = \E_{\by^*}\big( \E(r(\bw)|\by^*) \,\big|\, \by \big),
   \end{gather*}
   where $r(\cdot)$ is some function of $\bw$, and expectations are taken under the posterior distribution of $\by^*$.
   Hypothetically, if the true pdf $p(\by^*|\by)$ were tractable,  then the E-step can be computed using the true conditional distribution.
@@ -117,13 +120,13 @@ From \cref{eq:iprobitQEstep}, the function to be maximised in the M-step is
 \begin{align*}
   Q(\theta) 
   ={}& \E_{\by^*,\bw\sim q^{(t+1)}}  [ \log p(\by,\by^*,\bw|\theta) ] \nonumber \\
-  ={}& \const -\half\tr\Big( \bPsi \E[\bw^\top\bH_\eta^2\bw]  + \bPsi^{-1} \E[\bw^\top\bw] \Big)  \nonumber \\
+  ={}& \const -\half\tr\Big( \bPsi \E(\bw^\top\bH_\eta^2\bw)  + \bPsi^{-1} \E(\bw^\top\bw) \Big)  \nonumber \\
   &- \half \tr \Big( 
   \bPsi \big\{
-  \E[\by^{*\top}\by^*]
+  \E(\by^{*\top}\by^*)
   + n \balpha\balpha^\top 
-  - 2\balpha \bone_n^\top \E[\by^*]
-  - 2\E[\bw^\top]\bH_\eta [\E[\by^*] - \bone_n\balpha^\top] 
+  - 2\balpha \bone_n^\top \E \by^*
+  - 2\E(\bw^\top)\bH_\eta \big(\E \by^* - \bone_n\balpha^\top \big) 
   \big\} \Big)
   ,
 \end{align*}
@@ -131,14 +134,14 @@ where expectations are taken with respect to the variational distributions of $\
 Note that since $\bPsi$ is treated as fixed, the term $\E[\by^{*\top}\by^*]$ is absorbed into the constant.
 On closer inspection, the trace involving the second moments of $\bw$ is found to be
 \begin{align*}
-  \tr \Big( \bPsi\E[\bw^\top\bH_\eta^2\bw]  + \bPsi^{-1} \E[\bw^\top\bw] \Big)
+  \tr \Big( \bPsi\E(\bw^\top\bH_\eta^2\bw)  + \bPsi^{-1} \E(\bw^\top\bw) \Big)
   &= \sum_{i,j=1}^m \left\{ \psi_{ij} \tr(\bH_\eta^2\tilde\bW_{ij}) + \psi_{ij}^- \tr(\tilde\bW_{ij}) \right\}
 \end{align*}
 by the results of the derivations in \cref{{apx:qw}} \colp{\mypageref{eq:trCEwDw}}.
 In the above, we had defined $\psi_{ij}^-$ to be the $(i,j)$'th element of $\bPsi^{-1}$, and
 \[
   \tilde\bW_{ij} 
-  = \E[\bw_{\bigcdot i}\bw_{\bigcdot j}^\top]
+  = \E(\bw_{\bigcdot i}\bw_{\bigcdot j}^\top)
   =  \bV_{w}[i,j] + \tilde\bw_{\bigcdot i} \tilde\bw_{\bigcdot j}^\top,
 \]
 where $\bV_{w}[i,j] \in \bbR^{n\times n}$ refers to the $(i,j)$'th submatrix block of $\bV_w$, and the $n$-vector $\tilde \bw_{\bigcdot j} = \big( \E w_{ij} \big)_{i=1}^n$ is the expected value of the random effects for class $j$.
@@ -232,7 +235,7 @@ The ELBO for the I-probit model is given by the quantity
 \begin{align}
   \cL_q(\theta) = \half[nm] + \sum_{i=1}^n \log C_i(\theta) + \half\log \abs{\tilde\bV_w} - \half[n]\log\abs{\bPsi} - \half\sum_{i,j=1}^m \psi_{ij}^- \tr(\tilde\bW_{ij}),
 \end{align}
-where $C_i(\theta)$ is the normalising constant of the distribution $\tN_m(\balpha + \tilde\bw^\top\bh_\eta(x_i),\bPsi^{-1},\cC_{y_i})$, with $\cC_{y_i} = \{y_{iy_i}^* > y_{ik}^* | \forall k \neq y_i \}$, and $\psi_{ij}^{-}$.
+where $\psi_{ij}^{-}$ is the $(i,j)$'th entry of $\bPsi^{-1}$, and $C_i(\theta)$ is the normalising constant of the density of $\tN_m(\balpha + \tilde\bw^\top\bh_\eta(x_i),\bPsi^{-1},\cC_{y_i})$, with $\cC_{y_i} = \{y_{iy_i}^* > y_{ik}^* | \forall k \neq y_i \}$.
 That is,
 \[
   C_i(\theta) = \idotsint\displaylimits_{\{y_{iy_i}^* > y_{ik}^* \,|\, \forall k \neq y_i \}} \phi(y_{i1}^*, \dots, y_{im}^*|\balpha + \tilde\bw^\top\bh_\eta(x_i), \bPsi^{-1}) \dint y_{i1}^* \cdots \dint y_{im}^*.
@@ -240,7 +243,7 @@ That is,
 Similar to the EM algorithm, each iteration of the algorithm increases the ELBO to a stationary point \citep{blei2017variational}.
 Unlike the EM algorithm though, the variational EM algorithm does \emph{not} guarantee an increase in the marginal log-likelihood at each step, nor does it guarantee convergence to the global maxima of the log-likelihood.
 
-Further, the ELBO expression to be maximised is often not convex, which means the CAVI algorithm may terminate at local modes, for which they may be many.
+Further, the ELBO expression to be maximised is often not convex, which means the algorithm may terminate at local modes, for which there may be many.
 Note that the variational distribution with the higher ELBO value is the distribution that is closer, in terms of the KL divergence, to the true posterior distribution.
 In our experience, multiple random starts alleviates this issue for the I-probit model.
 
@@ -262,7 +265,7 @@ In our experience, multiple random starts alleviates this issue for the I-probit
         \State $\tilde \by^{*(t+1)}_{i \bigcdot} \gets \E_{q^{(t+1)}} (\by^*_{i \bigcdot})$
       \EndFor
       \Statex
-      \State $\tilde\bV_w^{(t+1)} \gets \big((\bPsi \otimes \bH_{\eta^{(t)}}^2) + (\bPsi^{-1} \otimes \bI_n)\big)^{-1}$ \Comment{Update $\bw$}
+      \State $\tilde\bV_w^{(t+1)} \gets \big(\bPsi \otimes \bH_{\eta^{(t)}}^2 + \bPsi^{-1} \otimes \bI_n\big)^{-1}$ \Comment{Update $\bw$}
       \State $\vecc\tilde\bw^{(t+1)}  \gets \tilde\bV_w^{(t+1)} 
       (\bPsi \otimes \bH_{\eta^{(t)}}) \vecc (\tilde\by^{*(t+1)} - \bone_n\balpha^{(t)\top})$
       \State $\tilde q^{(t+1)}(\bw) \gets \N_{nm}\big( \vecc \tilde\bw^{(t+1)}, \tilde\bV_w^{(t+1)} \big)$ 
@@ -286,10 +289,12 @@ In our experience, multiple random starts alleviates this issue for the I-probit
     \State Calculate ELBO $\cL^{(t+1)}$
     \State $t \gets t + 1$
     \Statex
-    \State $\{ \tilde q(\by^*), \tilde q(\bw), \hat\theta \} \gets \{ \tilde q^{(t)}(\by^*), \tilde q^{(t)}(\bw), \theta^{(t)} \}$ 
+    \State $\big\{ \tilde q(\by^*), \tilde q(\bw), \hat\theta \big\} \gets \big\{ \tilde q^{(t)}(\by^*), \tilde q^{(t)}(\bw), \theta^{(t)} \big\}$ 
     \State \textbf{return} Variational densities $\{ \tilde q(\by^*), \tilde q(\bw) \}$
     \State \textbf{return} Estimates $\{ \hat\balpha, \hat\eta \}$
     \State \textbf{return} ELBO $\cL_q(\theta) = \cL^{(t)}$    
   \EndWhile
 \end{algorithmic}
 \end{algorithm}
+
+\index{I-probit!variational EM algorithm|)}

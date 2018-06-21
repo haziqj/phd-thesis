@@ -5,8 +5,11 @@ In addition, we also discuss considerations to take into account if estimation o
 \subsection{Efficient computation of class probabilities}
 \label{sec:mnint}
 
+\index{Monte Carlo integration}
+\index{GHK simulator|(}
+\index{Geweke-Hajivassiliou-Keane simulator|see{GHK simulator}}
 The issue at hand here is that for $m>4$, the evaluation of the class probabilities in \cref{eq:pij} is computationally burdensome using classical methods such as quadrature methods \citet{geweke1994alternative}.
-As such, simulation techniques (Monte Carlo integration) are employed instead.
+As such, simulation techniques are employed instead.
 The simplest strategy to overcome this is a frequency simulator (otherwise known as Monte Carlo integration): obtain random samples from $\N_{m}\big(\bmu(x_i), \bPsi^{-1}\big)$, and calculate how many of these samples fall within the required  region.
 This method is fast and yields unbiased estimates of the class probabilities.
 However, in an extensive comparative study of various probability simulators, \citet{hajivassiliou1996simulation} concluded that the Geweke-Hajivassiliou-Keane (GHK) probability simulator \citep{geweke1989bayesian,hajivassiliou1998method,keane1994solution} is the most reliable under a multitude of scenarios.
@@ -145,10 +148,12 @@ It is better to work on a log-probability scale, so the products in \cref{eq:til
 
 \begin{remark}
   The GHK algorithm provides reasonably fast and accurate calculations of class probabilities when $\bPsi$ is dense.
-  As we alluded to earlier in the chapter, the class probabilities condense to a unidimensional integral involving products of normal cdfs (c.f. equation \ref{eq:pij2}) if $\bPsi$ is diagonal.
-  Note that if $\bPsi$ is diagonal, then the transformed $\bOmega_{(j)} = \bQ\bPsi^{-1}\bQ^\top$ is certainly not: the components of $\bz$ are correlated because they are all anchored on the same random variable.
-  Thus, direct evaluation of \cref{eq:pij2} using quadrature methods avoids the Cholesky step and random sampling employed by the GHK method.
+  As we alluded to earlier in the chapter, the class probabilities condense to a unidimensional integral involving products of normal cdfs (c.f {\color{\mycitecolour}Equation} \ref{eq:pij2}) if $\bPsi$ is diagonal.
+  Note that if $\bPsi$ is in fact diagonal, then the transformed $\bOmega_{(j)} = \bQ\bPsi^{-1}\bQ^\top$ is most certainly not; the components of $\bz$ are  correlated because they are all anchored on the same random variable.
+  Thus, direct evaluation of the unidimensional integral in \cref{eq:pij2} using quadrature methods as mentioned at the bottom of {\color{\mycitecolour}page} \pageref{eq:pij2} avoids the Cholesky step and random sampling employed by the GHK method.
 \end{remark}
+
+\index{GHK simulator|)}
 
 %\begin{remark}
 %  The GHK probability simulator relates to the \emph{method of simulated likelihood}.  
@@ -157,10 +162,11 @@ It is better to work on a log-probability scale, so the products in \cref{eq:til
 \subsection{Efficient Kronecker product inverse}
 \label{sec:complxiprobit}
 
+\index{Kronecker product}
 As with the normal I-prior model, the time complexity of the variational inference algorithm for I-probit models is dominated by the step involving the posterior evaluation of the I-prior random effects $\bw$, which essentially is the inversion of an $nm \times nm$ matrix.
 The matrix in question is %(from \cref{eq:varipostw})
 \begin{align}
-  \bV_w = \big[ (\bPsi \otimes \bH_\eta^2) + (\bPsi^{-1} \otimes \bI_n) \big]^{-1}. \tag{from \ref{eq:varipostw}}
+  \bV_w = \big( \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n \big)^{-1}. \tag{from \ref{eq:varipostw}}
 \end{align}
 We can actually exploit the Kronekcer product structure to compute the inverse efficiently.
 Perform an orthogonal eigendecomposition of $\bH_\eta$ to obtain $\bH_\eta = \bV\bU\bV^\top$ and of $\bPsi$ to obtain $\bPsi = \bQ\bP\bQ^\top$.
@@ -196,10 +202,10 @@ If so, the $Q$ function from \cref{eq:iprobitQEstep} conditional on the rest of 
   -\half \tr 
   \big( 
   \bPsi
-  \myoverbrace{\E\big( (\by^* - \bmu)^\top (\by^* - \bmu) \big)}{\bG_1}
+  \myoverbrace{\E\big[ (\by^* - \bmu)^\top (\by^* - \bmu) \big]}{\bG_1}
   +
   \bPsi^{-1}
-  \myoverbrace{\E(\bw^\top\bw)}{\bG_2} 
+  \myoverbrace{\E(\bw^\top\bw)}{\bG_2} \,
   \Big)
 \end{align*}
 with $\bmu = \bone_n\balpha^\top + \bH_\eta\bw$.
@@ -209,14 +215,14 @@ Specifically in the case where $\bPsi$ is a diagonal matrix $\diag(\psi_1,\dots,
   \vspace{-0.5em}
   Q(\bPsi|\balpha,\eta)
   ={}& \const -\half \sum_{j=1}^m \psi_j \tr
-  \E\big( (\by^*_{\bigcdot j} - \bmu_{\bigcdot j})(\by^*_{\bigcdot j} - \bmu_{\bigcdot j})^\top \big) \\
+  \E\big[ (\by^*_{\bigcdot j} - \bmu_{\bigcdot j})(\by^*_{\bigcdot j} - \bmu_{\bigcdot j})^\top \big] \\
   & -\half \sum_{j=1}^m \psi_j^{-1} \tr
   \E(\bw_{\bigcdot j}\bw_{\bigcdot j}^\top)
 \end{align*}
 is maximised, for $j=1,\dots,m$, at
 \[
   \hat\psi_j = \left( 
-  \frac{\E( \bw_{\bigcdot j}^\top\bw_{\bigcdot j} ) }{\E\big( (\by^*_{\bigcdot j} - \bmu_{\bigcdot j})^\top (\by^*_{\bigcdot j} - \bmu_{\bigcdot j}) \big) }
+  \frac{\E( \bw_{\bigcdot j}^\top\bw_{\bigcdot j} ) }{\E\big[ (\by^*_{\bigcdot j} - \bmu_{\bigcdot j})^\top (\by^*_{\bigcdot j} - \bmu_{\bigcdot j}) \big] }
   \right)^{\half},
 \] 
 independently of the rest of the other $\psi_k$'s, $k\neq j$.

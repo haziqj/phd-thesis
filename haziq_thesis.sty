@@ -167,6 +167,8 @@
 \definecolor{lseblu}{RGB}{85,172,238}
 \definecolor{lsegrn}{HTML}{C1EDCC}
 
+\newcommand{\mycitecolour}{lsedpr}
+
 % Coding
 \usepackage{algorithm}
 \usepackage{algpseudocode}
@@ -178,7 +180,7 @@
 \usepackage[style=authoryear-comp, firstinits=false, giveninits=false, maxcitenames=2, uniquelist=false,
   minnames=1, maxbibnames=99, backend=biber, natbib]{biblatex}
 \setlength\bibitemsep{1.5\itemsep}
-\AtEveryCite{\color{lsedpr}}
+\AtEveryCite{\color{\mycitecolour}}
 \makeatletter
 \AtEveryCitekey{\global\undef\cbx@lastyear}  % https://tex.stackexchange.com/questions/309697/multiple-citations-same-author-same-year-using-biblatex-list-year
 \makeatother
@@ -414,8 +416,8 @@
 \newcommand{\hnomenclature}{
   \hypersetup{
   colorlinks=true,
-  linkcolor=lsedpr,
-  citecolor=lsedpr,
+  linkcolor=\mycitecolour,
+  citecolor=\mycitecolour,
   urlcolor=lsepur
 }
   \ifstandalone
@@ -456,11 +458,11 @@
 \Crefname{equation}{}{}
 \hypersetup{
   colorlinks=true,
-  linkcolor=lsedpr,
-  citecolor=lsedpr,
+  linkcolor=\mycitecolour,
+  citecolor=\mycitecolour,
   urlcolor=lsepur
 }
-\newcommand{\mypageref}[1]{{{\color{lsedpr}p.} \pageref{#1}}}
+\newcommand{\mypageref}[1]{{{\color{\mycitecolour}p.} \pageref{#1}}}
 
 % Page intentionally left blank
 \makeatletter
@@ -483,7 +485,7 @@
 %\usepackage[fontsize=10.5]{scrextend}  % place here due to conflict
 
 % Coloured parantheses
-\newcommand{\colp}[1]{{\color{lsedpr}(#1)}}
+\newcommand{\colp}[1]{{\color{\mycitecolour}(#1)}}
 
 \makeatletter
 \DeclareFieldFormat{eprint:arxiv}{%

@@ -23,6 +23,7 @@
 \label{chapter5}
 \thispagestyle{chapterfive}
 
+\index{categorical response}
 Consider polytomous response variables $\by = \{y_1,\dots,y_n\}$, where each $y_i$ takes on exactly one of the values from the set of $m$ possible choices $\{1,\dots,m\}$.
 Modelling categorical response variables is of profound interest in statistics, econometrics and machine learning, with applications aplenty. 
 In the social sciences, categorical variables often arise from survey responses, and one may be interested in studying correlations between  explanatory variables and the categorical response of interest.
@@ -43,7 +44,7 @@ The probability mass function (pmf) of $y_i$ is given by
 \begin{equation*}%\label{eq:catdist}
   p(y_i) = p_{i1}^{[y_i = 1]} \cdots p_{im}^{[y_i = m]},
 \end{equation*}
-where the notation $[\cdot]$ refers to the Iverson bracket\footnote{$[A]$ returns 1 if the proposition $A$ is true, and 0 otherwise. The Iverson bracket is a generalisation of the Kronecker delta.}. 
+where the notation $[\cdot]$ refers to the Iverson bracket\footnote{$[A]$ returns 1 if the proposition $A$ is true, and 0 otherwise. The Iverson bracket is a generalisation of the Kronecker delta.}.\index{Iverson bracket} 
 As a side note, when there are only two possibilities for each outcome $y_i$, i.e. $m=2$, we have the Bernoulli distribution.
 The class probabilities are made to depend on the covariates through the relationship
 \begingroup
@@ -63,7 +64,7 @@ With an I-prior assumed on the $f_j$'s, we call this method of probit regression
 %Disregarding the correlations violates the independence of irrelevant alternatives (IIA) assumption, but this is usually fine for classification tasks where the alternatives are assumed not to be correlated.
 
 Due to the nature of the model assumptions, unfortunately the posterior distribution of the regression functions cannot be found in closed form.
-In particular, marginalising the I-prior from the joint likelihood involves a high-dimensional intractable integral (c.f. equation \ref{eq:intractablelikelihood2}).
+In particular, marginalising the I-prior from the joint likelihood involves a high-dimensional intractable integral (c.f. {\color{\mycitecolour}Equation}\ref{eq:intractablelikelihood2}).
 Similar problems are encountered in mixed logistic or probit multinomial models \citep{breslow1993approximate,mcculloch2000bayesian} and also in Gaussian process classification \citep{neal1999,rasmussen2006gaussian}.
 In these models, Laplace approximation for maximum likelihood (ML) estimation or Markov chain Monte Carlo (MCMC) methods for Bayesian estimation are used. 
 We instead explore a \emph{variational approximation} to the marginal log-likelihood, and by extension, to the posterior density of the regression functions.
@@ -82,7 +83,10 @@ We find that the many advantages of the normal I-prior methodology  transfer ove
 %\input{05a-naive}
 
 \section{A latent variable motivation: the I-probit model}
+\index{I-prior!categorical|see{I-probit}}
+\index{I-probit|(}
 \input{05b-iprobit}
+\index{I-probit|)}
 
 \section{Identifiability and IIA}\label{sec:iia}
 \input{05c-iia}
@@ -115,6 +119,10 @@ Techniques such as quadrature methods, Laplace approximation and MCMC tend to fa
 The main reason for this is the dimension of this integral, which is $nm$, and thus for large sample sizes and/or number of classes, is unfeasible with such methods.
 We turned to variational inference in the face of an intractable posterior density that hampers an EM algorithm, and the result is a sequential updating scheme, similar in time and storage requirements to the EM algorithm.
 
+\index{generalised additive model}
+\index{GPC}
+\index{SVM}
+\index{expectation propagation}
 In terms of similarity to other works, the generalised additive models (GAMs) of \citet{hastie1986} comes close.
 The setup of GAMs is near identical to the I-probit model, although estimation is done differently. 
 GAMs do not assume smooth functions from any RKHS, but instead estimates the $f$'s using a local scoring method or a local likelihood method.
@@ -151,6 +159,7 @@ Suggestions for future work include:
   \caption[Time taken to complete a single variational inference iteration]{Time taken to complete a single variational inference iteration for varying sample sizes and number of classes $m$. The solid line represents actual timings, while the dotted lines are linear extrapolations.}
 \end{figure}
 
+\index{variational!Bayes}
 As a final remark, we note that variational Bayes, which entails a fully Bayesian treatment of the model (setting priors on model parameters $\theta$), is a viable alternative to variational EM.
 The output of such a variational inference algorithm would be approximate posterior densities for $\theta$, in addition to $q(\by^*)$ and $q(\bw)$, instead of point estimates for $\theta$.
 Posterior inferences surrounding the parameters would then be possible, such as obtaining posterior standard deviations, credibility intervals, and so on.
@@ -158,8 +167,8 @@ However, a variational Bayes route has its cons:
 \begin{enumerate}
   \item \textbf{Tedious derivations}. As the parameters now have a distribution $\theta = \{\balpha,\eta,\bPsi\} \sim q(\balpha,\eta,\bPsi)$, quantities such as
   \begin{itemize}
-    \item $\E[\log \vert \bPsi \vert]$;
-    \item $\E[\bH_\eta^2]$; and
+    \item $\E(\log \vert \bPsi \vert)$;
+    \item $\E(\bH_\eta^2)$; and
     \item $\tr \E\big[ (\by^*-\bone_n\balpha^\top - \bH_\eta\bw)\bPsi (\by^*-\bone_n\balpha^\top - \bH_\eta\bw)^\top \big]$,
   \end{itemize}
   among others, will need to be derived for the variational inference algorithm, and these can be tricky to compute.

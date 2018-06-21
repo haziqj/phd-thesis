@@ -5,29 +5,29 @@ We first describe prediction of a new data point $x_{\text{new}}$.
 Step one is to determine the distribution of the posterior regression functions in each class, $\bff(x_{\text{new}}) = \bw^\top\bh_\eta(x_{\text{new}})$, where $\bh_\eta(x_{\text{new}})$ is the vector of length $n$ containing entries $h_\eta(x_i,x_\new)$, given values for the parameters $\theta$ of the I-probit model.
 To this end, we use the ELBO estimates for $\theta$, i.e. $\hat\theta = \argmax_\theta \cL_q(\theta)$, as obtained from the variational EM algorithm.
 As we know, the variational distribution of $\vecc\bw$ is normally distributed with mean and variance according to \cref{eq:varipostw}.
-By writing $\vecc \tilde\bw = (\tilde \bw_{\bigcdot 1}, \dots, \tilde \bw_{\bigcdot m})^\top$ to separate out the I-prior random effects per class, we have that $\bw_{\bigcdot j}|\hat\theta \sim \N_n(\tilde \bw_{\bigcdot j}, \tilde\bV_w[j,j])$, and $\Cov[\bw_{\bigcdot j},\bw_{\bigcdot k}] = \tilde\bV_w[j,k]$, where the `$[\cdot,\cdot]$' indexes the $n\times n$ sub-block of the block matrix structured matrix $\bV_w$.
+By writing $\vecc \tilde\bw = (\tilde \bw_{\bigcdot 1}, \dots, \tilde \bw_{\bigcdot m})^\top$ to separate out the I-prior random effects per class, we have that $\bw_{\bigcdot j}|\hat\theta \sim \N_n(\tilde \bw_{\bigcdot j}, \tilde\bV_w[j,j])$, and $\Cov(\bw_{\bigcdot j},\bw_{\bigcdot k}) = \tilde\bV_w[j,k]$, where the `$[\cdot,\cdot]$' indexes the $n\times n$ sub-block of the block matrix structured matrix $\bV_w$.
 Thus, for each class $j=1,\dots,m$ and any $x \in \cX$,
 \[
   f_j(x)|\by,\hat\theta \sim \N\big(\,
   \bh_{\hat\eta}(x)^\top \tilde\bw_{\bigcdot j} \, , \,
-  \bh_{\hat\eta}(x)^\top\tilde\bV_w[j,j]\bh_{\hat\eta}(x)
+  \bh_{\hat\eta}(x)^\top\tilde\bV_w[j,j] \, \bh_{\hat\eta}(x)
   \big),
 \]
 and the covariance between the regression functions in two different classes is
 \[
-  \Cov\big[f_j(x),f_k(x)|\by,\hat\theta \big] = 
-  \bh_{\hat\eta}(x)^\top \tilde\bV_w[j,k] \tilde\bh_{\hat\eta}(x).
+  \Cov\big(f_j(x),f_k(x)|\by,\hat\theta \big) = 
+  \bh_{\hat\eta}(x)^\top \tilde\bV_w[j,k] \, \tilde\bh_{\hat\eta}(x).
 \]
 Then, in step two, using the results obtained in the previous chapter in \cref{sec:ipriorpostest} \colp{\mypageref{sec:ipriorpostest}}, we have that the latent propensities $y_{\new,j}^*$ for each class are normally distributed with mean, variance, and covariances
 \begin{alignat*}{3}
-  \E[y_{\new,j}^*|\by,\hat\theta] 
-  &= \hat\alpha_j + \E \big[ f_j(x_\new) |\by,\hat\theta \big] 
+  \E(y_{\new,j}^*|\by,\hat\theta) 
+  &= \hat\alpha_j + \E \big( f_j(x_\new) |\by,\hat\theta \big)
   &&=: \hat\mu_j(x_\text{new}) \\
-  \Var[y_{\new,j}^*|\by,\hat\theta] 
-  &= \Var\big[f(x_\new)|\by,\hat\theta \big] + \bPsi^{-1}_{jj}
+  \Var(y_{\new,j}^*|\by,\hat\theta) 
+  &= \Var\big(f(x_\new)|\by,\hat\theta \big) + \bPsi^{-1}_{jj}
   &&=: \hat\sigma_j^2(x_\text{new}) \\
-  \Cov[y_{\new,j}^*,y_{\new,k}^*|\by,\hat\theta]
-  &= \Cov\big[f_j(x),f_k(x)|\by,\hat\theta \big] + \bPsi^{-1}_{jk}
+  \Cov(y_{\new,j}^*,y_{\new,k}^*|\by,\hat\theta)
+  &= \Cov\big(f_j(x),f_k(x)|\by,\hat\theta \big) + \bPsi^{-1}_{jk}
   &&=: \hat\sigma_{jk}(x_\text{new}).
 \end{alignat*}
 
@@ -60,6 +60,7 @@ as per \cref{eq:pij2}, since the $m$ components of $\bff(x_\new)$, and hence the
 Prediction of a single new data point takes $O(n^2m)$ time, because there are essentially $m$ I-prior posterior regression functions, and each take $O(n^2)$ to evaluate.
 This is assuming negligible time to compute the class probabilities.
 
+\index{credibility interval}
 We are able to take advantage of the Bayesian machinery to obtain credibility intervals for probability estimates or any transformation of these probabilities (e.g. log odds or odds ratios).
 The procedure is as follows.
 First, obtain samples $\bw^{(1)},\dots,\bw^{(T)}$ by drawing from its variational posterior distribution $\vecc\bw^{(t)}|\hat\theta \sim \N_{nm}(\vecc \tilde\bw,\bV_w)$.
@@ -72,6 +73,7 @@ To obtain a statistic of interest, say, a 95\% credibility interval of a functio
 %In this manner, all aspects of uncertainty, from the parameters to the latent variables of the generative model, are accounted for.
 
 \begin{remark}
+  \index{bootstrap}
   Unfortunately, with the variational EM algorithm, standard errors for the parameters $\theta$ are not so easy to obtain.  
   We could not ascertain as to the availability of an unbiased estimate of the asymptotic covariance matrix for $\theta$ under a variational framework.
   One strategy for obtaining standard errors is bootstrap \citep{chen2017use}:
@@ -82,7 +84,7 @@ To obtain a statistic of interest, say, a 95\% credibility interval of a functio
       \item Obtain $\cS^{(t)} = \{ (y_1^{(t)},x_1^{(t)}),\dots, (y_n^{(t)},x_n^{(t)})\}$ by sampling $n$ points with replacement from $\cS$.
       \item Compute $\hat\theta^{(t)} = \argmax_\theta \cL_q(\theta)$ using the data $\cS^{(t)}$.
     \end{enumerate}
-    \item For the $l$-th component of $\theta$, compute its variance estimator using
+    \item For the $l$'th component of $\theta$, compute its variance estimator using
     \[
       \widehat\Var(\hat\theta_l) = \frac{1}{T} \sum_{t=1}^T (\hat\theta_l^{(t)} - \bar\theta_l)^2
       \hspace{0.5cm}\text{where}\hspace{0.5cm}
@@ -96,6 +98,7 @@ To obtain a statistic of interest, say, a 95\% credibility interval of a functio
   The obvious downside to this bootstrap scheme is computational time.
 \end{remark}
 
+\index{empirical Bayes factor}
 Finally, a discussion on model comparison, which, in the variational inference literature, is achieved by comparing ELBO values of competing models \citep{beal2003}.
 The rationale is that the ELBO serves as a conservative estimate for the log marginal likelihood, which would allow model selection via (empirical) Bayes factors.
 This stems from the fact that 
@@ -112,6 +115,7 @@ since the Kullback-Leibler divergence from the true posterior density $p(\by^*,\
 and $\cL_q(\theta|M_k)$, $k=0,1$, is the ELBO for model $M_k$.
 It should be noted that while this works in practice, there is no theoretical basis for model comparison using the ELBO \citep{blei2017variational}.
 
+\index{Bayes factor}
 \vspace{0.3em}
 \begin{table}[htbp]\label{tab:BF}
   \centering

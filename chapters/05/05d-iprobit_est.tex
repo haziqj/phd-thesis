@@ -36,7 +36,7 @@ A schematic diagram depicting the I-probit model is shown in \cref{fig:iprobitda
     \label{fig:iprobitdag}
 \end{figure}
 
-
+\index{log-likelihood}
 The log likelihood function for $\theta$ using all $n$ observations $\{(y_1,x_1),\dots,(y_n,x_n)\}$ is obtained by performing the following integration:
 \begin{align}\label{eq:iprobitlik}
   L(\theta|\by) 
@@ -80,7 +80,7 @@ The challenge of estimation is then to first overcome this intractability by mea
 We present three possible avenues to achieve this aim, namely the Laplace approximation, a variational EM algorithm, and Markov chain Monte Carlo (MCMC) methods.
 
 \subsection{Laplace approximation}
-
+\index{Laplace's method|(}
 
 The focus here is to obtain the posterior density $p(\bw|\by) \propto p(\by|\bw)p(\bw) =: e^{R(\bw)}$ which has normalising constant equal to the marginal density of $\by$, $p(\by) = \int e^{R(\bw)} \dint \bw$, as per \cref{eq:intractablelikelihood2}.
 Note that the dependence of the pdfs on $\theta$ is implicit, but is dropped for clarity.
@@ -96,6 +96,7 @@ Laplace's method \citep[sec. 4.1.1, pp. 777--778]{kass1995bayes} entails expandi
 because, assuming that $R$ has a unique maximum, $\nabla R$ evaluated at its mode is zero.
 This is recognised as the logarithm of an unnormalised Gaussian density, implying $\bw|\by \sim \N_n(\hat\bw,\bOmega^{-1})$.
 Here, $\bOmega = -\nabla^2 R(\bw)|_{\bw=\hat\bw}$ is the negative Hessian of $Q$ evaluated at the posterior mode, and is typically obtained as a byproduct of the maximisation routine of $R$ using gradient or quasi-gradient based methods.
+\index{Hessian}
 
 The marginal distribution is then approximated by
 \begin{align*}
@@ -121,7 +122,10 @@ Lastly, as a comment, Laplace's method only approximates the true marginal likel
 In other words, a second order approximation of $R(\bw)$ must be be reliable for Laplace's method to be successful.
 This is typically the case if the posterior distribution is symmetric about the mode and falls quickly in the tails.
 
+\index{Laplace's method|)}
+
 \subsection{Variational EM algorithm}
+\index{variational!EM algorithm|(}
 
 We turn to variational methods as a means of approximating the posterior densities of interest and obtain parameter estimates.
 Variational methods are widely discussed in the machine learning literature, but there have been efforts to popularise it in statistics \citep{blei2017variational}.
@@ -144,7 +148,7 @@ Now, due to the independence of the observations $i=1,\dots,n$, the complete dat
   - \half \tr \Big(\bPsi^{-1} \bw^\top  \bw \Big)
   \label{eq:logjointprobit}
 \end{align}
-which looks like the complete data log-likelihood seen previously in \cref{eq:QfnEstep} \colp{\cref{sec:ipriorem},  \mypageref{eq:QfnEstep}}, except that here, together with $\bw$, the $\by^*_{i \bigcdot}$'s are not observed.
+which looks like the complete data log-likelihood seen previously in \cref{eq:QfnEstep} \colp{\cref{sec:emiprior},  \mypageref{eq:QfnEstep}}, except that here, together with $\bw$, the $\by^*_{i \bigcdot}$'s are not observed.
 
 For the E-step, it is of interest to determine the posterior density $p(\by^*,\bw|\by) = p(\by^*|\bw,\by)p(\bw|\by)$. 
 We have discerned from the discussion at the beginning of this section that this is hard to obtain, since it involves an intractable marginalising integral.
@@ -159,6 +163,7 @@ The constraint considered by us in this thesis is that $q$ satisfies a \emph{mea
 \]
 Under this scheme, the variational distribution for $\by^*$ is found to be a \emph{conically truncated multivariate normal} distribution, and for $\bw$, a multivariate normal distribution.
 
+\index{ELBO}
 It can be shown that, for any variational density $q$, the marginal log-likelihood is an upper-bound for the quantity $\cL_q(\theta) := \cL(q,\theta)$ defined by
 \[
   \log p(\by|\theta) \geq 
@@ -168,6 +173,7 @@ It can be shown that, for any variational density $q$, the marginal log-likeliho
 a quantity often referred to as the \emph{evidence lower bound} (ELBO).
 It turns out that minimising $\KL(q\Vert p)$ is equivalent to maximising the ELBO, a quantity that is more practical to work with than the KL divergence, and certainly more tractable than the log marginal density.
 Hence, if $q$ approximates the true posterior well, then the ELBO is a suitable proxy for the marginal log-likelihood.
+\index{KL divergence}
 
 In practice, obtaining ML parameter estimates and the posterior density $q(\by^*,\bw)$ which maximises the ELBO is achieved using a \emph{variational EM algorithm}, an EM algorithm in which the conditional distribution are replaced with a variational approximation.
 The $t$'th E-step entails obtaining the density $q^{(t+1)}$ as a solution to $\argmax_q \cL(q,\theta)$, keeping $\theta$ fixed at the current estimate $\theta^{(t)}$.
@@ -176,22 +182,25 @@ The objective function to be maximised is computed as
 \begin{align}
   Q(\theta) 
   ={}& \E_{\by^*,\bw\sim q^{(t+1)}}  [ \log p(\by,\by^*,\bw|\theta) ] \nonumber \\
-  ={}& \const -\half\tr\Big( \bPsi \E[\bw^\top\bH_\eta^2\bw]  + \bPsi^{-1} \E[\bw^\top\bw] \Big)  \nonumber \\
+  ={}& \const -\half\tr\Big( \bPsi \E(\bw^\top\bH_\eta^2\bw)  + \bPsi^{-1} \E(\bw^\top\bw) \Big)  \nonumber \\
   &- \half \tr \Big( 
   \bPsi \big\{
-  \E[\by^{*\top}\by^*]
+  \E(\by^{*\top}\by^*)
   + n \balpha\balpha^\top 
-  - 2\balpha \bone_n^\top \E[\by^*]
-  - 2\E[\bw^\top]\bH_\eta [\E[\by^*] - \bone_n\balpha^\top] 
+  - 2\balpha \bone_n^\top \E \by^*
+  - 2\E(\bw^\top)\bH_\eta \big(\E \by^* - \bone_n\balpha^\top \big) 
   \big\} \Big) \label{eq:iprobitQEstep}
   ,
 \end{align}
-and this is maximised with respect to $\theta$ in the M-step to obtain $\theta^{(t+1)}$
+and this is maximised with respect to $\theta$ in the M-step to obtain $\theta^{(t+1)}$.
 The algorithm alternates between the E- and M-step until convergence of the ELBO.
 A full derivation of the variational EM algorithm used by us will be described in \cref{sec:iprobitvar}.
 
+\index{variational!EM algorithm|)}
+
 \subsection{Markov chain Monte Carlo methods}
 
+\index{MCMC}
 Markov chain Monte Carlo (MCMC) methods is the tool of choice for a complete Bayesian analysis of multinomial probit models \citep{mcculloch2000bayesian,nobile1998hybrid,mcculloch2000bayesian}.
 \citet{albert1993bayesian} showed that a data augmentation approach, i.e. the latent variable approach, to probit models can be analysed using exact Bayesian methods, due to the underlying normality structure.
 Paired with corresponding conjugate prior choices, sampling from the posterior is very simple using a Gibbs sampling approach.
@@ -205,11 +214,13 @@ The models with likelihood \cref{eq:intractablelikelihood1} or \cref{eq:intracta
 However, as mentioned already, \cref{eq:intractablelikelihood1} contains an integral involving a $mn$-variate normal distribution whose covariance matrix is dense, and as far as we are aware, the Kronecker product structure cannot be exploited for efficiency in sampling.
 This leaves \cref{eq:intractablelikelihood2}, a non-conjugate model whose full conditional densities are not of recognisable form.
 Hamiltonian Monte Carlo is another possibility, since it does not require conjugacy.
-For binary models, this is a feasible approach because the class probabilities normal cdfs (c.f. equation \ref{eq:iprobitbin}), which means that it is doable using off-the-shelf software such as \proglang{Stan}.
+For binary models, this is a feasible approach because the class probabilities normal cdfs (c.f. {\color{\mycitecolour}Equation} \ref{eq:iprobitbin}), which means that it is doable using off-the-shelf software such as \proglang{Stan}.
 However, with multinomial responses, the arduous task of computing class probabilities, which involve integration of an at most $m$-dimensional normal density, must be addressed separately.
 
 \subsection{Comparison of estimation methods}
 
+\index{classification!binary}
+\index{fBm}
 In this subsection, we utilise a toy binary classification data set which has been simulated according to a spiral pattern, as in \cref{fig:exampleiprobit}.
 The predictor variables are $X_1$ and $X_2$, each of which are scaled similarly.
 Following \cref{eq:iprobitbin}, the binary I-probit model that is fitted is
@@ -276,6 +287,7 @@ Time taken (s) & >3600                & 5.32         & >1800                    
   \caption[Predicted probabilities and log-density plots]{Plots showing predicted probabilities (shaded region) for belonging to class `1' or `2' indicated by colour and intensity, and log-likelihood/ELBO surface plots for (a) Laplace's method, (b) variational EM, and (c) Hamiltonian MC. For the Hamiltonian MC plot, parameters are treated as fixed, and the mean log-density of the I-probit model recorded.}
   \label{fig:exampleiprobitfit}
 \end{figure}
+\index{Brier score}
 
 A plot of the log-likelihood (or ELBO) surface for three methods in \cref{fig:exampleiprobitfit} reveals some insight.
 The variational likelihood has two ridges, with the maxima occurring around the intersection of these two ridges.
@@ -284,7 +296,7 @@ However, parts of the Laplace likelihood are poorly approximated resulting in a 
 Laplace's method is known to yield poor approximations to probit model likelihoods \citep{kuss2005assessing}.
 On the other hand, the log-likelihood calculated using a Hamiltonian MC sampler (treating parameters as fixed values) yields a slightly different graph: the log-likelihood increases as values of $\alpha$ become larger, resulting in the upwards inflection of the log-likelihood surface (as opposed to a downward inflection seen in the variational and Laplace likelihood).
 
-In terms of predictive abilities, both the variational and Hamiltonian MC methods, even though the posteriors are differently estimated, have good predictive performance as indicated by their error rates and Brier scores\footnote{The Brier score is defined as $\frac{1}{n}\sum_{i=1}^n\sum_{j=1}^m (y_{ij} - \hat p_{ij})$ with $y_{ij}=1$ if $y_i = j$ and zero otherwise, and $\hat p_{ij}$ is the fitted probability $\hat\Prob(y_i = j)$. It gives a better sense of ``training/test error'', compared to simple misclassification rates, by accounting for the forecasted probabilities of the events happening. The Brier score is a proper scoring rule, i.e. it is uniquely minimised by the true probabilities.}.
+In terms of predictive abilities, both the variational and Hamiltonian MC methods, even though the posteriors are differently estimated, have good predictive performance as indicated by their error rates and Brier scores\footnote{\index{Brier score}The Brier score is defined as $\frac{1}{n}\sum_{i=1}^n\sum_{j=1}^m (y_{ij} - \hat p_{ij})$ with $y_{ij}=1$ if $y_i = j$ and zero otherwise, and $\hat p_{ij}$ is the fitted probability $\hat\Prob(y_i = j)$. It gives a better sense of ``training/test error'', compared to simple misclassification rates, by accounting for the forecasted probabilities of the events happening. The Brier score is a proper scoring rule, i.e. it is uniquely minimised by the true probabilities.}.
 \cref{fig:exampleiprobitfit} shows that HMC is more confident of new data predictions compared to variational inference, as indicated by the intensity of the shaded regions (HMC is shaded stronger than variational EM).
 Laplace's method gave poor predictive performance.
 

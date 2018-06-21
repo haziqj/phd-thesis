@@ -9,7 +9,7 @@ That is,
   \end{cases}
 \]
 With $y_i\iid\Cat(p_{i1},\dots,p_{im})$ for $i=1,\dots,n$, each $y_{ij}$ is distributed as Bernoulli with probability $p_{ij}$, $j=1,\dots,m$ according to the above formulation. 
-Now, assume that, for each $y_{i1}, \dots, y_{im}$, there exists corresponding \emph{continuous, underlying, latent variables} $y_{i1}^*, \dots, y_{im}^*$ such that
+Now, assume that, for each $y_{i1}, \dots, y_{im}$, there exists corresponding \emph{continuous, underlying, latent variables} $y_{i1}^*, \dots, y_{im}^*$ such that\index{latent variable}\index{latent propensity}
 \begin{align}\label{eq:latentmodel}
   y_i =
   \begin{cases}
@@ -48,7 +48,7 @@ The probability $p_{ij}$ of observation $i$ belonging to class $j$ is then calcu
 where $\phi(\cdot|\bmu,\bSigma)$ is the density of the multivariate normal with mean $\bmu$ and variance $\bSigma$.
 This is the probability that the normal random variable $\by_{i \bigcdot}^*$ belongs to the set $\cC_j := \intset$, which are cones in $\bbR^m$.
 Since the union of these cones is the entire $m$-dimensional space of reals, the probabilities add up to one and hence they represent a proper probability mass function (pmf) for the classes.
-For reference, we define our \emph{probit link function} $  g_j^{-1}(\cdot|\bPsi): \bbR^{m} \to [0,1]$ by the mapping
+For reference, we define our \emph{probit link function} $  g_j^{-1}(\cdot|\bPsi): \bbR^{m} \to [0,1]$ by the mapping\index{probit}
 \begin{equation}\label{eq:probitlink}
   \bmu(x_i) \mapsto \int_{\cC_j} \phi(\by^*|\bmu(x_i),\bPsi^{-1}) \dint \by^*.
 \end{equation}
@@ -89,7 +89,7 @@ To establish notation, let
   \item $\balpha = (\alpha + \alpha_1,\dots,\alpha + \alpha_m)^\top\in\bbR^{m}$ be the vector of intercepts;
   \item $\bmu = \bone_n\balpha^\top + \bff$, whose $(i,j)$ entries are $\mu_{j}(x_i) = \alpha + \alpha_j + f_j(x_i)$; and
   \item $\by^* \in \bbR^{n \times m}$ denote the matrix containing $(i,j)$ entries $y_{ij}^*$, that is, $\by^* = \bmu + \bepsilon$, so $\by^*|\bw \sim \MN_{n,m}(\bmu = \bone_n\balpha^\top + \bH_\eta\bw, \bI_n, \bPsi^{-1})$ and $\vecc \by^* \sim \N_{nm}\big(\vecc (\bone_n\balpha^\top), \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n\big)$---note that the marginal distribution of $\by^*$ cannot be expressed as a matrix normal, except when $\bPsi=\bI_m$.
-\end{itemize}
+\end{itemize}\index{matrix normal distribution}
 In the above, we have made use of matrix normal distributions,denoted by $\MN(\cdot,\cdot)$.
 The definition and properties of matrix normal distributions can be found in \colp{\cref{apx:matrixnormal}, \mypageref{apx:matrixnormal}}.
 
