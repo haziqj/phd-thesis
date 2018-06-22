@@ -326,11 +326,12 @@ where $\alpha$ is the grand intercept (a constant).
 
 \begin{definition}[Functional ANOVA representation]
   Let $\cP_p = \cP(\{1,\dots,p\})$, the power set of $\{1,\dots,p\}$.
-  For any function $f \in \cF\equiv\cF_1\otimes\cdots\otimes\cF_p$, with each $\cF_k$ a space of functions over $\cX_k$, $k=1,\dots,p$, the formula for $f$ in \cref{eq:functionalanova2} is known as the \emph{functional ANOVA representation} of $f$ if $\forall k \in \cK \in \cP_p \backslash \{ \}$,
+  For any function $f:\cX_1\times\cdots\times\cX_p\to\bbR$, the formula for $f$ in \cref{eq:functionalanova2} is known as the \emph{functional ANOVA representation} of $f$ if $\forall k \in \cK \in \cP_p \backslash \{ \}$,
   \begin{align}\label{eq:funcanovaorth}
     A_k f_\cK(x) = \int_{\cX_k} f_\cK(x) \dint\nu_k(x_k) = 0.
   \end{align}
   In other words, the integral of $f_\cK$ with respect to any of the variables indexed by the elements in $\cK$, is zero. 
+  Consequentially, each of the functional ANOVA components are centred with respect to each axis $\cX_j$, $j=1,\dots,p$.
 \end{definition}
 
 For the constant term, main effects, and two-way interaction terms, the familiar classical expressions are obtained:
@@ -361,8 +362,8 @@ It is interesting to note that an ANOVA RKKS is constructed very simply through 
 Expanding out equations \cref{eq:anovarkks}, we see that it is in fact a sum of products of kernels with increasing orders of interaction:
 \begin{align*}
   h_\lambda(x,x') 
-  ={}& 1 + \sum_{j=1}^p \lambda_j h_j(x_j,x_j') + \mathop{\sum_{j,k=1}^p}_{j<k} \lambda_j\lambda_k h_j(x_j,x_j')h_k(x_k,x_k') \\
-  &+ \cdots + \prod_{j=1}^p \lambda_j h_j(x_j,x_j').
+  ={}& 1 + \sum_{j=1}^p \lambda_j h_j(x_j,x_j') + \mathop{\sum_{j,k=1}^p}_{j<k} \lambda_j\lambda_k h_j(x_j,x_j')h_k(x_k,x_k')
+  + \cdots + \prod_{j=1}^p \lambda_j h_j(x_j,x_j').
 \end{align*}
 It is now clear from this expansion that the ANOVA RKKS yields functions that resemble those with the ANOVA representation in \cref{eq:functionalanova2}:
 the mean value of the function stems from the `1', i.e. it lies in an RKHS of constant functions; the main effects are represented by the sum of the individual kernels; the two-way interaction terms are represented by the second-order kernel interactions; and so on.
@@ -377,26 +378,25 @@ the mean value of the function stems from the `1', i.e. it lies in an RKHS of co
   \[
     h_\lambda\big((x_1,x_2),(x_1',x_2') \big) = 1 + \lambda_1 h_1(x_1,x_1') + \lambda_2 h_2(x_2,x_2') + \lambda_1\lambda_2 h_1(x_1,x_1')h_2(x_2,x_2').
   \]  
-  Suppose that $\cF_1$ and $\cF_2$ are the centred canonical RKKS of functions over $\bbR$.
-  Then, functions in $\cF = \cF_0 \oplus \cF_1 \oplus \cF_2 \oplus (\cF_1 \otimes \cF_2)$ are of the form
+  Suppose that $\cF_1$ and $\cF_2$ are the centred canonical RKHS of functions over $\bbR$.
+  Then, functions in $\cF = \cF_\emptyset \oplus \cF_1 \oplus \cF_2 \oplus (\cF_1 \otimes \cF_2)$ are of the form
   \[
     f(x_1,x_2) = \beta_0 + \beta_1x_1 + \beta_2x_2 + \beta_3x_1x_2.
   \]
 \end{example}
 
-\pagebreak
 As a remark, not all of the components of the ANOVA RKKS need to be included in the construction.
 The selective exclusion of certain interactions characterises many interesting statistical models.
 Excluding certain terms of the ANOVA RKKS is equivalent to setting the scale parameter for those relevant components to be zero, i.e. they play no role in the decomposition of the function.
 With this in mind, the ANOVA RKKS then gives us an objective way of model-building, from linear regression, to multilevel models, longitudinal models, and so on.
 
-Finally, we note that the functional ANOVA decomposition of an RKKS is orthogonal.
-Without loss of generality, assume that all scale parameters are positive.
-For $p=1$, we have that $\cF = \cF_\emptyset \oplus \cF_1$, where each of $\cF_\emptyset$ and $\cF_1$ is an RKHS.
-From \cref{thm:sumkernels}, the squared norm of $\cF$ is given by
-\[
-  \norm{f}_\cF^2 = \norm{f_\emptyset}^2_{\cF_\emptyset} + \norm{f_1}^2_{\cF_1},
-\]
-if the decomposition $f=f_\emptyset + f_1$ is minimal. 
-Hence, the decomposition is orthogonal.
-An inductive argument can be used to extend and generalise to any $p\geq 2$.
+%Finally, we note that the functional ANOVA decomposition of an RKKS is orthogonal.
+%Without loss of generality, assume that all scale parameters are positive.
+%For $p=1$, we have that $\cF = \cF_\emptyset \oplus \cF_1$, where each of $\cF_\emptyset$ and $\cF_1$ is an RKHS.
+%From \cref{thm:sumkernels}, the squared norm of $\cF$ is given by
+%\[
+%  \norm{f}_\cF^2 = \norm{f_\emptyset}^2_{\cF_\emptyset} + \norm{f_1}^2_{\cF_1},
+%\]
+%if the decomposition $f=f_\emptyset + f_1$ is minimal. 
+%Hence, the decomposition is orthogonal.
+%An inductive argument can be used to extend and generalise to any $p\geq 2$.
