@@ -3,7 +3,7 @@
 \standalonetrue
 \ifstandalone
   \usepackage{../../haziq_thesis}
-  \usepackage{pagegrid} 
+%  \usepackage{pagegrid} 
 \fi 
  
 \begin{document}
@@ -39,5 +39,20 @@
   
   \end{center}
 \end{titlepage}
+
+\begin{center}
+  \thispagestyle{empty}
+  \vspace*{1cm}
+  
+  \vfill
+  
+  \begingroup
+    \singlespacing
+    \color{gray}
+    \ttfamily 
+    [git]\;\gitBranch\,@\,\gitAbbrevHash{} \\[-0.3em]
+    change:\;\gitAuthorIsoDate
+  \endgroup
+\end{center}
 
 \end{document}
