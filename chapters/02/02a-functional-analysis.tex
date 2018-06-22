@@ -18,7 +18,7 @@ We begin with the definition of an inner product.
 \index{inner product!positive-definite}
 Additionally, an inner product is said to be \emph{positive definite} if $\langle f, f\rangle_{\mathcal F} \geq 0$, $\forall f \in \mathcal F$.
 Inner products need not necessarily be positive definite, and we shall revisit this fact later when we cover Kreĭn spaces.
-However, for the purposes of the forthcoming discussion, the inner products that are referenced are the positive-definite kind, unless otherwise stated.
+For the purposes of the forthcoming discussion, the inner products that are referenced are the positive-definite kind, unless otherwise stated.
 
 \index{norm}
 We can always define a \emph{norm} on $\cF$ using the inner product as 
@@ -35,28 +35,53 @@ This is defined below.
 	\item \textbf{Subadditivity}. $||f+g||_{\mathcal F} \leq ||f||_{\mathcal F} + ||g||_{\mathcal F}$, $\forall f,g \in \mathcal F$
 	\item \textbf{Point separating}. $||f||_{\mathcal F} = 0 \Leftrightarrow f=0$
 	\end{itemize}
+	Note that since $\norm{-f}_\cF = \abs{-1} \, \norm{f}_\cF = \norm{f}_\cF$, and by the subadditivity and point separating property, we have that $\norm{f}_\cF = \half\norm{f}_\cF + \half\norm{-f}_\cF \geq \half\norm{f - f}_\cF = 0$, thus implying non-negativity of norms.
 \end{definition}
 
+
 \index{triangle inequality}
+\index{reverse triangle inequality}
 \index{Cauchy-Schwarz inequality}
 \index{parallelogram law}
 \index{polarisation identity}
 The subadditivity property is also known as the \emph{triangle inequality}.
-Also note that since $\norm{-f}_\cF = \norm{f}_\cF$, and by the triangle inequality and point separating property, we have that $\norm{f}_\cF = \half\norm{f}_\cF + \half\norm{-f}_\cF \geq \half\norm{f - f}_\cF = 0$, thus implying non-negativity of norms.
-Several important relationships between norms and inner products hold in linear spaces, namely, the \emph{Cauchy-Schwarz inequality}
+Following this, there is also the \emph{reverse triangle inequality}, which states $\norm{f-g}_\cF \geq \big\vert \norm{f}_\cF - \norm{g}_\cF \big\vert$.
+In fact, the general forms of these triangle inequalities \citep[Lemma 10]{bergsma2017} also hold for $0\leq a\leq 1$ and any $f,g,h\in\cF$:
+\newcommand{\normF}[1]{\norm{#1}_\cF}
+\begingroup
+\setlength{\abovedisplayskip}{9pt}
+\setlength{\belowdisplayskip}{7pt}
+\begin{align}
+  \normF{f-g}^a &\leq \normF{f-h}^a + \normF{g-h}^a \label{eq:trieq1} \\ 
+  \normF{f-g}^a &\geq \big\vert \normF{f}^a - \normF{g}^a \big\vert. \label{eq:trieq2}
+\end{align}
+\endgroup
+Several other important relationships involving norms and inner products hold in linear spaces, namely, the \emph{Cauchy-Schwarz inequality}
+\begingroup
+\setlength{\abovedisplayskip}{9pt}
+\setlength{\belowdisplayskip}{7pt}
 \[
   |\ip{f,g}_\cF| \leq \norm{f}_\cF \, \norm{g}_\cF;
 \]
+\endgroup
 the \emph{parallelogram law}
+\begingroup
+\setlength{\abovedisplayskip}{7pt}
+\setlength{\belowdisplayskip}{7pt}
 \[
   \norm{f+g}_\cF^2 + \norm{f-g}_\cF^2 = 2\norm{f}_\cF^2 + 2\norm{g}_\cF^2;
 \]
+\endgroup
 and the \emph{polarisation identity} (in various forms)
+\begingroup
+\setlength{\abovedisplayskip}{9pt}
+\setlength{\belowdisplayskip}{7pt}
 \begin{align*}
   \norm{f+g}_\cF^2 - \norm{f-g}_\cF^2 &= 4\ip{f,g}_\cF,  \\
   \norm{f+g}_\cF^2 - \norm{f}_\cF^2 - \norm{g}_\cF^2 &= 2\ip{f,g}_\cF, \\
   - \norm{f-g}_\cF^2 + \norm{f}_\cF^2 + \norm{g}_\cF^2  &= 2\ip{f,g}_\cF,
 \end{align*}
+\endgroup
 for any $f,g\in\cF$.
 
 A vector space endowed with an inner product (c.f. norm) is called an inner product space (c.f. normed vector space).
@@ -155,7 +180,7 @@ There is an even stronger notion of continuity called  \emph{Lipschitz continuit
   \]
 \end{definition}
 
-\vspace{-0.8em}
+\vspace{-0.75em}
 Clearly, Lipschitz continuity implies uniform continuity: choose $\delta = \delta(\epsilon) := \epsilon/M$ and replace this in  \cref{def:continuity}.
 A continuous, linear operator is also one that is bounded.
 
@@ -180,11 +205,15 @@ A continuous, linear operator is also one that is bounded.
   Conversely, let $A$ be a continuous linear operator, especially at the zero vector.
   In other words, $\exists \delta > 0$ such that $\norm{A(f)}_\cG = \norm{A(f+0-0)}_\cG = \norm{A(f) - A(0)} \leq 1$, $\forall f\in\cF$ whenever $\norm{f}_\cF \leq \delta$.
   Thus, for all non-zero $f \in\cF$,
+  \begingroup
+  \setlength{\abovedisplayskip}{7pt}
+  \setlength{\belowdisplayskip}{7pt}
   \begin{align*}
     \norm{A(f)}_\cG &= \left\Vert \frac{\norm{f}_\cF}{\delta} A\left(\frac{\delta}{\norm{f}_\cF}f\right)\right\Vert_\cG \\
     &= \left\vert \frac{\norm{f}_\cF}{\delta}\right\vert \, \left\Vert A\left(\frac{\delta}{\norm{f}_\cF}f\right)\right\Vert_\cG \\    
-    &\leq \frac{\norm{f}_\cF}{\delta} \cdot 1, \vspace{-0.5em}
+    &\leq \frac{\norm{f}_\cF}{\delta} \cdot 1,
   \end{align*}
+  \endgroup
   and therefore $A$ is bounded.
 \end{proof}
 \vspace{-0.5em}
@@ -243,7 +272,6 @@ the map $A_g$ is obviously linear (by the bilinear property of inner products), 
 %An isometry that preserves the norm is known as \emph{linear isometry}.
 Implicitly, this means that $\cF^*$ is a Hilbert space as well.
 
-\pagebreak
 \index{orthogonal!projection}
 \index{orthogonal!complement}
 \index{orthogonal!decomposition}
@@ -307,9 +335,13 @@ Besides tensor sums, of importance is the concept of \emph{tensor products}, whi
 \begin{definition}[Tensor products]\label{def:tensorprod}
   Let $x_1\in\cH_1$ and $x_2\in\cH_2$ be two elements of two real Hilbert spaces.
   Then, the tensor product $x_1 \otimes x_2:\cH_1\times\cH_2\to\bbR$, is a bilinear form defined as
+  \begingroup
+  \setlength{\abovedisplayskip}{3pt}
+  \setlength{\belowdisplayskip}{5pt}
   \[
     (x_1\otimes x_2)(y_1,y_2) = \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2}
   \]
+  \endgroup
   for any $(y_1,y_2)\in\cH_1\times\cH_2$.
 \end{definition}
 
@@ -318,9 +350,13 @@ Correspondingly, we may also define the \emph{tensor product space}.
 \index{tensor!product space}
 \begin{definition}[Tensor product space]\label{def:tensprodspace}
   The tensor product space $\cH_1\otimes\cH_2$ is the completion of the space
+  \begingroup
+  \setlength{\abovedisplayskip}{8pt}
+  \setlength{\belowdisplayskip}{8pt}
   \[
     \cA = \left\{ \sum_{j=1}^J x_{1j} \otimes x_{2j} \,\Bigg\vert\, x_{1j}\in\cH_1, x_{2j}\in\cH_2, J \in \bbN \right\}.
   \]
+  \endgroup
   with respect to the norm induced by the inner product
   \[
     \left\langle  \sum_{j=1}^J x_{1j} \otimes x_{2j},  \sum_{k=1}^K y_{1k} \otimes y_{2k} \right\rangle_\cA = \sum_{j=1}^J\sum_{k=1}^K \ip{x_{1j},y_{1k}}_{\cH_1} \ip{x_{2j},y_{2k}}_{\cH_2}.
@@ -332,43 +368,54 @@ Correspondingly, we may also define the \emph{tensor product space}.
 \index{bilinear!form}
 Interestingly, the tensor product can be viewed as an operator between two Hilbert spaces.
 That is, for each pair of elements $(x_1,x_2) \in \cH_1\times\cH_2$, we define the operator $A_{x_1,x_2}:\cH_1\to\cH_2$ in the following way:
+\begingroup
+\setlength{\abovedisplayskip}{7pt}
+\setlength{\belowdisplayskip}{7pt}
 \begin{align*}
   A_{x_1,x_2}:\cH_1&\to\cH_2 \\
   y_1&\mapsto \ip{x_1,y_1}_{\cH_1}x_2.
 \end{align*}
+\endgroup
 Incidentally, an operator defined in such a way is called a \emph{rank one} operator.
 Indeed, for some $y_1\in\cH_1$ and $y_2\in\cH_2$, we have that
-\vspace{-0.5em}
+\begingroup
+\setlength{\abovedisplayskip}{7pt}
+\setlength{\belowdisplayskip}{6pt}
 \begin{align*}
   \ip{A_{x_1,x_2}(y_1),y_2}_{\cH_2} 
   &= \big\langle \ip{x_1,y_1}_{\cH_1}x_2 , y_2 \big\rangle_{\cH_2} \\
   &= \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2} \\
   &= (x_1\otimes x_2)(y_1,y_2). 
 \end{align*}
+\endgroup
 We now have three distinct interpretations of the tensor product.
 For $x_1,y_1\in\cH_1$ and $x_2,y_2\in\cH_2$, these are:
+\begingroup
+\setlength{\abovedisplayskip}{5pt}
+\setlength{\belowdisplayskip}{5pt}
 \begin{itemize}
-  \item \textbf{General form} (as an element in the tensor product space).
+  \item \textbf{General form}. An element in the tensor product space
   \[
-    x_1 \otimes x_2 \in \cH_1 \otimes \cH_2. 
+    x_1 \otimes x_2 \in \cH_1 \otimes \cH_2 
   \]
-  \item \textbf{Operator}.
+  \item \textbf{Operator form}. An operator between two Hilbert spaces
   \begin{align*}
     x_1 \otimes x_2:\cH_1 &\to \cH_2 \\
     y_1 &\mapsto \ip{x_1,y_1}_{\cH_1}x_2 
   \end{align*}  
-  \item \textbf{Bilinear form} (as per \cref{def:tensorprod}). 
+  \item \textbf{Bilinear form}. As per \cref{def:tensorprod}
   \begin{align*}
     x_1 \otimes x_2:\cH_1 \times \cH_2 &\to \bbR \\
     (y_1,y_2) &\mapsto \ip{x_1,y_1}_{\cH_1}\ip{x_2,y_2}_{\cH_2}
   \end{align*}
 \end{itemize}
+\endgroup
 
 \begin{remark}
   As explained by \citet[sec. 10.5, p. 227]{kokoszka2017introduction}, tensors are often thought of as generalisations of matrices.
   For example, in Euclidean space, a matrix $\bA \in \bbR^{n\times m}$, formed by two vectors $x_1\in\bbR^n$ and $x_2\in\bbR^m$ via $\bA = x_1x_2^\top =: x_1 \otimes x_2$, can be viewed in at least three ways: 
   1) as a traditional matrix in the space $\bbR^n \otimes \bbR^m = \bbR^{n\times m}$; 
-  2) as a linear transformation in Euclidean space $\bA:\bbR^n\to\bbR^m$ (or the reverse) by multiplying $\bA$ from the left or right by a vector; or
+  2) as a linear operator in Euclidean space $\bA:\bbR^n\to\bbR^m$ (or the reverse) by multiplying $\bA$ from the left or right by a vector; or
   3) as a bilinear mapping $\bA:\bbR^n \times \bbR^m \to \bbR$ in the form of $\bA(y_1,y_2) = y_1^\top\bA y_2 = y_1^\top x_1 x_2^\top y_2 = (y_1^\top x_1)(y_2^\top x_2)$, for some $y_1\in\bbR^n$ and $y_2\in\bbR^m$, arising often in the study of quadratic forms.
 \end{remark}
 
@@ -409,9 +456,13 @@ In any case, every random element $X$ induces a probability measure on $\cH$ def
 \]
 The measure $\nu$ is called the \emph{distribution} of $X$.
 The \emph{density} $p$ of $X$ is a measurable function with the property that
+\begingroup
+\setlength{\abovedisplayskip}{7pt}
+%\setlength{\belowdisplayskip}{5pt}
 \[
   \Prob(X \in B) = \int_{X^{-1}(B)} \omega \dint\Prob(\omega) = \int_B p(x) \dint\nu(x).
 \]
+\endgroup
 
 \begin{definition}[Mean vector]
   \index{mean vector}
@@ -433,26 +484,38 @@ The \emph{density} $p$ of $X$ is a measurable function with the property that
   Let $\nu$ be a Borel probability measure on a real Hilbert space $\cH$.
   Suppose that a random element $X$ of $\cH$ is \emph{square integrable}, i.e., $\E \norm{X}_\cH^2 < \infty$, and let $\mu$ be the mean vector of $X$.
   Then the \emph{covariance operator} $C$ is defined by the mapping
+  \begingroup
+  \setlength{\abovedisplayskip}{4pt}
+  \setlength{\belowdisplayskip}{6pt}
   \begin{align*}
     C:\cH &\to \cH \\
     x &\mapsto \E\big[\ip{X - \mu, x}_{\cH}(X - \mu) \big].
   \end{align*}
+  \endgroup
   The covariance operator $C$ is also an element of $\cH\otimes\cH$ that satisfies
+  \begingroup
+  \setlength{\abovedisplayskip}{13pt}
+  \setlength{\belowdisplayskip}{4pt} 
   \begin{align*}
     \ip{C,x\otimes x'}_{\cH\otimes\cH} 
     &= \int_\cH \ip{z-\mu, x}_\cH\ip{z-\mu,x'}_\cH \dint\nu(z) \\
     &= \E\big[\ip{X-\mu,x}_\cH \ip{X-\mu,x'}_\cH\big]
   \end{align*}
+  \endgroup
   for all $x,x'\in\cH$.
 \end{definition}
 
 From the definition of the covariance operator, we see that it induces a symmetric, bilinear form, which we shall denote by $\Cov:\cH\times\cH\to\bbR$, through
+\begingroup
+\setlength{\abovedisplayskip}{8pt}
+\setlength{\belowdisplayskip}{6pt}
 \begin{align*}
   \ip{Cx,x'}_\cH 
   &= \big\langle\E\big[\ip{X - \mu, x}_{\cH}(X - \mu) \big], x' \big\rangle_\cH \\
   &= \E\big[\ip{X-\mu,x}_\cH \ip{X-\mu,x'}_\cH\big] \\
   &=: \Cov(x,x').
 \end{align*}
+\endgroup
 
 \begin{definition}[Gaussian vectors]
   \index{Gaussian vector}

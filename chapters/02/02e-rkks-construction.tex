@@ -29,9 +29,8 @@ The two lemmas below formalise these two facts.
 \end{proof}
 
 \begin{lemma}[Products of kernels]\label{thm:prodkernels}
-  Let $\cF_1$ and $\cF_2$ be two RKHS of functions over $\cX_1$ and $\cX_2$, with respective reproducing kernels $h_1$ and $h_2$.
-  Then, $h = h_1 h_2$ is a kernel on $\cX_1 \times \cX_2$.
-  Moreover, the tensor product space $\cF_1 \otimes \cF_2$ is an RKHS with reproducing kernel $h$.
+  Let $\cF_1$ and $\cF_2$ be two RKHSs of functions over $\cX_1$ and $\cX_2$, with respective reproducing kernels $h_1$ and $h_2$.
+  Then, the tensor product space $\cF_1 \otimes \cF_2$ is an RKHS with reproducing kernel $h = h_1 h_2$ on $\cX_1 \times \cX_2$.
 \end{lemma}
 
 \begin{proof}
@@ -62,6 +61,7 @@ A familiar fact from linear algebra is realised here from \cref{thm:sumkernels,t
 %1) Multiplying a positive definite matrix by a positive constant results in a positive definite matrix; 
 1) the addition of positive-(semi)definite matrices is a positive-(semi)definite matrix; and 
 2) the \emph{Hadamard product}\footnotemark~of two positive (semi-)definite matrices is a positive (semi-)definite matrix.
+
 \footnotetext{The Hadamard product is an element-wise multiplication of two matrices $\bA$ and $\bB$ of identical dimensions, denoted $\bA \circ \bB$. That is, $(\bA \circ \bB)_{ij} = \bA_{ij}\bB_{ij}$.}
 
 The scale of an RKHS of functions $\cF$ over a set $\cX$ with kernel $h$ may be arbitrary.
@@ -263,7 +263,7 @@ and for the two-way ANOVA ($p=2$), we have $f = f_\emptyset + f_1 + f_2 + f_{12}
   f_1(x) ={}& \int_{\cX_2} \left( f(x_1,x_2) - \int_{\cX_1} f(x_1,x_2) \dint\nu_1(x_1) \right) \dint\nu_2(x_2)\\  
   f_2(x) ={}& \int_{\cX_1} \left( f(x_1,x_2) - \int_{\cX_2} f(x_1,x_2) \dint\nu_2(x_2) \right) \dint\nu_1(x_1)\\  
   f_{12}(x) ={}& f(x_1,x_2) - \int_{\cX_1} f(x_1,x_2) \dint\nu_1(x_1) - \int_{\cX_2} f(x_1,x_2) \dint\nu_2(x_2) \\
-  & + \int_{\cX_1}\int_{\cX_2} f(x_1,x_2) \dint\nu_1(x_1) \dint\nu_2(x_2).
+  &+ \int_{\cX_1}\int_{\cX_2} f(x_1,x_2) \dint\nu_1(x_1) \dint\nu_2(x_2).
 \end{align*}
 
 The averaging operator $A_k$ defined in \cref{eq:avgoper} generalises the concept of the previous subsection's averaging operator.
@@ -372,7 +372,7 @@ the mean value of the function stems from the `1', i.e. it lies in an RKHS of co
 %These are handled through opposing signs of their respective scale parameters, thus  the need for working in RKKSs.
 
 \begin{example}
-  Consider two RKKSs $\cF_k$ with kernel $\lambda_k h_k$, $k=1,2$.
+  Consider two RKHSs $\cF_k$ with kernel $h_k$, $k=1,2$.
   The ANOVA kernel defining the ANOVA RKKS $\cF$ is
   \[
     h_\lambda\big((x_1,x_2),(x_1',x_2') \big) = 1 + \lambda_1 h_1(x_1,x_1') + \lambda_2 h_2(x_2,x_2') + \lambda_1\lambda_2 h_1(x_1,x_1')h_2(x_2,x_2').
@@ -384,6 +384,7 @@ the mean value of the function stems from the `1', i.e. it lies in an RKHS of co
   \]
 \end{example}
 
+\pagebreak
 As a remark, not all of the components of the ANOVA RKKS need to be included in the construction.
 The selective exclusion of certain interactions characterises many interesting statistical models.
 Excluding certain terms of the ANOVA RKKS is equivalent to setting the scale parameter for those relevant components to be zero, i.e. they play no role in the decomposition of the function.

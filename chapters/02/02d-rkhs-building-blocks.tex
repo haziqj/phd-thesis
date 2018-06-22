@@ -2,6 +2,7 @@
 \index{I-prior!model}
 This section describes what we refer to as the ``building block'' RKHSs of functions.
 In the context of regression modelling using I-priors, we may assume that the regression function lies in any one of these single RKHSs, although it may be more appropriate to consider function spaces built upon these RKHSs for more complex models.
+I-priors will be presented in detail in \cref{chapter3}, but in advance of the forthcoming discussion, the plots in this section are intended to give an impression of sample paths from the respective RKHSs.
 Construction of new function spaces from these building block RKHSs will be discussed in the next section.
 
 \subsection{The RKHS of constant functions}
@@ -168,7 +169,7 @@ we find that the kernel of the RKHS with feature space $\cV$ and feature map $\p
 \index{positive definite}
 From its construction, it is clear that the fBm kernel is positive definite, and thus defines an RKHS.
 That the fBm RKHS describes a space of functions is proved in \citet{cohen2002}, who studied this space in depth. 
-It is also noted in the collection of examples of \citet[pp.71 \& 319]{berlinet2011reproducing}.
+It is also noted in the collection of examples of \citet[pp. 71 \& 319]{berlinet2011reproducing}.
 
 The Hurst coefficient $\gamma$ controls the ``smoothness'' of the functions in the RKHS. 
 We can talk about smoothness in the context of Hölder continuity of functions.
@@ -177,25 +178,16 @@ We can talk about smoothness in the context of Hölder continuity of functions.
   \index{Hölder continuous|seealso{continuity}}
   \index{Hölder continuous}
   \index{continuity!Holder@Hölder}
-  A function $f$ over a set $(\cX, \norm{\cdot}_\cX)$ is said to be \emph{Hölder continuous} of order $0 <\gamma\leq 1$ if there exists a $C>0$ such that $\forall x,x'\in\cX$,
+  A function $f$ over a set $(\cX, \norm{\cdot}_\cX)$ is said to be \emph{Hölder continuous} of order $0 <a\leq 1$ if there exists an $M>0$ such that $\forall x,x'\in\cX$,
   \[
-    \vert f(x) - f(x') \vert \leq C \norm{x-x'}^\gamma.
+    \vert f(x) - f(x') \vert \leq M \norm{x-x'}^a.
   \]
 \end{definition}
 
-Functions in the Hölder space $\text{C}^{k,\gamma}(\cX)$, where $k\geq 0$ is an integer, consists of those functions over $\cX$ having continuous derivatives up to order $k$ and such that the $k$th partial derivatives are Hölder continuous of order $\gamma$.
-Unlike realisations of actual fBm paths with Hurst index $\gamma$, which are well-known to be almost surely Hölder continuous of order less than $\gamma$ \citep[Theorem 4.1.1]{embrechts2002selfsimilar}, functions in its namesake RKHS are strictly smoother.
+Functions in the Hölder space $\text{C}^{k,a}(\cX)$, where $k\geq 0$ is an integer, consists of those functions over $\cX$ having continuous derivatives up to order $k$ and such that the $k$'th partial derivatives are Hölder continuous of order $a$.
+Unlike realisations of actual fBm paths with Hurst index $\gamma$, which are well-known to be almost surely Hölder continuous of order less than $\gamma$ \citep[Thm. 4.1.1]{embrechts2002selfsimilar}, functions in its namesake RKHS are strictly smoother.
 
-%\begin{claim}
-%  Let $\cF$ denote the fBm RKHS of functions over $\cX$ with Hurst parameter $\gamma \in (0,1)$, and the kernel $h$ as defined in  \cref{def:fbmrkhs}.
-%  Then,
-%  \begin{enumerate}[label=(\roman*)]
-%    \item The functions in $\cF$ are Hölder continuous of order $\gamma$.  
-%    \item The basis functions $h(\cdot,x)$ are Hölder continuous of order $2\gamma$.
-%  \end{enumerate}
-%\end{claim}
-
-\begin{proposition}
+\begin{proposition}[Hölder smoothness of fBm-$\gamma$ RKHS functions]
   The fBm-$\gamma$ RKHS $\cF$ of functions over $(\cX, \norm{\cdot}_\cX)$ are Hölder continuous of order $\gamma$.
 \end{proposition}
 
@@ -205,20 +197,51 @@ Unlike realisations of actual fBm paths with Hurst index $\gamma$, which are wel
   It follows from the Cauchy-Schwarz inequality that for any $x,x'\in\cX$,
   \begin{align*}
     \vert f(x) - f(x') \vert 
-    &= \vert \ip{f,h(\cdot,x) - h(\cdot,x')}_\cF \vert \\
-    &\leq \norm{f}_\cF \, \big\Vert h(\cdot,x) - h(\cdot,x') \big\Vert_\cF \\
+    &= \vert \ip{f,h_\gamma(\cdot,x) - h_\gamma(\cdot,x')}_\cF \vert \\
+    &\leq \norm{f}_\cF \, \big\Vert h_\gamma(\cdot,x) - h_\gamma(\cdot,x') \big\Vert_\cF \\
     &= \norm{f}_\cF \, \norm{x-x'}_\cX^{\gamma},
   \end{align*}
   since
   \begin{align*}
-    \big\Vert h(\cdot,x) - h(\cdot,x') \big\Vert_\cF ^2
-    &= \big\Vert h(\cdot,x) \big\Vert_\cF ^2 + \big\Vert h(\cdot,x') \big\Vert_\cF ^2 - 2 \ip{h(\cdot,x),h(\cdot,x')}_\cF \\
-    &= h(x,x) + h(x',x') - 2 h(x,x') \\
+    \big\Vert h_\gamma(\cdot,x) - h_\gamma(\cdot,x') \big\Vert_\cF ^2
+    &= \big\Vert h_\gamma(\cdot,x) \big\Vert_\cF ^2 + \big\Vert h_\gamma(\cdot,x') \big\Vert_\cF ^2 - 2 \ip{h_\gamma(\cdot,x),h_\gamma(\cdot,x')}_\cF \\
+    &= h_\gamma(x,x) + h_\gamma(x',x') - 2 h_\gamma(x,x') \\
+    &= \norm{x}_\cX^{2\gamma} + \norm{x'}_\cX^{2\gamma} - \left( \norm{x}_\cX^{2\gamma} + \norm{x'}_\cX^{2\gamma} - \norm{x-x'}_\cX^{2\gamma} \right) \\
     &= \norm{x-x'}_\cX^{2\gamma},
   \end{align*}  
   and thus proving the proposition.
 \end{proof}
-\pagebreak
+
+The span of the kernels is dense in $\cF$ (see paragraph at the end of \cref{thm:moorea}), and it is interesting to note that the basis functions $h(\cdot,x)$ are smoother still.
+
+\begin{proposition}[Hölder smoothness of fBm-$\gamma$ basis functions]\label{thm:holderfbmIprior}
+  For $0<\gamma\leq 1/2$ and $z\in\cX$, the function $h_\gamma(\cdot,z):\cX\to\bbR$ is Hölder continuous of order $2\gamma$.
+\end{proposition}
+
+\begin{proof}
+  Following the triangle inequalities \cref{eq:trieq1,eq:trieq2}, for any $x,x'\in\cX$, we have that
+  \begin{align*}
+    \left\vert h_\gamma(z,x) - h_\gamma(z,x') \right\vert
+    ={}& \half \left\vert 
+    \cancel{\norm{z}_\cX^{2\gamma}} 
+    + \norm{x}_\cX^{2\gamma} 
+    - \norm{z-x}_\cX^{2\gamma} 
+    - \cancel{\norm{z}_\cX^{2\gamma}} 
+    - \norm{x'}_\cX^{2\gamma} 
+    + \norm{z-x'}_\cX^{2\gamma} \right\vert \\
+    \leq{}& \half \left\vert \norm{z-x}_\cX^{2\gamma} - \norm{z-x'}_\cX^{2\gamma} \right\vert 
+    + \half \left\vert \norm{x}_\cX^{2\gamma} - \norm{x'}_\cX^{2\gamma}  \right\vert \\
+    \leq{}& \half \left\vert \cancel{\norm{z}_\cX^{2\gamma}} + \norm{x}_\cX^{2\gamma} - \cancel{\norm{z}_\cX^{2\gamma}} - \norm{x'}_\cX^{2\gamma} \right\vert 
+    + \half \left\vert \norm{x}_\cX^{2\gamma} - \norm{x'}_\cX^{2\gamma}  \right\vert \\
+    \leq{}& \left\vert \norm{x}_\cX^{2\gamma} - \norm{x'}_\cX^{2\gamma}  \right\vert \\
+    \leq{}& \norm{x-x'}_\cX^{2\gamma}. \qedhere
+  \end{align*}
+\end{proof}
+
+\begin{remark}
+  The above proposition can also be proven for $1/2<\gamma<1$, for which Hölder smoothness has to be defined for orders $1<a\leq 2$.
+  See \citep[Lemma 9]{bergsma2017} for details.
+\end{remark}
 
 
 \begin{figure}[hbt]
@@ -227,11 +250,10 @@ Unlike realisations of actual fBm paths with Hurst index $\gamma$, which are wel
   \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_3}
   \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_5}
   \includegraphics[width=0.49\textwidth]{figure/02-kernel_path_fbm_7}
-  \caption[Sample I-prior paths from the fBm RKHS with varying Hurst coefficients.]{Sample I-prior paths from the fBm RKHS with varying Hurst coefficients. Note that the fBm-$\gamma$ RKHS contains functions that are rougher than these I-prior paths.}
+  \caption[Sample I-prior paths from the fBm RKHS with varying Hurst coefficients.]{Sample I-prior paths from the fBm RKHS with varying Hurst coefficients. Note that the fBm-$\gamma$ RKHS contains functions that are rougher than these I-prior paths as a consequence of \cref{thm:holderfbmIprior} and the fact that I-prior realisations are finite combinations of the basis functions $h_\eta(\cdot,x)$ (c.f. {\color{\mycitecolour} Equation} \ref{eq:iprior2}, \mypageref{eq:iprior2}).}
 \end{figure}
 
-\vspace{-0.5em}
-The fBm-$\gamma$ RKHS is spanned by the functions $h(\cdot,x)$, which means that $f(0)=0$ for all $f \in \cF$, which may be undesirable.
+An undesirable property of fBm-$\gamma$ RKHS being spanned by the functions $h_\gamma(\cdot,x)$ is that $f(0)=0$ for all $f \in \cF$.
 We define the centred fBm RKHS as follows.
 
 \begin{definition}[Centred fBm RKHS]
@@ -305,7 +327,7 @@ Their derivation of an orthonormal basis of such an RKHS proved the SE kernel to
   \caption{Sample paths from the SE RKHS with varying values for the lengthscale.}
 \end{figure}
 
-SE kernels are known to be ``universal''. That is, it satisfies the following definition of universal kernels due to \citet{micchelli2006universal}.
+SE kernels are known to be ``universal''. That is, it satisfies the following definition of universal kernels is due to \citet{micchelli2006universal}.
 
 \begin{definition}[Universal kernel]
   \index{kernel!universality}
@@ -315,8 +337,8 @@ SE kernels are known to be ``universal''. That is, it satisfies the following de
   A kernel $h$ is said to be \emph{universal} if given any compact subset $\cZ \subset \cX$, any positive number $\epsilon$ and any function $f \in \text{C}(\cZ)$, there is a function $g \in \cK(\cZ)$ such that $\norm{f-g}_\cZ \leq \epsilon$.
 \end{definition}
 
-The consequence of this universal property vis-à-vis regression modelling is that any (continuous) regression function $f$ may be approximated very well by a function $\hat f$ belonging to the SE RKHS, and these two functions can get arbitrarily close to each other in the max norm sense.
-This, together with the convenient computational advantages that the SE kernel brings \citep{raykar2007fast}, is a testament to the popularity of SE kernels.
+The consequence of universality vis-à-vis regression modelling is that any (continuous) regression function $f$ may be approximated very well by a function $\hat f$ belonging to the SE RKHS, and these two functions can get arbitrarily close to each other in the maximum norm sense.
+This, together with the convenient computational advantages that the SE kernel brings \citep{raykar2007fast}, is a testament to the  popularity of SE kernels, especially in machine learning methods.
 
 In a similar manner to the two previous subsections, we may also derive the \emph{centred} SE RKHS. 
 
@@ -337,7 +359,7 @@ In a similar manner to the two previous subsections, we may also derive the \emp
 \subsection{The Pearson RKHS}
 
 In all of the previous RKHSs of functions, the domain $\cX$ was taken to be some Euclidean space. 
-The Pearson RKHS is a vector space of functions whose domain $\cX$ is a finite set.
+The Pearson RKHS is a space of functions whose domain $\cX$ is a finite set.
 Let $\Prob$ be a probability measure over the finite set $\cX$. 
 The Pearson RKHS is defined as follows.
 
@@ -349,6 +371,12 @@ The Pearson RKHS is defined as follows.
   \]
   where $X \sim \Prob$ and $\delta$ is the Kronecker delta.
 \end{definition}
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.53\textwidth]{figure/02-kernel_path_pearson}
+  \caption[Sample I-prior ``paths'' from the Pearson RKHS]{Sample I-prior ``paths'' from the Pearson RKHS. These are represented as points over a finite set. Similarly coloured points are from the same ``path'', and since they are zero-mean functions, they sum to zero.}
+\end{figure}
 
 The Pearson RKHS contains functions which are centred, and has the desirable property that the contribution of $f(x)^2$ (the square of $f(x)$) to the squared norm of $f$ is proportional to $\Prob(X=x)$.
 
@@ -381,8 +409,7 @@ The Pearson RKHS contains functions which are centred, and has the desirable pro
   The second part is proved as follows.
   Noting that with the choice $w_x = p_xf(x)$ and due to the reproducing property of $h$ for the RKHS $\cF$, the squared norm is 
   \begin{align*}
-    \norm{f}_\cF^2 
-    &= \ip{f,f}_\cF \\
+    \norm{f}_\cF^2 = \ip{f,f}_\cF 
     &= \left\langle \sum_{x\in\cX} w_{x}h(\cdot,x), \sum_{x'\in\cX} w_{x'}h(\cdot,x') \right\rangle_\cF \\
     &= \sum_{x\in\cX} \sum_{x'\in\cX} w_{x} w_{x'} \left\langle h(\cdot,x), h(\cdot,x') \right\rangle_\cF \\
     &= \sum_{x\in\cX} \sum_{x'\in\cX} w_{x} w_{x'} h(x,x')  \\
@@ -393,9 +420,5 @@ The Pearson RKHS contains functions which are centred, and has the desirable pro
   \vspace{-0.5em}
 \end{proof}
 
-\begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.53\textwidth]{figure/02-kernel_path_pearson}
-  \caption[Sample I-prior ``paths'' from the Pearson RKHS]{Sample I-prior ``paths'' from the Pearson RKHS. These are represented as points over a finite set. Similarly coloured points are from the same ``path'', and since they are zero-mean functions, they sum to zero.}
-\end{figure}
+
 
