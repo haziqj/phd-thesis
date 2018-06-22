@@ -73,13 +73,14 @@ We now present another well known result from information theory, regarding the 
 \index{I-prior!theorem}
 Returning to the normal regression model of \cref{eq:model1} subject to \cref{eq:model1ass}, we shall now derive the maximum entropy prior for $f$ in some RKKS $\cF$.
 One issue that we have is that the set $\cF$ is potentially ``too big'' for the purpose of estimating $f$, that is, for certain pairs of functions $\cF$, the data do not allow an assessment of whether one is closer to the truth than the other.
-In particular, the data do not contain information to distinguish between two functions $f$ and $g$ in $\cF$ for which $f(x_i) = g(x_i), i=1,\dots,n$.
-Since the Fisher information for a linear functional of a non-zero $f \in \cF_n$ is non-zero, there is information to allow a comparison between any pair of functions in $f_0 + \cF_n := \{f_0 + f_n \,|\, f_0 \in \cF, f_n \in \cF_n \}$.
+In particular, the data do not contain information to distinguish between two functions $f$ and $g$ in $\cF$ for which $f(x_i) = g(x_i), i=1,\dots,n$ since the Fisher information for the difference between $f$ and $g$ would be zero.
+Since the Fisher information for a linear functional of a non-zero $f_n \in \cF_n$ is non-zero, there is information to allow a comparison between any pair of functions in $f_0 + \cF_n := \{f_0 + f_n \,|\,  f_n \in \cF_n \}$ for some $f_0 \in \cF$.
 A prior for $f$ therefore need not have support $\cF$, instead it is sufficient to consider priors with support $f_0 + \cF_n$, where $f_0 \in \cF$ is fixed and chosen a priori as a ``best guess'' of $f$.
 We now state and prove the main I-prior theorem.
 
+\pagebreak
 \begin{theorem}[I-prior]
-  Let $\cF$ be a RKKS with kernel $h$, and consider the finite dimensional subspace $\cF_n$ of $\cF$ equipped with an inner product as per \cref{eq:Fninnerprod}.
+  Let $\cF$ be an RKKS with kernel $h$, and consider the finite dimensional subspace $\cF_n$ of $\cF$ equipped with an inner product as per \cref{eq:Fninnerprod}.
 %  Suppose $\Theta$ is a finite dimensional affine subspace of a Hilbert space with norm $\norm{\cdot}_\Theta$. 
 %  We have a metric space $(\cF_n,d)$, where $d(f,f')^2 = \ip{f-f',f-f'}$.
   Let $\nu$ be a volume measure induced by the norm $\norm{\cdot}_{\cF_n} = \sqrt{\ip{\cdot,\cdot}_{\cF_n}}$.
@@ -102,17 +103,25 @@ We now state and prove the main I-prior theorem.
   
   The norm on $\cF_n$ induces the metric $D(f,f') = \norm{f - f'}_{\cF_n}$.
   Consider functions in the set $f_0 + \cF_n$, i.e. functions of the form
+  \begingroup
+  \setlength{\abovedisplayskip}{8pt}
+  \setlength{\belowdisplayskip}{7pt}
   \[
     f = f_0 + \sum_{i=1}^n h(\cdot,x_i)w_i,
   \]
+  \endgroup
   such that $(f - f_0) \in \cF_n$. 
   Compute the squared distance between $f$ and $f_0$:
+  \begingroup
+  \setlength{\abovedisplayskip}{10pt}
+  \setlength{\belowdisplayskip}{6pt}
   \begin{align*}
     D(f,f_0)^2 
     &= \norm{f - f_0}_{\cF_n}^2 \\
     &= \left\Vert \sum_{i=1}^n h(\cdot,x_i)w_i \right\Vert_{\cF_n}^2 \\
     &= \bw ^\top\bPsi^{-1} \bw.
   \end{align*}
+  \endgroup
   Thus, by \cref{thm:maxentr}, the maximum entropy distribution for $f - f_0 = \sum_{i=1}^n h(\cdot,x_i)w_i$ is
   \[
     (w_1,\dots,w_n)^\top \sim \N_n(\bzero,\bPsi).
