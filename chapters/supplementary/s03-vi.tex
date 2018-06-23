@@ -146,6 +146,7 @@ For very simple problems, an exact solution for each $\tilde q_k$ can be found, 
 The \emph{coordinate ascent mean-field variational inference} (CAVI) algorithm cycles through each of the distributions in turn, updating them in sequence starting with arbitrary distributions as initial values.
 \index{coordinate ascent variational inference (CAVI)}
 
+\algrenewcommand{\algorithmiccomment}[1]{{\color{grymath} \hfill $\triangleright$ #1}}
 \begin{algorithm}[H]
 \caption{The CAVI algorithm}\label{alg:cavi}
   \begin{algorithmic}[1]
@@ -252,8 +253,8 @@ The variational EM algorithm can also be modified to obtain MAP estimates by inc
   \energyvbMstepb
   \energyemMstepfade \hspace{0.5cm}
   \energyvbMstepc
-  \vspace{-1em} 
-  \caption{Illustration of EM vs VEM. Whereas the EM guarantees an increase in log-likelihood value (red shaded region), the VEM does not.}
+  \vspace{-0.5em} 
+  \caption[Illustration of EM vs Variational EM algorithms]{Illustration of EM vs Variational EM (VEM) algorithms. Whereas the EM guarantees an increase in log-likelihood value (red shaded region), the VEM does not.}
 \end{figure}
 
 Due to an approximation to the true posterior being used in the E-step, there is no guarantee that the log-likelihood value will increase at each iteration.

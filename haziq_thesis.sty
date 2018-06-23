@@ -57,6 +57,11 @@
 }
 % https://tex.stackexchange.com/questions/195106/page-numbers-on-the-side-of-the-page
 
+\fancypagestyle{plainnomark}{%
+\fancyfoot[RO]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+\fancyfoot[LE]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+}
+
 \fancypagestyle{chapterone}{%
 \fancyfoot[RO]{\small{\textsc{Chapter one}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
 }
@@ -106,6 +111,7 @@
 }
 
 % Typeset and appearance
+\usepackage{csquotes}  % quotes
 \usepackage[english]{babel}   % manages structure of paper better
 \usepackage[]{xcolor}  % options: usenames, dvipsnames, svgnames, table
 \usepackage{soul}  % for highlighting text
@@ -400,6 +406,12 @@
   \listoftheorems[ignoreall,show={definition}, numwidth=2.7em]
   \addcontentsline{toc}{chapter}{Definitions}   
         
+  \newpage
+  \cleardoublepage
+  \renewcommand{\listalgorithmname}{Algorithms}
+  \listofalgorithms  
+  \addcontentsline{toc}{chapter}{Algorithms}
+        
   \begingroup
     \cleardoublepage
     \singlespacing
@@ -485,7 +497,7 @@
 %    \emph{This page intentionally left blank.}
 %    \end{center}
 %    \vspace{\fill}
-    \thispagestyle{empty}
+    \thispagestyle{plainnomark}
     \newpage
     \if@twocolumn\hbox{}\newpage\fi\fi\fi
 }

@@ -1,6 +1,3 @@
-%\section{A brief introduction}
-\label{misc:hmc}
-
 \index{HMC}
 Hamiltonian Monte Carlo had its beginnings in statistical physics, with the \citeyear{duane1987hybrid} paper by \citeauthor{duane1987hybrid}, using what they called `Hybrid Monte Carlo' in lattice models of quantum theory.
 Their work merged the approaches of molecular dynamics and Markov chain Monte Carlo methods.
@@ -10,6 +7,8 @@ It was not until 2011 when active development of the method, and in particular, 
 The \proglang{Stan} initiative \citep{carpenter2016stan} began in response to difficulties faced when performing full Bayesian inference on multilevel generalised linear models.
 These difficulties mainly involved poor efficiency in usual MCMC samplers, particularly due to high autocorrelations in the posterior chains, which meant that many chains and many iterations were required to get an adequate sample.
 It was a case of exhausting all possible algorithmic remedies for existing samplers (Gibbs samplers, Metropolis samplers, etc.), and realising that fundamentally not much improvement can be had unless a novel sampling technique was discovered.
+
+
 
 The basic idea behind HMC is to use Hamiltonian dynamics to propose new states in the posterior sampling, rather than relying on `random walks'.
 If one were to understand and use the geometry of the posterior density to one's benefit, then it should be possible to generate new proposal states with high probabilities of acceptance and move far away from the current state.
@@ -131,7 +130,7 @@ The HMC algorithm is summarised in \cref{alg:hmc}.
   \vspace{-20pt}  
   \includegraphics[width=0.49\textwidth]{figure/04-phase7}
   \includegraphics[width=0.49\textwidth]{figure/04-phase8}
-  \caption[A phase diagram schematic of HMC sampling in one-dimension. At step 0, initialise values for momentum and position]{A phase diagram schematic of HMC sampling in one-dimension. At step 0, initialise values for momentum and position. At step 1, simulate movement using Hamiltonian dynamics, accept position and discard momentum. At step 2, perturb momentum using a normal density, then repeat.}
+  \caption[A phase diagram schematic of HMC sampling in one-dimension]{A phase diagram schematic of HMC sampling in one-dimension. At step 0, initialise values for momentum and position. At step 1, simulate movement using Hamiltonian dynamics, accept position and discard momentum. At step 2, perturb momentum using a normal density, then repeat.}
 \end{figure}
 \vspace{-0.5em}
 
