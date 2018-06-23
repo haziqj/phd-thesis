@@ -12,7 +12,7 @@ Apart from the fact that the variational EM algorithm uses approximate condition
 \index{Kullback-Leibler|see{KL divergence}}
 \index{KL divergence}
 Let $\tilde q(\by^*,\bw)$ be the pdf that minimises the Kullback-Leibler divergence $\KL\big( q \Vert p \big)$ subject to the mean-field constraint $q(\by^*,\bw) = q(\by^*)q(\bw)$.
-By appealing to \citet[eq. 10.9, p. 466]{bishop2006pattern}, the optimal mean-field variational density $\tilde q$ for the latent variables $\by^*$ and $\bw$ satisfy
+By appealing to \citet[Eq. 10.9, p. 466]{bishop2006pattern}, the optimal mean-field variational density $\tilde q$ for the latent variables $\by^*$ and $\bw$ satisfy
 \begin{align}
   \log \tilde q(\by^*) &= \E_{\bw\sim\tilde q} [\log p(\by,\by^*,\bw)] + \const \label{eq:logqystar} \\
   \log \tilde q(\bw) &= \E_{\by^*\sim\tilde q} [\log p(\by,\by^*,\bw)] + \const \label{eq:logqw}
@@ -41,7 +41,7 @@ One strategy that can be considered is Monte Carlo integration: using samples fr
 This works reasonably well so long as the truncation region does not fall into the extreme tails of the multivariate normal.
 Alternatively, a Gibbs-based approach \citep{robert1995simulation} for sampling from a truncated multivariate normal can be implemented, and this is detailed in \cref{apx:truncmultinorm}.
 
-If the independent I-probit model is under consideration, whereby the covariance matrix has the independent structure $\bPsi = \diag(\sigma_1^{-2},\dots,\sigma_m^{-2})$, then the first moment  can be considered component-wise. 
+If the independent I-probit model is under consideration, whereby the covariance matrix has the independent structure $\bPsi = \diag(\sigma_1^{-2},\dots,\sigma_m^{-2})$, then the first moment  can be considered componentwise. 
 Each component of this expectation is given by
 \begin{align}\label{eq:ystarupdate}
   \tilde y_{ik}^* =

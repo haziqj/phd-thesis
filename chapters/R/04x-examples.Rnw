@@ -475,7 +475,7 @@ To implement the Nystr\"om method, the option \code{nystrom = 50} was added to t
 The hyperparameters estimated for both models are slightly different.
 The log-likelihood is also different, but this is attributed to information loss due to the approximation procedure.
 Nevertheless, we see from \cref{fig:nystrom.plot} that the estimated regression functions are quite similar in both the full model and the approximated model.
-The main difference is that the the Nystr\"om method was not able to extrapolate the right hand side of the plot well, because it turns out that there were no data points used from this region.
+The main difference is that the the Nystr\"om method was not able to extrapolate the right-hand side of the plot well, because it turns out that there were no data points used from this region.
 This can certainly be improved by using a more intelligent sampling scheme.
 The full model took a little over \Sexpr{floor(get_time(mod.full)$time)} minutes to converge, while the Nystr\"om method took seconds without compromising too much on root mean squared error of predictions.
 Storage savings is significantly higher with the Nystr\"om method as well.

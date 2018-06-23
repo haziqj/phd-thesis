@@ -25,7 +25,7 @@ The two lemmas below formalise these two facts.
 
 \begin{proof}
   That $h_1+h_2$ is a positive-definite kernel should be obvious, as the sum of two positive definite functions is also positive definite.
-  For a proof of the remaining statements, see \citet[Theorem 5]{berlinet2011reproducing}.
+  For a proof of the remaining statements, see \citet[Thm. 5]{berlinet2011reproducing}.
 \end{proof}
 
 \begin{lemma}[Products of kernels]\label{thm:prodkernels}
@@ -53,7 +53,7 @@ The two lemmas below formalise these two facts.
     &= \sum_{k=1}^n \sum_{l=1}^n \left(\sum_{i=1}^n \lambda_i a_{ik} b_{il} \right)^2 \\
     &\geq 0
   \end{align*}
-  Again, for the remainder of the statement in the lemma, we refer to \citet[Theorem 13]{berlinet2011reproducing}.
+  Again, for the remainder of the statement in the lemma, we refer to \citet[Thm. 13]{berlinet2011reproducing}.
 \end{proof}
 
 \index{Hadamard product}
@@ -372,7 +372,7 @@ the mean value of the function stems from the `1', i.e. it lies in an RKHS of co
 %One thing to note is that restricting the $\lambda$ parameters to the positive orthant might give unsatisfactory results---what if the effect of two functions are in truth opposing one another?
 %These are handled through opposing signs of their respective scale parameters, thus  the need for working in RKKSs.
 
-\begin{example}
+\begin{example}[ANOVA RKKS construction]
   Consider two RKHSs $\cF_k$ with kernel $h_k$, $k=1,2$.
   The ANOVA kernel defining the ANOVA RKKS $\cF$ is
   \[

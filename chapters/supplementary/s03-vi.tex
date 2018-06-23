@@ -122,7 +122,7 @@ Thus, for each $w_{[k]}$, $k=1,\dots,M$, $\tilde q_k$ satisfies
   \log \tilde q_k(w_{[k]}) = \E_{-k} [ \log p(\by,\bw) ] + \const
 \end{align}
 where expectation of the joint log density of $\by$ and $\bw$ is taken with respect to all of the unknowns $\bw$, except the one currently in consideration $w_{[k]}$, under their respective $\tilde q_k$ densities. 
-For further details, refer to \citet[eq. 10.9, p. 466]{bishop2006pattern}.
+For further details, refer to \citet[Eq. 10.9, p. 466]{bishop2006pattern}.
 
 In practice, rather than an explicit calculation of the normalising constant, one simply needs to inspect \cref{eq:qtilde} to recognise it as a known log-density function, which is the case when exponential family distributions are considered.
 That is, suppose that each complete conditional $p(w_{[k]}|\bw_{-k}, \by)$, where $\bw_{-k} = \{w_{[i]} \,|\, i \neq k\}$, follows an exponential family distribution
@@ -139,7 +139,7 @@ Then, from \cref{eq:qtilde},
 \end{align*}
 is also in the same exponential family.
 In situations where there is no closed form expression for $\tilde q$, then one resorts to sampling methods such as a Metropolis random walk to estimate quantities of interest.
-This stochastic step within a deterministic algorithm has been explored before in the context of a Monte Carlo EM algorithm---see \citet[sec. 4, pp. 537--538]{meng1997algorithm} and references therein.
+This stochastic step within a deterministic algorithm has been explored before in the context of a Monte Carlo EM algorithm---see \citet[Sec. 4, pp. 537--538]{meng1997algorithm} and references therein.
 
 One notices that the optimal mean-field variational densities for each component are coupled with one another, in the sense that the distribution $\tilde q_k$ depends on the moments of the rest of the components $\bw_{-k}$.
 For very simple problems, an exact solution for each $\tilde q_k$ can be found, but usually, the way around this is to employ an iterative procedure.

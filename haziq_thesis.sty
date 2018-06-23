@@ -247,7 +247,12 @@
 \usepackage{tocloft}
 \setlength{\cftfigindent}{0pt}  % indentations of fig and tab list
 \setlength{\cfttabindent}{0pt}
-%\tocloftpagestyle{myplain}
+\cftsetindents{figure}{0em}{2.7em}
+\cftsetindents{table}{0em}{2.7em}
+\usepackage{etoolbox}
+\patchcmd{\listof}{1.5em}{0pt}{}{} % indentations of alg list
+\patchcmd{\listof}{2.3em}{2.7em}{}{}
+% https://tex.stackexchange.com/questions/80430/how-to-prevent-indent-on-listofalgorithms/80432
 
 % Miscellaneous
 \usepackage{lipsum} 
@@ -382,6 +387,8 @@
 
 % List of figures, tables, symbols, and abbreviations
 \newcommand{\hLists}{
+%  \addcontentsline{toc}{chapter}{Lists}
+  
   \newpage
   \cleardoublepage
   \renewcommand{\listfigurename}{Figures}
@@ -405,11 +412,12 @@
   \renewcommand{\listtheoremname}{Definitions}
   \listoftheorems[ignoreall,show={definition}, numwidth=2.7em]
   \addcontentsline{toc}{chapter}{Definitions}   
-        
+  
   \newpage
   \cleardoublepage
   \renewcommand{\listalgorithmname}{Algorithms}
-  \listofalgorithms  
+%  {\let\cleardoublepage\clearpage\listofalgorithms}
+  \listofalgorithms
   \addcontentsline{toc}{chapter}{Algorithms}
         
   \begingroup

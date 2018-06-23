@@ -45,7 +45,7 @@ Without loss of generality, reorder the rows and columns of $\bH_\eta$ so that t
 %
 In other words, the data points indexed by $\cQ$ forms the smaller $q\times q$ kernel matrix $\bA$. 
 Let $\bA = \bV_q\bU_q\bV_q^\top = \sum_{i=1}^q u_i^{(q)}\bv_i^{(q)}\bv_i^{(q)\top}$ be the eigendeceomposition of $\bA$.
-The Nyström method provides the formulae for $\tilde u_i$ and $\tilde\bv_i$ \citep[sec. 8.1, eq. 8.2 and 8.3]{rasmussen2006gaussian} as
+The Nyström method provides the formulae for $\tilde u_i$ and $\tilde\bv_i$ \citep[Sec. 8.1, Eq. 8.2 and 8.3]{rasmussen2006gaussian} as
 \begin{align*}
   \tilde u_i &:= \frac{n}{q} u_i^{(q)} \in \bbR \\
   \tilde \bv_i &:= \sqrt{\frac{q}{n}} \frac{1}{u_i^{(q)}}
@@ -83,7 +83,7 @@ An additional step is required to obtain an orthogonal version of the Nyström d
    \end{pmatrix}
    \bA^{-\half}\bR\hat\bU^{-\half} \in \bbR^n \times \bbR^m,
  \]
- then we have that $\bH_\eta \approx \hat\bV\hat\bU\hat\bV^\top$ such that $\hat\bV\hat\bV^\top = \bI_n$ \citep[appx. A]{fowlkes2004spectral}.
+ then we have that $\bH_\eta \approx \hat\bV\hat\bU\hat\bV^\top$ such that $\hat\bV\hat\bV^\top = \bI_n$ \citep[Appx. A]{fowlkes2004spectral}.
  Estimating I-prior models with the Nystr\"om method including the orthogonalisation step takes roughly $O(nm^2)$ time and $O(nm)$ storage.
   
 The issue of selecting the subset $\cQ$ remains.
@@ -91,7 +91,7 @@ The simplest method, and that which is implemented in the \pkg{iprior} package,
 would be to uniformly sample a subset of size $q$ from the $n$ points.
 Although this works well in practice, the quality of approximation might suffer if the points do not sufficiently represent the training set.
 In this light, greedy approximations have been suggested to select the $q$ points, so as to reduce some error criterion relating to the quality of approximation.
-For a brief review of more sophisticated methods of selecting $\cQ$, see \citet[sec. 8.1]{rasmussen2006gaussian}.
+For a brief review of more sophisticated methods of selecting $\cQ$, see \citet[Sec. 8.1]{rasmussen2006gaussian}.
 
 \subsection{Front-loading kernel matrices for the EM algorithm}
 \label{sec:efficientEM1}

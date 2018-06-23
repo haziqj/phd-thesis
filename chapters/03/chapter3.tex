@@ -25,12 +25,12 @@
 
 We are interested in calculating the Fisher information for our unknown regression function $f$ (the parameter to be estimated) in \cref{eq:model1}, subject to \cref{eq:model1ass} and $f\in\cF$, an RKKS.
 Unlike in the traditional case, $\cF$ may be infinite dimensional, and hence care must be taken when computing derivatives with respect to $f$ when this is the case.
-If $\cF$ possesses an orthonormal basis, as all Hilbert spaces do, then one could define the derivative of the functional $\funder:\cF\to\bbR$ component-wise with respect to the orthonormal basis, as in the finite dimensional case.
+If $\cF$ possesses an orthonormal basis, as all Hilbert spaces do, then one could define the derivative of the functional $\funder:\cF\to\bbR$ componentwise with respect to the orthonormal basis, as in the finite-dimensional case.
 This is analogous to the usual concept of   partial derivatives.
 
 However, the notion of partial derivatives does not generalise to arbitrary topological vector spaces for two reasons.
 Firstly, general spaces may not have an orthonormal basis \citep[Sec. 5, p. 76]{tapia1971diff}.
-Secondly, component-wise derivatives, which are in essence limits taken component-wise using the usual definition of derivatives, may not coincide with the overall limit taken with respect to the topology of the vector space.
+Secondly, componentwise derivatives, which are in essence limits taken componentwise using the usual definition of derivatives, may not coincide with the overall limit taken with respect to the topology of the vector space.
 For these reasons, there is a need to consider the rigorous concepts of differentiation suitable for infinite-dimensional vector spaces provided by Fréchet and Gâteaux derivatives.
 These concepts are introduced in \cref{sec:fihilbert}, prior to the actual derivation of the Fisher information of the regression function in \cref{sec:firegfun}.
 
@@ -63,7 +63,7 @@ The I-prior has a simple, intuitive appeal: much information about $f$ correspon
 In estimating the regression function $f$ of the normal model in \cref{eq:model1} subject to \cref{eq:model1ass} and $f$ belonging to an RKKS $\cF$, we established that the entropy maximising prior distribution for $f$ is Gaussian with some chosen prior mean $f_0$, and covariance function proportional\footnote{Proportionality, rather than equality, is a consequence of any RKHS scale parameters that $\cF$ may have.} to the Fisher information for $f$.
 We call this the I-prior for $f$.
 
-The dimension of the function space $\cF$ could be huge, infinite-dimensional even, while the task of estimating $f\in\cF$ only relies on a finite amount of data point.
+The dimension of the function space $\cF$ could be huge, infinite dimensional even, while the task of estimating $f\in\cF$ only relies on a finite amount of data point.
 However, we are certain that the Fisher information for $f$ exists only for the finite subspace $\cF_n$ as defined in \cref{eq:subspaceFn}, and it is zero everywhere else.
 This suggests that the data only allows us to provide an estimation to the function $f\in\cF$ by considering functions in an (at most) $n$-dimensional subspace instead.
 In other words, it would be futile to consider functions in a space larger than this, and hence there is an element of dimension reduction here, especially when $\dim(\cF) \gg n$.

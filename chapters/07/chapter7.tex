@@ -76,14 +76,14 @@ We give a summary of the novel contributions of this thesis.
 
 \begin{itemize}
   \item \textbf{Fisher information for infinite-dimensional parameters}. 
-  When the RKHS/ RKKS $\cF$ is infinite-dimensional (e.g. covariates are themselves functions), then the Fisher information involves derivatives with respect to an infinite-dimensional vector.
-  Finite-dimensional results using component-wise/partial derivatives may fail in infinite dimensions.
-  The technology of Fréchet and Gâteaux differentials accommodate for the fact that $f$ may be infinite-dimensional, which, at minimum, requires $\cF$ to be a  normed vector space. 
+  When the RKHS/ RKKS $\cF$ is infinite dimensional (e.g. covariates are themselves functions), then the Fisher information involves derivatives with respect to an infinite-dimensional vector.
+  Finite-dimensional results using componentwise/partial derivatives may fail in infinite dimensions.
+  The technology of Fréchet and Gâteaux differentials accommodate for the fact that $f$ may be infinite dimensional, which, at minimum, requires $\cF$ to be a  normed vector space. 
   We foresee the work of \cref{sec:fihilbert} being applicable elsewhere, such as learning in (reproducing kernel) Banach spaces \citep{zhang2009reproducing,zhang2012regularized}, or in the theory of parameter estimation for general exponential family type distributions of the form
   \[
     p(X|\theta) = B(X)\exp\big(\ip{\theta,T(X)}_\cH - A(\theta) \big),
   \]
-  for which $\theta$ lies in some inner-product space $\cH$ which might be infinite-dimensional \citep{sriperumbudur2013density}.
+  in which $\theta$ lies in some inner-product space $\cH$ which might be infinite dimensional \citep{sriperumbudur2013density}.
   
   \item \textbf{Efficient estimation methods for normal I-prior models}. 
   The preferred estimation method for normal I-prior models for stability is the EM algorithm.
@@ -143,7 +143,7 @@ In closing, we briefly discuss several questions which remain open during the co
   The quasi-likelihood literature has results relating to efficiency of parameter estimates (adjustments to the information matrix is needed), and we wonder if these are applicable for variational inference.
   
   Also, obtaining standard errors directly from an EM algorithm is of interest, especially under a variational EM setting.
-  Though this is described in \citet[ch. 4]{mclachlan2007algorithm}, we have not seen this implemented widely.
+  Though this is described in \citet[Ch. 4]{mclachlan2007algorithm}, we have not seen this implemented widely.
   
   \item \textbf{Comparison of logistic and probit links}.
   For general binary and multinomial models, the logistic link function sees more prevalent use than its probit counterpart.\index{probit}\index{logistic}

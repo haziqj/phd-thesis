@@ -86,7 +86,7 @@ Note that in all of these examples, \ref{ass:A1}--\ref{ass:A3} were assumed.
 \index{Pearson kernel/RKHS}
 
 In this section, a comparison between a standard random effects model and the I-prior approach for estimating varying intercept and slopes model is illustrated.
-The example concerns control data\footnotemark\ from several runs of radioimmunoassays (RIA) for the protein insulin-like growth factor (IGF-I) (explained in further detail in \cite[sec. 3.2.1]{davidian1995nonlinear}).
+The example concerns control data\footnotemark\ from several runs of radioimmunoassays (RIA) for the protein insulin-like growth factor (IGF-I) (explained in further detail in \cite[Sec. 3.2.1]{davidian1995nonlinear}).
 RIA is an in vitro assay technique which is used to measure concentration of antigens---in our case, the IGF-I proteins.
 When an RIA is run, control samples at known concentrations obtained from a particular lot are included for the purpose of assay quality control.
 It is expected that the concentration of the control material remains stable as the machine is used, up to a maximum of about 50 days, at which point  control samples from a new batch is used to avoid degradation in assay performance.
@@ -851,7 +851,7 @@ To implement the Nystr\"om method, the option \code{nystrom = 50} was added to t
 The hyperparameters estimated for both models are slightly different.
 The log-likelihood is also different, but this is attributed to information loss due to the approximation procedure.
 Nevertheless, we see from \cref{fig:nystrom.plot} that the estimated regression functions are quite similar in both the full model and the approximated model.
-The main difference is that the the Nystr\"om method was not able to extrapolate the right hand side of the plot well, because it turns out that there were no data points used from this region.
+The main difference is that the the Nystr\"om method was not able to extrapolate the right-hand side of the plot well, because it turns out that there were no data points used from this region.
 This can certainly be improved by using a more intelligent sampling scheme.
 The full model took a little over 14 minutes to converge, while the Nystr\"om method took seconds without compromising too much on root mean squared error of predictions.
 Storage savings is significantly higher with the Nystr\"om method as well.

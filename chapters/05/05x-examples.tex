@@ -409,7 +409,7 @@ The numbers in each row indicate the instances of a predicted class, while the n
 
 Comparisons to other methods that had been used to analyse this data set is given in \cref{tab:vowel.tab}.
 In particular, the I-probit model is compared against 1) linear regression; 2) logistic linear regression; 3) linear and quadratic discriminant analysis; 4) decision trees; 5) neural networks; 6) $k$-nearest neighbours; and 7) flexible discriminant analysis.
-All of these methods are described in further detail in \citet[chs. 4 \& 12, table 12.3]{friedman2001elements}.
+All of these methods are described in further detail in \citet[Chs. 4 \& 12, Table 12.3]{friedman2001elements}.
 The I-probit model using both the fBm-0.5 and SE kernel offers one of the best out-of-sample classification error rates (34.4\%) of all the methods compared.
 The linear I-probit model is seen to be comparable to logistic regression, linear and quadratic discrimant analysis, and also decision trees.
 It also provides significant improvement over multiple linear regression.
@@ -464,7 +464,7 @@ It also provides significant improvement over multiple linear regression.
 Data containing the number of breakdows of bovine tubercolosis (BTB) in Cornwall, the locations of the infected animals, and the year of occurence is analysed.
 The interest, as motivated by veterinary epidimiology, is to understand whether or not there is spatial segregation of the infection of the herds, and whether there is a time-element to the presence or absence of this spatial segregation.
 There has been previous work done to analyse this data set.
-\citet{diggle2005nonparametric} developed a non-parametric method to estimate spatial segregation using a multivariate point process.
+\citet{diggle2005nonparametric} developed a nonparametric method to estimate spatial segregation using a multivariate point process.
 The occurrences are modelled as Poisson point processes, and spatial segregation is said to have occured if the model-estimated type-specific breakdown probabilities at any given location are not significantly different from the sample proportions.
 The authors estimated the probabilities via kernel regression, and the test statistic of interest had to be estimated via Monte Carlo methods.
 Other works include \citet{diggle2013spatial}, who used a fully Bayesian approach for spatio-temporal multivariate log-Gaussian Cox processes, which is implemented in the \proglang{R} package \pkg{lgcp} \citep{taylor2013lgcp}.

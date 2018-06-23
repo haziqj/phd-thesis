@@ -119,7 +119,7 @@ Note, that models may be pairwise compared based on these posterior model probab
   \myoverbrace{\frac{p(M_k)}{p(M_0)}}{\text{prior odds}}
 \end{equation}
 provide a point summary for comparing model $M_k$ against model $M_0$.
-The first term on the right hand side is the Bayes factor for comparing any model $M_k \in \cM$ to another model $M_0 \in \cM$, and is denoted by $\text{BF}(M_k,M_0)$.
+The first term on the right-hand side is the Bayes factor for comparing any model $M_k \in \cM$ to another model $M_0 \in \cM$, and is denoted by $\text{BF}(M_k,M_0)$.
 Thus, model selection based on posterior model probabilities can be formalised as the Bayesian alternative to classical hypothesis testing using Bayes factors \citep{kass1995bayes}.
 \index{Bayes factor}
 \index{Bayesian hypothesis test}
@@ -217,7 +217,7 @@ Interestingly, when $X_j$ is dropped from the model ($\gamma_j=0$), the posterio
 The data-driven I-prior incorporates information from the covariates into the prior, which then informs the posterior.
 In a similar manner, the conditional density for the intercept $\alpha$ is found to be $\N\big( \sum_{i=1}^n(y_i - \bx_i^\top\btheta) / \tilde A,\sigma^2\tilde A \big)$, where $\tilde A = n + A^{-1}$ and $A$ is the prior variance for $\alpha$.
 
-The (conditional) posterior samples of $\gamma=(\gamma_1,\dots,\gamma_p)$ are obtained component-wise, and each conditional probability mass function for $\gamma_j$ is Bernoulli  with success probability $\tilde \pi_j = u_j / (u_j + v_j)$, where
+The (conditional) posterior samples of $\gamma=(\gamma_1,\dots,\gamma_p)$ are obtained componentwise, and each conditional probability mass function for $\gamma_j$ is Bernoulli  with success probability $\tilde \pi_j = u_j / (u_j + v_j)$, where
 \begin{align*}
   \begin{gathered}
     u_j = \pi_j \exp\left( - \frac{1}{2\sigma^2} \Vert \by - \alpha \bone_n - \bX\btheta_j^{[1]} \Vert^2 \right) \\
