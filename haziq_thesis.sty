@@ -185,12 +185,14 @@
 % Bibliography
 \usepackage[style=authoryear-comp, firstinits=false, giveninits=false, maxcitenames=2, uniquelist=false,
   minnames=1, maxbibnames=99, backend=biber, natbib]{biblatex}
-\setlength\bibitemsep{1.5\itemsep}
+\setlength\bibitemsep{1\itemsep}
 \AtEveryCite{\color{\mycitecolour}}
 \makeatletter
 \AtEveryCitekey{\global\undef\cbx@lastyear}  % https://tex.stackexchange.com/questions/309697/multiple-citations-same-author-same-year-using-biblatex-list-year
 \makeatother
-    
+\setcounter{biburlnumpenalty}{9000}
+% https://tex.stackexchange.com/questions/134191/line-breaks-of-long-urls-in-biblatex-bibliography
+
 % Paragraph settings
 \usepackage{parskip}  
 \setlength{\parindent}{15pt}  % default indentation

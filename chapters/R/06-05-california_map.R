@@ -1,4 +1,4 @@
-# Chapter 8
+# Chapter 6
 # Bayesian Variable Selection using I-priors simulation study
 library(ggmap)
 library(ggrepel)
