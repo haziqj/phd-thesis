@@ -4,7 +4,6 @@ source("00-prelim.R")
 chapter <- "06"
 
 # ---- bvs.ozone ----
-
 data(Ozone, package = "mlbench")
 colnames(Ozone) <- c("Month", "DayMonth", "DayWeek", "Ozone", "PresVand",
                      "WindLAX", "HumLAX", "TempSand", "TempElMon", "ibhLAX",
