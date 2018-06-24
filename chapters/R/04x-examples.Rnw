@@ -467,7 +467,7 @@ To implement the Nystr\"om method, the option \code{nystrom = 50} was added to t
 <<nystrom.mod, cache = TRUE>>=
 @
 
-<<nystrom.plot, echo = FALSE, fig.show = "hold", out.width = "0.785\\textwidth", fig.width = 6.5, fig.height = 3.94, fig.cap = 'Plot of predicted regression function for the full model (top) and the Nystr\\"om approximated method (bottom). For the Nystr\\"om plot, the data points that were active are shown by circles with bold outlines.', cache = TRUE, fig.pos = "htbp">>=
+<<nystrom.plot, echo = FALSE, fig.show = "hold", out.width = "0.785\\textwidth", fig.width = 6.5, fig.height = 3.94, fig.cap = 'Plot of predicted regression function for the full model (top) and the Nystr\\"om approximated method (bottom). For the Nystr\\"om plot, the data points that were active are shown by circles with bold outlines.', cache = TRUE, fig.pos = "htbp", fig.scap = 'Plot of predicted regression function for the Nystr\"om example'>>=
 @
 <<nystrom.size, cache = TRUE>>=
 @

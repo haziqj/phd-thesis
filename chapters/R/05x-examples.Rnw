@@ -67,7 +67,7 @@ As expected, the lower bound value increases over time until a convergence crite
 @
 <<mod.full.cardiac, include = FALSE, cache = TRUE>>=
 @
-<<cardiac.mod.full.plot, echo = FALSE, fig.height = 3.9 * 0.9, fig.width = 6.5 * 0.9, out.width = "0.785\\linewidth", fig.cap = "Plot of variational lower bound over time (top), and plot of training error rate and Brier scores over time (bottom).", fig.show = "hold", fig.pos = "htb">>=
+<<cardiac.mod.full.plot, echo = FALSE, fig.height = 3.9 * 0.9, fig.width = 6.5 * 0.9, out.width = "0.785\\linewidth", fig.cap = "Plot of variational lower bound over time (top), and plot of training error rate and Brier scores over time (bottom).", fig.scap = "Plot of variational lower bound, training error rate and Brier scores against time and iterations", fig.show = "hold", fig.pos = "htb">>=
 @
 
 \index{Gaussian process!classification}

@@ -31,6 +31,7 @@ Note that the dependence of the kernel on parameters $\eta$ is implicitly assume
 		\partial_u k_x(v)	
 		&= \lim_{t \rightarrow 0} \frac{k(v+t u) - k(v)}{t} \\
 		&= \lim_{t \rightarrow 0} \frac{\langle \phi(x), v+t u \rangle_{\cV} - \langle \phi(x), v \rangle_{\cV}}{t} \\
+		&= \lim_{t \rightarrow 0} \frac{\langle \phi(x), \cancel{v} + tu - \cancel{v} \rangle_{\cV}}{t} \\		
 		&= \lim_{t \rightarrow 0} \frac{t\langle \phi(x), u \rangle_{\cV}}{t} \\
 		&= \langle \phi(x), u \rangle_{\cV}.
 	\end{align*}
@@ -55,9 +56,10 @@ Note that the dependence of the kernel on parameters $\eta$ is implicitly assume
 	\begin{align*}
 		\d^2 L(\cdot|\by,\theta)
 		&= - \frac{1}{2} \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} (\d k_{x_j} \d k_{x_i}  + \d k_{x_i}\d k_{x_j}) \\
-		&= - \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \, \d k_{x_i} \d k_{x_j},
+		&= - \sum_{i=1}^n\sum_{j=1}^n \psi_{ij} \, \d k_{x_i} \d k_{x_j} \\
+		&= - \sum_{i=1}^n\sum_{j=1}^n \psi_{ij}  \langle \phi(x_i), \cdot \rangle_{\cV} \, \langle \phi(x_j), \cdot \rangle_{\cV} ,
 	\end{align*}
-	since the derivative of $\d k_{x}$ is zero (it is the derivative of a constant).
+	since the derivative of $\d k_{x} = \ip{\phi(x),\cdot}_\cV$ is zero (it is the derivative of a constant).
 	We can then calculate the Fisher information to be
 	\begin{align*}
 		\cI(v) = -\E \big[ \d^2 L(v|\by,\theta) \big] 
