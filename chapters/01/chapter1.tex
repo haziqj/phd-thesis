@@ -30,7 +30,8 @@ Regression analysis concerns the estimation of said regression function, and onc
 Estimation of the regression function may be done in many ways.
 This thesis concerns the use of \emph{I-priors} \citep{bergsma2017}, in a semi-Bayesian manner, for regression modelling.
 The I-prior is an objective, entropy-maximising prior for the regression function which makes use of its Fisher information.
-The essence of regression modelling using I-priors is introduced briefly below, but as the development of I-priors is fairly recent, we dedicate two full chapters (\cref{chapter2,chapter3}) to describe the concept fully.
+The essence of regression modelling using I-priors is introduced briefly below, but as the development of I-priors is fairly recent, we dedicate two full chapters (\cref{chapter2,chapter3}) to describe the concept fully, including a fairly comprehensive review of functional analysis (\cref{sec:funcanalysis,sec:rkhstheory,sec:rkkstheory}) germane to our discussions.
+For the advanced reader who has familiarity with functional analysis including the theories of reproducing kernel Hilbert and Kreĭn spaces, these sections may be skipped.
 
 This thesis has three main chapters which we hope to present as methodological innovations surrounding the use of I-priors for regression modelling.
 \cref{chapter4} describes the I-prior modelling framework and computational methods relating to the estimation of I-prior models.
@@ -145,7 +146,7 @@ Therefore, the solution to the regularised least squares problem---call this $f_
   ,
 \end{equation}
 which also happens to be the \emph{penalised maximum likelihood} solution. 
-Here, $f_0 \in \cF$ can be thought of a prior `best guess' for the function $f$.
+Here, $f_0 \in \cF$ can be thought of a prior ``best guess'' for the function $f$.
 The $\lambda^{-1} > 0$ parameter---known as the regularisation parameter---controls the trade-off between the data-fit term and the penalty term in \cref{eq:penfunctional}, and is not usually known a priori and must be estimated.
 
 An attractive consequence of the representer theorem \citep{kimeldorf1970correspondence} for Tikhonov regularisation implies that $f_\text{reg}$ admits the form
@@ -163,7 +164,7 @@ Concrete notions of complexity penalties can be introduced if $\cF$ is a normed 
 \index{kernel!matrix}
 \index{Gram matrix|see {kernel matrix}}
 Tikhonov regularisation also has a well known Bayesian interpretation, whereby the regularisation term encodes prior information about the function $f$. 
-For the normal regression model with $f \in \cF$, an RKHS, it can be shown that $f_{\text{reg}}$ is the posterior mean of $f$ given a \emph{Gaussian process prior} \citep{rasmussen2006gaussian} with mean $f_0$ and covariance kernel $\Cov\big(f(x_i),f(x_j)\big) = \lambda h(x_i, x_j)$. 
+For the normal regression model with $f \in \cF$, an RKHS, it can be shown that $f_{\text{reg}}$ is the posterior mean of $f$ given a \emph{Gaussian process prior} \citep{rasmussen2006gaussian} with mean $f_0$ and covariance kernel $\Cov\big(f(x_i),f(x_j)\big) = \lambda \, h(x_i, x_j)$. 
 The exact solution for the coefficients $\bw := (w_1,\dots,w_n)^\top$ are in fact $\bw = \big(\bH + \bPsi^{-1}\big)^{-1}(\by - \bff_0)$, where $\bH = \big(h(x_i,x_j) \big)_{i,j=1}^n$ (often referred to as the Gram matrix or kernel matrix) and $(\by - \bff_0) = (y_1 - f_0(x_1), \dots, y_n - f_0(x_n))^\top$.
 
 \section{Regression using I-priors}
@@ -282,7 +283,7 @@ Deviating from the normality assumption would require approximation techniques t
 This thesis is structured as follows:
 
 \begin{itemize}
-  \item Following this introductory chapter, \textbf{\cref{chapter2}} provides a brief overview of functional analysis, and in particular, descriptions of interesting function spaces for regression.
+  \item Following this introductory chapter, \textbf{\cref{chapter2}} provides an overview of functional analysis, and in particular, descriptions of interesting function spaces for regression.
   In \textbf{\cref{chapter3}}, the concept of the Fisher information is extended to potentially infinite-dimensional parameters.
   This allows us to define the Fisher information for the regression function which parameterises the normal regression model, and we explain how this relates to the I-prior.
   
@@ -387,7 +388,7 @@ This thesis is structured as follows:
 Familiarity with basic estimation concepts (maximum likelihood, Bayes, empirical Bayes) and their corresponding estimation methods (gradient-based methods, Newton, quasi-Newton methods, MCMC, EM algorithm) are assumed throughout.
 Brief supplementary chapters are attached for readers who wish to familiarise themselves with topics such as variational inference and Hamiltonian Monte Carlo, which are used in \cref{chapter4,chapter5}.
 These brief readings are designed to be supplementary in nature, and are not strictly essential for the chapters.
-Additionally, Appendices A--I contain references to several statistical distributions and their properties, derivations, and proofs of the algorithms described in this thesis.
+Additionally, Appendices A--I contain references to several statistical distributions and their properties, proofs of various claims, and derivations of the algorithms described in this thesis.
 
 On a closing note, a dedicated website for this PhD project has been created, and it can be viewed at \url{http://phd.haziqj.ml}.
 

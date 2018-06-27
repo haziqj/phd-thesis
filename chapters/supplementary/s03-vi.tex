@@ -38,10 +38,10 @@ Advantages of this method are that 1) it is fast to implement computationally (c
 
 Briefly, we present the motivation behind variational inference and the minimisation of the KL divergence.
 Denote by $q(\cdot)$ some density function of $\bw$.
-One may show that log marginal density (the log of the intractable integral \cref{eq:varint}) holds the following bound:
+One may show that log marginal density, i.e. the log of the intractable integral \cref{eq:varint}, holds the following bound:
 \begin{align}
   \log p(y) &= \log p(\by,\bw) - \log p(\bw|\by) \mycomment{\footnotesize (Bayes' theorem)} \nonumber \\
-  &= \int \left\{ \log \frac{p(\by,\bw)}{q(\bw)} - \log \frac{p(\bw|\by)}{q(\bw)} \right\} q(\bw) \dint \bw \mycomment{\footnotesize (expectations both sides)} \hspace{0.95cm} \nonumber \\    
+  &= \int \left\{ \log \frac{p(\by,\bw)}{q(\bw)} - \log \frac{p(\bw|\by)}{q(\bw)} \right\} q(\bw) \dint \bw \mycomment{\footnotesize (expectation both sides)} \hspace{1cm} \nonumber \\    
   &=  \cL(q) +  \KL(q \Vert p) \nonumber \\
   &\geq \cL(q) \label{eq:varbound}
 \end{align}
@@ -110,9 +110,9 @@ and rearranging slightly for terms involving the $j$'th component only, we get
 \begin{align*}
   \cL(q) 
   ={}& \idotsint \left( \log p(\by,\bw)  - \log q_j(w_{[j]}) + \const \right) q_j(w_{[j]}) \dint w_{[j]} \prod_{k\neq j} \left\{ q_k(w_{[k]}) \dint w_{[k]} \right\} \\
-  ={}& \int \Bigg( 
+  ={}& \int  \Bigg( \,
   \myoverbrace{\idotsint \log p(\by,\bw)  \prod_{k\neq j} \left\{ q_k(w_{[k]}) \dint w_{[k]} \right\}}{\log \tilde p(\by,w_{[j]}) + \const}
-  \Bigg) q_j(w_{[j]}) \dint w_{[j]} \\
+  \, \Bigg) q_j(w_{[j]}) \dint w_{[j]} \\
   & - \int  \log q_j(w_{[j]}) q_j(w_{[j]}) \dint w_{[j]} + \const \\
   ={}& -\KL(q_{[j]} \Vert \tilde p) + \const
 \end{align*}

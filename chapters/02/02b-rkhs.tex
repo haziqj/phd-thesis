@@ -119,12 +119,12 @@ That is, $\forall a_1, \dots, a_n \in \mathbb R$ and $\forall x_1, \dots, x_n \i
   \sum_{i=1}^n\sum_{j=1}^n a_i a_j h(x_i, x_j) \geq 0.
 \]
 
-\begin{proposition}[Reproducing kernels of RKHS are positive definite]\label{thm:posdef}
+\begin{lemma}[Reproducing kernels of RKHSs are positive definite]\label{thm:posdef}
   \index{positive definite}
   \index{positive definite|seealso{inner product}}
   Let $h\!:\!\cX\times\cX\to\bbR$ be a reproducing kernel for a Hilbert space $\cF$.
-  Then $h$ is a symmetric and positive definite function.
-\end{proposition}
+  Then $h$ is a symmetric and positive-definite function.
+\end{lemma}
 
 \begin{proof}
   \begin{align*}
@@ -181,7 +181,7 @@ Pictorially, the following relationships are established:
     
     \path [singlearrow] (pd) -- node [text width=2.5cm,midway,above,align=center,yshift=0.2cm] {\cref{thm:moorea}} (rkhs);
     \path [doublearrow] (repkern.east) -- node [text width=2.5cm,midway,above,align=left,xshift=1.5cm] {\cref{thm:rkhsunique}} (rkhs.north);
-    \path [doublearrow] (repkern.west) -- node [text width=2.5cm,midway,above,align=right,xshift=-1.5cm] {\cref{thm:posdef}} (pd.north);
+    \path [singlearrow] (repkern.west) -- node [text width=2.5cm,midway,above,align=right,xshift=-1.5cm] {\cref{thm:posdef}} (pd.north);
   \end{tikzpicture}  
   \caption[Relationship between p.d. functions, rep. kernels, and RKHSs]{Relationships between positive definite functions, reproducing kernels, and RKHSs.}
 \end{figure}
@@ -202,9 +202,9 @@ The rest of this section is a consideration of these assertions, addressed by th
   Suppose $\cF$ is a Hilbert space of functions, and $\hXXR$ is a reproducing kernel for $\cF$.
   Then, choosing $\delta=\epsilon / \norm{h(\cdot,x)}_\cF$, for any $f \in \cF$ such that $\norm{f-g}_\cF < \delta$, we have
   \begin{align*}
-    \vert \delta_x (f) - \delta_x (g) \vert 
-    &= \vert (f-g)(x) \vert \\
-    &= |\ip{f-g,h(\cdot,x)}_\cF| \mycomment{(reproducing property)} \\
+    \big\vert \delta_x (f) - \delta_x (g) \big\vert
+    &= \big\vert (f-g)(x) \big\vert \\
+    &= \big\vert \ip{f-g,h(\cdot,x)}_\cF \big\vert \mycomment{(reproducing property)} \\
     &\leq \norm{h(\cdot,x)}_\cF \, \norm{f-g}_\cF \mycomment{(Cauchy-Schwarz)} \\
     &= \epsilon.
   \end{align*}

@@ -39,13 +39,13 @@ Note that in all of these examples, \ref{ass:A1}--\ref{ass:A3} were assumed.
 \subsection{Random effects models}
 \index{random-effects model|see{multilevel model}}
 \index{multilevel model}
-\index{IGF data set}
+\index{insulin-like growth factor (IGF-I) data set}
 \index{ANOVA!kernel/RKKS}
 \index{canonical kernel/RKHS}
 \index{Pearson kernel/RKHS}
 
 In this section, a comparison between a standard random effects model and the I-prior approach for estimating varying intercept and slopes model is illustrated.
-The example concerns control data\footnotemark\ from several runs of radioimmunoassays (RIA) for the protein insulin-like growth factor (IGF-I) (explained in further detail in \cite[sec. 3.2.1]{davidian1995nonlinear}).
+The example concerns control data\footnotemark\ from several runs of radioimmunoassays (RIA) for the protein insulin-like growth factor (IGF-I) (explained in further detail in \cite[Sec. 3.2.1]{davidian1995nonlinear}).
 RIA is an in vitro assay technique which is used to measure concentration of antigens---in our case, the IGF-I proteins.
 When an RIA is run, control samples at known concentrations obtained from a particular lot are included for the purpose of assay quality control.
 It is expected that the concentration of the control material remains stable as the machine is used, up to a maximum of about 50 days, at which point  control samples from a new batch is used to avoid degradation in assay performance.
@@ -117,7 +117,7 @@ One of the eigenvalues was found to be negative, so the covariance matrix is non
 
 <<IGf.prep.plot, cache = TRUE, include = FALSE, myspacing = TRUE>>=
 @
-<<IGF.plot.beta, echo = FALSE, fig.width = 7, fig.height = 3.8, fig.cap = "A comparison of the estimates for random intercepts and slopes (denoted as points) using the I-prior model and the standard random effects model. The dashed vertical lines indicate the fixed effect values.", fig.pos = "htbp">>=
+<<IGF.plot.beta, echo = FALSE, fig.width = 7, fig.height = 4.2, fig.cap = "A comparison of the estimates for random intercepts and slopes (denoted as points) using the I-prior model and the standard random effects model. The dashed vertical lines indicate the fixed effect values.", fig.pos = "htbp">>=
 @
 
 Degenerate covariance matrices often occur in models with a large number of random coefficients, and in cases where values of the variance components are estimated at the boundary.
@@ -127,13 +127,12 @@ Furthermore, I-prior models typically require fewer parameters to fit a similar 
 
 It is also possible to ``recover'' the estimates of the standard random effects model from the I-prior model, albeit in a slighly manual fashion (refer to \cref{sec:multilevelmodels}).
 Denote by $f^j$ the individual linear regression lines for each of the $j=1,\dots,10$ \code{Lots}.
-Then, each of these $f^j$ has a slope and intercept for which we can estimate from the fitted values $\hat f^j(x_{ij})$, $i=1,\dots,n_j$.
-This would give us the estimate of the posterior mean of the random intercepts and slopes; these would typically be obtained using empirical-Bayes methods in the case of the standard random effects model.
+Then, each of these $f^j$ has a slope and intercept for which we can estimate from the fitted regression lines $\hat f^j(x_{ij})$, $i=1,\dots,n_j$.
+This would give us the posterior mean estimates of the random intercepts and slopes.
+In order to obtain these intercepts and slopes, we simply run a best fit line through the I-prior estimated \code{conc} values.
+Furthermore, as $\sigma_0^2$ and $\sigma_1^2$ represent a measure of variability of the intercepts and slopes of the different groups, we can also calculate this manually for the 10 intercepts and slopes of the fitted I-prior model.
+In the same spirit, $\rho_{01} = \sigma_{01} / (\sigma_0 \sigma_1)$, which is the correlation between the random intercept and slope, can also be calculated.
 
-Furthermore, $\sigma_0^2$ and $\sigma_1^2$ gives a measure of variability of the intercepts and slopes of the different groups, and this can be calculated from the estimates of the random intercepts and slopes.
-In the same spirit, $\rho_{01} = \sigma_{01} / (\sigma_0 \sigma_1)$, which is the correlation between the random intercept and slope, can be similarly calculated.
-Finally, the fixed effects can be estimated from the intercept and slope of the best fit line running through the I-prior estimated \code{conc} values.
-The intuition for this is that the fixed effects are essentially the ordinary least squares (OLS) of a linear model if the groupings are disregarded.
 \cref{fig:IGF.plot.beta} illustrates the differences in the estimates for the random coefficients, while  \cref{tab:igf} illustrates the differences in the estimates for the covariance matrix.
 Minor differences do exist, with the most noticeable one being that the slopes in the I-prior model are categorically estimated as zero, and the sign of the correlation $\rho_{01}$ being opposite in both models.
 Even so, the conclusions from both models are similar.

@@ -22,9 +22,9 @@
 \label{chapter4}
 \thispagestyle{chapterfour}
 
-In the previous chapter, we defined an I-prior for the normal regression model \cref{eq:model1} subject to \cref{eq:model1ass} and $f$ belonging to a reproducing kernel Hilbert or Krein space of functions $\cF$, as a Gaussian distribution on $f$ with covariance function proportional to the Fisher information for $f$.
+In the previous chapter, we defined an I-prior for the normal regression model \cref{eq:model1} subject to \cref{eq:model1ass} and $f$ belonging to a reproducing kernel Hilbert or Kreĭn space of functions $\cF$, as a Gaussian distribution on $f$ with covariance function proportional to the Fisher information for $f$.
 We also saw how new function spaces can be constructed via the polynomial and ANOVA reproducing kernel Kreĭn spaces (RKKSs).
-In this chapter, we shall describe various regression models, and identify them with appropriate RKKSs, so that an I-prior may be defined on it.
+In this chapter, we shall describe various regression models, and identify the regression function in each of these models as belonging to an appropriate RKKS, so that an I-prior may be defined.
 
 Methods for estimating I-prior models are described in \cref{sec:ipriorestimation}.
 Estimation here refers to obtaining the posterior distribution of the regression function under an I-prior, while optimising the kernel parameters of $\cF$ and the error precision $\bPsi$.
@@ -79,7 +79,7 @@ The steps for I-prior modelling are essentially three-fold:
   \label{fig:ipriortime}
 \end{figure}
 
-The main sticking point with the estimation procedure is the involvement of the $n\times n$ kernel matrix, for which its inverse is needed.
+The main sticking point with the estimation procedure is the involvement of the $n\times n$ kernel matrix, for which an inverse is needed.
 This requires $O(n^2)$ storage and $O(n^3)$ computational time.
 %The Nyström method of approximating the kernel matrix reduces complexity to $O(nm)$ storage and approximately $O(nm^2)$, and is highly advantageous if $m \ll n$.
 The computational issue faced by I-priors are mirrored in GPR, so the methods to overcome these computational challenges in GPR can be explored further.
@@ -87,7 +87,7 @@ However, most efficient computational solutions exploit the nature of the SE ker
 Nonetheless, we suggest the following as considerations for future work:
 \begin{enumerate}
   \item \textbf{Sparse variational approximations}. \index{variational inference} Variational methods have seen an active development in recent times. By using inducing points \citep{titsias2009variational} or stochastic variational inference \citep{hensman2013gaussian}, such methods can greatly reduce computational storage and speed requirements. A recent paper by \citet{cheng2017variational} also suggests a variational algorithm with linear complexity for GPR-type models.
-  \item \textbf{Accelerating the EM algorithm}. \index{EM algorithm!accelerating} Two methods can be explored. The first is called parameter-expansion EM algorithm (PXEM) by \citet{liu1998parameter}, which has been shown to be promising for random-effects type models. It involves correcting the M-step by a `covariance adjustment', so that extra information can be capitalised on to improve convergence rates. The second is a quasi-Newton acceleration of the EM algorithm as proposed by \citet{lange1995quasi}. A slight change to the EM gradient algorithm in the M-step steers the EM algorithm to the Newton-Raphson algorithm, thus exploiting the benefits of the EM algorithm in the early stages (monotonic increase in likelihood) and avoiding the pitfalls of Newton-Raphson (getting stuck in local optima). Both algorithms require an in-depth reassessment of the EM algorithm to be tailored to I-prior models.
+  \item \textbf{Accelerating the EM algorithm}. \index{EM algorithm!accelerating} Two methods can be explored. The first is called parameter-expansion EM algorithm (PXEM) by \citet{liu1998parameter}, which has been shown to be promising for random-effects type models. It involves correcting the M-step by a ``covariance adjustment'', so that extra information can be capitalised on to improve convergence rates. The second is a quasi-Newton acceleration of the EM algorithm as proposed by \citet{lange1995quasi}. A slight change to the EM gradient algorithm in the M-step steers the EM algorithm to the Newton-Raphson algorithm, thus exploiting the benefits of the EM algorithm in the early stages (monotonic increase in likelihood) and avoiding the pitfalls of Newton-Raphson (getting stuck in local optima). Both algorithms require an in-depth reassessment of the EM algorithm to be tailored to I-prior models.
 \end{enumerate}
 
 \hClosingStuffStandalone

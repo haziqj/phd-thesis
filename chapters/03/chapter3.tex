@@ -23,10 +23,10 @@
 
 \newcommand{\funder}{\rho}  % variable used for Fréchet/Gâteaux
 
-We are interested in calculating the Fisher information for our unknown regression function $f$ (the parameter to be estimated) in \cref{eq:model1}, subject to \cref{eq:model1ass} and $f\in\cF$, an RKKS.
-Unlike in the traditional case, $\cF$ may be infinite dimensional, and hence care must be taken when computing derivatives with respect to $f$ when this is the case.
-If $\cF$ possesses an orthonormal basis, as all Hilbert spaces do, then one could define the derivative of the functional $\funder:\cF\to\bbR$ componentwise with respect to the orthonormal basis, as in the finite-dimensional case.
-This is analogous to the usual concept of   partial derivatives.
+We are interested in calculating the Fisher information for our unknown regression function $f$ (the parameter to be estimated) in \cref{eq:model1}, subject to \cref{eq:model1ass} and $f\in\cF$, a reproducing kernel Kreĭn space (RKKS).
+Usually, the Fisher information pertains to finite-dimensional parameters, but as $\cF$ may be infinite dimensional, care must be taken when computing derivatives with respect to $f$.
+For function spaces that possess an orthonormal basis, which all Hilbert spaces do, then one could define the derivative of the functional $\funder:\cF\to\bbR$ componentwise with respect to the orthonormal basis, as in the finite-dimensional case.
+This is analogous to the usual concept of partial derivatives.
 
 However, the notion of partial derivatives does not generalise to arbitrary topological vector spaces for two reasons.
 Firstly, general spaces may not have an orthonormal basis \citep[Sec. 5, p. 76]{tapia1971diff}.
@@ -34,6 +34,8 @@ Secondly, componentwise derivatives, which are in essence limits taken component
 For these reasons, there is a need to consider the rigorous concepts of differentiation suitable for infinite-dimensional vector spaces provided by Fréchet and Gâteaux derivatives.
 These concepts are introduced in \cref{sec:fihilbert}, prior to the actual derivation of the Fisher information of the regression function in \cref{sec:firegfun}.
 
+\index{I-prior}
+\index{maximum entropy}
 In the remaining sections, we discuss the notion of prior distributions for regression functions, and how one might assign a suitable prior.
 In our case, we choose an objective prior following \citep{jaynes1957a,jaynes1957b,jaynes2003probability}: in the absence of any prior knowledge, a prior distribution which maximises entropy should be used.
 As it turns out, the entropy maximising prior for $f$ is Gaussian with mean chosen a priori and covariance kernel proportional to the Fisher information.
@@ -69,7 +71,7 @@ This suggests that the data only allows us to provide an estimation to the funct
 In other words, it would be futile to consider functions in a space larger than this, and hence there is an element of dimension reduction here, especially when $\dim(\cF) \gg n$.
 
 By equipping the subspace $\cF_n$ with the inner product \cref{eq:Fninnerprod}, $\cF_n$ is revealed to be an RKHS with reproducing kernel equal to the Fisher information for $f$.
-Importantly, functions in the subspace $\cF_n$ are structurally similar to the functions in the parent space $\cF$ (though their topologies may differ).
+Importantly, since $\cF_n$ as in \cref{eq:subspaceFn} is the pre-Hilbert space whose completion as $n\to\infty$ is $\cF$, functions in the subspace $\cF_n$ contain ``similarly shaped'' functions as in the parent space $\cF$.
 The problem at hand then boils down to a Gaussian process regression using the kernel of the RKHS $\cF_n$, which is the Fisher information for $f$.
 
 \hClosingStuffStandalone

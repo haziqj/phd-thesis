@@ -92,7 +92,7 @@ Results for the methods listed above were extracted from the in-depth study by \
 These are all tabulated in \cref{tab:cardiac}.
 
 \begin{table}[htb]
-  \caption[Mean out-of-samle misclassification rates for the cardiac arrhythmia data set]{Mean out-of-sample misclassification rates and standard errors in parantheses for 100 runs of various training ($s$) and test ($451-s$) sizes for the cardiac arrhythmia binary classification task.}
+  \caption[Mean out-of-sample misclassification rates for the cardiac arrhythmia data set]{Mean out-of-sample misclassification rates and standard errors in parantheses for 100 runs of various training ($s$) and test ($451-s$) sizes for the cardiac arrhythmia binary classification task.}
   \label{tab:cardiac}
   \centering
   \begin{tabular}{l r r r}
@@ -126,10 +126,10 @@ These are all tabulated in \cref{tab:cardiac}.
 
 Of the three I-probit models, the fBm model performed the best.
 That it performed better than the canonical linear I-probit model is unsurprising, since an underlying smooth function to model the latent variables is expected to generalise better than a rigid straight line function.
-The poor performance of the SE I-probit model may be due to the fact that the lengthscale parameter was not estimated (fixed at $l=1$), but then again, we notice reliable performance of the fBm even with fixed Hurst index ($\gamma = 0.5$).
+The poor performance of the SE I-probit model may be due to the fact that the lengthscale parameter was not estimated (fixed at $l=1$), but then again, we noticed reliable performance of the fBm even with fixed Hurst index ($\gamma = 0.5$).
 It can be seen that the fBm I-probit model also outperform the more popular machine learning algorithms out there including $k$-nearest neighbours, support vector machines and Gaussian process classification.
-It came second only to random forests, an ensemble learning method, which is also generally faster to train than Gaussian process-like regressions such as I-prior models.
-The time complexity of a random forest algorithm is $O(pqn\log(n))$ \citep{louppe2014understanding}, where $p$ is the number of variables used for training, $q$ is the number of random decision trees, and $n$ is the number of observations.
+It came second only to random forests, an ensemble learning method, which is also generally faster to train than Gaussian process-like regressions including I-prior models.
+The time complexity of a random forest algorithm is $O(pqn\log(n))$ \citep{louppe2014understanding}, where $p$ is the number of variables used for training, $q$ is the number of random decision trees, and $n$ is the sample size.
 
 \subsection{Meta-analysis of smoking cessation}
 \index{meta-analysis|(}
@@ -375,7 +375,7 @@ It also provides significant improvement over multiple linear regression.
 
 \subsection{Spatio-temporal modelling of bovine tuberculosis in Cornwall}
 \index{spatio-temporal model}
-\index{BTB data set}
+\index{bovine tuberculosis (BTB) data set}
 \index{ANOVA!kernel/RKKS}
 \index{fBm kernel/RKHS}
 \index{Pearson kernel/RKHS}

@@ -10,7 +10,7 @@ It was a case of exhausting all possible algorithmic remedies for existing sampl
 
 
 
-The basic idea behind HMC is to use Hamiltonian dynamics to propose new states in the posterior sampling, rather than relying on `random walks'.
+The basic idea behind HMC is to use Hamiltonian dynamics to propose new states in the posterior sampling, rather than relying on random walks.
 If one were to understand and use the geometry of the posterior density to one's benefit, then it should be possible to generate new proposal states with high probabilities of acceptance and move far away from the current state.
 Hamiltonian dynamics, like classical Newtonian mechanics, provides a framework for modelling the motion of a body in space across time $t$. 
 Additionally, Hamiltonian dynamics concatenates the position vector $x$ with its momentum $z$, and the motion of $x$ in $d$-dimensional space is then described through Hamilton's equations
@@ -67,7 +67,7 @@ The system of PDEs is solved using Euler's method, or the more commonly used lea
 \vspace{-1.5em}
 \noindent in which steps 1--3 are repeated $L$ times.
 
-Having knowing the formula for how particles move in space, we can use this information to treat random points drawn from some probability density as `particles'.
+Having knowing the formula for how particles move in space, we can use this information to treat random points drawn from some probability density as ``particles''.
 Randomness of position and momentum are prescribed through probability densities on each.
 Given some energy function $E(\theta)$ over states $\theta$, the \emph{canonical distribution} of the states $\theta$ (otherwise known as the \emph{canonical ensemble}) is given by the probability density function
 \[

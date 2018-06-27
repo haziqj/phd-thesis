@@ -1,5 +1,5 @@
 This appendix is intended as a reference relating to the multivariate normal,  matrix normal, truncated univariate and multivariate normal, gamma and inverse gamma distributions, which are collated from various sources for convenience.
-Of interest are their probability density functions, first and second moments, and entropy \colp{\cref{def:entropy}, page \pageref{def:entropy}}.
+Of interest are their probability density functions, first and second moments, and entropy \colp{\cref{def:entropy},  \mypageref{def:entropy}}.
 Note that in this part of the appendix, boldface notation for matrix and vectors are not used.
 
 \section{Multivariate normal distribution}
@@ -11,7 +11,7 @@ Note that in this part of the appendix, boldface notation for matrix and vectors
   Then,
   \begin{itemize}
     \item \textbf{Pdf}. $p(X|\mu,\Sigma) = (2\pi)^{-d/2}|\Sigma|^{-1/2}\exp\big(-\half (X-\mu)^\top\Sigma^{-1}(X-\mu)\big)$.
-    \item \textbf{Moments}. $\E X=\mu$, $\E [XX^\top] = \Sigma + \mu \mu^\top$.
+    \item \textbf{Moments}. $\E X=\mu$, $\E (XX^\top) = \Sigma + \mu \mu^\top$.
     \item \textbf{Entropy}. $H(p) = \half \log \abs{2\pi e \Sigma} = \half[d](1 + \log 2\pi) + \half\log\abs{\Sigma}$.
   \end{itemize}
 \end{definition}
@@ -228,7 +228,7 @@ A matrix normal random variable can be expressed as a multivariate normal random
 \begin{proof}
   In the exponent of the matrix normal pdf, we have
   \begin{align*}
-    -\half \tr \big(\Psi^{-1}(X-\mu)^\top &\Sigma^{-1}(X-\mu)\big) \\
+    -\half \tr \big(\Psi^{-1}&(X-\mu)^\top \Sigma^{-1}(X-\mu)\big) \\
     &= -\half \vecc(X-\mu)^\top \vecc(\Sigma^{-1}(X-\mu)\Psi^{-1}) \\
     &= -\half \vecc(X-\mu)^\top (\Psi^{-1} \otimes \Sigma^{-1}) \vecc(X-\mu) \\
     &= -\half (\vecc X- \vecc \mu)^\top (\Psi \otimes \Sigma)^{-1} (\vecc X- \vecc \mu).     
@@ -241,10 +241,10 @@ Some useful properties of the matrix normal distribution are listed:
 \begin{itemize}
   \item \textbf{Expected values}.
   \begin{align*}
-    \E (X-\mu)(X-\mu)^\top &= \tr(\Psi)\Sigma \in \bbR^{n\times n} \\
-    \E (X-\mu)^\top(X-\mu) &= \tr(\Sigma)\Psi \in \bbR^{m\times m} \\
-    \E [XAX^\top] &= \tr(A^\top\Psi)\Sigma + \mu A\mu^\top \\
-    \E [X^\top BX] &= \tr(\Sigma B^\top)\Psi + \mu^\top B\mu \\   
+    \E [(X-\mu)(X-\mu)^\top] &= \tr(\Psi)\Sigma \in \bbR^{n\times n} \\
+    \E [(X-\mu)^\top(X-\mu)] &= \tr(\Sigma)\Psi \in \bbR^{m\times m} \\
+    \E (XAX^\top) &= \tr(A^\top\Psi)\Sigma + \mu A\mu^\top \\
+    \E (X^\top BX) &= \tr(\Sigma B^\top)\Psi + \mu^\top B\mu \\   
     \E [X CX] &=  \Sigma C^\top\Psi  + \mu C \mu \\    
   \end{align*} 
   \item \textbf{Transpose}. $X^\top \sim \MN_{m,n}(\mu^\top, \Psi, \Sigma)$.
@@ -272,7 +272,7 @@ Some useful properties of the matrix normal distribution are listed:
       \E X^2 = \sigma^2 + \mu^2 + \sigma^2  \frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{C}   + 2\mu\sigma \frac{\phi(\alpha) - \phi(\beta)}{C} \\
       \Var X = \sigma^2 \left[ 1 +  \frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{C} - \left(\frac{\phi(\alpha) - \phi(\beta)}{C}\right)^2 \right]
     \end{gather*}
-    \item \textbf{Entropy}.
+    \item \textbf{Entropy}.\vspace{-5pt}
     \begin{align*}
       H(p) 
       &= \half\log 2\pi e\sigma^2 + \log C + \frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{2C} \\
@@ -395,7 +395,7 @@ We present some results that we have not previously seen before elsewhere.
     \]
     and the second moments $\E [X - \mu]^2$ are given by
     \[
-      \E [X_i - \mu_i]^2 =
+      \E (X_i - \mu_i)^2 =
       \begin{cases}
         \sigma_i^2 + (\mu_j-\mu_i)(\E X_i - \mu_i) 
         + \sigma_i\sigma_j C^{-1} \E_Z \left[Z \phi_i 

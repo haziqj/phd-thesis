@@ -7,7 +7,7 @@ In addition, we also discuss considerations to take into account if estimation o
 
 \index{Monte Carlo integration}
 \index{Geweke-Hajivassiliou-Keane (GHK) simulator}
-The issue at hand here is that for $m>4$, the evaluation of the class probabilities in \cref{eq:pij} is computationally burdensome using classical methods such as quadrature methods \citet{geweke1994alternative}.
+The issue at hand here is that for $m>4$, the evaluation of the class probabilities in \cref{eq:pij} is computationally burdensome using classical methods such as quadrature methods \citep{geweke1994alternative}.
 As such, simulation techniques are employed instead.
 The simplest strategy to overcome this is a frequency simulator (otherwise known as Monte Carlo integration): obtain random samples from $\N_{m}\big(\bmu(x_i), \bPsi^{-1}\big)$, and calculate how many of these samples fall within the required  region.
 This method is fast and yields unbiased estimates of the class probabilities.

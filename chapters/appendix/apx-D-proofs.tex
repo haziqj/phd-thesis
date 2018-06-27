@@ -20,26 +20,26 @@ the proof follows directly.
 
 Recall that for $Y \sim \tN(\mu,\sigma^2,-\infty,b)$, for some function $g$ of $Y$, we have that
 \[
-  \E g(Y) = \Phi(\beta)^{-1} \int [y < b] \cdot g(y)  \phi(y|\mu,\sigma^2) \dint y,
+  \E [g(Y)] = \Phi(\beta)^{-1} \int [y < b] \cdot g(y)  \phi(y|\mu,\sigma^2) \dint y,
 \]
 and in particular, we have
 \begin{align}
-  \E[Y - \mu] &= -\sigma \frac{\phi(\beta)}{\Phi(\beta)} \label{eq:tnXminMu} \\
-  \E[Y - \mu]^2 - \sigma^2 &= -\sigma^2   \frac{ \beta\phi(\beta)}{\Phi(\beta)} \label{eq:tnXminMusq}
+  \E(Y - \mu) &= -\sigma \frac{\phi(\beta)}{\Phi(\beta)} \label{eq:tnXminMu} \\
+  \E(Y - \mu)^2 - \sigma^2 &= -\sigma^2   \frac{ \beta\phi(\beta)}{\Phi(\beta)} \label{eq:tnXminMusq}
 \end{align}
 where $\beta = (b - \mu)/\sigma$.
 For the conically truncated multivariate normal distribution $X \sim \tN_d(\mu,\Sigma,\cA_j)$, where $\Sigma = \diag(\sigma_1^2,\dots,\sigma_d^2)$, the independence structure of $\Sigma$ makes it possible to consider the expectations of each of the components separately by marginalising out the rest of the components. 
 For simplicity, denote $p(x_k) = \phi(x_k|\mu_k,\sigma_k) = \sigma^{-1}_k \phi(\frac{x_k - \mu_k}{\sigma_k})$.
 For $i \neq j$, we have
 \begin{align}
-  \E g(X_i)
+  \E [g(X_i)]
   &= C^{-1} \idotsint [x_k < x_j, \forall k \neq j] \cdot g(x_i) \prod_{k=1}^d p(x_k) \dint x_1 \cdots \dint x_d \nonumber \\
   &= C^{-1} \frac{\Phi((x_j-\mu_j)/\sigma_j)}{\Phi((x_j-\mu_j)/\sigma_j)} \iint [x_i < x_j] \cdot g(x_i) p(x_i) p(x_j) \mathop{\prod_{k=1}^d}_{k \neq i,j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  \dint x_i \dint x_j \nonumber \\
   &= C^{-1}  \int \E_{X_i\sim\tN(\mu_i,\sigma_i^2,-\infty,x_j)} [g(X_i)] \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right)  p(x_j)\dint x_j \label{eq:tnproofi}
   \end{align}
 where $C$ is the normalising constant for $X$, while for the $j$'the component we have
 \begin{align}
-  \E g(X_j)
+  \E [g(X_j)]
   &= C^{-1} \idotsint  [x_k < x_j, \forall k \neq j] \cdot g(x_j)  \prod_{k=1}^d p(x_k) \dint x_1 \cdots \dint x_d \nonumber \\
   &= C^{-1} \int  g(x_j)  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right) p(x_j) \dint x_d. \label{eq:tnproofj}  
 \end{align}
@@ -65,7 +65,7 @@ where we have made use of Lemma \ref{lem:EZgZ} in the second last step.
 
 For the second moments, plug in \cref{eq:tnXminMusq} for $g(X_i)= (X_i - \mu_i)^2 - \sigma_i^2$ in \cref{eq:tnproofi} to get
 \begin{align*}
-  \E [X_i - \mu_i]^2 - \sigma_i^2
+  \E (X_i - \mu_i)^2 - \sigma_i^2
   ={}& - \sigma_i^{\cancel{2}} C^{-1} \int   
   \myoverbrace{\frac{x_j - \mu_i}{\cancel{\sigma_i}}}{\hidewidth x_j - \mu_i - \mu_j + \mu_j \hidewidth} \cdot
   \frac{\phi\big( (x_j - \mu_i) / \sigma_i \big)}{\Phi\big( (x_j - \mu_i) / \sigma_i \big)}
@@ -93,7 +93,7 @@ For the second moments, plug in \cref{eq:tnXminMusq} for $g(X_i)= (X_i - \mu_i)^
 
 And similarly, for the $j$'th component
 \begin{align*}
-  \E [X_j - \mu_j]^2
+  \E (X_j - \mu_j)^2
   &= C^{-1} \int (x_j - \mu_j)^2  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{x_j - \mu_k}{\sigma_k} \right) p(x_j) \dint x_j \\
    &= C^{-1} \sigma_j^2 \int z^2  \mathop{\prod_{k=1}^d}_{k \neq j} \Phi \left( \frac{z\sigma_j + \mu_j - \mu_k}{\sigma_k} \right) p(x_j) \dint z \\
    &= C^{-1} \sigma_j^2 

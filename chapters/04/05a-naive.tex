@@ -17,7 +17,7 @@ The class correlations are manifest themselves in the variance of the errors $\b
 \index{ANOVA!kernel/RKKS|)}
 Denote the regression function $f$ in \cref{eq:naiveclassmod} on the set $\cX\times\cM$ as $f(x_i,j) = \alpha_j + f_j(x_i)$.
 This regression function corresponds to an ANOVA decomposition of the spaces $\cF_\cM$ and $\cF_\cX$ of functions over $\cM$ and $\cX$ respectively. 
-That is, $\cF = \cF_\cM \oplus (\cF_\cM \otimes \cF_\cX)$ is a decomposition into the main effects of `class', and an interaction effect of the covariates for each class.
+That is, $\cF = \cF_\cM \oplus (\cF_\cM \otimes \cF_\cX)$ is a decomposition into the main effects of class, and an interaction effect of the covariates for each class.
 Let $\cF_\cM$ and $\cF_\cX$ be RKHSs respectively with kernels $a:\cM\times\cM\to\bbR$ and $b_\eta:\cX\times\cX\to\bbR$.
 Then, the ANOVA RKKS $\cF$ possesses the reproducing kernel $h_\eta:(\cX \times \cM)^2 \to \bbR$ as defined by
 \begin{align}\label{eq:anovaclass}

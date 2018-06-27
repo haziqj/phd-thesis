@@ -71,7 +71,7 @@
 \begin{document}
 
 We present analyses of real-data examples using the I-probit model for a variety of applicaitons, namely binary and multiclass classification, meta-analysis, and spatio-temporal modelling of point processes.
-Examples in this section have been analysed using in \proglang{R} using the in-development \pkg{iprobit} package written by us.
+Examples in this section have been analysed using in \proglang{R} using the in-development \pkg{iprobit} package \citep{jamil2018riprobit} written by us.
 Code for replication is provided at \url{http://myphdcode.haziqj.ml}.
 All of these examples had assumed a fixed error precision $\bPsi = \bI_m$.
 
@@ -128,7 +128,6 @@ As expected, the lower bound value increases over time until a convergence crite
 \index{k-nearest neighbours@$k$-nearest neighbours}
 \index{support vector machine}
 \index{Lasso}
-\index{logistic}
 To measure predictive ability, we fit the I-probit models on a random subset of the data and obtain the out-of-sample test error rates from the remaining held-out observations.
 We then compare the results against popular machine learning classifiers, namely: 1) linear and quadratic discriminant analysis (LDA/QDA); 2) $k$-nearest neighbours; 3) support vector machines (SVM) \citep{steinwart2008support}; 4) Gaussian process classification \citep{rasmussen2006gaussian}; 5) random forests \citep{breiman2001random}; 6) nearest shrunken centroids (NSC) \citep{tibshirani2002diagnosis}; and 7) L-1 penalised logistic regression \citep{friedman2001elements}.
 The experiment is set up as follows:
@@ -145,7 +144,7 @@ Results for the methods listed above were extracted from the in-depth study by \
 These are all tabulated in \cref{tab:cardiac}.
 
 \begin{table}[htb]
-  \caption[Mean out-of-samle misclassification rates for the cardiac arrhythmia data set]{Mean out-of-sample misclassification rates and standard errors in parantheses for 100 runs of various training ($s$) and test ($451-s$) sizes for the cardiac arrhythmia binary classification task.}
+  \caption[Mean out-of-sample misclassification rates for the cardiac arrhythmia data set]{Mean out-of-sample misclassification rates and standard errors in parantheses for 100 runs of various training ($s$) and test ($451-s$) sizes for the cardiac arrhythmia binary classification task.}
   \label{tab:cardiac}
   \centering
   \begin{tabular}{l r r r}
@@ -179,10 +178,10 @@ These are all tabulated in \cref{tab:cardiac}.
 
 Of the three I-probit models, the fBm model performed the best.
 That it performed better than the canonical linear I-probit model is unsurprising, since an underlying smooth function to model the latent variables is expected to generalise better than a rigid straight line function.
-The poor performance of the SE I-probit model may be due to the fact that the lengthscale parameter was not estimated (fixed at $l=1$), but then again, we notice reliable performance of the fBm even with fixed Hurst index ($\gamma = 0.5$).
+The poor performance of the SE I-probit model may be due to the fact that the lengthscale parameter was not estimated (fixed at $l=1$), but then again, we noticed reliable performance of the fBm even with fixed Hurst index ($\gamma = 0.5$).
 It can be seen that the fBm I-probit model also outperform the more popular machine learning algorithms out there including $k$-nearest neighbours, support vector machines and Gaussian process classification.
-It came second only to random forests, an ensemble learning method, which is also generally faster to train than Gaussian process-like regressions such as I-prior models.
-The time complexity of a random forest algorithm is $O(pqn\log(n))$ \citep{louppe2014understanding}, where $p$ is the number of variables used for training, $q$ is the number of random decision trees, and $n$ is the number of observations.
+It came second only to random forests, an ensemble learning method, which is also generally faster to train than Gaussian process-like regressions including I-prior models.
+The time complexity of a random forest algorithm is $O(pqn\log(n))$ \citep{louppe2014understanding}, where $p$ is the number of variables used for training, $q$ is the number of random decision trees, and $n$ is the sample size.
 
 \subsection{Meta-analysis of smoking cessation}
 \index{meta-analysis|(}
@@ -454,17 +453,15 @@ It also provides significant improvement over multiple linear regression.
 
 \subsection{Spatio-temporal modelling of bovine tuberculosis in Cornwall}
 \index{spatio-temporal model}
-\index{BTB data set}
+\index{bovine tuberculosis (BTB) data set}
 \index{ANOVA!kernel/RKKS}
 \index{fBm kernel/RKHS}
 \index{Pearson kernel/RKHS}
 
-
-
 Data containing the number of breakdows of bovine tubercolosis (BTB) in Cornwall, the locations of the infected animals, and the year of occurence is analysed.
 The interest, as motivated by veterinary epidimiology, is to understand whether or not there is spatial segregation of the infection of the herds, and whether there is a time-element to the presence or absence of this spatial segregation.
 There has been previous work done to analyse this data set.
-\citet{diggle2005nonparametric} developed a nonparametric method to estimate spatial segregation using a multivariate point process.
+\citet{diggle2005nonparametric} developed a non-parametric method to estimate spatial segregation using a multivariate point process.
 The occurrences are modelled as Poisson point processes, and spatial segregation is said to have occured if the model-estimated type-specific breakdown probabilities at any given location are not significantly different from the sample proportions.
 The authors estimated the probabilities via kernel regression, and the test statistic of interest had to be estimated via Monte Carlo methods.
 Other works include \citet{diggle2013spatial}, who used a fully Bayesian approach for spatio-temporal multivariate log-Gaussian Cox processes, which is implemented in the \proglang{R} package \pkg{lgcp} \citep{taylor2013lgcp}.

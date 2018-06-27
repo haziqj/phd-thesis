@@ -108,8 +108,8 @@ We find that the many advantages of the normal I-prior methodology  transfer ove
 
 This work presents an extension of the normal I-prior methodology to fit categorical response models using probit link functions---a methodology we call the I-probit.
 The main motivation behind this work is to overcome the drawbacks of modelling probabilities using the normal I-prior model.
-We assumed latent variables that represent `class propensities' exist, modelled these using a normal I-prior, and simply transformed them via a probit link function.
-In this way, all of the advantages of the I-prior methodology seen for the normal model are preserved for binary and multinomial regression as well.
+We assumed continuous latent variables that represent ``class propensities'' exist, which we modelled using normal I-priors, and transformed them into probabilities using a probit link function.
+In this way, the advantages of the original I-prior methodology are preserved for categorical response models as well.
 
 The core of this work explores ways in which to overcome the intractable integral presented by the I-probit model in \cref{eq:iprobitlik}.
 Techniques such as quadrature methods, Laplace approximation and MCMC tend to fail, or are unsatisfactorily slow to accomplish.

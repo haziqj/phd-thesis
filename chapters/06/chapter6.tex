@@ -181,7 +181,7 @@ Note that as $c,d \to 0$ in the inverse gamma distribution we get the Jeffreys p
 \begin{remark}
   \index{spike-and-slab prior}
   The BVS model \cref{eq:km} together with the choice of Bernoulli priors on $\gamma$ and a normal prior $\N_p(\bzero,\bV_\beta)$ for $\bbeta$ can be seen a \emph{spike-and-slab prior} prior for linear regression models, a mixture of a point mass at zero and a normal density \citep{mitchell1988bayesian,geweke1996variable}.
-  Write $\btheta = (\gamma_1\beta_1,\dots,\gamma_p\beta_p)^\top$, which are interpreted as the `model-specific regression coefficients'.
+  Write $\btheta = (\gamma_1\beta_1,\dots,\gamma_p\beta_p)^\top$, which are interpreted as the ``model-specific'' regression coefficients.
   Then, the prior on $\btheta$ is equivalently written
   \[
     \btheta|\gamma \sim
@@ -346,7 +346,7 @@ We also make a comparison the variable selection performance of the Lasso, which
 For clarity, the Lasso model employed in the simulations is of a frequentist regularisation framework as per \citet{tibshirani1996regression}, and is neither a Bayesian variable selection model as described earlier, nor a fully Bayes implementation as per \citet{park2008bayesian}.
 We felt it interesting to compare the Lasso as it is widely used for variable selection of linear models.
 
-\index{SNR|(}
+\index{signal-to-noise ratio (SNR)}
 The experiment is to select from $p=100$ variables of a $n=150$ sample size artificial dataset which has pairwise correlations between the variables. This was inspired by the studies done by \citet{George1993} and \citet{Kuo1998} in their respective papers, albeit on a larger scale (in theirs, $p=30$).
 Five different scenarios were looked at. 
 For each scenario, only $s$ out of 100 variables were selected to form the ``true'' model and generate the responses according to the linear model $\by\sim\N_{100}(\bX\bbeta,\sigma^2 \bI_{150})$. 
@@ -420,17 +420,15 @@ We also inspect the sensitivity of the hyperprior choice of $\pi_j$ for the indi
 From the plot, it is seen that for high SNR scenarios, setting $\pi_j$ too low increases the number of false exclusions.
 Conversely, for low SNR scenarios, setting $\pi_j$ too high increases the number of false inclusions.
 This makes sense: when the true model size is small, then setting $\pi_j$ too high encourages variables to be retained in the model.
-While the optimal $\pi_j$ corresponds directly to the true SNR (e.g. SNR = 10\% performs best under $\pi_j=0.10$), \cref{fig:simres2} makes a case for $\pi_j=0.5$ to be a `safe choice' in the face of prior ignorance on model size.
+While the optimal $\pi_j$ corresponds directly to the true SNR (e.g. SNR = 10\% performs best under $\pi_j=0.10$), \cref{fig:simres2} makes a case for $\pi_j=0.5$ to be a ``safe choice'' in the face of prior ignorance on model size.
 
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.95\textwidth]{figure/06-sens_analysis}
-  \caption[Sensitivity analysis of hyperprior choice on number of false choices]{Average number of false choices (false inclusions or false exlusions) for the five different scenarios (SNR varied between 90\%, 75\%, 50\%, 25\% and 10\%) with different hyperprior setting for $\gamma_j\sim\Bern(\pi_j)$.}
+  \caption[Sensitivity analysis of hyperprior choice on number of false choices]{Average number of false choices (false inclusions or false exlusions) for the five different scenarios (SNR varied between 90\%, 75\%, 50\%, 25\% and 10\%) with different hyperprior settings for $\gamma_j\sim\Bern(\pi_j)$.}
   \label{fig:simres2}
 \end{figure}
 \vspace{-1em}
-
-\index{SNR|)}
 
 \section{Examples}
 
@@ -477,7 +475,7 @@ $X_6$ &0.275  &$0.003  \ (0.10)$ \\
 \end{tabular}
 \end{table}
 
-Notice that \cref{tab:aerobic} reports only on four of a possible $2^6 = 64$ models, and realise that the sum of the posterior model probabilities add to one.
+Notice that \cref{tab:aerobic} reports only on four out of  $2^6 = 64$ possible models, but the sum of the posterior model probabilities add to one.
 Naturally, models which are deemed important by virtue of data evidence are sampled more often, and in fact, models which are unpromising may not even get sampled.
 So, MCMC methods does not need to list out all possible models because models which are never visited in the posterior state space are assigned a probability of zero.
 The highest posterior model was found to be the model with the variables $X_1$, $X_3$ and $X_5$ (PMP = 0.564).
@@ -486,7 +484,7 @@ In \cref{fig:aerobic-densplot}, we can see that the point mass at zero overwhelm
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{figure/06-aerobic_coef}
-  \caption[Posterior density plots of the regression coefficients for the aerobic data set.]{Posterior density plots of the regression coefficients $\btheta$ for the aerobic data set. The `spike' at zero observed in the density plots for $X_2$, $X_4$ and $X_6$ is indicative of these variable being dropped often in the posterior samples.}
+  \caption[Posterior density plots of the regression coefficients for the aerobic data set.]{Posterior density plots of the regression coefficients $\btheta$ for the aerobic data set. The spike at zero observed in the density plots for $X_2$, $X_4$ and $X_6$ is indicative of these variable being dropped often in the posterior samples.}
   \label{fig:aerobic-densplot}
 \end{figure}
 

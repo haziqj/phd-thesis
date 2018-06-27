@@ -130,7 +130,7 @@ Variational methods are widely discussed in the machine learning literature, but
 Although variational inference is typically seen as a fully Bayesian method, whereby approximate posterior densities are sought for the latent variables and parameters, our goal is to apply variational inference to facilitate a pseudo maximum likelihood approach.
 
 Consider employing an EM algorithm, similar to the one seen in the previous chapter, to estimate I-probit models.
-This time, treat both the latent propensities $\by^*$ and the I-prior random effects $\bw$ as `missing', so the complete data is $\{\by,\by^*,\bw\}$.
+This time, treat both the latent propensities $\by^*$ and the I-prior random effects $\bw$ as ``missing'', so the complete data is $\{\by,\by^*,\bw\}$.
 Now, due to the independence of the observations $i=1,\dots,n$, the complete data log-likelihood is
 \begin{align}
   L(\theta |\by,\by^*,\bw) 
@@ -252,7 +252,7 @@ The posterior density for $\lambda$ was very positively skewed, and this contrib
 
 \begin{table}[hbt]
 \centering
-\caption{Table comparing the estimated parameter values, (marginal) log-likelihood values, and also time taken for the three estimation methods.}
+\caption[Table comparing various estimation methods for I-probit model]{Table comparing the estimated parameter values, (marginal) log-likelihood values, and also time taken (in seconds) for the three estimation methods.}
 \label{tab:compreiprobit}
 \begin{tabular}{@{}lrrr@{}}
 \toprule
@@ -294,7 +294,7 @@ However, parts of the Laplace likelihood are poorly approximated resulting in a 
 Laplace's method is known to yield poor approximations to probit model likelihoods \citep{kuss2005assessing}.
 On the other hand, the log-likelihood calculated using a Hamiltonian MC sampler (treating parameters as fixed values) yields a slightly different graph: the log-likelihood increases as values of $\alpha$ become larger, resulting in the upwards inflection of the log-likelihood surface (as opposed to a downward inflection seen in the variational and Laplace likelihood).
 
-In terms of predictive abilities, both the variational and Hamiltonian MC methods, even though the posteriors are differently estimated, have good predictive performance as indicated by their error rates and Brier scores\footnote{\index{Brier score}The Brier score is defined as $\frac{1}{n}\sum_{i=1}^n\sum_{j=1}^m (y_{ij} - \hat p_{ij})$ with $y_{ij}=1$ if $y_i = j$ and zero otherwise, and $\hat p_{ij}$ is the fitted probability $\hat\Prob(y_i = j)$. It gives a better sense of ``training/test error'', compared to simple misclassification rates, by accounting for the forecasted probabilities of the events happening. The Brier score is a proper scoring rule, i.e. it is uniquely minimised by the true probabilities.}.
+In terms of predictive abilities, both the variational and Hamiltonian MC methods, even though the posteriors are differently estimated, have good predictive performance as indicated by their error rates and Brier scores\footnote{\index{Brier score}The Brier score is defined as $\frac{1}{n}\sum_{i=1}^n\sum_{j=1}^m (y_{ij} - \hat p_{ij})$ with $y_{ij}=1$ if $y_i = j$ and zero otherwise, and $\hat p_{ij}$ is the fitted probability $\hat\Prob(y_i = j)$. It gives a better sense of training/test error, compared to simple misclassification rates, by accounting for the forecasted probabilities of the events happening. The Brier score is a proper scoring rule, i.e. it is uniquely minimised by the true probabilities.}.
 \cref{fig:exampleiprobitfit} shows that HMC is more confident of new data predictions compared to variational inference, as indicated by the intensity of the shaded regions (HMC is shaded stronger than variational EM).
 Laplace's method gave poor predictive performance.
 

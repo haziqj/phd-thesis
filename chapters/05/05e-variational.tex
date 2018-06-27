@@ -159,7 +159,7 @@ Specifically, when the error precision is of the form $\bPsi = \diag(\psi_1,\dot
 \vspace{-0.25em}
 The bulk of the computational effort required to evaluate $Q(\theta)$ stems from the trace involving the second moments of $\bw$, and the fact that $\bH_\eta^2$ needs to be reevaluated each time $\theta = \{\balpha,\eta\}$ changes.
 As discussed previously, each E-step takes $O(n^3m)$ time to compute the required first and second (approximate) posterior moments of $\bw$.
-Once this is done, we can use the `front-loading of the kernel matrices' trick described in \cref{sec:efficientEM1}, which effectively renders the evaluation of $Q$ to be linear in $\theta$ (after an initial $O(n^2)$ procedure at the beginning).
+Once this is done, we can use the ``front-loading of the kernel matrices'' trick described in \cref{sec:efficientEM1}, which effectively renders the evaluation of $Q$ to be linear in $\theta$ (after an initial $O(n^2)$ procedure at the beginning).
 
 As in the normal linear model, we employ a sequential update of the parameters (à la expectation conditional maximisation algorithm) by solving the first order conditions \index{ECM algorithm}
 \begingroup

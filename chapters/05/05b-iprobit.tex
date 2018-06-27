@@ -12,6 +12,9 @@ That is,
 \]
 With $y_i\iid\Cat(p_{i1},\dots,p_{im})$ for $i=1,\dots,n$, each $y_{ij}$ is distributed as Bernoulli with probability $p_{ij}$, $j=1,\dots,m$ according to the above formulation. 
 Now, assume that, for each $y_{i1}, \dots, y_{im}$, there exists corresponding \emph{continuous, underlying, latent variables} $y_{i1}^*, \dots, y_{im}^*$ such that\index{latent variable}\index{latent propensity}
+\begingroup
+\setlength{\abovedisplayskip}{7pt}
+\setlength{\belowdisplayskip}{12pt}
 \begin{align}\label{eq:latentmodel}
   y_i =
   \begin{cases}
@@ -21,13 +24,14 @@ Now, assume that, for each $y_{i1}, \dots, y_{im}$, there exists corresponding \
     m &\text{ if } y_{im}^* \geq y_{i2}^*, y_{i3}^*, \dots, y_{i\,m-1}^*. \\
   \end{cases}  
 \end{align}
+\endgroup
 In other words, 
 %$y_{ij} = [y_{ij}^* = \max_k y_{ik}^*]$.
 $y_{ij} = \argmax_{k=1}^m y_{ik}^*$.
 Such a formulation is common in economic choice models, and is rationalised by a utility-maximisation argument: an agent faced with a choice from a set of alternatives will choose the one which benefits them most.
 In this sense, the $y_{ij}^*$'s represent individual $i$'s \emph{latent propensities} for choosing alternative $j$.
 
-Instead of modelling the observed $y_{ij}$'s directly, we model instead the $n$ latent variables in each class $j=1,\dots,m$ according to the regression problem
+Instead of modelling the observed $y_{ij}$'s directly, we model instead, for observation $i=1,\dots,n$, the $m$ latent variables corresponding to each class or response category $j=1,\dots,m$ according to the regression problem
 \begin{equation}\label{eq:multinomial-latent}
   \begin{gathered}
     y_{ij}^* = \alpha + \alpha_j + f_j(x_i) + \epsilon_{ij} \\
@@ -39,13 +43,12 @@ We can see some semblance of this model with the one in \cref{eq:naiveclassiprio
 For now, write $\bmu(x_i) \in \bbR^m$ whose $j$'th component is $\alpha + \alpha_j + f_j(x_i)$, and realise that each $\by_{i \bigcdot}^* = (y_{i1}^*, \dots, y_{im}^*)^\top$ has the distribution $\N_m(\bmu(x_i), \bPsi^{-1})$, conditional on the data $x_i$,  the intercepts $\alpha,\alpha_1,\dots,\alpha_m$, the evaluations of the functions at $x_i$ for each class $f_1(x_i), \dots, f_m(x_i)$, and the error covariance matrix $\bPsi^{-1}$.
 
 \newcommand{\intset}{\{y_{ij}^* > y_{ik}^* \,|\, \forall k \neq j\}}
-The probability $p_{ij}$ of observation $i$ belonging to class $j$ is then calculated as 
+The probability $p_{ij}$ of observation $i$ belonging to class $j$ (or responding into category $j$) is then calculated as 
 \begin{align}
   p_{ij} 
   &= \Prob(y_i = j) \nonumber \\
   &= \Prob\big(\intset\big) \nonumber \\
   &= \idotsint\displaylimits_{\intset} \phi(y_{i1}^*, \dots, y_{im}^*|\bmu(x_i), \bPsi^{-1}) \dint y_{i1}^* \cdots \dint y_{im}^*,\label{eq:pij}
-%  =: g_{j}^{-1} ( \bmu(x_i) | \bPsi ),
 \end{align}
 where $\phi(\cdot|\bmu,\bSigma)$ is the density of the multivariate normal with mean $\bmu$ and variance $\bSigma$.
 This is the probability that the normal random variable $\by_{i \bigcdot}^*$ belongs to the set $\cC_j := \intset$, which are cones in $\bbR^m$.
@@ -70,9 +73,11 @@ This is similar to the naïve I-prior specification \cref{eq:naiveclassiprior}, 
 Importantly, the overall regression relationship still satisfies the ANOVA functional decomposition, because the $\alpha_j$'s sum to zero.
 We find that this approach, rather than the I-prior specification described in the naïve classification, bodes well down the line computationally.
 
-%\pagebreak
 We call the multinomial probit regression model of \cref{eq:latentmodel} subject to \cref{eq:multinomial-latent} and I-priors on $f_j \in \cF$, the \emph{I-probit model}.
 For completeness, this is stated again: for $i=1,\dots,n$, $y_i = \argmax_{k=1}^m y_{ik}^* \in \{1,\dots,m\}$, where, for $j=1,\dots,m$,
+\begingroup
+\setlength{\abovedisplayskip}{5pt}
+\setlength{\belowdisplayskip}{5.5pt}
 \begin{align}\label{eq:iprobitmod}
   \begin{gathered}
     y_{ij}^* = \alpha + \alpha_j + 
@@ -82,6 +87,7 @@ For completeness, this is stated again: for $i=1,\dots,n$, $y_i = \argmax_{k=1}^
     \bw_{i \bigcdot} := (w_{i1},\dots,w_{im})^\top \iid \N_m(\bzero,\bPsi).
   \end{gathered}
 \end{align}
+\endgroup
 The parameters of the I-probit model are denoted by $\theta = \{\alpha_1,\dots,\alpha_m,\eta,\bPsi \}$.
 To establish notation, let 
 \begin{itemize}
@@ -92,7 +98,7 @@ To establish notation, let
   \item $\bmu = \bone_n\balpha^\top + \bff$, whose $(i,j)$ entries are $\mu_{j}(x_i) = \alpha + \alpha_j + f_j(x_i)$; and
   \item $\by^* \in \bbR^{n \times m}$ denote the matrix containing $(i,j)$ entries $y_{ij}^*$, that is, $\by^* = \bmu + \bepsilon$, so $\by^*|\bw \sim \MN_{n,m}(\bmu = \bone_n\balpha^\top + \bH_\eta\bw, \bI_n, \bPsi^{-1})$ and $\vecc \by^* \sim \N_{nm}\big(\vecc (\bone_n\balpha^\top), \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n\big)$---note that the marginal distribution of $\by^*$ cannot be expressed as a matrix normal, except when $\bPsi=\bI_m$.
 \end{itemize}\index{matrix normal distribution}
-In the above, we have made use of matrix normal distributions,denoted by $\MN(\cdot,\cdot)$.
+In the above, we have made use of matrix normal distributions, denoted by $\MN(\cdot,\cdot)$.
 The definition and properties of matrix normal distributions can be found in \colp{\cref{apx:matrixnormal}, \mypageref{apx:matrixnormal}}.
 
 Before proceeding with estimating the I-probit model \cref{eq:iprobitmod}, we lay out several standing assumptions:

@@ -19,7 +19,7 @@ Kreĭn spaces are linear spaces endowed with a Hilbertian topology, characterise
 \end{definition}
 
 \begin{definition}[Kreĭn space]\label{def:krein}
-  An inner product space $\big(\cF,\ip{\cdot,\cdot}_\cF\big)$ is a \emph{Krein space} if there exists two Hilbert spaces $\big(\cF_+,\ip{\cdot,\cdot}_{\cF_+}\big)$ and $\big(\cF_-,\ip{\cdot,\cdot}_{\cF_-}\big)$ spanning $\cF$ such that
+  An inner product space $\big(\cF,\ip{\cdot,\cdot}_\cF\big)$ is a \emph{Kreĭn space} if there exists two Hilbert spaces $\big(\cF_+,\ip{\cdot,\cdot}_{\cF_+}\big)$ and $\big(\cF_-,\ip{\cdot,\cdot}_{\cF_-}\big)$ spanning $\cF$ such that
   \begin{itemize}
     \item All $f\in\cF$ can be decomposed into $f = f_+ + f_-$, where $f_+\in\cF_+$ and $f_- \in \cF_-$.
     \item This decomposition is orthogonal, i.e. $\cF_+ \cup \cF_- = \{0\}$, and $\ip{f_+,f_-}_\cF=0$ for all $f_+\in\cF_+$ and $f_-\in\cF_-$, with the inner product on $\cF$ defined below.
@@ -67,7 +67,7 @@ The strong topology on $\cF$ is defined to be the topology arising from the norm
 Now, we define an RKKS.
 
 \begin{definition}[Reproducing kernel Kreĭn space]
-  A Krein space $\cF$ of real-valued functions $f:\mathcal X \rightarrow \mathbb R$ on a non-empty set $\mathcal X$ is called a \emph{reproducing kernel Krein space} if the evaluation functional $\delta_x: f \mapsto f(x)$ is continuous on $\cF$, $\forall x \in \cX$, endowed with its strong topology (i.e. the topology of its associated Hilbert space $\cF_\cH$).
+  A Kreĭn space $\cF$ of real-valued functions $f:\mathcal X \rightarrow \mathbb R$ on a non-empty set $\mathcal X$ is called a \emph{reproducing kernel Kreĭn space} if the evaluation functional $\delta_x: f \mapsto f(x)$ is continuous on $\cF$, $\forall x \in \cX$, endowed with its strong topology (i.e. the topology of its associated Hilbert space $\cF_\cH$).
 \end{definition}
 
 \index{RKKS!uniqueness}
@@ -109,7 +109,7 @@ Indeed, for every RKKS $\cF$ of functions over a set $\cX$, there corresponds a 
 The analogue of the Moore-Aronszajn theorem holds partially for RKKS, up to uniqueness.
 That is, there is \emph{at least} one associated RKKS with kernel $\hXXR$ if and only if $h$ can be decomposed as the difference between two positive kernels $h_+$ and $h_-$ over $\cX$, i.e. $h=h_+-h_-$.
 The proof of this statement is rather involved, so is omitted in the interest of maintaining coherence to the discussion at hand.
-This subject has been studied by various authors; one may refer to works by \citet[Thm. 2 \& e.g. in Section 4]{alpay1991some}, and \citet[Thm. 2.28]{mary2003hilbertian}.
+This subject has been studied by various authors; one may refer to works by \citet[Thm. 2 \& E.g. in Sec. 4]{alpay1991some}, and \citet[Thm. 2.28]{mary2003hilbertian}.
 %\begin{lemma}[Non-uniqueness of RKKS for kernel]
 %  Let $h$ be a kernel over $\cX$.
 %  There is (at least) one associated RKKS with kernel $h$ if and only if $h$ can be decomposed as the difference between two positive kernels $h_+$ and $h_-$ over $\cX$, i.e. $h=h_+-h_-$.
@@ -118,7 +118,7 @@ This subject has been studied by various authors; one may refer to works by \cit
 %\begin{proof}
 %  The existence and (non-)uniqueness of an RKKS associated with a kernel $h$ relies on the ability to complete the span of $h(\cdot,x)$, much like in the proof of the Moore-Aronszajn theorem.
 %  As it turns out, this is rather involved, so is omitted in the interest of maintaining coherence to the discussion at hand.
-%  This subject has been studied by various authors, one may refer to a proof of this lemma in works by \citet[Theorem 2 \& Example in Section 4]{alpay1991some}, and \citet[Theorem 2.28]{mary2003hilbertian}.
+%  This subject has been studied by various authors, one may refer to a proof of this lemma in works by \citet[Thm. 2 \& Example in Section 4]{alpay1991some}, and \citet[Thm. 2.28]{mary2003hilbertian}.
 %\end{proof}
 
 The take-away message as we close this section is that there is no bijection, but a surjection, between the set of RKKS and the set of bivariate, symmetric functions over $\cX\times\cX$.

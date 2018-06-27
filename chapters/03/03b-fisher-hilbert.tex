@@ -279,13 +279,13 @@ Therefore, $\cI(\theta) = \E[- \nabla^2 L(\theta|Y)]$.
 The Fisher information $\cI(\theta)$ for $\theta$, much like the covariance operator, can be viewed in one of three ways: 
 \begin{enumerate}
   \item As its general form, i.e. an element in the tensor product space $\Theta\otimes\Theta$;
-  \item As an operator $\cI(\theta):\Theta\to\Theta$ defined by $\cI(\theta)(b) = \E[- \nabla^2 L(\theta|Y)](b)$; and finally
+  \item As an operator $\cI(\theta):\Theta\to\Theta$ defined by $\cI(\theta): b \mapsto \E[- \nabla^2 L(\theta|Y)](b)$; and finally
   \item As a bilinear form $\cI(\theta):\Theta\times\Theta\to\bbR$ defined by $\cI(\theta)(b,b') = \ip{-\E \nabla^2 L(\theta|Y)(b), b'}_\Theta$ $= \E [-\d^2 L(\theta|Y)(b,b') ]$.
 \end{enumerate}
 In particular, viewed as a bilinear form, the evaluation of the Fisher information for $\theta$ at two points $b$ and $b'$ in $\Theta$ is seen as the Fisher information between two continuous, linear functionals of $\theta$.
 %This is because the continuity of the linear differential operator ensures that the Fisher information is an element of the continuous dual $\Theta^*$.
 For brevity, we denote this $\cI(\theta_b,\theta_{b'})$, where $\theta_b = \ip{\theta,b}_\theta$ for some $b\in\Theta$.
-The natural isometry between $\Theta$ and $\Theta^*$ then allows us to write 
+The natural isometry between $\Theta$ and its continuous dual $\Theta^*$ then allows us to write 
 \begin{align}\label{eq:fisher-linear-functional}
   \cI(\theta_b,\theta_{b'}) = \ip{\cI(\theta), b \otimes b'}_{\Theta\otimes\Theta} = \big\langle\cI(\theta), \ip{\cdot,b}_\Theta \otimes \ip{\cdot,b'}_\Theta \big\rangle_{\Theta^*\otimes\Theta^*}.
 \end{align}

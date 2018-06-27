@@ -1,5 +1,5 @@
 \index{identifiability}
-The parameters in the standard linear multinomial probit model is well known to be unidentified \citep{Keane1992,train2009discrete}, and we find this to be the case in the I-probit model as well.
+The parameters in the standard linear multinomial probit model are well known to be unidentified \citep{Keane1992,train2009discrete}, and we find this to be the case in the I-probit model as well.
 Unrestricted probit models are not identified for two reasons.
 Firstly, an addition of a non-zero constant $a\in\bbR$ to the latent variables $y_{ij}^*$'s in \cref{eq:latentmodel} will not change which latent variable is maximal, and therefore leaves the model unchanged.
 It is for this reason that assumptions \ref{ass:A4} and \ref{ass:A5} are imposed.
@@ -82,7 +82,7 @@ Many possible specifications of the restriction on $\bPsi$ is possible, dependin
 \end{remark}
 \index{probit}
 
-\vspace{-0.1em}\index{independent of irrelevant alternatives}
+\vspace{-0.1em}\index{independent of irrelevant alternatives (IIA)}
 Now, we turn to a discussion of the role of $\bPsi$ in the model.
 In decision theory, the independence axiom states that an agent's choice between a set of alternatives should not be affected by the introduction or elimination of a choice option.
 The probit model is suitable for modelling multinomial data where the independence axiom, which is also known as the \emph{independence of irrelevant alternatives} (IIA) assumption, is not desired. 
@@ -98,7 +98,7 @@ Specifically, the off-diagonal elements $\bPsi_{jk}$ capture the correlations be
 Allowing all $m(m+1)/2$ covariance elements of $\bPsi$ to be non-zero leads to the \emph{full I-probit model}, and would not assume an IIA position.
 \cref{fig:iprobcovstr} illustrates the covariance structure for the marginal distribution of the latent propensities, $\bV_{y^*} = \bPsi \otimes \bH_\eta^2 + \bPsi^{-1} \otimes \bI_n$, and of the I-prior $\bV_f = \bPsi \otimes \bH_\eta^2$.
 
-\newcommand{\matcol}{lsered}
+\newcommand{\matcol}{lseblu}
 \begin{figure}[hbt]
 \vspace{-1em}
 \centering\hspace{-13pt}
