@@ -59,7 +59,7 @@ However, the Lasso in general produces estimates which are biased towards zero, 
 Further criticisms of the Lasso include its inability to select more than $n$ predictors in a $p>n$ situation, and poor performance when multicollinearity exists among the covariates.
 
 From a Bayesian perspective, regularisation is akin to placing priors on the $\beta_k$'s to shrink the effects of the $\beta_k$'s: the ridge regression has a Bayesian interpretation of placing normal priors on the regression coefficients, while the Lasso a Laplace or double exponential prior \citep{park2008bayesian}.
-The term adaptive shrinkage has been used for the method in which hyper-priors are placed on the scale parameter of the prior for the $\beta_k$'s.
+The term adaptive shrinkage has been used for the method in which hyperpriors are placed on the scale parameter of the prior for the $\beta_k$'s.
 The idea is to adaptively shape the prior depending on the importance of the variable in the regression model.
 Bayesian shrinkage includes the task of specifying tuning parameters, which could potentially affect chain mixing in a Markov chain Monte Carlo method (MCMC) procedure (which is often used).
 

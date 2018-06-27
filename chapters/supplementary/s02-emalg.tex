@@ -2,13 +2,13 @@
 %\index{expectation-maximisation algorithm|see{EM algorithm}}
 %\index{expectation conditional maximisation algorithm|see{ECM algorithm}}
 Often times, there are unobserved, random variables $\bw=\{w_1,\dots,w_n\}$ that are assumed to make up the data generative process, prescribed in the statistical model through the \emph{joint pdf} $p(\by,\bw|\theta)$.
-Examples of models that include latent variables are plenty: Gaussian mixture models, latent class analysis, factor models, random coefficient models, and so on.
-In order to obtain ML estimates through a direct maximisation of the likelihood, it is necessary to first marginalise out the latent variables via
+Examples of models that include latent variables are plentiful: Gaussian mixture models, latent class analysis, factor models, random coefficient models, and so on.
+In order to obtain maximum likelihood (ML) estimates through a direct maximisation of the likelihood, it is necessary to first marginalise out the latent variables,
 \begin{equation}\label{eq:varint}
   p(\by|\theta) 
   = \int 
   \myoverbrace{p(\by|\bw,\theta)p(\bw|\theta)}{p(\by,\bw|\theta)}
-  \dint \bw
+  \dint \bw,
 \end{equation}
 and obtain the \emph{marginal likelihood}.
 Note that the integral is replaced by a summation over all possible values in the case of discrete latent variables $\bw$.
@@ -41,7 +41,7 @@ Note that the objective function in \cref{eq:em1} forms an upper bound for the q
 \begin{align*}
   L(\theta|\by) - L(\theta^{(t)}|\by)
   \phantom{:}={}& \log \int p(\by|\bw,\theta)p(\bw|\theta) \, \frac{p(\bw|\by,\theta^{(t)})}{p(\bw|\by,\theta^{(t)})}  \dint\bw - \log p(\by|\theta^{(t)}) \\
-  \phantom{:}\geq{}& \int p(\bw|\by,\theta^{(t)}) \log \frac{p(\by|\bw,\theta)p(\bw|\theta)}{p(\bw|\by,\theta^{(t)})} \dint\bw \mycomment{(Jensen's inequality)} \\
+  \phantom{:}\geq{}& \int p(\bw|\by,\theta^{(t)}) \log \frac{p(\by|\bw,\theta)p(\bw|\theta)}{p(\bw|\by,\theta^{(t)})} \dint\bw \mycomment{\small (Jensen's inequality)}  \\
   \phantom{:}& - \log p(\by|\theta^{(t)})\int p(\bw|\by,\theta^{(t)}) \dint \bw \\
   \phantom{:}={}& \int p(\bw|\by,\theta^{(t)}) \log \frac{p(\by|\bw,\theta)p(\bw|\theta)}{p(\bw|\by,\theta^{(t)})p(\by|\theta^{(t)})} \dint\bw\\
   =:{}& Q(\theta|\theta^{(t)}).

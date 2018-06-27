@@ -295,7 +295,7 @@ Alternatively, the inverse-transform method using
   X = \mu + \sigma\Phi^{-1}\left( \Phi(\alpha) + UC \right)
 \]
 with $U\sim\Unif(0,1)$ will work too.
-Either of these methods will work reasonably well as long as the truncation region is not too far away from $\mu$, but neither is particularly fast.
+Either of these methods will work reasonably well as long as the truncation region is not too far away from $\mu$, but neither is particularly efficient.
 Efficient algorithms have been explored which are along the lines of either accept/reject algorithms \citep{robert1995simulation}, Gibbs sampling \citep{damien2001sampling}, or pseudo-random number generation algorithms \citep{chopin2011fast}.
 The latter algorithm is inspired by the Ziggurat algorithm \citep{marsaglia2000ziggurat} which is considered to be the fastest Gaussian random number generator.
 
@@ -315,7 +315,7 @@ The latter algorithm is inspired by the Ziggurat algorithm \citep{marsaglia2000z
 \end{definition}
 
 Generally speaking, there are no closed-form expressions for $\E [g(X)]$ for any well-defined functions $g$ on $X$.
-One strategy to obtain values such as $\E X$ (mean), $\E X^2$ (second moment) and $E [\log p(X)]$ (entropy) would be Monte Carlo integration.
+One strategy to obtain values such as $\E X$ (mean), $\E X^2$ (second moment) and $\E [\log p(X)]$ (entropy) would be Monte Carlo integration.
 If $X^{(1)},\dots,X^{(T)}$ are samples from $X\sim\tN_d(\mu,\Sigma,\cA)$, then $\widehat{\E g(X)} = \frac{1}{T} \sum_{t=1}^T g(X^{(t)})$.
 
 Sampling from a truncated multivariate normal distribution is described by \citet{robert1995simulation}, who used a Gibbs-based approach, which we now describe.

@@ -13,16 +13,16 @@ It is defined as the mapping $\theta \mapsto p(\by|\theta)$, where $p(\by|\theta
 \index{maximum likelihood}
 \index{likelihood}
 \index{log-likelihood}
-It is logical to consider the parameter set which provides the largest likelihood value,
+It is logical to consider the parameter which provides the largest likelihood value,
 \begin{equation}\label{eq:ml}
   \hat\theta_{\text{ML}} = \argmax_\theta p(\by|\theta).
 \end{equation}
-The value $\hat\theta$ is referred to as the \emph{maximum likelihood estimate} for $\theta$.
+The value $\hat\theta_{\text{ML}}$ is referred to as the \emph{maximum likelihood estimate} for $\theta$.
 For convenience, the \emph{log-likelihood} function $L(\theta) = \log p(\by|\theta)$ is maximised instead; as the logarithm is a monotonically increasing function, the maximiser of the log-likelihood function is exactly the maximiser of the likelihood function itself.
 
 \index{gradient!method}
 When ML estimates are unable to be found in closed-form, the maximisation problem of \cref{eq:ml} requires iterative, numerical methods to find the maximum.
-These methods are often \emph{gradient-based} methods, algorithms that make use of the gradient of the objective function to be optimised.
+These methods are often \emph{gradient based}, i.e. algorithms that make use of the gradient of the objective function to be optimised.
 Examples include Newton's method, Fisher's scoring, quasi-Newton methods, gradient descent, and conjugate gradient methods.
 As the name suggests, these methods require evaluation of gradients or approximate gradients, and in some cases, the Hessian.
 Depending on the situation, gradients or Hessians can be expensive or inconvenient to compute or approximate.
@@ -57,7 +57,7 @@ This usually means treating the parameters as random, following some distributio
 There are many ways of categorising different types of priors.
 Broadly speaking, priors, and hence Bayesian analysis \citep{robert2007bayesian,kadane2011principles}, can be either \emph{subjective} or \emph{objective}, with the demonyms `subjectivists' and `objectivists' used to refer to those subscribing to each respective principle.
 Subjectivists assert that probabilities are merely opinions, while objectivists, in contrast, view probabilities as an extension of logic.
-In this regard, objectives Bayes seek to minimise the statistician's contribution to inference and ``let data speak for itself'', while subjective Bayes does the opposite.
+In this regard, objective Bayes seek to minimise the statistician's contribution to inference and ``let data speak for itself'', while subjective Bayes does the opposite.
 
 In either case, inference about the parameters are then performed using the \emph{posterior density}
 \begin{equation}
@@ -127,10 +127,10 @@ Therefore, a different parameterisation of $\theta$ will impact the location of 
 
 \section{Empirical Bayes}
 
-The term \emph{empirical Bayes} \citep{robbins1956empirical,casella1985introduction} refers to procedure in which features of the prior is informed by the data.
-This is realised by parameterising the prior by a hyper-parameter $\eta$, i.e. $\theta \sim p(\theta|\eta)$.
+The term \emph{empirical Bayes} \citep{robbins1956empirical,casella1985introduction} refers to a procedure in which features of the prior is informed by the data.
+This is realised by parameterising the prior by a hyperparameter $\eta$, i.e. $\theta \sim p(\theta|\eta)$.
 %Consider a scenario in which the parameters to be estimated are the mean components of a multivariate normal distribution. 
-%It is reasonable to assume that the means were drawn from an identical prior distribution, hyper-parameterised by $\eta$.
+%It is reasonable to assume that the means were drawn from an identical prior distribution, hyperparameterised by $\eta$.
 %%That is, if $\theta = (\theta_1,\dots,\theta_p)^\top$, then $\theta_k|\eta \iid p(\theta_k|\eta)$ for each $k=1,\dots,p$.
 %The posterior density for $\theta$ is now written
 %\begin{equation}
@@ -143,7 +143,7 @@ This is realised by parameterising the prior by a hyper-parameter $\eta$, i.e. $
 %  p(\theta|\by) \approx \frac{p(\by|\theta)p(\theta|\hat\eta)}{p(\by|\hat\eta)}.
 %\end{equation}
 %This approach of optimising the hyperparameters $\eta$ by maximising the 
-Values for the hyper-parameter are clearly important, because they appear in the posterior for $\theta$: 
+Values for the hyperparameter are clearly important, because they appear in the posterior for $\theta$: 
 \begin{equation}\label{eq:empbayes1}
   p(\theta|\by) = \frac{p(\by|\theta)p(\theta|\eta)}{p(\by|\eta)} 
 \end{equation}
@@ -160,5 +160,5 @@ It is also commonplace in statistics, especially in random-effects or latent var
 As a remark, estimation of $\eta$ itself can be made to conform to Bayesian philosophy, i.e., by placing priors on it and inferring $\eta$ through its posterior.
 Such a procedure is referred to as \emph{Bayesian hierarchical modelling}.
 A motivation for doing this is because the ML estimate of $\eta$ ignores any uncertainty in it.
-Of course, the hyper-prior for $\eta$ could be parameterised by a hyper-hyper-parameter, and itself have a prior, and so on and so forth.
-Evidently the model is specified until such a point where there are parameters of the model which are left ``unoptimised'' and must be specified in subjective manner \citep{beal2003variational}.
+Of course, the hyperprior for $\eta$ could be parameterised by a hyper-hyperparameter, and itself have a prior, and so on and so forth.
+Evidently the model is specified until such a point where there are parameters of the model which are left unoptimised and must be specified in subjective manner \citep{beal2003variational}.
