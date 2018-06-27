@@ -23,7 +23,7 @@ This implies a multivariate normal prior distribution for the regression coeffic
 where $\bX$ is the $n \times p$ design matrix for the covariates, excluding the column of ones at the beginning typically reserved for the intercept. 
 As expected, the covariance matrix for $\boldsymbol\beta$ is recognised as the scaled Fisher information matrix for the regression coefficients.
 
-If the covariates are not measured similarly, e.g. weights in kilograms, heights in metres, etc., then it makes sense to introduce scale parameters $\lambda_k$ to account for the difference in scale.
+If the covariates are not measured similarly, e.g. weights in kilograms, heights in metres, etc., then it makes sense to introduce scale parameters $\lambda_k$ to account for the differences in scale.
 One could decompose the regression function into
 \[
   f(\bx_i) = f_1(x_{i1}) + \cdots + f_p(x_{ip}) 
@@ -40,7 +40,8 @@ Thus, the corresponding I-prior for $\boldsymbol{\beta}$ is
   \boldsymbol{\beta} \sim \N_p(\bzero, \bX^\top\bLambda \bPsi \bLambda \bX),
 \]
 with $\bLambda = \diag(\lambda_1,\dots,\lambda_p)$.
-Note that $\cF_\lambda$ can be seen as a special case of the ANOVA RKKS, in which only the main effects are considered, in which case the \emph{centred canonical RKHSs} should be considered instead.
+Note that $\cF_\lambda$ can be seen as a special case of the ANOVA RKKS, in which only the main effects are considered. 
+Thusly, the \emph{centred canonical RKHSs} containing zero-mean functions should be considered instead.
 This approach is disadvantageous when $p$ is large, in which case there would be numerous scale parameters to estimate.
 
 \begin{remark}
@@ -54,7 +55,7 @@ This approach is disadvantageous when $p$ is large, in which case there would be
 
 \begin{remark}
   The I-prior for $\boldsymbol{\beta}$ in \cref{eq:ipriorcanonical} bears resemblance to the $g$-prior \citep{zellner1986assessing}, and in fact, the $g$-prior can be interpreted as an I-prior if the inner product of $\cX$ is the Mahalonobis inner product.
-  See \cref{misc:gprior} for a discussion.
+  See \cref{misc:gprior} \colp{\mypageref{misc:gprior}} for a discussion.
 \end{remark}
 
 \subsection{Multilevel linear modelling}
@@ -87,10 +88,10 @@ We can show that the regression function \cref{eq:anovamultilevel} corresponds t
   f(\bx_i^{(j)}, j) = \beta_0 + \bx_i^{(j)\top}\boldsymbol{\beta}_1 + \beta_{0j} + \bx_i^{(j)\top}\boldsymbol{\beta}_{1j}.   
 \end{equation}
 and determine the prior distributions on $(\beta_{0j},\boldsymbol{\beta}_{1j}^\top)^\top \in \bbR^{p+1}$.
-For the interested reader, the details are in \cref{misc:multilevelmodels}.
+For the interested reader, the details are in \cref{misc:multilevelmodels} \colp{\mypageref{misc:multilevelmodels}}.
 The standard multilevel random effects assumption is that $(\beta_{0j},\boldsymbol{\beta}_{1j}^\top)^\top$ is normally distributed with mean zero and covariance matrix $\bPhi$.
 In total, there are $p+1$ regression coefficients and $(p+1)(p+2)/2$ covariance parameters in $\Phi$ to be estimated.
-In contrast, the I-prior model is parameterised by only two RKKS scale parameters---one for $\cF_1$ and one for $\cF_2$---and the error precision $\psi$.
+In contrast, the I-prior model is parameterised by only two RKKS scale parameters---one for $\cF_1$ and one for $\cF_2$---and the error precision $\bPsi$, which is usually proportional to the identity matrix.
 While the estimation procedure for $\bPhi$ in the standard multilevel model can result in non-positive covariance matrices, the I-prior model has the advantage that positive definiteness is taken care of automatically\footnote{By virtue of the estimate of the regression function belonging to $\cF_n$, an RKHS with a positive definite kernel equal to the Fisher information for $f$.}.
 %This is seen from the calculations for $\Var \beta_{0j}$, $\Var \boldsymbol\beta_{1j}$ and the respective covariances.
 %An example of multilevel modelling using I-priors is given in \hltodo{Section 4.3.1}.
@@ -107,10 +108,10 @@ In addition, one may add flexibility to the model in two possible ways:
 \begin{enumerate}
   \item \textbf{More than two levels}. The model can be easily adjusted to reflect the fact that that the data is structured in a hierarchy containing three or more levels. For the three level case, let the indices $j\in\{1,\dots,m_1\}$ and $k\in\{1,\dots,m_2\}$ denote the two levels, and simply decompose the regression function accordingly:
   \begin{align*}
-    \begin{gathered}
-      f(\bx_i^{(j,k)}, j, k) = \alpha + f_1(\bx_i^{(j,k)}) + f_2(j) + f_3(k) + f_{12}(\bx_i^{(j,k)}, j) + f_{13}(\bx_i^{(j,k)}, k)\\ 
-      + f_{23}(j, k) + f_{123}(\bx_i^{(j,k)}, j, k).
-    \end{gathered}
+%    \begin{gathered}
+      f(\bx_i^{(j,k)}, j, k) ={}& \alpha + f_1(\bx_i^{(j,k)}) + f_2(j) + f_3(k) + f_{12}(\bx_i^{(j,k)}, j) + f_{13}(\bx_i^{(j,k)}, k)\\ 
+      &+ f_{23}(j, k) + f_{123}(\bx_i^{(j,k)}, j, k).
+%    \end{gathered}
   \end{align*}
   \item \textbf{Covariates not varying with levels}. Suppose now we would like to add covariates with a fixed effect to the model, i.e. covariates $\bz_i^{(j)}$ which are not assumed to affect the responses differently in each group. The regression function would be:
   \begin{align*}
@@ -191,6 +192,7 @@ There are several attractive properties of using the fBm RKHS, and for one-dimen
 \index{centring!RKHS}
 \index{empirical distribution}
 Assume that, up to a constant, the regression function lies in the scaled, centred fBm RKHS $\cF$ of functions over $\cX \equiv \bbR$ with Hurst index $1/2$.
+Additionally, assume independent and identical (iid) error precisions, i.e. $\bPsi = \psi\bI_n$.
 Thus, with a centring with respect to the empirical distribution $\Prob_n$ of $\{x_1,\dots,x_n\}$ and using the absolute norm on $\bbR$, $\cF$ has kernel
 \[
   h_\lambda(x,x') = \frac{\lambda}{2n^2} \sum_{i=1}^n\sum_{j=1}^n \Big( \abs{x-x_i} + \abs{x'-x_j} - \abs{x-x'} - \abs{x_i-x_j} \Big).
@@ -245,7 +247,7 @@ This will lead to more shrinkage of the posterior derivative of $f$ towards the 
 %  &= \frac{\lambda}{2n} \sum_{k=1}^n  \sum_{i=1}^n           \left( \sign(x-x_i)  - \sign(x-x_k)  \right) w_k \\
 %\end{align*}
 
-Another advantage of the I-prior methodology is the ability to fit single or multidimensional smoothing models with just two parameters to be estimated: the RKHS scale parameter $\lambda$ and the error precision $\bPsi$.
+Another advantage of the I-prior methodology is the ability to fit single or multidimensional smoothing models with just two parameters to be estimated: the RKHS scale parameter $\lambda$ and the error precision $\psi$.
 The Hurst parameter $\gamma \in (0,1)$ of the fBm RKHS can also be treated as a free parameter for added flexibility, but for most practical applications, we find that the default setting of $\gamma = 1/2$ performs sufficiently well.
 
 \begin{remark}

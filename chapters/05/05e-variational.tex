@@ -36,7 +36,7 @@ That is, for each $i=1,\dots,n$ and noting the observed categorical response $y_
 \end{align}
 We denote this by $\by_{i \bigcdot}^* \iid \tN(\tilde\bmu_{i \bigcdot}, \bPsi^{-1},\cC_{y_i})$, and the important properties of this distribution are explored in the appendix.
 
-The required expectation $\tilde\by^* := \E_{\by^*\sim\tilde q} [\by^*_{i\bigcdot}] = \E_{\by^*\sim\tilde q} [y_{i1}^*,\dots, y_{im}^*]^\top$ in the M-step can be tricky to obtain.
+The required expectation $\tilde\by^* := \E_{\by^*\sim\tilde q} (\by^*_{i\bigcdot}) = \E_{\by^*\sim\tilde q} (y_{i1}^*,\dots, y_{im}^*)^\top$ in the M-step can be tricky to obtain.
 One strategy that can be considered is Monte Carlo integration: using samples from $\N_m(\tilde\bmu_{i \bigcdot},  \bPsi^{-1})$, disregard those that do not satisfy the condition $y_{iy_i}^* > y_{ik}^*, \forall k \neq j$, and then take the sample average.
 This works reasonably well so long as the truncation region does not fall into the extreme tails of the multivariate normal.
 Alternatively, a Gibbs-based approach \citep{robert1995simulation} for sampling from a truncated multivariate normal can be implemented, and this is detailed in \cref{apx:truncmultinorm}.

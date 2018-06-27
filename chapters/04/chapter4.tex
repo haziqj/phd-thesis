@@ -22,14 +22,14 @@
 \label{chapter4}
 \thispagestyle{chapterfour}
 
-In the previous chapter, we defined an I-prior for the normal regression model \cref{eq:model1} subject to \cref{eq:model1ass} and $f$ belonging to a reproducing kernel Hilbert or Kreĭn space of functions $\cF$, as a Gaussian distribution on $f$ with covariance function proportional to the Fisher information for $f$.
-We also saw how new function spaces can be constructed via the polynomial and ANOVA reproducing kernel Kreĭn spaces (RKKSs).
+In the previous chapter, we defined an I-prior for the normal regression model \cref{eq:model1} subject to \cref{eq:model1ass} and $f$ belonging to a reproducing kernel Hilbert or Kreĭn space (RKHS/ RKKS) of functions $\cF$, as a Gaussian distribution on $f$ with covariance function proportional to the Fisher information for $f$.
+We also saw how new function spaces can be constructed via the polynomial and ANOVA RKKSs.
 In this chapter, we shall describe various regression models, and identify the regression function in each of these models as belonging to an appropriate RKKS, so that an I-prior may be defined.
 
 Methods for estimating I-prior models are described in \cref{sec:ipriorestimation}.
 Estimation here refers to obtaining the posterior distribution of the regression function under an I-prior, while optimising the kernel parameters of $\cF$ and the error precision $\bPsi$.
 Likelihood based methods, namely direct optimisation of the likelihood and the expectation-maximisation (EM) algorithm, are the preferred estimation methods of choice.
-Having said this, it is also possible to estimate I-prior models under a full Bayesian paradigm by employing Markov chain Monte Carlo methods to sample from the relevant posterior densities.
+Having said this, it is also possible to estimate I-prior models under a full Bayesian paradigm by employing Markov chain Monte Carlo (MCMC) methods to sample from the relevant posterior densities.
 Once estimation is completed, post-estimation procedures such as inference and prediction for a new data point can be done.
 This is described in \cref{sec:ipriorpostest}.
 

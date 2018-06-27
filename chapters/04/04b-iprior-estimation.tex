@@ -30,7 +30,7 @@ For a derivation, see \cref{apx:posteriorw} \colp{\mypageref{apx:posteriorw}}.
 By linearity, the posterior distribution for $f$ is also normal.
 
 In each modelling scenario, there are a number of kernel parameters $\eta$ that need to be estimated from the data.
-Assuming that the covariate space is $\cX = \cX_1\times\cdots\times\cX_p$, and there is an ANOVA like decomposition of the function space $\cF$ into its constituents spaces $\cF_1,\dots,\cF_p$, then at the very least, there are $p$ scale parameters $\lambda_1,\dots,\lambda_p$ for each of the RKHSs.
+Assuming that the covariate space is $\cX = \cX_1\times\cdots\times\cX_p$, and there is an ANOVA-like decomposition of the function space $\cF$ into its constituents spaces $\cF_1,\dots,\cF_p$, then at the very least, there are $p$ scale parameters $\lambda_1,\dots,\lambda_p$ for each of the RKHSs.
 Depending on the RKHS used, there could be more kernel parameters that need to be optimised, for instance, the Hurst index for the fBm RKHS, the lengthscale for the SE RKHS, and/or the offset for the polynomial RKKS.
 However, these may be treated as fixed parameters as well.
 %Default settings for these parameters may be used, and if this is the case, only scale parameters need to be estimated, and the estimation procedure can be made more efficient as the kernel matrices need not be recomputed each time.
@@ -227,7 +227,7 @@ This then combines the stability of the EM with the speed of direct optimisation
 \index{MCMC}
 \index{HMC}
 For completeness, it should be mentioned that a full Bayesian treatment of the model is possible, with additional priors on the set of hyperparameters.
-Markov chain Monte Carlo (MCMC) methods can then be employed to sample from the posteriors of the hyperparameters, with point estimates obtained using the posterior mean or mode, for instance.
+MCMC methods can then be employed to sample from the posteriors of the hyperparameters, with point estimates obtained using the posterior mean or mode, for instance.
 Additionally, the posterior distribution encapsulates the uncertainty about the parameter, for which inference can be made.
 Posterior sampling can be done using Gibbs-based methods in \pkg{WinBUGS} \citep{lunn2000winbugs} or \pkg{JAGS} \citep{plummer2003jags}, and both have interfaces to \proglang{R} via \pkg{R2WinBUGS} \citep{sturtz2005r2winbugs} and \pkg{runjags} \citep{denwood2016runjags} respectively.
 Hamiltonian Monte Carlo (HMC) sampling is also a possibility, and the \proglang{Stan} project \citep{carpenter2016stan} together with the package \pkg{rstan} \citep{rstan}  makes this possible in \proglang{R}.
@@ -239,7 +239,7 @@ This makes it inconvenient for GPR and I-prior models, because in addition to th
 Speaking of efficiency, it is more advantageous to marginalise the I-prior and work with the marginal model \cref{eq:marglogliky}, rather than the hierarchical specification \cref{eq:model2}.
 The reason for this is that the latter model has a parameter space whose dimension is $O(n)$, while the former only samples the hyperparameters.
 Note that the marginal model \cref{eq:marglogliky} cannot then be sampled efficiently using a Gibbs procedure as the Gibbs conditionals are not of closed-form.
-Instead, Hamiltonian MC should be used, which does not depend on model conjugacy.
+Instead, HMC should be used, which does not depend on model conjugacy.
 %The posterior sampling for the $w_i$'s in (equivalently, the posterior Gaussian process $f(x) = \sum_{i=1}^n h_\lambda(x,x_i)w_i$) is performed using the normal posterior distribution in \cref{eq:posteriorw}.
 
 \subsection{Comparison of estimation methods}

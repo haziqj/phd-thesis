@@ -208,9 +208,9 @@ The difference is that in MCMC, sampling from posterior distributions is perform
 
 A downside to the data augmentation scheme for probit models in a MCMC framework is that it enlarges the variable space by an additional $nm$ dimensions, which is memory inefficient for large $n$.
 The models with likelihood \cref{eq:intractablelikelihood1} or \cref{eq:intractablelikelihood2} after integrating out $\bw$ and $\by^*$ respectively, is less demanding for MCMC sampling than the model with likelihood \cref{eq:iprobitlik}.
-However, as mentioned already, \cref{eq:intractablelikelihood1} contains an integral involving a $mn$-variate normal distribution whose covariance matrix is dense, and as far as we are aware, the Kronecker product structure cannot be exploited for efficiency in sampling.
+However, as mentioned already, \cref{eq:intractablelikelihood1} contains an integral involving an $mn$-variate normal distribution whose covariance matrix is dense, and as far as we are aware, the Kronecker product structure cannot be exploited for efficiency in sampling.
 This leaves \cref{eq:intractablelikelihood2}, a non-conjugate model whose full conditional densities are not of recognisable form.
-Hamiltonian Monte Carlo is another possibility, since it does not require conjugacy.
+Hamiltonian Monte Carlo (HMC) is another possibility, since it does not require conjugacy.
 For binary models, this is a feasible approach because the class probabilities normal cdfs (c.f. {\color{\mycitecolour}Equation} \ref{eq:iprobitbin}), which means that it is doable using off-the-shelf software such as \proglang{Stan}.
 However, with multinomial responses, the arduous task of computing class probabilities, which involve integration of an at most $m$-dimensional normal density, must be addressed separately.
 
@@ -231,8 +231,8 @@ Following \cref{eq:iprobitbin}, the binary I-probit model that is fitted is
 \end{gather*}
 where $h_\lambda$ is the (scaled) kernel of the fBm-0.5 RKHS $\cF$ to which $f$ belongs.
 
-We carry out the three estimation precodures described above (Laplace's method, variational EM, and Hamiltonian MC) to compare parameter estimates, (training) error rates, and runtime.
-The Laplace and variational EM methods were performed in the \pkg{iprobit} package, while \proglang{Stan} was used to code the Hamiltonian MC sampler.
+We carry out the three estimation precodures described above (Laplace's method, variational EM, and HMC) to compare parameter estimates, (training) error rates, and runtime.
+The Laplace and variational EM methods were performed in the \pkg{iprobit} package, while \proglang{Stan} was used to code the HMC sampler.
 Prior choices for the fully Bayesian methods were: 1) a vague folded-normal prior $\lambda\sim\N_+(0,100)$ for the RKHS scale parameter, and 2) a diffuse prior for the intercept $p(\alpha) \propto \const$
 Note that the restriction of $\lambda$ to the positive orthant is required for identifiability.
 The results are presented in \cref{tab:compreiprobit}.
@@ -281,7 +281,7 @@ Time taken (s) & >3600                & 5.32         & >1800                    
   \vspace{1em}
   \includegraphics[width=0.49\textwidth]{figure/05-fit_hmc}
   \includegraphics[width=0.49\textwidth]{figure/05-lik_hmc}
-  \caption[Predicted probabilities and log-density plots]{Plots showing predicted probabilities (shaded region) for belonging to class `1' or `2' indicated by colour and intensity, and log-likelihood/ELBO surface plots for (a) Laplace's method, (b) variational EM, and (c) Hamiltonian MC. For the Hamiltonian MC plot, parameters are treated as fixed, and the mean log-density of the I-probit model recorded.}
+  \caption[Predicted I-probit probabilities and log-density plots]{Plots showing predicted probabilities (shaded region) for belonging to class `1' or `2' indicated by colour and intensity, and log-likelihood/ELBO surface plots for (a) Laplace's method, (b) variational EM, and (c) HMC. For the likelihood plot relating to Hamiltonian Monte Carlo, parameters are treated as fixed, and the mean log-density of the I-probit model recorded.}
   \label{fig:exampleiprobitfit}
 \end{figure}
 \index{Brier score}
@@ -292,14 +292,14 @@ The variational likelihood has two ridges, with the maxima occurring around the 
 The Laplace likelihood seems to indicate a similar shape---in both the Laplace and variational method, the posterior distribution of $\bw$ is approximated by a Gaussian distribution, with different means and variances.
 However, parts of the Laplace likelihood are poorly approximated resulting in a loss of fidelity around the supposed maxima, which might have contributed to the set of values that were estimated.
 Laplace's method is known to yield poor approximations to probit model likelihoods \citep{kuss2005assessing}.
-On the other hand, the log-likelihood calculated using a Hamiltonian MC sampler (treating parameters as fixed values) yields a slightly different graph: the log-likelihood increases as values of $\alpha$ become larger, resulting in the upwards inflection of the log-likelihood surface (as opposed to a downward inflection seen in the variational and Laplace likelihood).
+On the other hand, the log-likelihood calculated using an HMC sampler (treating parameters as fixed values) yields a slightly different graph: the log-likelihood increases as values of $\alpha$ become larger, resulting in the upwards inflection of the log-likelihood surface (as opposed to a downward inflection seen in the variational and Laplace likelihood).
 
-In terms of predictive abilities, both the variational and Hamiltonian MC methods, even though the posteriors are differently estimated, have good predictive performance as indicated by their error rates and Brier scores\footnote{\index{Brier score}The Brier score is defined as $\frac{1}{n}\sum_{i=1}^n\sum_{j=1}^m (y_{ij} - \hat p_{ij})$ with $y_{ij}=1$ if $y_i = j$ and zero otherwise, and $\hat p_{ij}$ is the fitted probability $\hat\Prob(y_i = j)$. It gives a better sense of training/test error, compared to simple misclassification rates, by accounting for the forecasted probabilities of the events happening. The Brier score is a proper scoring rule, i.e. it is uniquely minimised by the true probabilities.}.
+In terms of predictive abilities, both the variational and  HMC methods, even though the posteriors are differently estimated, have good predictive performance as indicated by their error rates and Brier scores\footnote{\index{Brier score}The Brier score is defined as $\frac{1}{n}\sum_{i=1}^n\sum_{j=1}^m (y_{ij} - \hat p_{ij})$ with $y_{ij}=1$ if $y_i = j$ and zero otherwise, and $\hat p_{ij}$ is the fitted probability $\hat\Prob(y_i = j)$. It gives a better sense of training/test error, compared to simple misclassification rates, by accounting for the forecasted probabilities of the events happening. The Brier score is a proper scoring rule, i.e. it is uniquely minimised by the true probabilities.}.
 \cref{fig:exampleiprobitfit} shows that HMC is more confident of new data predictions compared to variational inference, as indicated by the intensity of the shaded regions (HMC is shaded stronger than variational EM).
 Laplace's method gave poor predictive performance.
 
 Finally, on the computational side, variational inference was by far the fastest method to fit the model.
-Sampling using Hamiltonian MC was very slow, because the parameter space is in effect $O(n + 2)$ (parameters are $\{w_1,\dots,w_n,\alpha,\lambda\}$ under the model with likelihood \cref{eq:intractablelikelihood2}, i.e. without the data augmentation scheme).
+Sampling using HMC was very slow, because the parameter space is in effect $O(n + 2)$ (parameters are $\{w_1,\dots,w_n,\alpha,\lambda\}$ under the model with likelihood \cref{eq:intractablelikelihood2}, i.e. without the data augmentation scheme).
 As for Laplace, each Newton step involves obtaining posterior modes of the $w_i$'s, and this contributed to the slowness of this method.
 The reality is that variational inference takes seconds to complete what either the Laplace or full MCMC methods would take minutes or even hours to.
 The predictive performance, while not as good as HMC, is certainly an acceptable compromise in favour of speed.

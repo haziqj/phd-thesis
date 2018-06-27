@@ -243,7 +243,7 @@ A model comparison using the evidence lower bound indicates that Model 3 has the
 % In this case, Model 3 has the highest lower bound value.
 The misclassification rate and Brier score indicates good predictive performance of the models, and there is not much to distinguish between the three although Model 3 is the best out of the three models.
 
-<<smoke.forest.plot, echo = FALSE, warning = FALSE, fig.height = 7.6, fig.width = 6, out.width = "\\linewidth", fig.cap = "Forest plot of effect sizes (log odds ratios) in each group as well as the overall effect size together with their 95\\% confidence bands. The plot compares the raw log odds ratios, the logistic random-effect estimates, and the I-prior estimates. Sizes of the points indicate the relative sample sizes per study group.", fig.pos = "p">>=
+<<smoke.forest.plot, echo = FALSE, warning = FALSE, fig.height = 8.3, fig.width = 6, out.width = "\\linewidth", fig.cap = "Forest plot of effect sizes (log odds ratios) in each group as well as the overall effect size together with their 95\\% confidence bands. The plot compares the raw log odds ratios, the logistic random-effect estimates, and the I-prior estimates. Sizes of the points indicate the relative sample sizes per study group.", fig.pos = "p">>=
 @
 
 Unlike in the logistic random-effects model, where the log odds ratio can be read off directly from the coefficients, with an I-prior probit model the log odds ratio needs to be calculated manually from the fitted probabilities. \index{log odds ratio}\index{log odds ratio|seealso{odds ratio}}
