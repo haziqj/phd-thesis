@@ -1,0 +1,205 @@
+---
+title: "PhD Examination"
+subtitle: "Regression modelling using priors depending on Fisher information covariance kernels (I-priors)"
+author: "Haziq Jamil"
+date: "24 September 2018"
+output:
+  xaringan::moon_reader:
+    css: [default, rladies, metropolis-fonts]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+# Executive summary
+
+> Development of a novel methodology&mdash;theoretical and computational&mdash;for regression, classification and variable selection.
+
+.center[![](figures/keyword.png)]
+
+---
+
+# Scope
+
+- What are I-priors?
+
+  - Motivation: The normal regression model [[CHAPTER 1]]()
+  - Prerequisite: Functional analysis and RKHS/RKKS theory [[CHAPTER 2]]()
+  - Fisher information and the I-prior [[CHAPTER 3]]()
+  
+--
+
+- My PhD work involving I-priors
+  - Computational methods for estimation of I-prior models [[CHAPTER 4]]()
+  - Extensions to categorical responses [[CHAPTER 5]]()
+  - Bayesian variable selection for linear models [[CHAPTER 6]]()
+
+--
+
+- Supplementary material
+  - Estimation concepts
+  - EM algorithm and variational inference
+  - Hamiltonian Monte Carlo
+  
+.footnote[
+
+----------------------
+Chapters 2, 3 and 4 were jointly co-authored with Wicher Bergsma (main supervisor).
+]
+
+---
+class: inverse, center, middle
+
+# Regression modelling using <br> I-priors
+
+---
+
+# The normal regression model
+
+- For $y_i\in\mathbb R$, $x_i\in\mathcal X$, and $i = 1,\dots,n$, $\phantom{\big[}$
+  $$
+  y_i = f(x_i) + \epsilon_i \tag{1.1} 
+  $$
+  $$
+  (\epsilon_1,\dots,\epsilon_n)^\top \sim \text{N}(0, \boldsymbol\Psi^{-1}) \tag{1.2} \\
+  $$
+- Assume $f \in \mathcal{F}$ a reproducing kernel Hilbert or Krein space (RKHS/RKKS).
+
+- The basis for various regression problems:
+    - Linear models [(canonical RKHS)]()
+    - Multilevel models [(canonical + Pearson = ANOVA RKKS)]()
+    - Longitudinal models [(fBm/canonical + Pearson = ANOVA RKKS)]()
+    - Smoothing models [(fBm RKHS)]()
+    - etc.
+
+---
+
+# Various function spaces
+
+[some plots of RKHSs?]
+
+---
+
+# The I-prior
+
+- [(Corollary 3.3.1, p. 93)]() The Fisher information for $f \in \mathcal{F}$, an RKHS/RKKS with kernel $h_\eta:\mathcal X \times \mathcal X\to\mathbb R$, is
+$$\mathcal I \big(f(x), f(x') \big) = \sum_{i,j=1}^n\psi_{ij}h_\eta(x,x_i) h_\eta(x',x_j)$$
+
+- Define an I-prior for $f$ to be
+$$\mathbf f := \big(f(x_1),\dots,f(x_n)\big) \sim \text{N}_n (\mathbf f_0, \mathcal I[f])$$
+where $\mathbf f_0$ is some prior mean, and $\mathcal I[f]$ is the $n\times n$ Fisher information matrix for $\mathbf f$.
+
+- Objective and intuitive
+  - Entropy-maximising prior [(Theorem 3.6, p. 98)]().
+  - More information about $f$ $\Rightarrow$ less influence on prior mean choice (usually zero), and vice versa.
+
+---
+
+# Merits
+
+- A unifying methodology for regression
+
+  - Choose appropriate RKHS/RKKS depending on problem
+
+--
+
+- Parsimoniuos specification
+  - Often less number of parameters required to fit compared to the classical way
+
+--
+
+- Prevents overfitting and undersmoothing
+
+--
+
+- Better prediction
+
+--
+
+- Straightforward inference
+  - Model comparison using marginal likelihood
+  - Bayesian post-estimation procedures possible, e.g. credibility intervals and posterior predictive checks
+
+---
+class: inverse, center, middle
+
+# Main contributions
+
+---
+
+**PROBLEM 1**: Storage is $O(n^2)$ while estimation is $O(n^3)$ due to matrix inversion in posterior, specifically, assuming $\, f_0(x)=0 \, \forall x$,
+
+$$\text{E} (f(x)|\mathbf y ) =\mathbf h_\eta^\top(x) \cdot \boldsymbol \Psi(\mathbf H_\eta\boldsymbol\Psi\mathbf H_\eta + \boldsymbol\Psi^{-1})^{-1} \cdot \mathbf y\tag{1.7}$$
+
+$$\text{Var} (f(x)|\mathbf y ) = \mathbf h_\eta^\top(x) \cdot \boldsymbol (\mathbf H_\eta\boldsymbol\Psi\mathbf H_\eta + \boldsymbol\Psi^{-1})^{-1} \cdot \mathbf h_\eta(x)\tag{1.8}$$
+
+--
+
+<h3>Chapter 4: An efficient estimation procedure</h3>
+
+- Nyström approximation of kernel matrix to reduce storage and time requirements to $O(nm)$ and $O(nm^2)$, $m\ll n$.
+
+- Multiple $O(n^3)$ calls in the EM algorithm, so pre-calculate and store for later use (front-loading).
+
+- Exploit normality and exponential families and use ECM algorithm to avoid maximisation in M-step.
+
+- Implemented in R package `iprior`.
+
+- Practical applications: Multilevel modelling (IGF-I data), longitudinal modelling (cow growth data), and smoothing models (Tecator data).
+
+---
+
+**PROBLEM 2**: Violations of modelling assumptions when responses are categorical, i.e. $y_i \in \{1,\dots,m \}$.
+
+--
+
+<h3>Chapter 5: Probit link on (latent) regression functions</h3>
+
+- [(Section 5.1, pp. 149–151)]() "Squash" the regression functions through a sigmoid function, via
+\begin{equation}
+\text{P}(y_i = j) = g^{-1}\big( f_1(x_i),\dots,f_m(x_i) \big)
+\end{equation}
+where $g^{-1}$ is an integral involving a truncation of an $m$-variate normal density.
+
+  - When $m=2$ (binary data), the model simplifies to
+  
+  $$y_i \sim \text{Bern}(\Phi(f(x_i)))$$
+
+- Model is estimated using a variational EM algorithm, because the E-step cannot be found in closed-form.
+
+- Practical applications: Binary and multiclass classification, meta-analysis (smoking cessation data), and spatio-temporal modelling (BTB data).
+
+---
+
+**PROBLEM 3**: Model selection via pairwise marginal likelihood comparisons is intractable for large $p$.
+
+--
+
+<h3>Chapter 6: Gibbs-based variable selection for linear models</h3>
+
+- Focusing on iid normal linear models only, i.e.
+$$y_i \sim\text{N}\Big( \alpha + \sum_{k=1}^p x_{ik}\gamma_k\beta_k, \psi^{-1} \Big) \\
+\gamma_k \sim \text{Bern}(\pi_k), k=1,\dots,p$$
+with the I-prior $\boldsymbol\beta\sim\text{N}_p(\mathbf 0, \kappa\psi^{-1}\mathbf X^\top\mathbf X)$. 
+
+- Estimates of posterior model probabilities, inclusion probabilities, and regression coefficients obtained simultaneously using Gibbs sampling.
+
+- Simulation study and real-data analysis show favourable results for I-prior (vs. sparse prior, $g$-prior, and Lasso).
+
+- Practical applications: aerobic data, mortality and air pollution data, and ozone data.
+
+---
+class: inverse, center, middle
+
+# End
+
+
+
+
+
