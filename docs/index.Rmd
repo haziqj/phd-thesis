@@ -5,12 +5,13 @@ author: "Haziq Jamil"
 date: "24 September 2018"
 output:
   xaringan::moon_reader:
-    css: [default, rladies, metropolis-fonts]
+    css: [default, rladies, metropolis-fonts, "custom.css"]
     lib_dir: libs
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+      countdown: 90000
 ---
 
 ```{r setup, include=FALSE}
@@ -22,6 +23,13 @@ options(htmltools.dir.version = FALSE)
 > Development of a novel methodology&mdash;theoretical and computational&mdash;for regression, classification and variable selection.
 
 .center[![](figures/keyword.png)]
+
+???
+
+With my thesis being over 300 pages long it's only fair that I come up with a one-liner executive summary, and it is the following.
+My project was to develop a novel methodology for regression, classification and variable selection.
+Though mainly my work on this is computational, I also look at it from a theoretical standpoint.
+My work led me to explore a wide-variety of topics such as RKHSs, EM algorithms, variational inference, Gaussian process regression, etc.
 
 ---
 
@@ -53,6 +61,25 @@ options(htmltools.dir.version = FALSE)
 Chapters 2, 3 and 4 were jointly co-authored with Wicher Bergsma (main supervisor).
 ]
 
+???
+
+The scope of the thesis was as follows.
+We began by introducing the normal regression model, and motivate the need to develop something new in this area.
+Because this is something entirely new I decided to dedicate two big chapters to explaining the I-prior theory. 
+This involves a review of functional analysis (mostly tetbook stuff), but also introducing the various RKHS/RKKS of interest for modelling.
+The central tenet for I-priors is the concept of the Fisher information for regression function.
+This is obtained in the usual way but more sophisticated differentiation tools was needed, so we looked at Fréchet and Gâteaux derivatives for this.
+
+Chapter 4 was about looking at the estimation procedure for these I-prior models.
+Chapter 5 was extending the I-prior model to categorical responses.
+Chapter 6 was a fully Bayesian outlook at variable selection for linear models using I-priors.
+
+I provided several supplementary material, which was not strictly needed for the main chapters, but nice to have, especially for somebody unfamiliar with the subject.
+The aim was to make the thesis self sufficient in a manner of speaking.
+
+For clarity Chapters 2, 3 and 4 were jointly coauthored with Wicher.
+To be fair the original idea of I-priors were developed by Wicher and my research helped refined this topic further.
+
 ---
 class: inverse, center, middle
 
@@ -65,9 +92,20 @@ class: inverse, center, middle
 - For $y_i\in\mathbb R$, $x_i\in\mathcal X$, and $i = 1,\dots,n$, $\phantom{\big[}$
   $$y_i = f(x_i) + \epsilon_i \tag{1.1}$$
   $$(\epsilon_1,\dots,\epsilon_n)^\top \sim \text{N}(0, \boldsymbol\Psi^{-1}) \tag{1.2} \\$$
+  
+???
+
+The regression problem that we are interested in can be written as follows.
+We have real response variables y and covariates X which can either be continuous, discrete or even functional. 
+All together there are n number of observations, and we model the relationship as such where f is a regression function to be estimated with some normal errors.
+
 --
 
 - Assume $f \in \mathcal{F}$ a reproducing kernel Hilbert or Krein space (RKHS/RKKS).
+
+???
+
+Along with this modelling assumption we further assume that f lies in some RKHS/RKKS, which gives us nice mathematical properties.
 
 --
 
@@ -78,6 +116,11 @@ class: inverse, center, middle
     - Smoothing models [(fBm RKHS)]()
     - etc.
 
+???
+
+Importantly, this regression problem as stated forms the basis for various regression problem, depending on what our function f looks like and therefore which RKHS/RKKS it belongs to.
+For example...
+
 ---
 
 # The I-prior
@@ -85,17 +128,33 @@ class: inverse, center, middle
 - [(Corollary 3.3.1, p. 93)]() The Fisher information for $f \in \mathcal{F}$, an RKHS/RKKS with kernel $h_\eta:\mathcal X \times \mathcal X\to\mathbb R$, is
 $$\mathcal I \big(f(x), f(x') \big) = \sum_{i,j=1}^n\psi_{ij}h_\eta(x,x_i) h_\eta(x',x_j)$$
 
+???
+
+With $f$ being estimated it is in fact a parameter of the regression model, and with that we can think about the concept of Fisher information for $f$ just like we would any parameter under estimation.
+We note that $f$ may be infinite-dimensional, so we used what we think were the appropriate differentiation tools, i.e. Fréchet and Gâteaux derivatives.
+This equation here would give the Fisher information for some linear functional of $f$, in this case the evaluation functional, so we can compute the Fisher information about $f$ at two input points $x$ and $x'$.
+
 --
 
 - Define an I-prior for $f$ to be
 $$\mathbf f := \big(f(x_1),\dots,f(x_n)\big) \sim \text{N}_n (\mathbf f_0, \mathcal I[f])$$
 where $\mathbf f_0$ is some prior mean, and $\mathcal I[f]$ is the $n\times n$ Fisher information matrix for $\mathbf f$.
 
+???
+
+Specifically for $x_1$ up to $x_n$ our data, we can build the $n \times n$ Fisher information matrix curly I.
+We define the I-prior as being the Gaussian process prior on $f$ with mean chosen a priori and covariance matrix equal to curly I.
+
 --
 
 - Objective and intuitive
   - Entropy-maximising prior [(Theorem 3.6, p. 98)]().
   - More information about $f$ $\Rightarrow$ less influence on prior mean choice (usually zero), and vice versa.
+
+???
+
+This has a nice intuitive property, and that is the more information you have about $f$, the larger the variance and hess less influence of the prior mean and more of the data on estimation, and vice versa.
+It is also the entropy-maximising prior for this regression problem as proven here.
 
 ---
 
@@ -104,6 +163,10 @@ where $\mathbf f_0$ is some prior mean, and $\mathcal I[f]$ is the $n\times n$ F
 - A unifying methodology for regression
 
   - Choose appropriate RKHS/RKKS depending on problem
+
+???
+
+We advocate the I-prior for regression due to a number of reasons...
 
 --
 
@@ -124,6 +187,8 @@ where $\mathbf f_0$ is some prior mean, and $\mathcal I[f]$ is the $n\times n$ F
   - Model comparison using marginal likelihood
   - Bayesian post-estimation procedures possible, e.g. credibility intervals and posterior predictive checks
 
+
+
 ---
 class: inverse, center, middle
 
@@ -136,6 +201,12 @@ class: inverse, center, middle
 $$\text{E} (f(x)|\mathbf y ) =\mathbf h_\eta^\top(x) \cdot \boldsymbol \Psi(\mathbf H_\eta\boldsymbol\Psi\mathbf H_\eta + \boldsymbol\Psi^{-1})^{-1} \cdot \mathbf y\tag{1.7}$$
 
 $$\text{Var} (f(x)|\mathbf y ) = \mathbf h_\eta^\top(x) \cdot \boldsymbol (\mathbf H_\eta\boldsymbol\Psi\mathbf H_\eta + \boldsymbol\Psi^{-1})^{-1} \cdot \mathbf h_\eta(x)\tag{1.8}$$
+
+???
+
+The first of my contributions relate to estimation of these I-prior models (i.e. posterior regression function and model hyperparameters).
+I explored a direct optimisation of the likelihood, EM algorithm and MCMC.
+The main issue we have, as per Gaussian process regression is, storage and time requirements.
 
 --
 
@@ -196,8 +267,3 @@ with the I-prior $\boldsymbol\beta\sim\text{N}_p(\mathbf 0, \kappa\psi^{-1}\math
 class: inverse, center, middle
 
 # End
-
-
-
-
-
