@@ -11,7 +11,7 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-      countdown: 90000
+      # countdown: 90000
 ---
 
 ```{r setup, include=FALSE}
@@ -267,3 +267,9 @@ with the I-prior $\boldsymbol\beta\sim\text{N}_p(\mathbf 0, \kappa\psi^{-1}\math
 class: inverse, center, middle
 
 # End
+
+<!-- d -->
+<!-- ```{r, include = FALSE} -->
+<!-- file_name <- paste0(normalizePath("index.html")) -->
+<!-- webshot(file_name, "presentation.pdf", delay = 5) -->
+<!-- ``` -->

@@ -1,0 +1,169 @@
+---
+title: "PhD Thesis FAQ"
+author: "Haziq Jamil"
+date: "23/09/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### What is the difference between I-prior and $g$-prior?
+
+- The $g$-prior has covariance matrix proportional to the inverse Fisher information, while the I-prior's covariance matrix is proportional to the Fisher information iteself.
+
+- The $g$-prior is often used in empirical Bayes model selection, whereas I-prior is not restricted to this.
+
+- The convenience of $g$-priors are demonstrated:
+
+For the normal linear model with the prior
+
+$$
+\beta|\sigma^2 \sim \text{N}(b,\sigma^2 B)
+$$
+
+on the regression coefficients, the posterior distribution for $\beta$ is normal with mean
+
+$$
+(X^\top X + B^{-1})^{-1}(X^\top y + B^{-1}b)
+$$
+
+Which means that for the $g$-prior, we have 
+
+$$
+((1+1/g)X^\top X )^{-1}(X^\top y + 1/g\cdot X^\top X b) = \frac{g}{1+g}\hat\beta + \frac{1}{1+g} b
+$$
+
+the posterior mean is a convex combination between the OLS estimator and the prior mean.
+
+Furthermore, the marginal likelihood under a $g$-prior is such that the Bayes factor comparing two models reduces to a ratio involving residual sum of squares of the two models.
+
+### Why do we need Fréchet and Gâteaux derivatives?
+
+For infinite-dimensional vectors in a Hilbert space, it might be possible to compute derivatives componentwise.
+However, these componentwise derivatives may not conincide with the overall limit taken with respect to the topology of the vector space.
+
+The mathematics involving Fréchet and Gâteaux derivatives enhances the understanding of the Fisher information as being similar to a covariance operator (with the involvement of tensors).
+
+### What is the difference between variational EM and variational Bayes?
+
+Firstly, note that the EM algorithm can be modified to obtain MAP estimates by adding the log prior densities to the complete data log-likelihood.
+It is even possible to obtain posterior densities for not only the latent variables, but also for the parameters.
+
+By extension, variational EM is an EM algorithm in which the E-step is approximated using variational methods.
+Similarly, variational Bayes obtains variational approximations for all posterior densities of the model, both latent variables and parameters.
+Variational EM does not require specifying priors on parameters, but variational Bayes does.
+
+### Why do we need centred RKHSs?
+
+Centred RKHS ensure that the functions are zero-meaned, and this is crucial for the orthogonality requirement in the definition of functional ANOVA decompositions.
+In short, centering ensures that the ANOVA RKKS "makes sense".
+The ANOVA RKKS forms the basis of many regression problems e.g. multilevel, longitudinal, and so on.
+
+### Why is the prior mean set to zero?
+
+Zero is simply a convenient choice after centering the responses.
+Note that it does not have to be zero, but this reflects a prior choice for $f$, i.e. the estimated regression function will fall back to the prior mean in areas with low Fisher information is observed.
+
+### What's the significance of ECM algorithm?
+
+Although the front-loading method streamlines the EM greatly, we also explored ECM algorithm. 
+For the I-prior model at the M-step, conditional on all other parameter values and complete data, each parameter can be found in closed form.
+The significance of this is that it reduces the EM to a sequential updating scheme thereby bypassing the maximisation required at the M-step.
+
+Incidentally, that it has a closed form often implies that the (posterior) parameter densities are recognisable as a member of an exponential family distribution.
+This means that we could also assign prior distributions for the parameters such that the posterior densities are exponential family and then we can modify the EM to be Bayesian.
+If instead we maximise the posterior density with respect to the parameter, we obtain MAP estimates.
+
+### Why probit insteat of logit link for classification?
+
+The probit link greatly streamlines the variational EM algorithm, as keeping most distributions in the exponential family is highly advantageous.
+It would not be immediately obvious as to what the variational posteriors would be if a logistic distribution were used.
+
+### Why choose Kuo and Mallick's model instead of George and McCulloch or Dellaportas et al?
+
+K&M's model seems the simplest to implement an I-prior.
+The G&M model arrived first in the literature, building upon the class of `spike and slab' priors (not exactly, since the mixture is between a flat normal and the real prior for beta).
+This is not so easy to tune, many tuning parameters.
+Dellaportas et al model also has a mixture prior for beta and indicators in the model.
+
+It is simply a case of opportunity being highest with K&M models to use an I-prior.
+
+### Why not use RKHS of constant functions for intercept?
+
+It is certainly possible, but it is too much work for just an intercept. 
+The MLE for the intercept is the sample mean of $y$.
+Note that using an RKHS of constant functions and modifying the kernel to be $1+h$ implies a shrinkage for the intercept, so results are slightly different.
+
+### What is special about fBm RKHS for smoothing?
+
+There are several advantages of fBm RKHS for smoothing:
+- Automatic boundary correction: close to the boundary there is little Fisher information, so the prior variance is small and the regression function reverts to the prior mean.
+- Single or multidimensional smoothing models can be fit with just two parameters to be estimated (RKHS scale and error precision, while keeping Hurst fixed at 0.5).
+- fBm I-prior paths are smoother than functions in an fBm RKHS or realisations of fBm paths themselves. As a result, unlike Tikhonov regularisation, the I-prior is less likely to undersmooth the true regression function.
+
+### Why are Kreĭn spaces required for I-prior modelling?
+
+Restricting $\lambda$ to the positive reals is arbitrary and unnecessarily restrictive. Especially when considering sums and products of scaled RKHSs, having negative scale parameters also give additional flexibility. The resulting kernels from summation and/or multiplication with negative kernels may no longer be positive definite, and in such cases, they give rise to RKKSs instead.
+
+### What are advantages of EM algorithm over direct optimisation?
+
+In our experience, the EM algorithm is more stable than direct maximisation, in the sense that the EM steps increase the likelihood in a gentle manner that prevents sudden explosions of the likelihood. In contrast, the search direction using gradient-based methods can grow the likelihood too quickly and potentially causes numerical errors to creep in. As such, the EM is especially suitable if there are many scale parameters to estimate, but on the flip side, it is typically slow to converge. �
+
+A good strategy would be to switch to the direct optimisation method after running several EM iterations. This then combines the stability of the EM with the speed of direct optimisation.
+
+<!-- ### Why do we need to estimate RKHS scale parameters or error precision? -->
+
+<!-- In the simplest case of one covariate and one RKHS scale parameter, the I-prior regression function takes the form (without error) -->
+
+<!-- $$ -->
+<!-- y = \alpha + \lambda \sum_{i=1}^n h(x, x_i)w_i -->
+<!-- $$ -->
+
+<!-- We see that $\lambda$ acts as a scale parameter to balance the left-hand and right-hand side of the above equation. -->
+<!-- The scale of an RKHS may be arbitrary, so must be estimated. -->
+<!-- In other words, to assign a value to $\lambda$ implies a complete understanding of the role that $\lambda$ plays to scale the $y$'s and $x$'s, but often this is not the case. -->
+
+<!-- It is tempting to standardise and simply set $\lambda = 1$.  -->
+
+### Why not use Nyström method for EM algorithm?
+
+Limited experimentation with the Nyström method to approximate the kernel matrix yielded poor convergence of the EM algorithm.
+I believe this is because the approximation in the E-step degrades the quality of objective function to be maximised.
+I found that the tracked log-likelihood value in the EM did not reliably increase, and the parameter values do not stabilise.
+From experience, non-monotonic increase in log-likelihood value may also be observed in MC-EM algorithms, another form of approximation of the E-step.
+
+### What is the difference between I-prior and GP prior?
+
+The Gaussian process (GP) prior for $f\in\mathcal F$ in a regression model is
+
+$$
+\mathbf f = (f(x_1),\dots,f(x_n))^\top \sim \text{N}(\mathbf 0, \mathbf H_\eta)
+$$
+
+whereas the I-prior is
+
+$$
+\mathbf f = (f(x_1),\dots,f(x_n))^\top \sim \text{N}(\mathbf f_0, \mathbf H_\eta\boldsymbol\Psi\mathbf H_\eta)
+$$
+with $\mathbf f_0 = \mathbf 0$ almost a default choice for the prior mean.
+
+- There is a philosophical difference between the two:
+    - The motivation behind I-priors is to use an objective, data-driven prior suitable for a regression model. The I-prior is the entropy-maximising prior for the regression function.
+    - For GP prior, the dependence between two points $f(x)$ and $f(x')$ is made to depend on how `similar' the input points are in feature space (i.e. dependence through the kernel).
+- Moreover, there is a stronger emphasis of modelling rather than prediction in I-prior modelling compared to GPR.
+- In terms of kernel choice,
+    - Fractional Brownian motion kernel is mainly used for smoothing in I-prior modelling.
+    - The de-facto choice for the kernel in GP is squared exponential kernel, mainly because of the well studied approximations which in turn speed up computation.
+- Often, GP hyperparamters are treated as fixed, whereas I-prior parameters are almost always estimated.
+    - For GP hyperparameters, cross-validation is sometimes used (e.g. on lengthscale parameter of SE kernel) based on a certain criterion (e.g. MSE prediction).
+    - The estimation of the RKHS scale parameters are a hallmark of I-prior modelling, mainly because there is a belief that the function spaces are not similarly scaled if the inputs are not.
+    - This is typically overcomed in GPR by standardising the inputs, but we feel this is rather ad-hoc.
+- In either case, both I-prior and GPR have similar computational time and storage complexities.
+
+
+
+
+
+
