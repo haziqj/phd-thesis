@@ -1,0 +1,50 @@
+---
+title: "PhD Thesis: The Good, The Bad and The Ugly"
+author: "Haziq Jamil"
+date: "23/09/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The Good
+
+1. The iprior package. People have a way of getting their hands on I-prior modelling easily.
+
+2. Use of variational inference in a statistics application.
+
+3. BVS I-prior is very promising.
+
+4. Nice overview of functional analysis and RKHS/RKKS.
+
+## The Bad
+
+1. For I-probit model, estimation for $\Psi$ is described but not implemented. This requires calculation of $E[g(X)]$ for $X\sim$ truncated normal, which was not able to be reliably calculated.
+
+    Also, took a while to realise the identifiabilty issues surrounding estimation of $\Psi$. In `iprobit` software, not sure yet which constraints are best suited, or maybe more than one type of constraint can be implemented. But the question is the correct UI.
+
+2. Length of thesis! But actually  it is roughly < 200 pages in true content. The remainder was supplementary material. Moreover, I-priors are unknown and takes some time to carefully explain it.
+
+3. The parts involving Frechet and Gateaux have not fully matured, although we are certain that the theory is sound and should be applicable to Hilbert spaces. Doing it the regular way by componentwise differentiation feels a bit like handwaving, and we wanted to make it more sound.
+
+4. I-prior estimation is still slow.
+
+## The Ugly
+
+1. Proofs in appendices have only been verified once.
+
+2. Not exactly sure why the I-prior works well in BVS models. No theoretical basis for why it should do well, only intuition.
+
+3. I-prior for variable selection only, what about for other RKHS apart from canonical? Not yet figured out the best way for this.
+
+## Next projects
+
+1. Pursue a multipurpose truncated normal package. Explore efficient ways to not only sample from, but to compute integrals (expectations) involving truncated normal densities. Not only is it crucial for I-probit models, but also for other things like constrained regression, tobit, etc.
+
+2. How to make I-prior estimation fast? I think key lies in using subsample like the Nyström, but something more reliable. Something like an ensemble approach to learning. Stochastic optimisation? Variational inference?
+
+3. For I-prior BVS there is almost no tuning parameters to set. I was thinking of variational Bayes as a very promising way forward for this. Skipping the sampling step would be great since this takes a lot of time.
+
+4. For the I-prior BVS then also want to see what's the best way to expand to categorical variables, ordered variables, etc.

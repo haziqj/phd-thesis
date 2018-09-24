@@ -11,7 +11,7 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-      # countdown: 90000
+      countdown: 120000
 ---
 
 ```{r setup, include=FALSE}
