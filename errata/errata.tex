@@ -31,22 +31,36 @@
 \begin{enumerate}
   \item \textbf{Additional details regarding maximum entropy priors.}
   
-  Why maximum entropy priors? What is entropy? Not the original motivation, but it was a nice consequence that was noticed.
-  Motivate the principle of maximum entropy.
+  The central tenet of the thesis is estimating regression functions using a novel methodology which improves upon Tikhonov regularisation using an objective, data-dependent prior for the regression function.
   
-  \begin{itemize}
-    \item For the regression problem, one could choose to assign subjective prior on the regression function. Using Gaussian priors, this is Gaussian process regression. Gaussian and Levy process priors are described in Pillai, Wu, Liang, Mukerjee and Wolpert (2007).
-    \item Instead we focus on objective priors. E.g. include maximum-entropy priors, Jeffreys' priors, reference priors, g-priors, etc.
-  \end{itemize}
+  For the regression problem \cref{eq:model1}, one could choose to assign a subjective prior on the regression function.
+  For instance, using Gaussian priors, this is Gaussian process regression \citep{rasmussen2006gaussian}.
   
+  Instead, we focus on objective priors, specifically a prior on the regression function based on the principle of maximum entropy.
+  \citet{jaynes1957a,jaynes1957b,jaynes2003probability} argues that in the absence of any prior knowledge, a probability distribution that maximises information entropy (as per definition \hl{XX}) should be advocated.
+  Entropy-maximising priors is ``uninformative'' in the sense that it minimises the amount of prior information encoded into prior distributions.
+  
+  In Chapter 3, we show that the entropy maximising prior distribution for the regression function is Gaussian with covariance kernel proportional to its Fisher \underline{i}nformation (hence the name \underline{I}-prior).
+  This has the intuitive property that the more Fisher information available regarding the regression function, the larger its prior variance, and hence lesser influence of the prior mean and more of the data, and vice versa.
+  
+  \textit{Amendments to thesis}: Reworded introductory chapter to better motivate I-priors.
+    
   \item \textbf{How do I-priors benefit from the principle of maximum entropy? Compare to other priors.}
   
-  A comparison is given in Bergsma (2018).
-  Here, we make brief statements regarding advantage of maximum entropy prior over other objective priors.
+  Besides being based on the principle of maximum entropy, we have not discovered a definitive optimality criterion for which the I-prior satisfies.
+  However, our small and large sample simulations and real-data examples have been promising, especially in terms of predictive abilities.
+  
+  The prior for the regression function can certainly be chosen based on other objective principles, and we discuss these briefly.
+  An expanded discussion of these priors is given in \citet{bergsma2017}.
+  \begin{itemize}
+    \item The $g$-prior \citep{zellner1986assessing} for regression coefficients has covariance proportional to the \emph{inverse} of its Fisher information. This is entirely different from I-priors, and a comparison is discussed in \cref{chapter6} and \cref{misc:gprior}.
+    \item Jeffreys prior \citep{jeffreys1946invariant} is proportional to the square root of the determinant of the Fisher information. For large or even potentially infinite-dimensional regression functions this poses a problem, so practically speaking, it is only suitable for low-dimensional problems.
+    \item A particular kernel called the Fisher kernel has been used in kernel machines. Like the I-prior, it also uses Fisher information, but the similarities end there. 
+  \end{itemize}
   
   \item \textbf{On the choice of I-priors leading to a finite-dimensional estimator of the regression function.}
   
-  In the conclusion section of Chapter 3, I wrote
+  In the conclusion section of \cref{chapter3}, I wrote
   
   \begin{displayquote}
 The dimension of the function space $\cF$ could be huge, infinite dimensional even, while the task of estimating $f\in\cF$ only relies on a finite amount of data point.
@@ -72,6 +86,17 @@ This suggests that the data only allows us to provide an estimation to the funct
   
   Arbitrary kernels can be used within the I-prior methodology. 
   But we choose specifically the linear, fBm, and Pearson RKHSs as the building blocks, and using these RKHSs we build more complex RKHSs/RKKSs using the polynomial or ANOVA construction.
+  A short discussion of the choice of these is as follows:
+  \begin{itemize}
+    \item The canonical (linear) kernel obviously produces ``straight-line'' regression functions, similar to that of linear regression. This choice of kernel is obviously for linear problems.
+    \item The Pearson kernel takes discrete covariates as input. This is used for regressing independent variables against categorical covariates, or used in an ANOVA-type construction to deal with ``group'' information (e.g. in multilevel modelling).
+    \item The fBm kernel is used for smoothing problems. Certainly other smooth kernels can be used, such as squared-exponential kernel, but the fBm kernel has several desirable properties
+    \begin{enumerate}
+      \item Requires only one smoothing parameter (the Hurst coefficient), which can usually be left at the default of 1/2; 
+      \item Automatic boundary correction in the sense described in Section 4.1.5; and 
+      \item Prior and posterior sample paths under an I-prior are suitably smooth and not as rough as fBm paths themselves or even functions in an fBm RKHS.
+    \end{enumerate}
+  \end{itemize}
   
   \item \textbf{On the connection with Generalised Additive Models (GAMs).}
   
@@ -173,15 +198,15 @@ This suggests that the data only allows us to provide an estimation to the funct
   \item \textbf{On the Laplace approximation for I-probit models}
   
   The modes of the Laplace approximation was obtained using a quasi-Newton algorithm.
-  No EM algorithm was used (Brümmer 2014).
-  A suggestion of using INLA is received.
+  No EM algorithm was used. 
+  A suggestion of using INLA was received.
   
   \textit{Amendments to thesis}: The suggestion of INLA will be noted in \hl{where}.
 
   \item \textbf{Variational inference for logit link}
 
   The logit link is not compatible with I-priors (see point 13). 
-  Even if it were used, a different form of variational inference would be required other than the mean-field variational approximation, e.g. a local variational bound (\hl{Bishop 2006}).
+  Even if it were used, a different form of variational inference would be required other than the mean-field variational approximation, e.g. a local variational bound \citep{bishop2006pattern}.
   
   \item \textbf{Comparing Gaussian process priors}
 
@@ -193,19 +218,46 @@ This suggests that the data only allows us to provide an estimation to the funct
   
   \item \textbf{Additional criticisms to Bayesian variable selection}
   
-  impact of prior, Lindley paradox
+  \textit{Amendments to thesis}: On Page 201, the following was added:
+  
+\begin{displayquote}
+The choice of priors for model parameters affects consistency of Bayesian model selection procedures. 
+Specifically, improper priors cannot be used to calculate posterior model probabilities \citep{casella2009consistency} ---otherwise, one risks running into Lindley's paradox \citep{lindley1957statistical}.
+\end{displayquote} 
+
+  In the footnotes, a short explanation of the Lindley paradox was included, which reads
+
+\begin{displayquote}
+Briefly, in testing a point null hypothesis of the mean of a normally distributed parameter, the null hypothesis is increasingly accepted as the prior variance of the parameter approaches infinity, regardless of evidence for or against the null.
+The paradox is also termed Jeffreys-Lindley paradox \citep{robert2014jeffreys}.
+\end{displayquote} 
+  
     
   \item \textbf{Clarification on model-averaged version of $\boldsymbol\beta$}
 
-  Page 207. Yes, on their own it would probably not make sense... these betas are instead used for prediction etc.
-  Need to read MAdigan and Raftery 1994.
-  It is possible to do this, and may even be informative. 
-  High spike at zero tells us that this coefficient is almost zero all the time. 
-  Large confidence band means that it wasn't included in the model that often.
-  However, don't bother interpreting these regression coefficients.
+  On page 207, a reference was made to ``model-averaged'' coefficients.
+  In general, any quantity of interest $\Delta$ can be model-averaged \citep{madigan1994model}, for which its posterior distribution is given by
+  \begin{equation}
+    p(\Delta|\by) = \sum_{M_k \in \cM} p(\Delta|\by,M_k) p(M_k|\by).
+  \end{equation}
+  The quantity $\Delta$ may be ``effect size, a future observable, or the utility of a course of action'' \citep{madigan1994model, hoeting1999bayesian}.
+  Averaging in such a manner incorporates model uncertainty into analyses, which avoids overconfidence of inference surrounding $\Delta$.
 
-  Model averaged coefficients includes model uncertainty, and gives an indication of how important a variable is. 
-  However, interpretation not straight forward.
+  The original motivation for model averaging was to improve upon predictive accuracy.
+  Predictions obtained in such a manner is understood to be the average prediction over a subset/all models as weighted by posterior model probabilities.
+  
+  Explanatory inference using model-averaged coefficients on the other hand, is not practically meaningful.
+  \citet{banner2017considerations} writes that ``regression coefficients... may not hold equivalent interpretations across all of the models in which they appear'', and one reason for this might be ``interpretation of partial regression coefficients can depend on other variables that have been included in the model''.
+  The use of model-averaged effect sizes may result in misleading inferences \citep{cade2015model}.
+  
+  The aims of Bayesian variable selection using I-priors is two-fold: 1) to ascertain variable importance; and 2) prediction using model-averaged regression coefficients.
+  To this end, we advocate the view of \citet{madigan1994model,hoeting1999bayesian} that quantities of interest should be model-averaged to avoid overconfidence, \emph{and} we also agree with the assessment of \citet{banner2017considerations,cade2015model} that using model-averaged regression coefficients is meaningless.
+  
+  To clarify, in our data applications in Sections 6.7.1 and 6.7.2 report the model-averaged regression coefficients, but no attempt of interpreting these coefficients were made.
+  The data example in Section 6.7.3 highlights predictive accuracy of the choice of I-priors in Bayesian variable selection, in which predictive RMSE was made using model-averaged regression coefficients.
+  In the simulation study, the aim was to assess the performance of the I-prior by looking at the discrepancy between what the BVS model thinks is the highest probability model, and what the actual model behind the data generating mechanism was.
+  
+  \textit{Amendments to thesis}: Added remark on page 207 to clarify that the use of model-averaged regression coefficients for explanatory inference is not meaningful.
 
 \end{enumerate}
 

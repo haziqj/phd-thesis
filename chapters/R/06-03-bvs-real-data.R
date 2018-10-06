@@ -1,4 +1,4 @@
-# Chapter 8
+# Chapter 6
 # Bayesian Variable Selection using I-priors simulation study
 source("00-prelim.R")
 chapter <- "06"
@@ -102,3 +102,62 @@ ggsave("figure/06-aerobic_coef.pdf", plot_coef2(mod1), "pdf",
        width = 7, height = 6.4)
 move_fig_to_chapter()
 (mod2 <- ipriorBVS(Oxygen ~ ., aerobic, two.stage = TRUE))
+
+# Model 1 = 101010
+# Model 2 = 001000
+# Model 3 = 101000
+# Model 4 = 001010
+
+create_mod_dat <- function(model, chain) {
+  the.mod <- as.numeric(strsplit(model, "")[[1]])
+  mod1.mcmc <- mod1$mcmc[[1]]
+  tmp <- as.data.frame(mod1.mcmc[[chain]])
+  ind <- which(tmp$`gamma[1]` == the.mod[1] &
+                 tmp$`gamma[2]` == the.mod[2] &
+                 tmp$`gamma[3]` == the.mod[3] &
+                 tmp$`gamma[4]` == the.mod[4] &
+                 tmp$`gamma[5]` == the.mod[5] &
+                 tmp$`gamma[6]` == the.mod[6])
+  plot.df <- tmp[ind, grep("gb", colnames(tmp))]
+  plot.df[, which(the.mod == 0)] <- NA
+  colnames(plot.df) <- paste0("X", seq_len(ncol(plot.df)))
+  cbind(plot.df, "Chain" = chain, "Model" = model)
+}
+
+create_avg_dat <- function() {
+  tmp <- mod1$mcmc[[1]]
+  res <- NULL
+  for (j in 1:8) {
+    res <- rbind(
+      res,
+      cbind(tmp[[j]][, grep("gb", colnames(tmp[[j]]))], "Chain" = j)
+    )
+  }
+  colnames(res) <-  c(paste0("X", seq_len(ncol(res) - 1)), "Chain")
+  res <- cbind(res, "Model" = "Average")
+  res
+}
+
+create_full_mod_dat <- function() {
+  models <- c("101010", "001000", "101000", "001010")
+  res <- NULL
+  for (i in seq_along(models)) {
+    for (j in 1:8) {  # number of chains
+      res <- rbind(res, create_mod_dat(models[i], j))
+    }
+  }
+  res <- rbind(res, create_avg_dat())
+  res$Chain <- as.factor(res$Chain)
+  for (i in 1:6) res[[i]] <- as.numeric(res[[i]])
+  res
+}
+
+ggplot(melt(create_full_mod_dat(), id = c("Chain", "Model"))) +
+  geom_line(aes(x = value, group = Chain, col = Chain),
+            stat = "density") +
+  facet_grid(Model ~ variable) +
+  coord_cartesian(ylim = c(0, 6)) +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+
