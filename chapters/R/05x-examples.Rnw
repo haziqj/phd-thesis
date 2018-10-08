@@ -506,8 +506,8 @@ In comparing the distribution of the spoligotypes over the years, we may refer t
 For each time period, we also superimposed the actual observations onto the predicted surface probabilities.
 In addition, coloured dotted lines are displayed to indicate the ``decision boundaries'' for each of the four spoligotypes.
 The most evident change is seen to the spatial distribution of spoligotype 12, with the decision boundary giving it a large area in years 1996 and earlier, but this steadily shrunk over the years.
-Spoligotype 9, which is most commonly seen in the east of Cornwall, seems to have made its way down to the south-west over the years.
-The other two spoligotypes seem to be rather constant over the years.
+The occurrences of spoligotype 9 in the south-west, which is most commonly seen in the east of Cornwall, is not deemed to be significant by the model.
+The other two spoligotypes are also relatively unchanged across the years.
 
 \end{document}
 

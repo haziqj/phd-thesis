@@ -6,14 +6,7 @@
   \usepackage{../haziq_maths}
   \usepackage{../haziq_glossary}
   \addbibresource{../bib/haziq.bib}
-  \externaldocument{../chapters/01/.texpadtmp/chapter1}
-  \externaldocument{../chapters/02/.texpadtmp/chapter2}  
-  \externaldocument{../chapters/03/.texpadtmp/chapter3}
-  \externaldocument{../chapters/04/.texpadtmp/chapter4}
-  \externaldocument{../chapters/05/.texpadtmp/chapter5}
-  \externaldocument{../chapters/06/.texpadtmp/chapter6}
-  \externaldocument{../chapters/07/.texpadtmp/chapter7}
-  \externaldocument{../chapters/appendix/.texpadtmp/appendix}  
+  \externaldocument{../.texpadtmp/phd-thesis}  
 \fi
 
 \begin{document}
@@ -166,7 +159,7 @@ This suggests that the data only allows us to provide an estimation to the funct
   \item \textbf{Would smoother GPR yield better results in the Tecator example?}
 
   As we understand it, squared exponential kernels are the de-facto kernels for Gaussian process regression.
-  As seen from the results in Table 4.5 on p. 141, GPR does not perform well compared to I-priors or any other method for that matter.
+  As seen from the results in \hl{Table 4.5 on p. 141}, GPR does not perform well compared to I-priors or any other method for that matter.
   
   Perhaps performance can be improved by using `smoother' kernels.
   For instance, the \pkg{kernlab} package in \proglang{R} provides options for the hyperbolic tangent kernel, Laplacian kernel, Bessel kernel, ANOVA Gaussian RBF kernel, and the spline kernel.
@@ -178,15 +171,15 @@ This suggests that the data only allows us to provide an estimation to the funct
   
   \item \textbf{Limiting form of I-priors in relation to integrated Brownian motion and cubic splines}
 
-  Also compare GPR with I-priors in terms of smoothness.
+  The link between I-priors and integrated Brownian bridge, which has a close relationship with cubic spline smoothers, has been brought up in in \hl{Remark 4.3 page?}.
 
   \item \textbf{The logit link with I-priors}
   
-  In Chapter 5, the I-prior methodology is extended by way of a `probit-like' link function on the regression functions. 
+  In \cref{chapter5}, the I-prior methodology is extended by way of a `probit-like' link function on the regression functions. 
   The probit link was chosen as this is compatible with a variational method of estimation---the normality of the distributions implied by the link function facilitates variational inference.
   
   The logit link is not compatible with the I-prior methodology.
-  As per the latent variable motivation in Section 5.1, the I-prior is assigned to the latent regression problem.
+  As per the latent variable motivation in \cref{sec:iprobitlatentvarmot}, the I-prior is assigned to the latent regression problem.
   This latent regression problem is assumed to have normally distributed errors, which is one of the crucial assumptions of I-prior modelling.
   This, in turn, yields the probit link.
   
@@ -199,9 +192,9 @@ This suggests that the data only allows us to provide an estimation to the funct
   
   The modes of the Laplace approximation was obtained using a quasi-Newton algorithm.
   No EM algorithm was used. 
-  A suggestion of using INLA was received.
+  A suggestion of using integrated nested Laplace approximations (INLA) was received.
   
-  \textit{Amendments to thesis}: The suggestion of INLA will be noted in \hl{where}.
+  \textit{Amendments to thesis}: The suggestion of INLA has been noted on \mypageref{errata15}.
 
   \item \textbf{Variational inference for logit link}
 
@@ -218,7 +211,7 @@ This suggests that the data only allows us to provide an estimation to the funct
   
   \item \textbf{Additional criticisms to Bayesian variable selection}
   
-  \textit{Amendments to thesis}: On Page 201, the following was added:
+  \textit{Amendments to thesis}: On \mypageref{errata18}, the following was added:
   
 \begin{displayquote}
 The choice of priors for model parameters affects consistency of Bayesian model selection procedures. 
@@ -235,7 +228,7 @@ The paradox is also termed Jeffreys-Lindley paradox \citep{robert2014jeffreys}.
     
   \item \textbf{Clarification on model-averaged version of $\boldsymbol\beta$}
 
-  On page 207, a reference was made to ``model-averaged'' coefficients.
+  On \mypageref{errata19}, a reference was made to ``model-averaged'' coefficients.
   In general, any quantity of interest $\Delta$ can be model-averaged \citep{madigan1994model}, for which its posterior distribution is given by
   \begin{equation}
     p(\Delta|\by) = \sum_{M_k \in \cM} p(\Delta|\by,M_k) p(M_k|\by).
@@ -253,11 +246,18 @@ The paradox is also termed Jeffreys-Lindley paradox \citep{robert2014jeffreys}.
   The aims of Bayesian variable selection using I-priors is two-fold: 1) to ascertain variable importance; and 2) prediction using model-averaged regression coefficients.
   To this end, we advocate the view of \citet{madigan1994model,hoeting1999bayesian} that quantities of interest should be model-averaged to avoid overconfidence, \emph{and} we also agree with the assessment of \citet{banner2017considerations,cade2015model} that using model-averaged regression coefficients is meaningless.
   
-  To clarify, in our data applications in Sections 6.7.1 and 6.7.2 report the model-averaged regression coefficients, but no attempt of interpreting these coefficients were made.
-  The data example in Section 6.7.3 highlights predictive accuracy of the choice of I-priors in Bayesian variable selection, in which predictive RMSE was made using model-averaged regression coefficients.
+  To clarify, in our data applications in \cref{sec:aerobicbvs,sec:airpollution} report the model-averaged regression coefficients, but no attempt of interpreting these coefficients were made.
+  The data example in \cref{sec:ozone} highlights predictive accuracy of the choice of I-priors in Bayesian variable selection, in which predictive RMSE was made using model-averaged regression coefficients.
   In the simulation study, the aim was to assess the performance of the I-prior by looking at the discrepancy between what the BVS model thinks is the highest probability model, and what the actual model behind the data generating mechanism was.
   
-  \textit{Amendments to thesis}: Added remark on page 207 to clarify that the use of model-averaged regression coefficients for explanatory inference is not meaningful.
+  \textit{Amendments to thesis}: The following remark was added on \mypageref{errata19}:
+
+\begin{displayquote}
+  The intention of computing model-averaged regression coefficients $\btheta$ is solely for the inclusion of model uncertainty.  
+  There is a strong agreement in the Bayesian variable selection literature that that such coefficients are practically meaningless when it comes to explanatory inferences.
+  \citet{banner2017considerations} writes that ``regression coefficients... may not hold equivalent interpretations across all of the models in which they appear'', and one reason for this might be ``interpretation of partial regression coefficients can depend on other variables that have been included in the model''.
+  The use of model-averaged effect sizes may result in misleading inferences \citep{cade2015model}.
+\end{displayquote} 
 
 \end{enumerate}
 

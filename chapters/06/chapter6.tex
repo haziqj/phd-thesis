@@ -76,9 +76,13 @@ When several competing models have high posterior probabilities, regression coef
 Averaging over a set of models takes into account the uncertainty surrounding model selection, which other standard statistical procedures ignore upon selection of a single model from which to do inference.
 It is known to be the case that predictive accuracy of the model-averaged quantity is improved, as measured by a logarithmic scoring rule \citep{raftery1997bayesian}.
 
+\label{errata18}
 Bayesian model selection is not without criticism, however.
 For complex models with many predictors or samples, MCMC is slow and may mix poorly \citep{OHara2009}.
 Often, there are a lot of tuning parameters that need to be set correctly for the problem at hand.
+Also, the choice of priors for model parameters affects consistency of Bayesian model selection procedures. 
+Specifically, improper priors cannot be used to calculate posterior model probabilities \citep{casella2009consistency}---otherwise, one risks running into Lindley's paradox\footnote{Briefly, in testing a point null hypothesis of the mean of a normally distributed parameter, the null hypothesis is increasingly accepted as the prior variance of the parameter approaches infinity, regardless of evidence for or against the null.
+The paradox is also termed Jeffreys-Lindley paradox \citep{robert2014jeffreys}.} \citep{lindley1957statistical}.
 
 The plan for this chapter is to describe a fully Bayesian model for variable selection using I-priors. 
 The approach that we take is a stochastic search of the model space due to \citet{Kuo1998}, realised through a simple Gibbs sampling procedure.
@@ -297,6 +301,14 @@ Thus, any inferential procedure surrounding the regression coefficients avoids t
 Note that, since $\btheta$ will contain values of exactly zero when predictors are dropped out of the model, the posterior density for $\btheta$ is a mixture of a point mass at zero and a normal density.
 In any case, the likelihood only provides sufficient information to identify the product of $\bbeta$ and $\gamma$, but not each of them separately \citep{Kuo1998}.
 
+\label{errata19}
+\begin{remark}
+  The intention of computing model-averaged regression coefficients $\btheta$ is solely for the inclusion of model uncertainty.  
+  There is a strong agreement in the Bayesian variable selection literature that that such coefficients are practically meaningless when it comes to explanatory inferences.
+  \citet{banner2017considerations} writes that ``regression coefficients... may not hold equivalent interpretations across all of the models in which they appear'', and one reason for this might be ``interpretation of partial regression coefficients can depend on other variables that have been included in the model''.
+  The use of model-averaged effect sizes may result in misleading inferences \citep{cade2015model}.
+\end{remark}
+
 Finally, any quantity of interest $\Delta$ can be incorporated as part of the Gibbs sampling procedure.
 That is, at each Gibbs iteration $t=1,\dots,T$, calculate $\Delta^{(t)}$ as a function of the parameter values at iteration $t$.
 This can be done during the Gibbs sampling process, or even after the fact as part of a post-processing procedure.
@@ -439,6 +451,7 @@ Reproducible code is available at \url{http://myphdcode.haziqj.ml}.
 In all analyses, a two-stage procedure was conducted for the I-prior model, where each stage consists of obtaining 15,000 MCMC samples (including 5,000 for burn-in).
 
 \subsection{Aerobic data set}
+\label{sec:aerobicbvs}
 \index{aerobic data set}
 
 \begin{figure}[htb]

@@ -114,6 +114,8 @@ Note that, should a fully Bayesian approach be undertaken, i.e. priors prescribe
 
 In any case, each evaluation of the objective function $L(\theta) = \log p(\by|\btheta)$ involves finding the posterior modes $\hat\bw$.
 This is a slow and difficult undertaking, especially for large sample sizes $n$---even assuming computation of the class probabilities is efficient---because the dimension of this integral is exactly the sample size.
+Perhaps, for a future study, the integrated nested Laplace approximation (INLA, \cite{rue2009approximate}) could be looked at.
+\label{errata15}
 
 Standard errors for the parameters can be obtained from diagonal entries of the information matrix involving the second derivatives of $\log p(\by)$.
 However, it is not known whether the asymptotic variance of the parameters are affected by a Laplace approximation to the likelihood.
