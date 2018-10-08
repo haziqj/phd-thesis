@@ -23,7 +23,7 @@
   \textit{\large Regression modelling using priors depending on} \\[-0.2em]
   \textit{\large Fisher information covariance kernels} \\[0.5em]
   {\large Md. Haziq Md. Jamil} \\
-  {\large 2 October 2018}
+  {\large 8 October 2018}
 \end{center}
 
 \vspace{2em}
@@ -37,10 +37,10 @@
   For instance, using Gaussian priors, this is Gaussian process regression \citep{rasmussen2006gaussian}.
   
   Instead, we focus on objective priors, specifically a prior on the regression function based on the principle of maximum entropy.
-  \citet{jaynes1957a,jaynes1957b,jaynes2003probability} argues that in the absence of any prior knowledge, a probability distribution that maximises information entropy (as per definition \hl{XX}) should be advocated.
+  \citet{jaynes1957a,jaynes1957b,jaynes2003probability} argues that in the absence of any prior knowledge, a probability distribution that maximises information entropy (as per \cref{def:entropy}) should be advocated.
   Entropy-maximising priors is ``uninformative'' in the sense that it minimises the amount of prior information encoded into prior distributions.
   
-  In Chapter 3, we show that the entropy maximising prior distribution for the regression function is Gaussian with covariance kernel proportional to its Fisher \underline{i}nformation (hence the name \underline{I}-prior).
+  In \cref{chapter3}, we show that the entropy maximising prior distribution for the regression function is Gaussian with covariance kernel proportional to its Fisher \underline{i}nformation (hence the name \underline{I}-prior).
   This has the intuitive property that the more Fisher information available regarding the regression function, the larger its prior variance, and hence lesser influence of the prior mean and more of the data, and vice versa.
   
   \textit{Amendments to thesis}: Reworded introductory chapter to better motivate I-priors.
@@ -154,10 +154,10 @@ This suggests that the data only allows us to provide an estimation to the funct
 
   \item \textbf{On the `99-dimensional' covariate, p. 138}
   
-  The example in Section 4.5.3 concerns functional covariates, that is, each observed $x_i$ is assumed to belong to a function space $\cX$. 
+  The example in \hl{Section 4.5.3} concerns functional covariates, that is, each observed $x_i$ is assumed to belong to a function space $\cX$. 
   As absorption data had not been measured continuously, 100 equally-spaced discretised points were measured and this makes up each data point $x_i$.
   
-  As per Section 4.1.6, we make an implicit assumption that $\cX$ is a Hilbert-Sobolev space with inner product given in that section.
+  As per \cref{sec:regfunctionalcov}, we make an implicit assumption that $\cX$ is a Hilbert-Sobolev space with inner product given in that section.
   In order to apply the linear, fBm or any other kernels which make use of inner products, one should make the approximation as given by the second equation on page 109. \hl{need to number this}.
   It involves taking first differences of the 100-dimensional covariate, and this reduces to 99 dimensions.
 
