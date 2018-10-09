@@ -39,12 +39,12 @@ All references and page numbers in this document pertain to the amended thesis (
   In \cref{chapter3}, we show that the entropy maximising prior distribution for the regression function is Gaussian with covariance kernel proportional to its Fisher \underline{i}nformation (hence the name \underline{I}-prior).
   This has the intuitive property that the more Fisher information available regarding the regression function, the larger its prior variance, and hence lesser influence of the prior mean and more of the data, and vice versa.
   
-  \textit{Amendments to thesis}: Reworded introductory chapter to better motivate I-priors.
+  \textit{Amendments to thesis}: Reworded introductory chapter to better motivate I-priors \colp{\mypageref{errata1}}.
     
   \item \textbf{How do I-priors benefit from the principle of maximum entropy? Compare to other priors.}
   
   Besides being based on the principle of maximum entropy, we have not discovered a definitive optimality criterion for which the I-prior satisfies.
-  However, our small and large sample simulations and real-data examples have been promising, especially in terms of predictive abilities.
+  However, our small and large sample simulations and real-data examples have been promising, especially in terms of predictive abilities (as shown by the examples in \cref{sec:ipriorexamples} \colp{\mypageref{sec:ipriorexamples}} and \cref{sec:iprobiteg} \colp{\mypageref{sec:iprobiteg}}).
   
   The prior for the regression function can certainly be chosen based on other objective principles, and we discuss these briefly.
   An expanded discussion of these priors is given in \citet{bergsma2017}.
@@ -56,7 +56,7 @@ All references and page numbers in this document pertain to the amended thesis (
   
   \item \textbf{On the choice of I-priors leading to a finite-dimensional estimator of the regression function.}
   
-  In the conclusion section of \cref{chapter3}, I wrote
+  In the conclusion section of \cref{chapter3} \colp{\mypageref{errata3}}, I wrote
   
   \begin{displayquote}
 The dimension of the function space $\cF$ could be huge, infinite dimensional even, while the task of estimating $f\in\cF$ only relies on a finite amount of data point.
@@ -76,27 +76,27 @@ This suggests that the data only allows us to provide an estimation to the funct
   The likelihood for $f$ therefore does not depend on $r$, and since $f_n$ is orthogonal to $r$, the data do not contain Fisher information regarding $r$.
   Thusly, it is not possible to perform inference on $r$ using the data at hand, and one can only do statistical inference on $f_n$.
   
-  \textit{Amendments to thesis}: A linguistic argument is added at the end of Chapter 3 (\hl{page?}). Most of the details have already been provided in various parts of the thesis (\hl{where?}), but this additional paragraph should help make this clearer.
+  The main details of this argument has been provided in \cref{sec:inducedFisherRKHS} \colp{\mypageref{sec:inducedFisherRKHS}}.
   
   \item \textbf{How to motivate the choice of kernels?}
   
-  Arbitrary kernels can be used within the I-prior methodology. 
-  But we choose specifically the linear, fBm, and Pearson RKHSs as the building blocks, and using these RKHSs we build more complex RKHSs/RKKSs using the polynomial or ANOVA construction.
-  A short discussion of the choice of these is as follows:
+  Any kernel, and thus RKHS, can be used with the I-prior methodology.
+  In this thesis, we chose to study the linear, fBm and Pearson RKHS as the building blocks, and using these RKHSs we build more complex RKHSs/RKKSs using the polynomial or ANOVA construction.
+  A short discussion for motivating the choice of each of these kernels is given below:
   \begin{itemize}
-    \item The canonical (linear) kernel obviously produces ``straight-line'' regression functions, similar to that of linear regression. This choice of kernel is obviously for linear problems.
-    \item The Pearson kernel takes discrete covariates as input. This is used for regressing independent variables against categorical covariates, or used in an ANOVA-type construction to deal with ``group'' information (e.g. in multilevel modelling).
+    \item The canonical (linear) kernel produces ``straight-line'' regression functions, similar to that of linear regression. This choice of kernel is obviously for linear problems.
+    \item The Pearson kernel takes discrete covariates as input. This is used for regressing independent variables against categorical covariates, or used in an ANOVA-type construction to deal with ``group'' information (e.g. in multilevel modelling). Other discrete kernels might be used (e.g. identity kernel or string kernel). The Pearson kernel uses inverse probability weights as a measure of similarity between two discrete inputs.
     \item The fBm kernel is used for smoothing problems. Certainly other smooth kernels can be used, such as squared-exponential kernel, but the fBm kernel has several desirable properties
     \begin{enumerate}
       \item Requires only one smoothing parameter (the Hurst coefficient), which can usually be left at the default of 1/2; 
-      \item Automatic boundary correction in the sense described in Section 4.1.5; and 
+      \item Automatic boundary correction in the sense described in \cref{sec:ipriorsmoothingmod} \colp{\mypageref{sec:ipriorsmoothingmod}}; and 
       \item Prior and posterior sample paths under an I-prior are suitably smooth and not as rough as fBm paths themselves or even functions in an fBm RKHS.
     \end{enumerate}
   \end{itemize}
   
   \item \textbf{On the connection with Generalised Additive Models (GAMs).}
   
-  Apart from the additive nature of the equation in reference (\hl{Eq. 4.2, p. 103}), the I-prior methodology is completely different from additive models or GAMs.
+  Apart from the additive nature of \cref{eq:anovamultilevel} \colp{\mypageref{eq:anovamultilevel}}, the I-prior methodology is completely different from additive models or GAMs.
   
   In the I-prior methodology, the principle of decomposing the regression function into additive parts is the ANOVA functional decomposition.
   The advantage of this is that we are able to also describe two-, three- or higher order interactions, and this is useful for describing multilevel or longitudinal models.
@@ -150,16 +150,15 @@ This suggests that the data only allows us to provide an estimation to the funct
 
   \item \textbf{On the `99-dimensional' covariate, p. 138}
   
-  The example in \cref{sec:regfuncex} concerns functional covariates, that is, each observed $x_i$ is assumed to belong to a function space $\cX$. 
+  The example in \cref{sec:regfuncex} \colp{\mypageref{sec:regfuncex}} concerns functional covariates, that is, each observed $x_i$ is assumed to belong to a function space $\cX$. 
   As absorption data had not been measured continuously, 100 equally-spaced discretised points were measured and this makes up each data point $x_i$.
   
-  As per \cref{sec:regfunctionalcov}, we make an implicit assumption that $\cX$ is a Hilbert-Sobolev space with inner product given in that section.
+  As per \cref{sec:regfunctionalcov} \colp{\mypageref{sec:regfunctionalcov}}, we make an implicit assumption that $\cX$ is a Hilbert-Sobolev space with inner product given in that section.
   In order to apply the linear, fBm or any other kernels which make use of inner products, one should make the approximation as given by \cref{eq:hilbsobip2}.
   It involves taking first differences of the 100-dimensional covariate, and this reduces to 99 dimensions.
   
-  The above has been explained in the second paragraph on \pageref{errata11}.
+  The above has been explained in the second paragraph on \mypagereffull{errata11}.
 
-  
   \item \textbf{Would smoother GPR yield better results in the Tecator example?}
 
   As we understand it, squared exponential kernels are the de-facto kernels for Gaussian process regression.
