@@ -275,7 +275,7 @@ A plot of the fitted regression curves onto the cow data set is shown in \cref{f
 <<cows.plot, echo = FALSE, fig.height = 3.5, fig.width = 7, fig.cap = "A plot of the I-prior fitted regression curves from Model 5. In this model, growth curves differ among cows and by treatment effect (with an interaction between cows and treatment effect), thus producing these 60 individual lines, one for each cow, split between their respective treatment groups (A or B).", fig.pos = "htb">>=
 @
 
-\subsection{Regression with a functional covariate}
+\subsection{Regression with a functional covariate}\label{sec:regfunccov}
 \index{functional regression}
 \index{Tecator data set}
 \index{ANOVA!kernel/RKKS}

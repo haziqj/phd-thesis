@@ -1,4 +1,4 @@
-\documentclass[11pt,showframe]{report}
+\documentclass[11pt,showframe,twoside,openright]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
@@ -16,10 +16,13 @@
   \textit{\large Regression modelling using priors depending on} \\[-0.2em]
   \textit{\large Fisher information covariance kernels} \\[0.5em]
   {\large Md. Haziq Md. Jamil} \\
-  {\large 8 October 2018}
+  {\large 10 October 2018}
 \end{center}
 
 \vspace{2em}
+
+These are the responses to the comments and questions raised by the examiners relating to the thesis submitted for examination (git version \verb|master@54604a8|).
+All references and page numbers in this document pertain to the amended thesis (git version \verb|master@XXXXX|).
 
 \begin{enumerate}
   \item \textbf{Additional details regarding maximum entropy priors.}
@@ -93,25 +96,25 @@ This suggests that the data only allows us to provide an estimation to the funct
   
   \item \textbf{On the connection with Generalised Additive Models (GAMs).}
   
-  Apart from the additive nature of the equation in reference (\hl{Eq. 4.2, p. 103}), the I-prior methodology is completely different from GAMs.
+  Apart from the additive nature of the equation in reference (\hl{Eq. 4.2, p. 103}), the I-prior methodology is completely different from additive models or GAMs.
   
   In the I-prior methodology, the principle of decomposing the regression function into additive parts is the ANOVA functional decomposition.
   The advantage of this is that we are able to also describe two-, three- or higher order interactions, and this is useful for describing multilevel or longitudinal models.
   
-  The focus of GAM is to model the relationship of the independent variable $y$ and the covariates $x$ through a series one-dimensional smoothers nonparameterically.
+  The focus of additive models or GAMs is to model the relationship of the independent variable $y$ and the covariates $x$ through a series one-dimensional smoothers nonparameterically.
   Estimation is performed usually using a backfitting algorithm.
   There are no assumptions on the function space to which the regression function belongs.
-
-  \textit{Amendments to thesis}: Added a short paragraph at the conclusion to Chapter 4.
+  
+  A brief comparison with GAMs has already been provided in \cref{sec:iprobitconcl} \colp{\mypageref{sec:iprobitconcl}}.
 
   \item \textbf{Priors for RKHS scale parameters}
   
-  On \hl{p. 116}, the stated priors for $\lambda$ (and $\psi$) are only applicable in full Bayesian estimation of I-prior models.
+  On \mypagereffull{errata6}, the stated priors for $\lambda$ (and $\psi$) are only applicable in full Bayesian estimation of I-prior models.
   These priors are a suggestion to reflect the ignorance surrounding the true value of these parameters.
   
   \textit{Amendments to thesis}: Stronger emphasis that these priors are only applicable to a full Bayesian analysis, and not the EM algorithm or direct optimisation method.
   
-  \item \textbf{Error in Table 4.1, p. 116}
+  \item \textbf{Error in \cref{tab:comparemethodsestimate}, \mypageref{tab:comparemethodsestimate}}
 
   The `Predictive RMSE' is not predictive. This has been changed to simply `RMSE', with the formula now given, which is as follows:
 
@@ -119,17 +122,17 @@ This suggests that the data only allows us to provide an estimation to the funct
     \text{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^n (y_i - \hat y_i)^2}
   \end{equation}
   
-  where $\hat y_i$ is the estimate of the $i$'th observation, as described in Section 4.4.
+  where $\hat y_i$ is the estimate of the $i$'th observation, as described in \cref{sec:ipriorpostest}.
 
   \item \textbf{Computational cost of GPR vs I-priors}
 
   A comment received from the examiners is as follows: For some univariate GPR models, computational cost is reduced to $O(n)$ or $O(n\log n)$ if the kernel matrix is of a specific structure such as tridiagonal or Toeplitz.
-  
   Inversions of such kernel matrices would be less than $O(n^3)$.
+  
   In our experience, we have not come across a kernel matrix with such structures before, and it is also unlikely to be the case.
   A Toeplitz-structured kernel matrix would suggest that the data points are somewhat equally spaced apart, so perhaps one might encounter such matrices when dealing with time series data.
   
-  \item \textbf{On Figure 4.6, p. 128}
+  \item \textbf{On \cref{fig:postregppc}, \mypageref{fig:postregppc}}
 
   The posterior predictive density check allows us to compare the distribution of the observed data with the distribution that is predicted by the model. 
   This is not for a single $y$, but rather each line represents the distribution of all the data points (observed or replications).
@@ -147,19 +150,20 @@ This suggests that the data only allows us to provide an estimation to the funct
 
   \item \textbf{On the `99-dimensional' covariate, p. 138}
   
-  The example in \hl{Section 4.5.3} concerns functional covariates, that is, each observed $x_i$ is assumed to belong to a function space $\cX$. 
+  The example in \cref{sec:regfuncex} concerns functional covariates, that is, each observed $x_i$ is assumed to belong to a function space $\cX$. 
   As absorption data had not been measured continuously, 100 equally-spaced discretised points were measured and this makes up each data point $x_i$.
   
   As per \cref{sec:regfunctionalcov}, we make an implicit assumption that $\cX$ is a Hilbert-Sobolev space with inner product given in that section.
-  In order to apply the linear, fBm or any other kernels which make use of inner products, one should make the approximation as given by the second equation on page 109. \hl{need to number this}.
+  In order to apply the linear, fBm or any other kernels which make use of inner products, one should make the approximation as given by \cref{eq:hilbsobip2}.
   It involves taking first differences of the 100-dimensional covariate, and this reduces to 99 dimensions.
+  
+  The above has been explained in the second paragraph on \pageref{errata11}.
 
-  \textit{Amendments to thesis}: Reference to appropriate section for clarity.
   
   \item \textbf{Would smoother GPR yield better results in the Tecator example?}
 
   As we understand it, squared exponential kernels are the de-facto kernels for Gaussian process regression.
-  As seen from the results in \hl{Table 4.5 on p. 141}, GPR does not perform well compared to I-priors or any other method for that matter.
+  As seen from the results in \cref{tab:tecator} \colp{\mypageref{tab:tecator}}, GPR does not perform well compared to I-priors or any other method for that matter.
   
   Perhaps performance can be improved by using `smoother' kernels.
   For instance, the \pkg{kernlab} package in \proglang{R} provides options for the hyperbolic tangent kernel, Laplacian kernel, Bessel kernel, ANOVA Gaussian RBF kernel, and the spline kernel.
@@ -171,7 +175,7 @@ This suggests that the data only allows us to provide an estimation to the funct
   
   \item \textbf{Limiting form of I-priors in relation to integrated Brownian motion and cubic splines}
 
-  The link between I-priors and integrated Brownian bridge, which has a close relationship with cubic spline smoothers, has been brought up in in \hl{Remark 4.3 page?}.
+  The link between I-priors and integrated Brownian bridge, which has a close relationship with cubic spline smoothers, has been brought up in in \cref{rem:ipriorIBM} \colp{\mypageref{rem:ipriorIBM}}.
 
   \item \textbf{The logit link with I-priors}
   
@@ -194,7 +198,7 @@ This suggests that the data only allows us to provide an estimation to the funct
   No EM algorithm was used. 
   A suggestion of using integrated nested Laplace approximations (INLA) was received.
   
-  \textit{Amendments to thesis}: The suggestion of INLA has been noted on \mypageref{errata15}.
+  \textit{Amendments to thesis}: The suggestion of INLA has been noted \colp{\mypageref{errata15}}.
 
   \item \textbf{Variational inference for logit link}
 

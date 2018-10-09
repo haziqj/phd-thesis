@@ -281,6 +281,8 @@ A vague prior choice for $\lambda$ and $\psi$ are prescribed, namely
 where $\N_+(0,\sigma^2)$ represents the \emph{folded-normal} distribution\footnote{The random variable $X \sim \N_+(\mu,\sigma^2)$ has the density $p(x) = \phi(x|\mu,\sigma^2)\ind(x \geq 0)$.}\footnote{Note that a single scale parameter $\lambda$ is not identified in sign, and is thus constrained to the positive reals. This is applicable in both likelihood-based and Bayesian methods.\index{identifiability}}.
 We have also set an improper prior density $p(\alpha) \propto \const$ for the intercept.
 The advantage of HMC is that efficiency is not dictated by conjugacy, so there is freedom to choose any appropriate prior choice on the parameters.
+Note that priors for $\lambda$ and $\psi$ are only applicable in a fully Bayesian estimation of the I-prior model, and we did not assign any priors in the EM algorithm or direct optimisation method.
+\label{errata6}
 
 \begin{table}[hbt]
 \centering
@@ -293,7 +295,7 @@ Intercept ($\alpha$)      & 16.1 (0.35)           & 16.1 (0.35)    & 16.1 (0.17)
 Scale ($\lambda$)      & 5.01 (1.23)         & 5.01 (1.26)  & 5.61 (1.42)     \\
 Precision ($\psi$)         & 0.236 (0.03)        & 0.236 (0.03) & 0.237 (0.03)\\[0.5em]
 Log-density    & -339.7              & -339.7       & -341.1                  \\
-Predictive RMSE & 0.574               & 0.575        & 0.582                   \\[0.5em]
+RMSE\footnotemark & 0.574               & 0.575        & 0.582                   \\[0.5em]
 Iterations     & 12                  & 266          & 2000                    \\
 Time taken (s) & 0.96                & 3.65         & 232                     \\ \bottomrule
 \end{tabular}
@@ -304,3 +306,5 @@ The three methods concur on the estimated parameter values, although the scale p
 The resulting log-likelihood value for the Bayesian method is lower than the ML methods, which also took the longest to compute.
 Although the EM algorithm took longer than the direct optimisation method to compute, the time taken per iteration is significantly shorter than one Newton iteration.
 %In this simple example, there were no numerical issues encountered with the direct optimisation method, but in more complex examples (see \hltodo{Section X}), instabilities could arise.
+
+\footnotetext{The root mean squared error (RMSE) is calculated using the formula $\text{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^n (y_i - \hat y_i)^2}$, where $\hat y_i$ is the fitted value for the $i$'th observation, as described in \cref{sec:ipriorpostest}}

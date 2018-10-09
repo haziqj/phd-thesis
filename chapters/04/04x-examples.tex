@@ -476,7 +476,7 @@ A plot of the fitted regression curves onto the cow data set is shown in \cref{f
 
 \end{knitrout}
 
-\subsection{Regression with a functional covariate}
+\subsection{Regression with a functional covariate}\label{sec:regfuncex}
 \index{functional regression}
 \index{Tecator data set}
 \index{ANOVA!kernel/RKKS}
@@ -521,6 +521,7 @@ These methods include neural networks \citep{thodberg1996review}, kernel smoothi
 An analysis of this data set using the SIR and SAVE methods were conducted by  \citet{lian2014series}, while the MARS, PLS and (CSE)FAM methods were studied by \citet{zhu2014structured}.
 \cref{tab:tecator} tabulates the all of the results from these various references.
 
+\label{errata11}
 Assuming a regression model as in \cref{eq:model2}, we would like to model the \code{fat} content $y_i$ using the spectral curves $x_i$.
 Let $x_i(t)$ denote the absorbance for wavelength $t = 1,\dots,100$.
 From \cref{fig:tecator.data}, it appears that the curves are smooth enough to be differentiable, and therefore it is reasonable to assume that they lie in the Sobolev-Hilbert space as discussed in \cref{sec:regfunctionalcov}.

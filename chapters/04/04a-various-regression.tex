@@ -250,7 +250,7 @@ This will lead to more shrinkage of the posterior derivative of $f$ towards the 
 Another advantage of the I-prior methodology is the ability to fit single or multidimensional smoothing models with just two parameters to be estimated: the RKHS scale parameter $\lambda$ and the error precision $\psi$.
 The Hurst parameter $\gamma \in (0,1)$ of the fBm RKHS can also be treated as a free parameter for added flexibility, but for most practical applications, we find that the default setting of $\gamma = 1/2$ performs sufficiently well.
 
-\begin{remark}
+\begin{remark}\label{rem:ipriorIBM}
   From \cref{eq:ipriorbrownianbridge}, the prior process for $f$ is thus an integrated Brownian bridge. 
   This shows a close relation with cubic spline smoothers, which can be interpreted as the posterior mean when the prior is an integrated Wiener process \citep{wahba1990spline}.
   Unlike I-priors however, cubic spline smoothers do not have automatic boundary corrections, and typically the additional assumption is made that the smoothing curve is linear at the boundary knots.
@@ -262,22 +262,18 @@ The Hurst parameter $\gamma \in (0,1)$ of the fBm RKHS can also be treated as a 
 
 Suppose that we have functional covariates $x$ in the real domain, and that $\cX$ is a set of differentiable functions.
 If so, it is reasonable to assume that $\cX$ is a Hilbert-Sobolev space with inner product
-%
-\[
+\begin{equation}\label{eq:hilbsobip1}
   \langle x,x' \rangle_\cX = \int \dot{x}(t) \dot{x}'(t) \dint t,
-\]
-%
+\end{equation}
 so that we may apply the linear, fBm or any other kernels which make use of inner products by making use of the polarisation identity.
 Furthermore, let $z \in \bbR^T$ be the discretised realisation of the function $x \in \cX$ at regular intervals $t = 1,\dots,T$. Then
-%
-\[
+\begin{equation}\label{eq:hilbsobip2}
   \langle x,x' \rangle_\cX \approx \sum_{t=1}^{T-1} (z_{t+1} - z_t)(z'_{t+1} - z_t').
-\]
-%
+\end{equation}
 For discretised observations at non-regular intervals $\{t_1,\dots,t_T\}$ then a more general formula to the above one might be used, for instance,
-\[
+\begin{equation}\label{eq:hilbsobip3}
   \langle x,x' \rangle_\cX \approx \sum_{i=1}^{T-1} \frac{(z_{t_{i+1}} - z_{t_i})(z'_{t_{i+1}} - z_{t_i}')}{t_{i+1} - t_{i}}.
-\]
+\end{equation}
 
 %\subsection{Structural equation modelling}
 %
