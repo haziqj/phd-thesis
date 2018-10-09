@@ -1,4 +1,4 @@
-\documentclass[11pt,showframe,twoside,openright]{report}
+\documentclass[11pt,openright,twoside]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
@@ -10,6 +10,7 @@
 \fi
 
 \begin{document}
+\pagestyle{chaptererr}
 
 \begin{center}
   {\Large Errata for PhD Thesis:} \\[0.5em]
@@ -208,13 +209,13 @@ This suggests that the data only allows us to provide an estimation to the funct
 
   Gaussian process priors for categorical data is often used in a classification setting, because often, prediction is key.
   To this end, we did look at binary classification of cardiac arrhythmia using GPC and a squared exponential kernel.
-  Additionally, we will also run the GPC on the vowel recognition data set and include the results in Table 5.6.
+  Additionally, we will also run the GPC on the vowel recognition data set and include the results in \cref{tab:vowel.tab} \colp{\mypageref{tab:vowel.tab}}.
   
-  \textit{Amendments to thesis}: Add GPC to results in Table 5.6.
+  \textit{Amendments to thesis}: Added GPC to results to \cref{tab:vowel.tab}.
   
   \item \textbf{Additional criticisms to Bayesian variable selection}
   
-  \textit{Amendments to thesis}: On \mypageref{errata18}, the following was added:
+  \textit{Amendments to thesis}: On \mypagereffull{errata18}, the following was added:
   
 \begin{displayquote}
 The choice of priors for model parameters affects consistency of Bayesian model selection procedures. 

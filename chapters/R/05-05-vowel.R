@@ -3,6 +3,7 @@
 library(iprobit)
 library(tidyverse)
 library(reshape2)
+library(kernlab)
 
 ## ---- vowel.data ----
 data("vowel.train", package = "ElemStatLearn")
@@ -117,3 +118,10 @@ conf_mat(mod.se)
 #              caption = "Results of various classification methods for the vowel data set.") %>%
 #   kableExtra::kable_styling(position = "center") %>%
 #   kableExtra::add_header_above(c(" " = 1, "Error rates" = 2))
+
+## ---- vowel.gpc ----
+mod.gpc1 <- gausspr(y ~ ., vowel.train, kernel = "vanilladot")
+mod.gpc2 <- gausspr(y ~ ., vowel.train, kernel = "rbfdot")
+y.hat <- predict(mod.gpc2, vowel.test)
+RMSE.train <- sum(fitted(mod.gpc2) != vowel.train$y) / length(vowel.train$y) * 100
+RMSE.test <- sum(y.hat != vowel.test$y) / length(vowel.test$y) * 100

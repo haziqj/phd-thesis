@@ -110,6 +110,11 @@
 \fancyfoot[RO]{\small{\textsc{Appendix \thechapter}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
 }
 
+\fancypagestyle{chaptererr}{%
+\fancyfoot[RO]{\small{\textsc{Errata}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+\fancyfoot[LE]{\small{\textsc{Errata}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+}
+
 % Typeset and appearance
 \usepackage{csquotes}  % quotes
 \usepackage[english]{babel}   % manages structure of paper better

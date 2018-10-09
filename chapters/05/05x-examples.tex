@@ -409,9 +409,9 @@ The numbers in each row indicate the instances of a predicted class, while the n
 Comparisons to other methods that had been used to analyse this data set is given in \cref{tab:vowel.tab}.
 In particular, the I-probit model is compared against 1) linear regression; 2) logistic linear regression; 3) linear and quadratic discriminant analysis; 4) decision trees; 5) neural networks; 6) $k$-nearest neighbours; and 7) flexible discriminant analysis.
 All of these methods are described in further detail in \citet[Chs. 4 \& 12, Table 12.3]{friedman2001elements}.
-The I-probit model using both the fBm-0.5 and SE kernel offers one of the best out-of-sample classification error rates (34.4\%) of all the methods compared.
-The linear I-probit model is seen to be comparable to logistic regression, linear and quadratic discrimant analysis, and also decision trees.
-It also provides significant improvement over multiple linear regression.
+Additionally, Gaussian process classification (SE kernel) using the \pkg{kernlab} package \citep{zeileis2004kernlab} in \proglang{R} was used.
+The I-probit model using the fBm-0.5 and SE kernel offers two of the best out-of-sample classification error rates (40\% and 34\% respectively) of all the methods compared.
+The linear I-probit model is seen to be comparable to logistic regression, linear and quadratic discrimant analysis, and  decision trees, yet provides a significant improvement over multiple linear regression.
 
 \begin{table}
   \caption{Results of various classification methods for the vowel data set.}
@@ -446,11 +446,14 @@ It also provides significant improvement over multiple linear regression.
   \hspace{0.5em} $k$-nearest neighbours          &    & 44
   \\[0.5em]
   \hspace{0.5em} FDA/BRUTO                       & 6  & 44 \\
-  \hspace{0.5em} FDA/MARS                        & 13 & 39 \\
+  \hspace{0.5em} FDA/MARS                        & 13 & 39 
+  \\[0.5em]
+  \hspace{0.5em} GPC (SE)                        & 4  & 42 \\  
   \bottomrule
   \end{tabular}
 \end{table}
 
+\vspace{-0.5em}
 \subsection{Spatio-temporal modelling of bovine tuberculosis in Cornwall}
 \index{spatio-temporal model}
 \index{bovine tuberculosis (BTB) data set}
@@ -458,8 +461,7 @@ It also provides significant improvement over multiple linear regression.
 \index{fBm kernel/RKHS}
 \index{Pearson kernel/RKHS}
 
-
-
+\vspace{-0.5em}
 Data containing the number of breakdows of bovine tubercolosis (BTB) in Cornwall, the locations of the infected animals, and the year of occurence is analysed.
 The interest, as motivated by veterinary epidimiology, is to understand whether or not there is spatial segregation of the infection of the herds, and whether there is a time-element to the presence or absence of this spatial segregation.
 There has been previous work done to analyse this data set.
