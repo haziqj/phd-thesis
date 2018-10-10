@@ -63,7 +63,7 @@ For both continuous and categorical response I-prior models, we find advantages 
 
 Finally, in \cref{chapter6}, we dealt with the problem of model selection, specifically for linear regression models.
 There, we used a fully Bayesian approach for estimating model probabilities in which  regression coefficients are assigned an I-prior.
-We devised a model that requires minimal tuning on the part of the user, yet performs well in simulated and real-data examples, especially if multicollinearity exists among the covariates.
+We devised a model that requires minimal tuning on the part of the user, yet performs well in simulated and real-data examples, even if multicollinearity exists among the covariates.
 
 %The I-prior for the regression model \cref{eq:model1} subject to \cref{eq:model1ass} is seemingly data dependent, which violates Bayesian first principles.
 %That is, an I-prior for $f$ as per \cref{eq:iprior2} makes use of the same data $\bx:=\{x_1,\dots,x_n\}$ in the covariance matrix for $f$ that appears in the model.
@@ -81,15 +81,15 @@ We give a summary of the novel contributions of this thesis.
   The technology of Fréchet and Gâteaux differentials accommodate for the fact that $f$ may be infinite dimensional, which, at minimum, requires $\cF$ to be a  normed vector space. 
   We foresee the work of \cref{sec:fihilbert} being applicable elsewhere, such as learning in (reproducing kernel) Banach spaces \citep{zhang2009reproducing,zhang2012regularized}, or in the theory of parameter estimation for general exponential family type distributions of the form
   \[
-    p(X|\theta) = B(X)\exp\big(\ip{\theta,T(X)}_\cH - A(\theta) \big),
+    p(y|\theta) = B(y)\exp\big(\ip{\theta,T(y)}_\cH - A(\theta) \big),
   \]
   in which $\theta$ lies in some inner-product space $\cH$ which might be infinite dimensional \citep{sriperumbudur2013density}.
   
   \item \textbf{Efficient estimation methods for normal I-prior models}. 
   The preferred estimation method for normal I-prior models for stability is the EM algorithm.
-  Implementing the EM algorithm can be computationally costly, due to the squaring and inversion of the kernel matrices in the $Q$ function in \cref{eq:QfnEstep} on {\color{\mycitecolour}page} \pageref{eq:QfnEstep}.
+  Implementing the EM algorithm can be computationally costly, due to the squaring and inversion of the kernel matrices in the $Q$ function in \cref{eq:QfnEstep} on \mypagereffull{eq:QfnEstep}.
   Unfortunately, not much can be done about the inversion, but we explored systematic ways in which to perform the squaring.
-  Combining a ``front-loading method'' of the kernel matrices (\cref{sec:efficientEM1}, \mypageref{sec:efficientEM1}) and an exponential family ECM (expectation conditional maximisation) algorithm \citep{meng1993maximum}, the estimation procedure is streamlined.
+  Combining a ``front-loading method'' of the kernel matrices \colp{\cref{sec:efficientEM1}, \mypageref{sec:efficientEM1}} and an exponential family ECM (expectation conditional maximisation) algorithm \citep{meng1993maximum}, the estimation procedure is streamlined.
   Our computational work culminated in the publicly available and well-documented \proglang{R} package \pkg{iprior} \citep{jamil2017iprior} published on CRAN.
   
   \item \textbf{Methodological extension of I-priors to categorical responses}.
@@ -153,7 +153,7 @@ In closing, we briefly discuss several questions which remain open during the co
   
   \item \textbf{Consistency of I-prior Bayesian variable selection}.\index{Bayesian variable selection!consistency}
   We wondered about model selection consistency for I-priors in Bayesian variable selection.
-  That is, assuming that model $M_\text{true}$ is behind the true data generative process, do
+  That is, assuming that model $M_\text{true}$ is actually behind the true data generative process, do
   \[
     \lim_{n\to\infty} \Prob(M_\text{true}|\by) = 1
     \ \ \text{and} \ \
