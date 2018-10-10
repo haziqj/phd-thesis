@@ -4,7 +4,7 @@ Unrestricted probit models are not identified for two reasons.
 Firstly, an addition of a non-zero constant $a\in\bbR$ to the latent variables $y_{ij}^*$'s in \cref{eq:latentmodel} will not change which latent variable is maximal, and therefore leaves the model unchanged.
 It is for this reason that assumptions \ref{ass:A4} and \ref{ass:A5} are imposed.
 Secondly, all latent variables can be scaled by some positive constant $c\in\bbR_{>0}$ without changing which latent variable is largest.
-This means that $m$-variate normal distribution $\N_m\big(\bmu(x_i), \bPsi^{-1}\big)$ of the underlying latent variables $\by_{i\bigcdot}^*$ would yield the same class probabilities as the multivariate normal distribution $\N_m\big( a\bone_m + c\bmu(x_i), c^2\bPsi^{-1} \big)$, according to \cref{eq:pij}.
+Together, this means that $m$-variate normal distribution $\N_m\big(\bmu(x_i), \bPsi^{-1}\big)$ of the underlying latent variables $\by_{i\bigcdot}^*$ would yield the same class probabilities as the multivariate normal distribution $\N_m\big( a\bone_m + c\bmu(x_i), c^2\bPsi^{-1} \big)$, according to \cref{eq:pij}.
 Therefore, the multinomial probit model is not identified as there exists more than one set of parameters for which the categorical likelihood $\prod_{i,j} p_{ij}$ is the same.
 
 Identification issues in the probit model is resolved by setting one restriction on the intercepts $\alpha_1,\dots,\alpha_m$ (location) and $m+1$ restrictions on the precision matrix $\bPsi$ (scale).
@@ -66,7 +66,7 @@ Many possible specifications of the restriction on $\bPsi$ is possible, dependin
 \end{itemize}
 
 \begin{remark}
-  Identification is most commonly achieved by fixing the latent propensities of one of the classes to zero and fixing one element the covariance matrix \citep{dansie1985parameter,bunch1991estimability}.
+  Identification is most commonly achieved by fixing the latent propensities of one of the classes to zero and fixing one element of the covariance matrix \citep{dansie1985parameter,bunch1991estimability}.
   Fixing the last class, say, to zero, i.e. $y_{im}^* = 0,\forall i=1,\dots,n$ has the effect of shrinking $\bPsi$ to an $(m-1)$ matrix, and thus one more restriction needs to be made (typically, $\bPsi_{11}$ is set to one).
   This speaks to the fact that the absolute values of the latent propensities themselves do not matter, and only their relative differences do.   
   We also remark that for the binary case ($m=2$), setting the latent propensities for the second class to zero and fixing the remaining variance parameter to unity yields

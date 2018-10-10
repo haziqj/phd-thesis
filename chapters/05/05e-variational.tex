@@ -25,7 +25,7 @@ For further details on the derivation of these densities, please refer to \cref{
 
 The fact that the rows $\by_{i \bigcdot}^* \in \bbR^m$, $i=1,\dots,n$ of $\by^* \in \bbR^{n \times m}$ are independent can be exploited, and this results in a further induced factorisation $q(\by^*) = \prod_{i=1}^n q(\by_i^*)$.
 Define the set $\cC_j = \{y_{ij}^* > y_{ik}^* \,|\, \forall k\neq j \}$.
-Then $q(\by_{i \bigcdot}^*)$ is the density of a multivariate normal distribution with mean $\tilde \bmu_{i \bigcdot} = \balpha + \tilde\bw^\top  \bh_\eta(x_i)$, where $\tilde \bw = \E_{\bw\sim\tilde q}[\bw]$, and variance $\bPsi^{-1}$, subject to a truncation of its components to the set $\cC_{y_i}$.
+Then $q(\by_{i \bigcdot}^*)$ is the density of a multivariate normal distribution with mean $\tilde \bmu_{i \bigcdot} = \balpha + \tilde\bw^\top  \bh_\eta(x_i)$, where $\tilde \bw = \E_{\bw\sim\tilde q}(\bw)$, and variance $\bPsi^{-1}$, subject to a truncation of its components to the set $\cC_{y_i}$.
 That is, for each $i=1,\dots,n$ and noting the observed categorical response $y_i \in \{1,\dots,m\}$ for the $i$'th observation, the $\by_i^*$'s are distributed according to
 \begin{align}\label{eq:ystardist}
   \by_{i \bigcdot}^* \iid
@@ -36,7 +36,7 @@ That is, for each $i=1,\dots,n$ and noting the observed categorical response $y_
 \end{align}
 We denote this by $\by_{i \bigcdot}^* \iid \tN(\tilde\bmu_{i \bigcdot}, \bPsi^{-1},\cC_{y_i})$, and the important properties of this distribution are explored in the appendix.
 
-The required expectation $\tilde\by^* := \E_{\by^*\sim\tilde q} (\by^*_{i\bigcdot}) = \E_{\by^*\sim\tilde q} (y_{i1}^*,\dots, y_{im}^*)^\top$ in the M-step can be tricky to obtain.
+The required expectation $\tilde\by^*_i := \E_{\by^*_i\sim\tilde q} (\by^*_{i\bigcdot}) = \E_{\by^*\sim\tilde q} (y_{i1}^*,\dots, y_{im}^*)^\top$ in the M-step can be tricky to obtain.
 One strategy that can be considered is Monte Carlo integration: using samples from $\N_m(\tilde\bmu_{i \bigcdot},  \bPsi^{-1})$, disregard those that do not satisfy the condition $y_{iy_i}^* > y_{ik}^*, \forall k \neq j$, and then take the sample average.
 This works reasonably well so long as the truncation region does not fall into the extreme tails of the multivariate normal.
 Alternatively, a Gibbs-based approach \citep{robert1995simulation} for sampling from a truncated multivariate normal can be implemented, and this is detailed in \cref{apx:truncmultinorm}.
@@ -132,7 +132,7 @@ From \cref{eq:iprobitQEstep}, the function to be maximised in the M-step is
   ,
 \end{align*}
 where expectations are taken with respect to the variational distributions of $\by^*$ and $\bw$. 
-Note that since $\bPsi$ is treated as fixed, the term $\E[\by^{*\top}\by^*]$ is absorbed into the constant.
+Note that since $\bPsi$ is treated as fixed, the term $\E(\by^{*\top}\by^*)$ is absorbed into the constant.
 On closer inspection, the trace involving the second moments of $\bw$ is found to be
 \begin{align*}
   \tr \Big( \bPsi\E(\bw^\top\bH_\eta^2\bw)  + \bPsi^{-1} \E(\bw^\top\bw) \Big)

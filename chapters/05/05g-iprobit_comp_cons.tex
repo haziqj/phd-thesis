@@ -27,8 +27,8 @@ Reformulate $\by^*$ in \cref{eq:latentmodel} by anchoring on the $j$'th latent v
   )^\top \in \bbR^{m-1}.
 \]
 Note that we have indexed the vector $\bz$ using $j' = k$ if $k < j$, and $j' = k -1$ if $k > j$ for $k=1,\dots,m$, so that the index $j'$ runs from $1$ to $m-1$.
-Let $\bQ \in \bbR^{(m-1)\times m}$ be a matrix formed by inserting a column of minus ones at the $j$'th position in an $(m-1)$ identity matrix.
-We can then write $\bz = \bQ\by^*$, and thus we have that $\bz\sim\N_{m-1}(\bnu_{(j)}, \bOmega_{(j)})$, where $\bnu_{(j)} = \bQ\bmu(x_i)$ and $\bOmega_{(j)} = \bQ\bPsi^{-1}\bQ^\top$.
+Let $\bQ_{(j)} \in \bbR^{(m-1)\times m}$ be a matrix formed by inserting a column of minus ones at the $j$'th position in an $(m-1)$ identity matrix.
+We can then write $\bz = \bQ_{(j)}\by^*$, and thus we have that $\bz\sim\N_{m-1}(\bnu_{(j)}, \bOmega_{(j)})$, where $\bnu_{(j)} = \bQ_{(j)}\bmu(x_i)$ and $\bOmega_{(j)} = \bQ_{(j)}\bPsi^{-1}\bQ_{(j)}^\top$.
 These are indexed by `$(j)$' because the transformation is dependent on which latent variable the $\bz$'s are anchored on.
 
 \begin{remark}
@@ -144,7 +144,7 @@ By performing the above scheme $T$ number of times to obtain $T$ such simulated 
 \]
 
 If it so happens that one of the standard normal cdfs in \cref{eq:tildepj} is extremely small, this can cause loss of significance due to floating-point errors (catastrophic cancellation).
-It is better to work on a log-probability scale, so the products in \cref{eq:tildepj} turn into sums, and revert back by exponentiating.
+It is better to work on a log-probability scale, so the products in \cref{eq:tildepj} turn into sums, and the result reverted back by exponentiating.
 
 \begin{remark}
   The GHK algorithm provides reasonably fast and accurate calculations of class probabilities when $\bPsi$ is dense.
@@ -168,7 +168,7 @@ The matrix in question is %(from \cref{eq:varipostw})
 \end{align}
 We can actually exploit the Kronekcer product structure to compute the inverse efficiently.
 Perform an orthogonal eigendecomposition of $\bH_\eta$ to obtain $\bH_\eta = \bV\bU\bV^\top$ and of $\bPsi$ to obtain $\bPsi = \bQ\bP\bQ^\top$.
-This process takes $O(n^3 + m^3) \approx O(n^3)$ time if $m\ll n$ or if done in parallel, and needs to be performed once per CAVI iteration.
+This process takes $O(n^3 + m^3) \approx O(n^3)$ time if $m\ll n$ or if done in parallel, and needs to be performed once per variational EM iteration.
 Then, manipulate $\bV_w^{-1}$ as follows:
 \begin{align*}
   \bV_w^{-1} 

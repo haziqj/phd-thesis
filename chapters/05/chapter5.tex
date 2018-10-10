@@ -35,7 +35,7 @@ As an extension to the I-prior methodology, we propose a flexible modelling fram
 In the spirit of generalised linear models \citep{mccullagh1989}, we relate class probabilities of the observations to a normal I-prior regression model via a \emph{link function}.
 Perhaps though, it is more intuitive to view it as machine learners do: since the regression function is ranged on the entire real line, it is necessary to ``squash'' it through some sigmoid function to conform it to the interval $[0,1]$ suitable for probability ranges.
 
-Expanding on this idea further, assume that the $y_i$'s follow a categorical distribution \index{distribution!categorical}, $i=1,\dots,n$, denoted by 
+Expanding on this idea further, assume that the $y_i$'s follow a categorical distribution, \index{distribution!categorical} $i=1,\dots,n$, denoted by 
 \[
   y_i \sim \Cat(p_{i1},\dots,p_{im}),
 \]

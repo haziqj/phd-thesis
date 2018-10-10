@@ -6,7 +6,7 @@ We first describe prediction of a new data point $x_{\text{new}}$.
 Step one is to determine the distribution of the posterior regression functions in each class, $\bff(x_{\text{new}}) = \bw^\top\bh_\eta(x_{\text{new}})$, where $\bh_\eta(x_{\text{new}})$ is the vector of length $n$ containing entries $h_\eta(x_i,x_\new)$, given values for the parameters $\theta$ of the I-probit model.
 To this end, we use the ELBO estimates for $\theta$, i.e. $\hat\theta = \argmax_\theta \cL_q(\theta)$, as obtained from the variational EM algorithm.
 As we know, the variational distribution of $\vecc\bw$ is normally distributed with mean and variance according to \cref{eq:varipostw}.
-By writing $\vecc \tilde\bw = (\tilde \bw_{\bigcdot 1}, \dots, \tilde \bw_{\bigcdot m})^\top$ to separate out the I-prior random effects per class, we have that $\bw_{\bigcdot j}|\hat\theta \sim \N_n(\tilde \bw_{\bigcdot j}, \tilde\bV_w[j,j])$, and $\Cov(\bw_{\bigcdot j},\bw_{\bigcdot k}) = \tilde\bV_w[j,k]$, where the `$[\cdot,\cdot]$' indexes the $n\times n$ sub-block of the block matrix structured matrix $\bV_w$.
+By writing $\vecc \tilde\bw = (\tilde \bw_{\bigcdot 1}, \dots, \tilde \bw_{\bigcdot m})^\top$ to separate out the I-prior random effects per class, we have that $\bw_{\bigcdot j}|\hat\theta \sim \N_n(\tilde \bw_{\bigcdot j}, \tilde\bV_w[j,j])$, and $\Cov(\bw_{\bigcdot j},\bw_{\bigcdot k}) = \tilde\bV_w[j,k]$, where the `$[\cdot,\cdot]$' indexes the $n\times n$ sub-block of the block matrix $\bV_w$.
 Thus, for each class $j=1,\dots,m$ and any $x \in \cX$,
 \[
   f_j(x)|\by,\hat\theta \sim \N\Big(\,
@@ -98,7 +98,7 @@ To obtain a statistic of interest, say, a 95\% credibility interval of a functio
 %      \bar\theta_l = \frac{1}{T} \sum_{t=1}^T \hat\theta_l^{(t)}.
 %    \]
   \end{enumerate}
-  The obvious downside to this bootstrap scheme is computational time.
+  The obvious potential downside to this bootstrapp scheme is computational time.
 \end{remark}
 
 \index{Bayes factor!empirical}
