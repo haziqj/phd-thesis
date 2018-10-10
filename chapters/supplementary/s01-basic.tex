@@ -82,7 +82,7 @@ Markov chain Monte Carlo (MCMC) methods are the standard way of approximating su
 The sample $\{\theta^{(1)},\dots,\theta^{(T)} \}$ is then manipulated in a way to derive its approximation.
 In the case of the posterior mean,
 \begin{equation}
-  \hat\E[\theta|\by] = \frac{1}{T}\sum_{i=1}^T \theta^{(t)}
+  \hat\E(\theta|\by) = \frac{1}{T}\sum_{i=1}^T \theta^{(t)}
 \end{equation}
 gives an approximation, and its $(1-\alpha) \times 100\%$ credible interval can be approximated using the lower $\alpha/2\times 100\%$ and upper $(1-\alpha/2)\times 100\%$ quantile of the sample.
 
