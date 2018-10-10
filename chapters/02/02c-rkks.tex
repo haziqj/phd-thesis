@@ -22,7 +22,7 @@ Kreĭn spaces are linear spaces endowed with a Hilbertian topology, characterise
   An inner product space $\big(\cF,\ip{\cdot,\cdot}_\cF\big)$ is a \emph{Kreĭn space} if there exists two Hilbert spaces $\big(\cF_+,\ip{\cdot,\cdot}_{\cF_+}\big)$ and $\big(\cF_-,\ip{\cdot,\cdot}_{\cF_-}\big)$ spanning $\cF$ such that
   \begin{itemize}
     \item All $f\in\cF$ can be decomposed into $f = f_+ + f_-$, where $f_+\in\cF_+$ and $f_- \in \cF_-$.
-    \item This decomposition is orthogonal, i.e. $\cF_+ \cup \cF_- = \{0\}$, and $\ip{f_+,f_-}_\cF=0$ for all $f_+\in\cF_+$ and $f_-\in\cF_-$, with the inner product on $\cF$ defined below.
+    \item This decomposition is orthogonal, i.e. $\cF_+ \cap \cF_- = \{0\}$, and $\ip{f_+,f_-'}_\cF=0$ for any $f,f'\in\cF$, with the inner product on $\cF$ defined below.
     \item $\forall f,f'\in\cF$, $\ip{f,f'}_\cF = \ip{f_+,f_+'}_{\cF_+}- \ip{f_-,f_-'}_{\cF_-}$.
   \end{itemize}
 \end{definition}
@@ -62,7 +62,8 @@ The associated Hilbert space can be found via the linear operator $J = P - Q$ ca
 That is, a Kreĭn space $\cF$ can be turned into its associated Hilbert space by using the positive-definite inner product of the associated Hilbert space as $\ip{f,f'}_{\cF_\cH} = \ip{f,Jf'}_\cF$, for all $f,f'\in\cF$.
 The converse is true too: starting from a Hilbert space $\cF_\cH$ and an operator $J$, the vector space endowed with the inner product $\ip{f,f'}_\cF = \ip{f,Jf'}_{\cF_\cH}$, for all $f,f'\in\cF$, is a Kreĭn space.
 
-We realise that for a Kreĭn space $\cF$, $|\ip{f,f}_\cF| \leq \norm{f}^2_{\cF_\cH}|$ for all $f\in\cF$ (we say that $\cF_\cH$ majorises the $\cF$), and in fact it is the smallest Hilbert space to do so.
+We realise that for a Kreĭn space $\cF$, $|\ip{f,f}_\cF| \leq \norm{f}^2_{\cF_\cH}$ for all $f\in\cF$.
+As such, we say that $\cF_\cH$ majorises $\cF$, and in fact it is the smallest Hilbert space to do so.
 The strong topology on $\cF$ is defined to be the topology arising from the norm of $\cF_\cH$, and this does not depend on the decomposition chosen \citep{ong2004learning}.
 Now, we define an RKKS.
 

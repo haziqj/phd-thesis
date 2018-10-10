@@ -44,7 +44,7 @@ The two lemmas below formalise these two facts.
     &= (\bA^\top\bA)_{ij} \, (\bB^\top\bB)_{ij} \\
     &= \sum_{k=1}^n a_{ik}a_{jk} \sum_{l=1}^n b_{il}b_{jl},
   \end{align*}
-  where we have denoted $b_{ij}$ and $c_{ij}$ to be the $(i,j)$'th entries of $\bB$ and $\bC$ respectively 
+  where we have denoted $a_{ij}$ and $b_{ij}$ to be the $(i,j)$'th entries of $\bA$ and $\bB$ respectively 
   Then,
   \begin{align*}
     \sum_{i=1}^n\sum_{j=1}^n h(x_i,x_j)
@@ -117,6 +117,7 @@ In particular, we only require a single scale parameter in polynomial kernel con
   \]
   where $\lambda \in \bbR$ is a scale parameter for the linear kernel, and $c \in \bbR$ is a real constant called the \emph{offset}.
   This kernel defines the \emph{polynomial RKKS} of degree $d$.
+  Note that if $\lambda,c > 0$ then the kernel is positive definite and thus defines an RKHS.
 \end{definition}
 
 Write
@@ -127,7 +128,7 @@ Write
 %  \, \ip{x,x'}_\cX^k.
 \end{align*}
 Evidently, as the name suggests, this is a polynomial involving the canonical kernel.
-In particular, each of the $k$-powered kernels (i.e., $\ip{x,x'}_\cX^k$) defines an RKHS of their own (since these are merely products of kernels), and therefore the sum of these $k$-powered kernels define the polynomial RKHS.
+In particular, each of the $k$-powered kernels (i.e. $\ip{x,x'}_\cX^k$) defines an RKHS of their own (since these are merely products of kernels), and therefore the sum of these $k$-powered kernels define the polynomial RKKS.
 
 The offset parameter influences trade-off between the higher-order versus lower-order terms in the polynomial.
 It is sometimes known as the bias term.
@@ -143,7 +144,7 @@ It is sometimes known as the bias term.
 \end{proof}
 
 \begin{remark}
-  We may opt to use other RKHSs as the building blocks of the polynomial RKHS.
+  We may opt to use other RKHSs as the building blocks of the polynomial RKKS.
   In particular, using the centred canonical kernel seems natural, so that each of the functions in the constituents of the direct sum of spaces is centred.
   However, the polynomial RKKS itself will not be centred.
 \end{remark}
@@ -196,7 +197,7 @@ The choice of A is arbitrary, as is the choice of restriction, so long as it sat
 \index{operator!averaging}
 The multiway ANOVA can be motivated in a similar fashion. 
 Let $x = (x_1,\dots,x_p) \in \prod_{k=1}^p \cX_k$, and consider functions that map $\prod_{k=1}^p \cX_k$ to $\bbR$.
-Let $A_j$ be an averaging operator on $\cX_k$ that averages the $k$'th component of $x$ from the active argument list, i.e. $A_kf$ is constant on the $\cX_k$ axis but not necessarily an overall constant function.
+Let $A_k$ be an averaging operator on $\cX_k$ that averages the $k$'th component of $x$ from the active argument list, i.e. $A_kf$ is constant on the $\cX_k$ axis but not necessarily an overall constant function.
 An ANOVA decomposition of $f$ is
 \begin{equation}
   f = \left( \prod_{k=1}^p (A_k + I - A_k) \right)f = \sum_{\cK\in\cP_p} \left( \prod_{k\in\cK} (I - A_k) \prod_{k\notin\cK} A_k \right)f = \sum_{\cK\in\cP_p} f_\cK

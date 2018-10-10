@@ -53,7 +53,7 @@ In fact, the general forms of these triangle inequalities \citep[Lemma 10]{bergs
 \setlength{\belowdisplayskip}{7pt}
 \begin{align}
   \normF{f-g}^a &\leq \normF{f-h}^a + \normF{g-h}^a \label{eq:trieq1} \\ 
-  \normF{f-g}^a &\geq \big\vert \normF{f}^a - \normF{g}^a \big\vert. \label{eq:trieq2}
+  \normF{f-g}^a &\geq \big\vert \normF{f}^a - \normF{g}^a \big\vert \label{eq:trieq2}
 \end{align}
 \endgroup
 Several other important relationships involving norms and inner products hold in linear spaces, namely, the \emph{Cauchy-Schwarz inequality}
@@ -61,7 +61,7 @@ Several other important relationships involving norms and inner products hold in
 \setlength{\abovedisplayskip}{9pt}
 \setlength{\belowdisplayskip}{7pt}
 \[
-  |\ip{f,g}_\cF| \leq \norm{f}_\cF \, \norm{g}_\cF;
+  |\ip{f,g}_\cF| \leq \norm{f}_\cF \, \norm{g}_\cF,
 \]
 \endgroup
 the \emph{parallelogram law}
@@ -69,7 +69,7 @@ the \emph{parallelogram law}
 \setlength{\abovedisplayskip}{7pt}
 \setlength{\belowdisplayskip}{7pt}
 \[
-  \norm{f+g}_\cF^2 + \norm{f-g}_\cF^2 = 2\norm{f}_\cF^2 + 2\norm{g}_\cF^2;
+  \norm{f+g}_\cF^2 + \norm{f-g}_\cF^2 = 2\norm{f}_\cF^2 + 2\norm{g}_\cF^2,
 \]
 \endgroup
 and the \emph{polarisation identity} (in various forms)
@@ -78,7 +78,7 @@ and the \emph{polarisation identity} (in various forms)
 \setlength{\belowdisplayskip}{7pt}
 \begin{align*}
   \norm{f+g}_\cF^2 - \norm{f-g}_\cF^2 &= 4\ip{f,g}_\cF,  \\
-  \norm{f+g}_\cF^2 - \norm{f}_\cF^2 - \norm{g}_\cF^2 &= 2\ip{f,g}_\cF, \\
+  \norm{f+g}_\cF^2 - \norm{f}_\cF^2 - \norm{g}_\cF^2 &= 2\ip{f,g}_\cF, \text{ and}\\
   - \norm{f-g}_\cF^2 + \norm{f}_\cF^2 + \norm{g}_\cF^2  &= 2\ip{f,g}_\cF,
 \end{align*}
 \endgroup
@@ -165,7 +165,7 @@ An interesting property of these operators to look at, besides linearity, is whe
   If, in addition, $\delta$ depends on $\epsilon$ only, $A$ is said to be \emph{uniformly continuous}.
 \end{definition}
 
-Continuity in the sense of linear operators here means that a convergent sequence in $\cF$ can be mapped to a convergent sequence in $\cG$.
+Continuity in the sense of linear operators here means that a convergent sequence in the domain $\cF$ can be mapped to a convergent sequence in the range $\cG$.
 For a particular linear operator, the evaluation functional, this means that closeness in norm implies pointwise closeness---this relates to RKHSs, which is discussed in \cref{sec:rkhstheory}.
 There is an even stronger notion of continuity called  \emph{Lipschitz continuity}.
 
@@ -191,7 +191,7 @@ A continuous, linear operator is also one that is bounded.
   \[
     \norm{Af}_\cG \leq M \norm{f}_\cF.\vspace{-0.4em}
   \]
-  The smallest such $M$ is defined to be the \emph{operator norm}, denoted $\norm{A} := \sup_{f\in\cF} \frac{\norm{Af}_\cG}{\norm{f}_\cF}$.
+  The smallest such $M$ is defined to be the \emph{operator norm}, denoted $\norm{A}_{\text{op}} := \sup_{f\in\cF} \frac{\norm{Af}_\cG}{\norm{f}_\cF}$.
 \end{definition}
 
 \begin{lemma}[Equivalence of boundedness and continuity]\label{thm:boundcont}
@@ -203,7 +203,7 @@ A continuous, linear operator is also one that is bounded.
   Suppose that $A$ is bounded.
   Then, $\forall f,f' \in \cF$, $\exists M>0$ such that $\norm{A(f-f')}_\cG \leq M \norm{f-f'}_\cG$, so $A$ is Lipschitz continuous.
   Conversely, let $A$ be a continuous linear operator, especially at the zero vector.
-  In other words, $\exists \delta > 0$ such that $\norm{A(f)}_\cG = \norm{A(f+0-0)}_\cG = \norm{A(f) - A(0)} \leq 1$, $\forall f\in\cF$ whenever $\norm{f}_\cF \leq \delta$.
+  In other words, $\exists \delta > 0$ such that $\norm{A(f)}_\cG = \norm{A(f+0-0)}_\cG = \norm{A(f) - A(0)}_\cG \leq 1$, $\forall f\in\cF$ whenever $\norm{f}_\cF \leq \delta$.
   Thus, for all non-zero $f \in\cF$,
   \begingroup
   \setlength{\abovedisplayskip}{7pt}
@@ -230,7 +230,7 @@ So important is the concept of linearity and continuity, that there are speciall
 As it turns out, the algebraic dual space and continuous dual space coincide in finite-dimensional Hilbert spaces:
 take any $A\in\cF^\vee$; since $A$ is finite dimensional, it is bounded, and therefore continuous (see \cref{thm:boundcont}), so $A\in\cF^*$ and $\cF^\vee \subseteq \cF^*$; but $\cF^* \subseteq \cF^\vee$ trivially, so $\cF^\vee \equiv \cF^*$.
 For infinite-dimensional Hilbert spaces, this is not so, but in any case, we will only be considering the continuous dual space in this thesis.
-The following result is an important one, which states that continuous linear functionals of an inner product space are nothing more than inner products.
+The following result is an important one, which states that continuous linear functionals of an inner product space are nothing more than just inner products.
 
 \index{Riesz-Fréchet theorem|see{Riesz representation theorem}}
 \begin{theorem}[Riesz-Fréchet]
@@ -412,11 +412,11 @@ For $x_1,y_1\in\cH_1$ and $x_2,y_2\in\cH_2$, these are:
 \endgroup
 
 \begin{remark}
-  As explained by \citet[Sec. 10.5, p. 227]{kokoszka2017introduction}, tensors are often thought of as generalisations of matrices.
-  For example, in Euclidean space, a matrix $\bA \in \bbR^{n\times m}$, formed by two vectors $x_1\in\bbR^n$ and $x_2\in\bbR^m$ via $\bA = x_1x_2^\top =: x_1 \otimes x_2$, can be viewed in at least three ways: 
+  As explained by \citet[Sec. 10.5, p. 227]{kokoszka2017introduction}, tensors are often thought of as generalisations of matrices and outer products.
+  For example, in Euclidean space, a matrix $\bA \in \bbR^{n\times m}$, formed by two vectors $\bx_1\in\bbR^n$ and $\bx_2\in\bbR^m$ via $\bA = \bx_1\bx_2^\top =: \bx_1 \otimes \bx_2$, can be viewed in at least three ways: 
   1) as a traditional matrix in the space $\bbR^n \otimes \bbR^m = \bbR^{n\times m}$; 
   2) as a linear operator in Euclidean space $\bA:\bbR^n\to\bbR^m$ (or the reverse) by multiplying $\bA$ from the left or right by a vector; or
-  3) as a bilinear mapping $\bA:\bbR^n \times \bbR^m \to \bbR$ in the form of $\bA(y_1,y_2) = y_1^\top\bA y_2 = y_1^\top x_1 x_2^\top y_2 = (y_1^\top x_1)(y_2^\top x_2)$, for some $y_1\in\bbR^n$ and $y_2\in\bbR^m$, arising often in the study of quadratic forms.
+  3) as a bilinear mapping $\bA:\bbR^n \times \bbR^m \to \bbR$ in the form of $\bA(\by_1,\by_2) = \by_1^\top\bA \by_2 = \by_1^\top \bx_1 \bx_2^\top \by_2 = (\by_1^\top \bx_1)(\by_2^\top \bx_2)$, for some $\by_1\in\bbR^n$ and $\by_2\in\bbR^m$, arising often in the study of quadratic forms.
 \end{remark}
 
 \index{sigma algebra|seealso{Borel space}}
@@ -437,7 +437,7 @@ Recall that a function $\nu:\Sigma\to[0,\infty]$ is called a \emph{measure} if i
   \item \textbf{$\sigma$-additivity:} for all countable, mutually disjoint sets $\{S_i\}_{i=1}^\infty$,
   \[
     \nu\left(\bigcup_{i=1}^\infty S_i \right) = \sum_{i=1}^\infty \nu(S_i).
-  \] 
+  \]\vspace{-1.5em} 
 \end{itemize}
 A measure $\nu$ on $\big(\cH,\cB(\cH)\big)$ is called a \emph{Borel measure} on $\cH$.
 We shall only concern ourselves with finite Borel measures. 

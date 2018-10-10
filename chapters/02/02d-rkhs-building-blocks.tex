@@ -2,7 +2,7 @@
 \index{I-prior!model}
 This section describes what we refer to as the ``building block'' RKHSs of functions.
 In the context of regression modelling using I-priors, we may assume that the regression function lies in any one of these single RKHSs, although it may be more appropriate to consider function spaces built upon these RKHSs for more complex models.
-I-priors will be presented in detail in \cref{chapter3}, but in advance of the forthcoming discussion, the plots in this section are intended to give an impression of sample paths from the respective RKHSs.
+I-priors will be presented in detail in \cref{chapter3}, but in advance of the forthcoming discussion, the plots in this section are intended to give an impression of sample I-prior paths from the respective RKHSs.
 Construction of new function spaces from these building block RKHSs will be discussed in the next section.
 
 \subsection{The RKHS of constant functions}
@@ -48,7 +48,7 @@ We can show that the continuous dual space of $\cX$ is an RKHS which consists of
 
 \begin{proposition}[Canonical RKHS]
   \index{dual space!continuous dual}
-  The continuous dual space a Hilbert space $\cX$, denoted by $\cX^*$, is an RKHS of linear functions over $\cX$ of the form $\ip{\cdot,\beta}_\cX$, $\beta\in\cX$. Its reproducing kernel $h:\cX\times\cX\to\bbR$ is defined by
+  The continuous dual space of a Hilbert space $\cX$, denoted by $\cX^*$, is an RKHS of linear functions over $\cX$ of the form $\ip{\cdot,\beta}_\cX$, $\beta\in\cX$. Its reproducing kernel $h:\cX\times\cX\to\bbR$ is defined by
   \[
     h(x,x') = \ip{x,x'}_{\cX}.
   \]
@@ -380,7 +380,7 @@ The Pearson RKHS is defined as follows.
 
 The Pearson RKHS contains functions which are centred, and has the desirable property that the contribution of $f(x)^2$ (the square of $f(x)$) to the squared norm of $f$ is proportional to $\Prob(X=x)$.
 
-\begin{proposition}
+\begin{proposition}[Mean and variance of functions in a Pearson RKHS]
   Let $\cF$ be the Pearson RKHS of functions over a finite set $\cX$.
   Then,
   \[

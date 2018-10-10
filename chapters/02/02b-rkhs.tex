@@ -2,7 +2,7 @@
 \index{evaluation functional!continuous}
 The introductory section sets us up nicely to discuss the coveted reproducing kernel Hilbert space.
 This is a subset of Hilbert spaces for which its evaluation functionals are continuous (by definition, in fact).
-The majority of this section, apart from defining RKHSs, is an exercise in convincing ourselves that each and every RKHS of functions can be specified solely through its reproducing kernel.
+The majority of this section, apart from defining RKHSs, is an exercise in persuading ourselves that each and every RKHS of functions can be specified solely through its reproducing kernel.
 To begin, we consider a fundamental linear functional on a Hilbert space of functions $\cF$, that assigns a value to $f \in \mathcal F$ for each $x \in \mathcal X$, called the \emph{evaluation functional}.
 
 \begin{figure}[t]
@@ -114,9 +114,9 @@ This leads us to the definition of a \emph{reproducing kernel} of an RKHS---the 
 \end{definition}
 
 An important property for reproducing kernels of an RKHS is that they are positive definite functions.
-That is, $\forall a_1, \dots, a_n \in \mathbb R$ and $\forall x_1, \dots, x_n \in \mathcal X$,
+That is, $\forall \lambda_1, \dots, \lambda_n \in \mathbb R$ and $\forall x_1, \dots, x_n \in \mathcal X$,
 \[
-  \sum_{i=1}^n\sum_{j=1}^n a_i a_j h(x_i, x_j) \geq 0.
+  \sum_{i=1}^n\sum_{j=1}^n \lambda_i \lambda_j h(x_i, x_j) \geq 0.
 \]
 
 \begin{lemma}[Reproducing kernels of RKHSs are positive definite]\label{thm:posdef}
@@ -140,7 +140,7 @@ That is, $\forall a_1, \dots, a_n \in \mathbb R$ and $\forall x_1, \dots, x_n \i
   \index{kernel!method}
   \index{kernel!trick}
   \index{feature map/space}
-  In the kernel method literature, a \emph{kernel} $\hXXR$ is usually defined as the inner product between inputs in feature space.
+  In the kernel methods literature, a \emph{kernel} $\hXXR$ is usually defined as the inner product between inputs in feature space.
   That is, take $\phi:\cX\to\cV$, $x\mapsto\phi(x)$, where $\cV$ is a Hilbert space.
   Then the kernel is defined as $h(x,x') = \ip{\phi(x),\phi(x')}_\cV$, for any $x,x'\in\cX$.
   The space $\cV$ is known as the \emph{feature space} and the mapping $\phi$ the \emph{feature map}.
