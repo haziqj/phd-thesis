@@ -74,7 +74,7 @@ In such cases, we might want to consider a regression function with additive com
   f(x_i^{(j)}, j) = f_1(x_i^{(j)}) + f_2(j) + f_{12}(x_i^{(j)}, j)
 \]
 where $x_i^{(j)}$ denotes the $p$-dimensional $i$'th observation for group $j\in\{1,\dots,m\}$.
-Again, assuming a linear parameterisation, this is recognisable as the standard multilevel or random-effects linear model \citep{skrondal2012multilevel}, with $f_2$ representing the varying intercept via $f_2(j) = \alpha_{j}$, $f_{12}$ representing the varying slopes via $f_{12}(x_{ij},j) = x_i^{(j)\top} u_{j}$,  $u_j \in \bbR^p$, and $f_1$ representing the fixed-effects linear component $ x_i^{(j)\top} \beta$ as in the linear model above.
+Again, assuming a linear parameterisation, this is recognisable as the standard multilevel or random-effects linear model \citep{skrondal2012multilevel}, with $f_2$ representing the varying intercept via $f_2(j) = \alpha_{j}$, $f_{12}$ representing the varying slopes via $f_{12}(x_i^{(j)},j) = x_i^{(j)\top} u_{j}$,  $u_j \in \bbR^p$, and $f_1$ representing the fixed-effects linear component $ x_i^{(j)\top} \beta$ as in the linear model above.
 
 \index{parametric}
 \index{nonparametric}
@@ -84,9 +84,9 @@ A myriad of models exist for this type of problem, with most classed as nonparam
 Semiparametric regression models, on the other hand, combines the linear component of a regression model with a nonparameteric component.
 
 \index{functional regression}
-Further, the regression problem is made more intriguing when the set of covariates $\cX$ is functional---in which case the linear regression model aims to estimate coefficient functions $\beta:\cT \to \bbR$ from the model
+Further, the regression problem is made more intriguing when the set of covariates $\cX$ is functional---in which case the linear regression model aims to estimate coefficient functions $\alpha,\beta:\cT \to \bbR$ from the model
 \[
-  y_i = \int_\cT x_i(t)\beta(t) \dint t + \epsilon_i.
+  y_i = \int_\cT \Big\{ \alpha(t) + x_i(t)\beta(t) \Big\} \dint t + \epsilon_i.
 \]
 Nonparametric and semiparametric regression with functional covariates have also been widely explored \citep{ramsay2005functional}.
 Models of this nature still fall under the remit of the normal regression model by selecting a regression functional with domain over the functional covariates.
@@ -97,7 +97,7 @@ Models of this nature still fall under the remit of the normal regression model 
 \index{RKKS}
 \index{kernel}
 It would be beneficial to prescribe some sort of structure for which estimation of the regression function can be carried out methodically and reliably. 
-This needed structure is given to us by assuming that our regression function $f$ for the normal model lies in some reproducing kernel Hilbert or Kreĭn space (RKHS/RKKS) $\cF$ equipped with the reproducing kernel $h:\cX \times \cX \to \bbR$.
+This needed structure is given to us by assuming that our regression function $f$ for the normal model lies in some topological vector space, namely, a reproducing kernel Hilbert or Kreĭn space (RKHS/RKKS) $\cF$ equipped with the reproducing kernel $h:\cX \times \cX \to \bbR$.
 Often, the reproducing kernel (or simply kernel, for short) is shaped by one or more parameters which we shall denote by $\eta$.
 Correspondingly, the kernel is rightfully denoted $h_\eta$ to indicate the dependence of the parameters on the kernels, though where this is seemingly obvious, might be omitted.
 For I-prior modelling, which is the focus of this thesis, we make the assumption that our regression function lies in a RKKS $\cF$.
@@ -176,7 +176,7 @@ The exact solution for the coefficients $\bw := (w_1,\dots,w_n)^\top$ are in fac
 
 \index{I-prior!model}
 Building upon the Bayesian interpretation of regularisation, \citet{bergsma2017} proposes an original prior distribution for the regression function such that its realisations admit the form for the solution given in the representer theorem.
-The \emph{I-prior} for the regression function $f$ in \cref{eq:model1} subject to \cref{eq:model1ass} and $f\in\cF$, a RKKS with kernel $h_\eta$, is defined as the distribution of a random function of the form \cref{eq:repform} when the $w_i$ are distributed according to 
+The \emph{I-prior} for the regression function $f$ in \cref{eq:model1} subject to \cref{eq:model1ass} and $f\in\cF$, an RKKS with kernel $h_\eta$, is defined as the distribution of a random function of the form \cref{eq:repform} when the $w_i$ are distributed according to 
 \[
   (w_1,\dots,w_n)^\top \sim \N_n(\bzero,\bPsi),
 \]
@@ -210,7 +210,7 @@ Incidentally, the elements of the $n$-vector $\tilde \bw$ defined in \cref{eq:po
 The point-evaluation posterior variance for $f$ is given by
 \begin{align}\label{eq:postvar}
   \Var\big(f(x) \big| \by\big) = 
-  \bh_\eta^\top(x)\big( \bH_\eta\bPsi\bH_\eta + \bPsi^{-1} \big)^{-1} \bh_\eta^\top(x).
+  \bh_\eta^\top(x)\big( \bH_\eta\bPsi\bH_\eta + \bPsi^{-1} \big)^{-1} \bh_\eta(x).
 \end{align}
 Prediction for a new data point $x_\new \in \cX$ then concerns obtaining the \emph{posterior predictive distribution}
 \[
@@ -267,7 +267,7 @@ The I-prior methodology has the following advantages:
   \item \textbf{Straightforward inference.}
   
   Marginal likelihoods after integrating out the I-prior are easily obtained, making model selection via likelihood comparison a viable option.
-  This method of comparing marginal likelihood with maximum likelihood estimate plug-ins of the model parameters, is viewed as empirical Bayes factors comparison in the Bayesian literature.
+  This method of comparing marginal likelihood with maximum likelihood estimate plug-ins of the model parameters, is viewed as empirical Bayes factors comparison in the Bayesian literature \citep{george2000calibration,casella1985introduction}.
   
 \end{enumerate}
 
@@ -303,7 +303,7 @@ This thesis is structured as follows:
 
   \item \textbf{\cref{chapter6}} is a contribution to the area of variable selection.
   Specifically for linear models with $p$ variables to select from, model comparison requires elucidation of $2^p$ marginal likelihoods, and this becomes infeasible when $p$ is large.
-  To circumvent this issues, we use a stochastic search method to choose models that have high posterior probabilities of occurring, equivalent to choosing models that have large Bayes factors.
+  To circumvent this issue, we use a stochastic search method to choose models that have high posterior probabilities of occurring, equivalent to choosing models that have large Bayes factors.
   We experiment with the use of I-priors to improve false selections, especially in the presence of multicollinearity.
 \end{itemize}
 
