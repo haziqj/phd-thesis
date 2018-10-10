@@ -45,7 +45,7 @@ We broadly classify variable selection into three categories: 1) (pairwise) mode
 We understand that different categorisations and hence categories of model selection exist in the literature, but our focus is on the discussion of the three types as mentioned.
 
 \index{model selection}
-Model selection criteria, both from a frequentist and Bayesian standpoint, can either be of a predictive nature ($R^2$, mean squared error of prediction (MSEP), $C_p$ \citep{mallows1973some}, $k$-fold cross-validation MSEP, etc.), or a likelihood-based information criterion (likelihood ratios, Bayes factors, Akaike information criterion (AIC, \cite{akaike1973}), Bayesian information criterion (BIC, \cite{schwarz1978estimating}), etc.).
+Model selection criteria, both from a frequentist and Bayesian standpoint, can either be of a predictive nature (e.g.  $R^2$, mean squared error of prediction (MSEP), $C_p$ \citep{mallows1973some}, $k$-fold cross-validation MSEP, etc.), or based on likelihood (e.g. likelihood ratios, Bayes factors, Akaike information criterion (AIC, \cite{akaike1973}), Bayesian information criterion (BIC, \cite{schwarz1978estimating}), etc.).
 Selecting a model based on either of these criteria requires comparison of all $2^p$ criteria, which is not feasible for large $p$.
 Typically, these criteria are used in conjunction with stepwise procedures such as forward-selection or backward-deletion to restrict attention to a smaller number of potential subsets \citep{George1993,miller2002subset}.
 
@@ -61,11 +61,11 @@ Further criticisms of the Lasso include its inability to select more than $n$ pr
 From a Bayesian perspective, regularisation is akin to placing priors on the $\beta_k$'s to shrink the effects of the $\beta_k$'s: the ridge regression has a Bayesian interpretation of placing normal priors on the regression coefficients, while the Lasso a Laplace or double exponential prior \citep{park2008bayesian}.
 The term adaptive shrinkage has been used for the method in which hyperpriors are placed on the scale parameter of the prior for the $\beta_k$'s.
 The idea is to adaptively shape the prior depending on the importance of the variable in the regression model.
-Bayesian shrinkage includes the task of specifying tuning parameters, which could potentially affect chain mixing in a Markov chain Monte Carlo method (MCMC) procedure (which is often used).
+Bayesian shrinkage includes the task of specifying tuning parameters, which could potentially affect chain mixing in a Markov chain Monte Carlo method (MCMC) procedure, which is the estimation method that is commonly used.
 
 \index{Bayesian model selection}
-Bayesian model selection is probabilistic in nature: a priori, one assigns probabilities over the set of models, and then after observing the data, posterior model probabilities (PMPs) are used to discern which of the models was likeliest to have been behind the data generative process of the observed responses.
-Of course, with large  $p$ then calculation of all $2^p$ posterior model probabilities to ascertain which is highest will be a challenge, if not impossible.
+True Bayesian model selection is probabilistic in nature: a priori, one assigns probabilities over the set of models, and then after observing the data, posterior model probabilities (PMPs) are used to discern which of the models was likeliest to have been behind the data generative process of the observed responses.
+Of course, with large  $p$, calculation of all $2^p$ posterior model probabilities to ascertain which is highest will be a challenge, if not impossible.
 But, as with most Bayesian applications, MCMC can be applied as a practical means of overcoming this intractability.
 This stochastic approach to variable selection was pioneered by \citet{George1993}, and studied by others such as \citet{Kuo1998,dellaportas2002bayesian,Ntzoufras2008}.
 Unlike shrinkage methods, Bayesian model selection is able to quantify the amount of times a variable ``enters the model'' (inclusion probabilities), and thereby measuring its worth as a  predictor.
@@ -232,7 +232,7 @@ The (conditional) posterior samples of $\gamma=(\gamma_1,\dots,\gamma_p)$ are ob
 \end{align*}
 Here, we have used the notation $\btheta_j^{[1]}$ to indicate the vector $\btheta$ with the $j$'th component replaced by $\bbeta_j$, and $\btheta_j^{[0]}$ to indicate the vector $\btheta$ with the $j$'th component replaced by 0.
 Values of 1 for $\gamma$ are more likely to be sampled when the ratio $u_j / v_j$ is greater than the prior odds $\pi_j/(1-\pi_j)$.
-Specifically when the prior probabilities $\pi_j$ are all set to be 0.5, then $\gamma_j$ will be more likely to be sampled as `1' if $u_j > v_j$, i.e. if the residual sum of squares (RSS) $\Vert \by - \alpha\bone_n - \bX\btheta \Vert^2$ is \emph{smaller} when the $j$th component is non-zero, compared to the RSS when the $j$'th component of $\btheta$ is zero.
+Specifically when the prior probabilities $\pi_j$ are all set to be 0.5, then $\gamma_j$ will be more likely to be sampled as `1' if $u_j > v_j$, i.e. if the residual sum of squares (RSS) $\Vert \by - \alpha\bone_n - \bX\btheta \Vert^2$ is \emph{smaller} when the $j$'th component of $\btheta$ is non-zero, compared to the RSS when the $j$'th component of $\btheta$ is zero.
 \index{residual sum of squares}
 
 \index{Bayesian hypothesis test}
@@ -318,7 +318,7 @@ For each Gibbs sample, calculate
 \[
   y_\new^{(t)} = \alpha^{(t)} + \bx_\text{new}^\top (\gamma_1\beta_1,\dots,\gamma_p\beta_p),
 \]
-and obtain a point estimate $\hat y_\new^{(t)}$ using the posterior mean or mode.
+and obtain a point estimate $\hat y_\new$ using the posterior mean or mode.
 The uncertainty for this estimate is contained in the standard deviation calculated from the sample $y_\new^{(1)},\dots,y_\new^{(T)}$, from which a 95\% credibility interval for this estimate can be obtained from the empirical upper and lower 0.025 cut off points.
 
 \section{Two stage procedure}
@@ -340,7 +340,7 @@ A natural choice for $\tau$ would be 0.5, and therefore a two-stage approach to 
 The median probability model is obtained by selecting all variables with a posterior inclusion probability of greater than or equal to a half.
 \citet{Barbieri2004} show that the median probability model has the property of being optimally predictive (minimises squared error loss for predictions) under certain strict conditions. 
 
-The notion of a two-stage approaches are not new, as many variable selection methods in the literature generally employ a preselection method of some kind before running their selection process proper.
+The notion of a two-stage approach is not new, as many variable selection methods in the literature generally employ a preselection method of some kind before running their selection process proper.
 This can be based on subjective preconceptions about which variables to retain, substantive theory, or even an objective preselection criterion.
 Two-stage procedures for Bayesian variable selection models have been used in works by \citet{Fouskakis2008} and \citet{Ntzoufras2008}. 
 
@@ -385,7 +385,7 @@ The overall results are also plotted in the form a frequency polygon (see \cref{
 
 \begin{table}[htb]
 \centering
-\caption[Simulation results for the Bayesian variable selection experiment]{Simulation results (proportion of false choices) for the Bayesian variable selection experiment using the I-prior, an independent prior, the $g$-prior and the Lasso across varying SNR.}
+\caption[Simulation results for the Bayesian variable selection experiment]{Simulation results (proportion of false choices) for the Bayesian variable selection experiment using the I-prior, an independent prior, the $g$-prior and the Lasso across varying SNR. Standard errors are given in parentheses.}
 \label{tab:simres}
 \begin{tabular}{lrrrrr}
 \toprule \Bot
@@ -432,7 +432,7 @@ We also inspect the sensitivity of the hyperprior choice of $\pi_j$ for the indi
 \cref{fig:simres2} plots the mean number of false choices made in each of the five SNR scenarios with varying hyperprior setting for $\pi_j$.
 From the plot, it is seen that for high SNR scenarios, setting $\pi_j$ too low increases the number of false exclusions.
 Conversely, for low SNR scenarios, setting $\pi_j$ too high increases the number of false inclusions.
-This makes sense: when the true model size is small, then setting $\pi_j$ too high encourages variables to be retained in the model.
+This makes sense: when the true model size is small, then setting $\pi_j$ too high encourages variables to be retained in the model, and vice versa.
 While the optimal $\pi_j$ corresponds directly to the true SNR (e.g. SNR = 10\% performs best under $\pi_j=0.10$), \cref{fig:simres2} makes a case for $\pi_j=0.5$ to be a ``safe choice'' in the face of prior ignorance on model size.
 
 \begin{figure}[hbt]
@@ -474,7 +474,7 @@ The sample correlations of interest are shown in \cref{fig:aerobic-cor}.
 \label{tab:aerobic}
 \begin{tabular}{lrrrrrr}
 \toprule
-      &PIP    &$\btheta$ est. (SD)  &Model 1 &Model 2 &Model 3 &Model 4 \\
+      &PIP    &Coef. (SD)  &Model 1 &Model 2 &Model 3 &Model 4 \\
 \midrule
 $X_1$ &0.685  &$-0.169 \ (0.14)$ &\cmark  &        &\cmark  & \\
 $X_2$ &0.205  &$-0.017 \ (0.05)$ \\
@@ -627,7 +627,7 @@ Out-of-sample prediction RMSE were obtained, as well as the coefficient of deter
 
 C\&M removed the variables $X_{11}$ and $X_{12}$ before running their selection model, citing multicollinearity causing ill-conditioned design matrices. 
 Upon inspection, there are indeed correlations among the variables as high as 0.93 for some of them, but not enough to cause rank deficiency in the design matrix and a degenerate $\XTX$ matrix.
-The sample correlations $\widehat\Corr(X_7,X_{11}) =0.91$ and $\widehat\Corr(X_{11},X_{12}) = 0.93$ seemed to drive the decision to drop the two variables, and while it is a valid concern, we still will conduct variable selection on the full set of 12 variables to see the performance of I-priors in the presence of multicollinearity in this real-world data set. 
+The sample correlations $\widehat\Corr(X_7,X_{11}) =0.91$ and $\widehat\Corr(X_{11},X_{12}) = 0.93$ seemed to drive the decision to drop the two variables, and while it is a valid concern, we shall still conduct variable selection on the full set of 12 variables to see the performance of I-priors in the presence of multicollinearity in this real-world data set. 
 On another note, the variables $X_1$, $X_2$ and $X_3$ were presumably intended to be categorical as in modelling seasonality in a time series data, but these were treated as continuous, as did C\&M. 
 The results are compared in \cref{tab:ozoneres}.
 
@@ -647,10 +647,12 @@ I-prior                         &$X_1,X_6,X_{11}$     &3    &0.708 &0.554 \\
 \end{table}
 
 What we found was that the model selected using the I-prior does better in terms of $R^2$ as well as RMSE compared to the methods used by C\&M and B\&F. 
-The average posterior model probability for $X_1,X_6,X_{11}$ as found by the I-prior was 0.722\footnotemark. 
+The average posterior model probability for $\{X_1,X_6,X_{11}\}$ as found by the I-prior was 0.722\footnotemark. 
 One thing to note is that the I-prior model selected the variable $X_{11}$ instead of its highly correlated proxy $X_7$, which is what C\&M selected.
 These two variables are temperature measurements at different locations in California.
 As C\&M excluded $X_{11}$ from the model search it was of course never considered in their model selection process, and because we included it in ours, the variable selection model was able to consider both variables together and decide on the more appropriate one. 
+
+\footnotetext{Since the total model space used was different between our method, C\&M and B\&F, it does not make sense to compare posterior model probabilities which we obtained. C\&M reported a model probability of 0.491 for their model, but this model was not selected at all using the I-prior.}
 
 Interestingly, the distance as the crow flies between Sandberg, CA (location of temperature measurements for $X_7$) and Upland, CA (location of ozone readings) is roughly 121 km, but El Monte, CA (location of temperature measurements for $X_{11}$) is just 35 km away from Upland, CA.
 It stands to reason that $X_{11}$ provides more geographical reliability than $X_7$.
@@ -665,8 +667,6 @@ Out of curiosity, running the variable selection model on the reduced variable s
   \label{fig:aerobic-densplot       }
 \end{figure}
 \footnotetext{Map tiles by \href{http://stamen.com/}{Stamen Design}, under \href{https://creativecommons.org/licenses/by/3.0/legalcode}{CC BY 3.0}. Data by \href{http://openstreetmap.org/}{OpenStreetMap}, under \href{https://creativecommons.org/licenses/by-sa/3.0/legalcode}{CC BY-SA 3.0}. Created using the \pkg{ggmap} package \citep{ggmap} in \proglang{R}.}
-
-\footnotetext{Since the total model space used was different between our method, C\&M and B\&F, it does not make sense to compare posterior model probabilities which we obtained. C\&M reported a model probability of 0.491 for their model, but this model was not selected at all using the I-prior.}
 
 \index{interaction}
 We then used the I-prior method to select between the squared terms and all level two interactions, in addition to all the variables, in an effort to improve model prediction. 
@@ -695,7 +695,7 @@ C\&M
 \section{Conclusion}
 
 The model selection problem is an important one in statistics, but highly contentious.
-\citet{miller2002subset} writes that many statisticians view model selection as ``unclean'' or ``distasteful', and that ``terms such as `fishing expeditions', `torturing the data until they confess', `data mining', and others are used as descriptions of these practices''. 
+\citet{miller2002subset} writes that many statisticians view model selection as ``unclean'' or ``distasteful'', and that ``terms such as `fishing expeditions', `torturing the data until they confess', `data mining', and others are used as descriptions of these practices''. 
 The disagreement with the principle of model selection stems from the belief in the mantra that models should only be built by thoughtfully choosing variables which are expected to influence the response by appealing to substantive theory, and not by virtue of optimising some model selection criterion.
 However, variable selection as an exploratory study is certainly justified by many practical applications, especially when there is a genuine desire to know the most reasonable, parsimonious and interpretable model.
 Through variable selection exercises, we can learn which covariates are important, and which are negligible, in explaining the variation in the response.
