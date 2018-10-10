@@ -231,16 +231,16 @@ The derivative of $\int p(Y|\cdot)\dint Y$ at any value of $\theta\in\Theta$ is 
   For nice and well-behaved probability densities, such as the normal density that we will be working with, there aren't issues with interchanging integrals and derivatives.
 }
 
-Using the classical notion that the Fisher information is the variance of the score function, then, for fixed $b,b'\in\Theta$, combined with the fact that $\E[\d L(\theta|Y)]$ is a zero-mean function, we have that 
+Using the classical notion that the Fisher information is the variance of the score function, then, for fixed $b,b'\in\Theta$, combined with the fact that $\d L(\theta|Y)(\cdot)$ is a zero-meaned function, we have that 
 \begin{align*}
   \cI(\theta)(b,b') 
-  &= \E [ \d L(\theta|Y)(b) \cdot \d L(\theta|Y)(b') ] \\
+  &= \E [ \d L(\theta|Y)(b) \, \d L(\theta|Y)(b') ] \\
   &= \E \big[ \left\langle \nabla L(\theta|Y) , b \right\rangle_\Theta \left\langle \nabla L(\theta|Y) , b' \right\rangle_\Theta \big] \\
   &= \left\langle \E [\nabla L(\theta|Y) \otimes \nabla L(\theta|Y)] , b \otimes b' \right\rangle_{\Theta\otimes\Theta}.
 \end{align*}
 Hence, $\cI(\theta)$ as a bilinear form corresponds to the element $\E [\nabla L(\theta|Y) \otimes \nabla L(\theta|Y)] \in \Theta\otimes\Theta$.
 
-The Gâteaux derivative of the Fréchet differential is the second Fréchet derivative, since $L(\cdot|Y)$ is assumed to be twice differentiable at $\theta\in\Theta$:
+The Gâteaux derivative of the Fréchet differential is the second Fréchet derivative, since $L(\cdot|Y)$ is assumed to be twice Fréchet differentiable at $\theta\in\Theta$:
 \begin{align*}
   \d^2 L(\theta|Y)(b,b') 
   &= \partial_{b'} \d L(\theta|Y)(b) \\

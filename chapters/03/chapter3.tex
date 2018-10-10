@@ -66,7 +66,10 @@ The I-prior has a simple, intuitive appeal: much information about $f$ correspon
 In estimating the regression function $f$ of the normal model in \cref{eq:model1} subject to \cref{eq:model1ass} and $f$ belonging to an RKKS $\cF$, we established that the entropy maximising prior distribution for $f$ is Gaussian with some chosen prior mean $f_0$, and covariance function proportional\footnote{Proportionality, rather than equality, is a consequence of any RKHS scale parameters that $\cF$ may have.} to the Fisher information for $f$.
 We call this the I-prior for $f$.
 
-The dimension of the function space $\cF$ could be huge, infinite dimensional even, while the task of estimating $f\in\cF$ only relies on a finite amount of data point.
+The concept of Fisher information for a regression function $f$ is brought about by viewing the regression model \cref{eq:model1} subject to \cref{eq:model1ass} as being parameterised by $f$.
+One caveat is that the dimension of the function space $\cF$ to which $f$ belongs is potentially infinite-dimensional, in which case the tools such as Fréchet and Gâteaux differentials are necessary in order to calculate first and second derivatives.
+
+On a related note, should $\cF$ be infinite dimensional, the task of estimating $f\in\cF$ relies only on a finite amount of data points.
 However, we are certain that the Fisher information for $f$ exists only for the finite subspace $\cF_n$ as defined in \cref{eq:subspaceFn}, and it is zero everywhere else.
 This suggests that the data only allows us to provide an estimation to the function $f\in\cF$ by considering functions in an (at most) $n$-dimensional subspace instead.
 In other words, it would be futile to consider functions in a space larger than this, and hence there is an element of dimension reduction here, especially when $\dim(\cF) \gg n$.
