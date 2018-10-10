@@ -257,8 +257,8 @@ Notice that the above likelihood is an exponential family distribution with the 
   T_2 =  \psi\tilde\by^\top \bR_k \bw - \half[\psi]\tr(\bU_k^2 \bw\bw^\top).
 \]
 This likelihood is maximised at $\hat\lambda_k = T_2/2T_1$, but of course, the variables $w_1,\dots,w_n$ are never observed.
-As per the exponential family EM routine, replace occurrences of $\bw$ and $\bw\bw^\top$ with their respective conditional expectations, i.e. $\bw\mapsto\E[\bw|\by] = \wtilde$ and $\bw\bw^\top\mapsto\E[\bw\bw^\top|\by] = \tilde\bV_w + \wtilde\wtilde^\top$ as defined in \cref{eq:posteriorw}.
-That the $\lambda_k$'s have closed-form expressions, together with the closed-form expression for $\psi$ in \cref{eq:closedformpsi}, greatly simplifies the EM algorithm.
+As per the exponential family EM routine, replace occurrences of $\bw$ and $\bw\bw^\top$ with their respective conditional expectations, i.e. $\bw\mapsto\E(\bw|\by) = \wtilde$ and $\bw\bw^\top\mapsto\E(\bw\bw^\top|\by) = \tilde\bV_w + \wtilde\wtilde^\top$ as defined in \cref{eq:posteriorw}.
+The fact that the $\lambda_k$'s have closed-form expressions, together with the closed-form expression for $\psi$ in \cref{eq:closedformpsi}, greatly simplifies the EM algorithm.
 At the M-step, one simply updates the parameters in turn, and as such, there is no maximisation per se.
 
 The exponential family EM algorithm for ANOVA-type I-prior models is summarised in \cref{alg:EM2}.
@@ -306,7 +306,7 @@ As a remark, it is not necessary that $h_\lambda$ is the full ANOVA RKKS; any of
 \begin{remark}
   Another compelling reason to use \cref{alg:EM2} is conjugacy of the exponential family of distributions.
   Realise that $\lambda_k|\by,\bw,\lambda_{-k},\psi$ is in fact normally distributed, with mean and variance given by $T_2/2T_1$ and $1/2T_1$ respectively.
-  If we were so compelled to assign a normal prior on each of the $\lambda_k$'s, then the conditionally dependent log-likelihood of $\lambda_k$, $L(\lambda_k|\by,\bw,\lambda_{-k},\psi)$, would have a normal prior log-density involving $\lambda_k$ added on.
+  If we were so compelled, we could assign normal priors on each of the $\lambda_k$'s, then the conditionally dependent log-likelihood of $\lambda_k$, $L(\lambda_k|\by,\bw,\lambda_{-k},\psi)$, would have a normal prior log-density involving $\lambda_k$ added on.
   Importantly, viewed as a posterior log-density for $\lambda_k$, the $\lambda_k$ is normally distributed.
   The exponential family EM is thus easily modified to compute maximum a posteriori (MAP) estimates (or penalised ML estimates) of the scale parameters.
 %  With diffuse priors on $\lambda_k$, MAP estimates are in fact ML estimates.

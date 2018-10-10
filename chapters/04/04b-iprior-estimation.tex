@@ -1,5 +1,5 @@
 \index{I-prior!model}
-After selecting a RKHS/RKKS $\cF$ of functions over $\cX$ suitable for the regression problem at hand, one then proceeds to estimate the posterior distribution of the regression function.
+After selecting an RKHS/RKKS $\cF$ of functions over $\cX$ suitable for the regression problem at hand, one then proceeds to estimate the posterior distribution of the regression function.
 The I-prior model \cref{eq:model1} subject to \cref{eq:model1ass} and $f\in\cF$ has the simple and convenient representation
 \begin{align}\label{eq:model2}
   \begin{gathered}
@@ -68,7 +68,7 @@ However, it can be obtained by realising that for $\alpha\in\cF_\emptyset$ the R
 On the other hand, consider the intercept as a parameter $\alpha$ to be estimated.
 Obtaining an estimate $\alpha$ using a likelihood-based argument is rather simple.
 From \cref{eq:model2}, $\E y_i = \alpha + f_0(x_i)$ for all $i=1,\dots,n$, so the maximum likelihood (ML) estimate for $\E y$ is its sample mean $\bar y = \frac{1}{n}\sum_{i=1} y_i$, and hence the ML estimate for $\alpha$ is $\hat\alpha = \bar y - \frac{1}{n} \sum_{i=1}^n f_0(x_i)$.
-Thus, assumption \ref{ass:A1} therefore implies that the ML estimate for the intercept is the sample mean of the responses.
+Thus, assumption \ref{ass:A1} therefore implies that the ML estimate for the intercept is the sample mean of the responses (assuming \ref{ass:A2} holds).
 
 %Finally, the estimation of $\alpha$ under a fully Bayesian treatment is possible by assuming an appropriate hyperprior on it, such as a conjugate normal prior $\N(a,A^{-1})$.
 %If so, the conditional posterior of $\alpha$ given $\bw$, $\eta$, $\bPsi$ and $f_0$ is also normal with mean $\tilde a$ and variance $\tilde A$, where
@@ -143,7 +143,7 @@ On a practical note, parameters are best transformed so that optimisation of the
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.75\textwidth]{figure/04-iprior-ridge-2}
-  \caption[A typical log-likelihood surface plot of I-prior models.]{A typical log-likelihood surface plot of I-prior models, in which there are two ridges. The maximum occurs along one of the two ridges, or sometimes at the intersection. Clearly, different initialisations can lead optimisation algorithms to either ridge and possibly converge to a local optima.}
+  \caption[A typical log-likelihood surface plot of I-prior models.]{A typical log-likelihood surface plot of I-prior models, in which there are two ridges. The maximum occurs along one of the two ridges, or sometimes near or at the intersection. Clearly, different initialisations can lead optimisation algorithms to either ridge and possibly converge to a local optima.}
   \label{fig:ipriorridge}
 \end{figure}
 
@@ -184,8 +184,8 @@ By treating the complete data as $\{\by,\bw \}$ and the $w_i$'s as ``missing'', 
   )\tilde\bW^{(t)} \Big)
   + \psi\tilde\by^\top\bH_\eta\wtilde^{(t)}, \nonumber
 \end{align}
-where $\tilde\bw^{(t)} = \E \big( \bw|\by,\theta^{(t)} \big)$ and $\tilde\bW^{(t)} = \E\big( \bw\bw^\top|\by,\theta^{(t)} \big)$ are the first and second posterior moments of $\bw$ calculated at the $t$th EM iteration.
-These can be computed directly from \cref{eq:posteriorw}, substituting for $\theta^{(t)} = \{\eta^{(t)}, \psi^{(t)} \}$ as appropriate.
+where $\tilde\bw^{(t)} = \E \big( \bw|\by,\theta^{(t)} \big)$ and $\tilde\bW^{(t)} = \E\big( \bw\bw^\top|\by,\theta^{(t)} \big)$ are the first and second posterior moments of $\bw$ calculated at the $t$'th EM iteration.
+These can be computed directly from \cref{eq:posteriorw}, substituting $\{\eta^{(t)}, \psi^{(t)} \}$ for $\theta^{(t)}$ as appropriate.
 
 The M-step assigns $\theta^{(t+1)}$ the value of $\theta$ which maximises the $Q$ function above.
 This boils down to solving the first order conditions

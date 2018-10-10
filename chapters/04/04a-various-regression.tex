@@ -1,7 +1,7 @@
 \index{regression}
 In the introductory chapter \colp{\cref{sec:introregmod}, \mypageref{sec:introregmod}}, we described several interesting regression models.
-The goal of this section is to formulate the I-prior model that describes each of these models.
-This is done by carefully choosing the RKHS/RKKS $\cF$ of real functions over a set $\cX$ to which the regression function $f$ belongs.
+The goal of this section is to formulate the I-prior model that describes each of these regression problems.
+This is done by thoughtfully choosing the RKHS/RKKS $\cF$ of real functions over a set $\cX$ to which the regression function $f$ belongs.
 Without loss of generality and for simplicity, assume a prior mean of zero for the I-prior distribution.
 
 \subsection{Multiple linear regression}
@@ -23,7 +23,7 @@ This implies a multivariate normal prior distribution for the regression coeffic
 where $\bX$ is the $n \times p$ design matrix for the covariates, excluding the column of ones at the beginning typically reserved for the intercept. 
 As expected, the covariance matrix for $\boldsymbol\beta$ is recognised as the scaled Fisher information matrix for the regression coefficients.
 
-If the covariates are not measured similarly, e.g. weights in kilograms, heights in metres, etc., then it makes sense to introduce scale parameters $\lambda_k$ to account for the differences in scale.
+If the covariates are not measured similarly, e.g. weights in kilograms, heights in metres, etc., then it makes sense to introduce multiple scale parameters $\lambda_k$ to account for the differences in scale.
 One could decompose the regression function into
 \[
   f(\bx_i) = f_1(x_{i1}) + \cdots + f_p(x_{ip}) 
@@ -41,12 +41,13 @@ Thus, the corresponding I-prior for $\boldsymbol{\beta}$ is
 \]
 with $\bLambda = \diag(\lambda_1,\dots,\lambda_p)$.
 Note that $\cF_\lambda$ can be seen as a special case of the ANOVA RKKS, in which only the main effects are considered. 
-Thusly, the \emph{centred canonical RKHSs} containing zero-mean functions should be considered instead.
+Thusly, the \emph{centred canonical RKHSs} containing zero-mean functions should be considered instead, in order to satisfy the functional ANOVA decomposition (see \cref{def:funcanovarep}, \mypageref{def:funcanovarep} and \cref{def:anovarkks}, \mypageref{def:anovarkks}).
 This approach is disadvantageous when $p$ is large, in which case there would be numerous scale parameters to estimate.
 
 \begin{remark}
   Of course, one could simply turn to standardisation of the $\bX$ variables, so as to make the variables measure on the same scale.
   We feel this is a rather ad-hoc approach which creates meaningless units (they are standard deviations) for the covariates which are then fiddly to interpret.
+  Small sample bias and non-normality are also valid concerns when scaling data.
   On the other hand, there is a balance to be made between elegance and feasibility.
   With large $p$, standardising is much simpler and computationally less burdensome than estimating $p$ individual scale parameters.
   In \cref{chapter6}, where we tackle the problem of  Bayesian variable selection using I-priors in linear models, standardisation of the variables is done for the sake of streamlining the Gibbs sampler.
@@ -90,7 +91,7 @@ We can show that the regression function \cref{eq:anovamultilevel} corresponds t
 and determine the prior distributions on $(\beta_{0j},\boldsymbol{\beta}_{1j}^\top)^\top \in \bbR^{p+1}$.
 For the interested reader, the details are in \cref{misc:multilevelmodels} \colp{\mypageref{misc:multilevelmodels}}.
 The standard multilevel random effects assumption is that $(\beta_{0j},\boldsymbol{\beta}_{1j}^\top)^\top$ is normally distributed with mean zero and covariance matrix $\bPhi$.
-In total, there are $p+1$ regression coefficients and $(p+1)(p+2)/2$ covariance parameters in $\Phi$ to be estimated.
+In total, there are $p+1$ regression coefficients and $(p+1)(p+2)/2$ covariance parameters in $\bPhi$ to be estimated.
 In contrast, the I-prior model is parameterised by only two RKKS scale parameters---one for $\cF_1$ and one for $\cF_2$---and the error precision $\bPsi$, which is usually proportional to the identity matrix.
 While the estimation procedure for $\bPhi$ in the standard multilevel model can result in non-positive covariance matrices, the I-prior model has the advantage that positive definiteness is taken care of automatically\footnote{By virtue of the estimate of the regression function belonging to $\cF_n$, an RKHS with a positive definite kernel equal to the Fisher information for $f$.}.
 %This is seen from the calculations for $\Var \beta_{0j}$, $\Var \boldsymbol\beta_{1j}$ and the respective covariances.
@@ -188,7 +189,7 @@ In fact, any of the RKHS/RKKS described in \cref{chapter3} can be used to either
 \index{fBm kernel/RKHS}
 Single- and multi-variable smoothing models can be fitted under the I-prior methodology using the fBm RKHS.
 In standard kernel based smoothing methods, the squared exponential kernel is often used, and the corresponding RKHS contains analytic functions.
-There are several attractive properties of using the fBm RKHS, and for one-dimensional smoothing, these are discussed below.
+There are several attractive properties of using the fBm RKHS, and for one-dimensional smoothing, which are discussed below.
 
 \index{centring!RKHS}
 \index{empirical distribution}
@@ -209,7 +210,7 @@ For $f$ of the form $f = \sum_{i=1}^n h(\cdot,x_i)w_i$, i.e. $f\in\cF_n$, the fi
 where 
 \vspace{-0.5em}
 \begin{align}
-  \beta(t) = \sum_{i:x_i \leq t} w_i =  \frac{f(x_{i_t + 1}) - f(x_{i_t})}{x_{i_t + 1} - x_{i_t}} \vspace{-0.1em}
+  \beta(t) = \sum_{i\in\{k|x_k \leq t\}} w_i =  \frac{f(x_{i_t + 1}) - f(x_{i_t})}{x_{i_t + 1} - x_{i_t}} \vspace{-0.1em}
 \end{align}
 with $i_t = \max_{x_i \leq t} i$.
 Under the I-prior with an iid assumption on the errors, the $w_i$'s are zero mean normal random variables with variance $\psi$, so that $\beta$ as defined above is an ordinary Brownian bridge with respect to the empirical distribution $\Prob_n$.

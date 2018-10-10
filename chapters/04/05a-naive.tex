@@ -11,7 +11,7 @@ For $j=1,\dots,m$, we model
     (\epsilon_{i1},\dots,\epsilon_{im})^\top \iid \N_m(\bzero,\bPsi^{-1}).
   \end{gathered}
 \end{equation}
-The idea here being that we attempt to model the class responses $y_{ij}$ using class-specific regression functions $f_j$, and the class responses are assumed to be independent among individuals, but may or may not be correlated among classes for each individual.
+The idea here being that we attempt to model the class responses $y_{ij}$ using class-specific regression functions, and the class responses are assumed to be independent among individuals, but may or may not be correlated among classes for each individual.
 The class correlations are manifest themselves in the variance of the errors $\bPsi^{-1}$, which is an $m\times m$ matrix.
 
 \index{ANOVA!kernel/RKKS|)}
@@ -21,8 +21,9 @@ That is, $\cF = \cF_\cM \oplus (\cF_\cM \otimes \cF_\cX)$ is a decomposition int
 Let $\cF_\cM$ and $\cF_\cX$ be RKHSs respectively with kernels $a:\cM\times\cM\to\bbR$ and $b_\eta:\cX\times\cX\to\bbR$.
 Then, the ANOVA RKKS $\cF$ possesses the reproducing kernel $h_\eta:(\cX \times \cM)^2 \to \bbR$ as defined by
 \begin{align}\label{eq:anovaclass}
-  h_\eta\big( (x,j), (x',j') \big) = a(j,j') + a(j,j')b_\eta(x,x').  
+  h_\eta\big( (x,j), (x',j') \big) = a(j,j') + a(j,j')b_\eta(x,x'), 
 \end{align}
+which leaves the $\alpha$ to be estimated separately (see \cref{sec:intercept}).
 The kernel $b_\eta$ may be any of the kernels described in this thesis, ranging from the linear kernel, to the fBm kernel, or even an ANOVA kernel.
 Choices for $a:\cM \times \cM \to \bbR$ include \index{Pearson kernel/RKHS} \index{identity kernel}
 \begin{enumerate}
