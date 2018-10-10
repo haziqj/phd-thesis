@@ -213,7 +213,7 @@ where
   \beta(t) = \sum_{i\in\{k|x_k \leq t\}} w_i =  \frac{f(x_{i_t + 1}) - f(x_{i_t})}{x_{i_t + 1} - x_{i_t}} \vspace{-0.1em}
 \end{align}
 with $i_t = \max_{x_i \leq t} i$.
-Under the I-prior with an iid assumption on the errors, the $w_i$'s are zero mean normal random variables with variance $\psi$, so that $\beta$ as defined above is an ordinary Brownian bridge with respect to the empirical distribution $\Prob_n$.
+Under the I-prior with an iid assumption on the errors, the $w_i$'s are zero-meaned normal random variables with variance $\psi$, so that $\beta$ as defined above is an ordinary Brownian bridge with respect to the empirical distribution $\Prob_n$.
 The I-prior for $f$ is piecewise linear with knots at $x_1,\dots,x_n$, and the same holds true for the posterior mean.
 The implication is that the I-prior automatically adapts to irregularly spaced $x_i$: in any region where there are no observations, the resulting smoother is linear.
 This is explained by the reduced Fisher information about the derivative of the regression curve in regions with no observation.

@@ -56,7 +56,7 @@ Further, when zero-mean functions are considered, the intercept serves as being 
 The handling of an intercept to the regression model may be viewed in one of two ways.
 The first is to view it as a function belonging to the RKHS of constant functions $\cF_\emptyset$, and thereby tensor summing this space to $\cF$.
 The second is to simply treat the intercept as a parameter of the model to be estimated.
-In the polynomial and ANOVA RKKSs, we saw that an intercept is naturally induced by the inclusion of a RKHS of constant functions in their construction.
+In the polynomial and ANOVA RKKSs, we saw that an intercept is naturally induced by the inclusion of an RKHS of constant functions in their construction.
 In any of the other RKHSs described in \cref{chapter2}, an intercept would need to be added separately.
 These two methods convey slightly different interpretations of the intercept: in the first method, the intercept is shrunk by an I-prior, while in the second, it is not.
 Estimation is also entirely different for the two methods.
@@ -102,7 +102,7 @@ From \cref{eq:model2}, the marginal log-likelihood of $\theta$ is given by
   &= \log \int p(\by|\bw,\theta)p(\bw|\theta) \dint \bw \nonumber \\
   &= -\half[n]\log 2\pi - \half\log\vert \bSigma_\theta \vert - \half \tilde\by^\top \bSigma_\theta^{-1} \tilde\by \label{eq:marglogliky},
 \end{align}
-which is the log-likelihood of a zero mean multivariate normal distribution with covariance matrix $\bSigma_\theta$.
+which is the log-likelihood of a zero-meaned multivariate normal distribution with covariance matrix $\bSigma_\theta$.
 This closed-form expression of the integral \cref{eq:marglogliky} stems from the fact that the (conditional) likelihood and the I-prior are both Gaussian.
 Note that the term `marginal' refers to the fact that we are averaging out the random function represented by $\bw$.
 
