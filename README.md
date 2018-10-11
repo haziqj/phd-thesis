@@ -1,3 +1,5 @@
+[![download v1.1@13baef5](https://img.shields.io/badge/download-v1.1@13baef5-brightgreen.svg)](http://google.com)
+
 # Regression modelling using priors depending on Fisher information covariance kernels (I-priors)
 
 Haziq Jamil, 11 October 2018.
