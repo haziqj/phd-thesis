@@ -1,4 +1,4 @@
-\documentclass[showframe,11pt,twoside,openright]{report}
+\documentclass[11pt,twoside,openright]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
@@ -8,20 +8,13 @@
   \usepackage{../../knitr}
   \usepackage{../../matrix_fig}
   \addbibresource{../../bib/haziq.bib}
-  \externaldocument{../01/.texpadtmp/chapter1}
-  \externaldocument{../02/.texpadtmp/chapter2}  
-  \externaldocument{../03/.texpadtmp/chapter3}
-  \externaldocument{../04/.texpadtmp/chapter4}
-%  \externaldocument{../05/.texpadtmp/chapter5}
-  \externaldocument{../06/.texpadtmp/chapter6}
-  \externaldocument{../07/.texpadtmp/chapter7}
-  \externaldocument{../appendix/.texpadtmp/appendix}  
+  \externaldocument{../../.texpadtmp/phd-thesis}
 \fi
 
 \begin{document}
 \hChapterStandalone[5]{I-priors for categorical responses}
-\label{chapter5}
 \thispagestyle{chapterfive}
+\hsetpagenumstandalone{chapter5}
 
 \index{categorical response}
 Consider polytomous response variables $\by = \{y_1,\dots,y_n\}$, where each $y_i$ takes on exactly one of the values from the set of $m$ possible choices $\{1,\dots,m\}$.

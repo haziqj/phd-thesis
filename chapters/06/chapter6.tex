@@ -1,4 +1,4 @@
-\documentclass[showframe,11pt,twoside,openright]{report}
+\documentclass[11pt,twoside,openright]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
@@ -7,18 +7,13 @@
   \usepackage{../../haziq_glossary}
   \usepackage{../../knitr}
   \addbibresource{../../bib/haziq.bib}
-  \externaldocument{../01/.texpadtmp/chapter1}
-  \externaldocument{../02/.texpadtmp/chapter2}
-  \externaldocument{../03/.texpadtmp/chapter3}
-  \externaldocument{../04/.texpadtmp/chapter4}
-  \externaldocument{../05/.texpadtmp/chapter5}
-  \externaldocument{../appendix/.texpadtmp/appendix}
+  \externaldocument{../../.texpadtmp/phd-thesis}
 \fi
 
 \begin{document}
 \hChapterStandalone[6]{Bayesian variable selection using I-priors}
-\label{chapter6}
 \thispagestyle{chaptersix}
+\hsetpagenumstandalone{chapter6}
 
 \index{linear regression}
 Earlier in \cref{sec:various-regression} \colp{\mypageref{sec:various-regression}}, we saw that model \cref{eq:model1} subject to normal assumptions \cref{eq:model1ass}, model assumptions \ref{ass:A1}--\ref{ass:A3}, and $f$ belonging to the canonical RKHS of functions over $\cX \equiv \bbR^p$ yields the standard multiple regression model
@@ -70,6 +65,7 @@ But, as with most Bayesian applications, MCMC can be applied as a practical mean
 This stochastic approach to variable selection was pioneered by \citet{George1993}, and studied by others such as \citet{Kuo1998,dellaportas2002bayesian,Ntzoufras2008}.
 Unlike shrinkage methods, Bayesian model selection is able to quantify the amount of times a variable ``enters the model'' (inclusion probabilities), and thereby measuring its worth as a  predictor.
 
+\thispagestyle{chaptersix}
 \index{Bayesian model averaging}
 Note that, in addition to model probabilities and inclusion probabilities, estimates of regression coefficients are obtained simultaneously in Bayesian variable selection.
 When several competing models have high posterior probabilities, regression coefficients from each model, or indeed any quantity of interest, may be combined and weighted using their posterior model probabilities, a technique known as \emph{Bayesian model averaging} \citep{madigan1994model,hoeting1999bayesian}.

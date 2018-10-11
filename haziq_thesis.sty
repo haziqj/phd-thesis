@@ -31,6 +31,14 @@
 \usepackage{morewrites}  % https://tex.stackexchange.com/questions/289734/special-package-combination-gives-no-room-for-new-write
 \usepackage[all]{nowidow}  % https://tex.stackexchange.com/questions/4152/how-do-i-prevent-widow-orphan-lines
 
+% Page numbers
+\usepackage{refcount}  % to count page numbers
+\newcommand{\hsetpagenumstandalone}[1]{%
+  \ifstandalone
+    \setcounter{page}{\getpagerefnumber{#1}}
+  \fi
+}
+
 % Git info
 \usepackage[maxdepth=8]{gitinfo2}
 
@@ -56,6 +64,13 @@
 \fancyfoot[LE]{\small\nouppercase{\textsc{\leftmark}}\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small{\textsc{\thepage}}};  \end{tikzpicture}}
 }
 % https://tex.stackexchange.com/questions/195106/page-numbers-on-the-side-of-the-page
+
+\fancypagestyle{plainnopagenum}{%
+%  \fancyfoot[RO]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+%  \fancyfoot[LE]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=east,xshift=\numwidth,yshift=\numlength] at (current page.south west)  {\small{\textsc{\thepage}}};  \end{tikzpicture}}
+\fancyfoot[RO]{\small\nouppercase{\textsc{\leftmark}}}
+\fancyfoot[LE]{\small\nouppercase{\textsc{\leftmark}}}
+}
 
 \fancypagestyle{plainnomark}{%
 \fancyfoot[RO]{\begin{tikzpicture}[remember picture,overlay] \node [anchor=west,inner sep=0pt,xshift=-\numwidth,yshift=\numlength] at (current page.south east) {\small{\textsc{\thepage}}};  \end{tikzpicture}}
@@ -342,37 +357,42 @@
 
 \newcommand{\hChapterStandalone}[2][1]{
   \ifstandalone
-    \begingroup
-    \let\clearpage\relax  % Don't allow page break
+%  % uncomment for final version  
 %    \pagenumbering{roman}
-    {\hypersetup{allcolors=.} %pdfborder=0 0 0
-%      \listoftodos[\vspace{-3.03cm}To-do list]  % uncomment for final version
-      \vspace{-1em}
-      \tableofcontents
-    }
-    \endgroup
-
-%    \pagenumbering{arabic}
+%    \begingroup
+%    \let\clearpage\relax  % Don't allow page break
+%    {\hypersetup{allcolors=.} %pdfborder=0 0 0
+%      \listoftodos[\vspace{-3.03cm}To-do list]        \vspace{-1em}
+%      \tableofcontents
+%    }
+%    \endgroup
+    
     \setcounter{chapter}{#1-1}
     \chapter{#2}
-    %0.475, 0.8175
-    \placetextbox{0.5085}{0.8625}{
-      Haziq Jamil \\[-0.3em]
-      {\it\small Department of Statistics} \\[-0.35em]
-      {\it\small London School of Economics and Political Science} \\[-0.35em]
-      {\small PhD thesis: `Regression modelling using Fisher information covariance kernels (I-priors)'}
+    \placetextbox{0.521}{0.8585}{
+      {\small Haziq Jamil} \\[-0.4em]
+      {\it\footnotesize Department of Statistics} \\[-0.45em]
+      {\it\footnotesize London School of Economics and Political Science} \\[-0.45em]
+      {\footnotesize PhD thesis: `Regression modelling using priors depending on Fisher information covariance kernels'} \\[-0.45em]
+      {\footnotesize 11 Oct 2018 (\code{v1.1@54d04a8})}
     }
   \fi
+%  \pagenumbering{arabic}
 }
 
 % Adds Bibliography to TOC
 \newcommand{\hPrintBibliography}{
+  \cleardoublepage
+  \phantomsection
+  \ifstandalone
+    \renewcommand{\thepage}{}
+  \else
+    \addcontentsline{toc}{chapter}{Bibliography}
+  \fi
   \begingroup
     \singlespacing
-%    \AtNextBibliography{\small}
     \printbibliography
   \endgroup
-  \addcontentsline{toc}{chapter}{Bibliography}
 }
 
 % Change arXiv style
@@ -458,13 +478,13 @@
 \newcommand{\hClosingStuffStandalone}{
   \ifstandalone
     \hPrintBibliography
-    {\hypersetup{allcolors=.} %pdfborder=0 0 0  
-      \hLists
-      \begingroup
-        \singlespacing
-        \printindex
-      \endgroup
-    }
+%    {\hypersetup{allcolors=.} %pdfborder=0 0 0  
+%      \hLists
+%      \begingroup
+%        \singlespacing
+%        \printindex
+%      \endgroup
+%    }
   \fi
 }
 

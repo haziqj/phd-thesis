@@ -1,4 +1,4 @@
-\documentclass[showframe,11pt,twoside,openright]{report}
+\documentclass[11pt,twoside,openright]{report}
 \usepackage{standalone}
 \standalonetrue
 \ifstandalone
@@ -7,20 +7,13 @@
   \usepackage{../../haziq_glossary}
   \usepackage{../../knitr}
   \addbibresource{../../bib/haziq.bib}
-  \externaldocument{../01/.texpadtmp/chapter1}
-  \externaldocument{../02/.texpadtmp/chapter2}  
-  \externaldocument{../03/.texpadtmp/chapter3}
-%  \externaldocument{../04/.texpadtmp/chapter4}
-  \externaldocument{../05/.texpadtmp/chapter5}
-  \externaldocument{../06/.texpadtmp/chapter6}
-  \externaldocument{../07/.texpadtmp/chapter7}
-  \externaldocument{../appendix/.texpadtmp/appendix}  
+  \externaldocument{../../.texpadtmp/phd-thesis}
 \fi
 
 \begin{document}
 \hChapterStandalone[4]{Regression with I-priors}
-\label{chapter4}
 \thispagestyle{chapterfour}
+\hsetpagenumstandalone{chapter4}
 
 In the previous chapter, we defined an I-prior for the normal regression model \cref{eq:model1} subject to \cref{eq:model1ass} and $f$ belonging to a reproducing kernel Hilbert or Kreĭn space (RKHS/ RKKS) of functions $\cF$, as a Gaussian distribution on $f$ with covariance function proportional to the Fisher information for $f$.
 We also saw how new function spaces can be constructed via the polynomial and ANOVA RKKSs.
