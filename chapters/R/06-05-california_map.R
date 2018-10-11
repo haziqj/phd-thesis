@@ -29,6 +29,6 @@ ggmap(ozone.map) +
 
 # Ignore warning messages
 
-ggsave("figure/06-ozone_map.png", p, "png", width = 15, height = 6,
+ggsave("figure/06-ozone_map.png", p, "png", width = 15 * 1.2, height = 6 * 1.2,
        units = "cm", dpi = 300)
-move_fig_to_chapter()  # need to crop a little bit
+move_fig_to_chapter()
