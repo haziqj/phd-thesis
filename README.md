@@ -1,4 +1,6 @@
-[![download v1.1@13baef5](https://img.shields.io/badge/download-v1.1@13baef5-brightgreen.svg)](http://google.com)
+![Github release](https://img.shields.io/github/release/qubyte/rubidium.svg)
+[![pdf download](https://img.shields.io/badge/pdf-download-brightgreen.svg)](http://google.com)
+[![errata download](https://img.shields.io/badge/errata-download-brightgreen.svg)](http://google.com)
 
 # Regression modelling using priors depending on Fisher information covariance kernels (I-priors)
 
