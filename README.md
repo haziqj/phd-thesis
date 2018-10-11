@@ -14,7 +14,7 @@ Please cite using the following BibTeX entry:
   author={Jamil, Haziq},
   school={London School of Economics and Political Science},
   year=2018,
-  month=6
+  month=10
 }
 ```
 
