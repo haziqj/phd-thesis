@@ -1,6 +1,6 @@
 # Regression modelling using priors depending on Fisher information covariance kernels (I-priors)
 
-Haziq Jamil, 27 June 2018.
+Haziq Jamil, 11 October 2018.
 
 A thesis submitted to the Department of Statistics of the London School of Economics and Political Science for the degree of Doctor of Philosophy.
 
