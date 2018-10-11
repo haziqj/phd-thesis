@@ -1,5 +1,5 @@
 [![Github release](https://img.shields.io/github/release/haziqj/phd-thesis.svg)](https://github.com/haziqj/phd-thesis/releases)
-[![pdf download](https://img.shields.io/badge/pdf-download-brightgreen.svg)](https://github.com/haziqj/phd-thesis/releases/download/v1.1/phd-thesis-final-0863d1c.pdf)
+[![pdf download](https://img.shields.io/badge/pdf-download-brightgreen.svg)](https://github.com/haziqj/phd-thesis/releases/download/v1.1/phd-thesis-final-f378773.pdf)
 [![errata download](https://img.shields.io/badge/errata-download-brightgreen.svg)](https://github.com/haziqj/phd-thesis/releases/download/v1.1/errata.pdf)
 
 # Regression modelling using priors depending on Fisher information covariance kernels (I-priors)
