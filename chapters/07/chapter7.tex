@@ -18,17 +18,18 @@
 \index{I-prior}
 \index{nonparametric}
 \index{parametric}
-The work done in this thesis explores the concept of regression modelling using priors with Fisher information covariance kernels (I-priors, \cite{bergsma2017}).
+The work done in this thesis explores the concept of regression modelling using priors dependent on Fisher information covariance kernels (I-priors, \cite{bergsma2017}).
 It is best seen as a flexible regression technique which is able to fit both parametric and nonparametric models, and bears similarity to Gaussian process regression.
-For the regression model \cref{eq:model1} subject to \cref{eq:model1ass}, stated again here for convenience,
+
+The regression model of the form \cref{eq:model1} subject to \cref{eq:model1ass} is of interest, and this is stated again  for convenience:
 \begin{gather}
   y_i = \alpha + f(x_i) + \epsilon_i \tag{from \ref{eq:model1}} \\
   (\epsilon_1,\dots,\epsilon_n) \sim \N_n(\bzero,\bPsi^{-1}) \tag{from \ref{eq:model1ass}} \\
-  i = 1,\dots,n, \nonumber
+  i = 1,\dots,n. \nonumber
 \end{gather}
-and it is assumed that the regression function $f$ lies in some reproducing kernel Hilbert or Kreĭn space (RKHS/RKKS) $\cF$ with kernel $h_\eta$ defined over the set of covariates $\cX$.
-In \cref{chapter2}, we built a primer on basic functional analysis, and described various interesting RKHS/RKKS for regression modelling.
+It is also assumed that the regression function $f$ lies in some reproducing kernel Hilbert or Kreĭn space (RKHS/RKKS) $\cF$ with kernel $h_\eta$ defined over the set of covariates $\cX$.
 
+In \cref{chapter2}, we built a primer on basic functional analysis, and described various interesting RKHS/RKKS for regression modelling.
 \index{Fisher information!regression function}
 We then ascertained the form of the Fisher information for $f$, treated as a parameter of the model to be estimated, and from \cref{thm:fisherreglinfunc} \colp{\mypageref{thm:fisherreglinfunc}}, it is
 \begin{align*}
@@ -92,11 +93,11 @@ We give a summary of the novel contributions of this thesis.
   We proposed a latent variable framework, in which there corresponds latent propensities for each category of the observations.
   Instead of modelling the responses directly, the latent propensities are modelled using an I-prior, and class probabilities obtained using a normal integral.
   We named this model the I-probit model.
-  The challenge of estimation was overcoming said integral, and we used a variational EM algorithm in which the E-step uses a variational approximation to intractable conditional density.
+  The challenge of estimation was overcoming said integral, and we used a variational EM algorithm in which the E-step involves a variational approximation of the intractable conditional density.
   The variational EM algorithm was preferred over a fully Bayesian variational inference algorithm for two main reasons: 1) the work done in the normal I-prior EM algorithm applies directly; and 2) prior specification for hyperparameters can be dispensed with.
   Classification, meta-analysis and spatio-temporal modelling are specific examples of the applications of I-probit models.
   
-  \item \textbf{Some distributional results for truncated normals}. 
+  \item \textbf{Distributional results for truncated normals}. 
   In deriving the variational algorithm, some properties related to the conically truncated multivariate independent normal distribution (as defined in \cref{apx:truncmultinorm}, \mypageref{apx:truncmultinorm}) were required.
   A small contribution of ours was to derive the closed-form expressions for its first and second moments, and its entropy (\cref{thm:contruncn}, \mypageref{thm:contruncn}).
   We have only seen closed-form expressions of the mean of such a distribution being used before \citep{girolami2006variational} but not for the variance, nor an explicit derivation of these quantities.
@@ -137,7 +138,7 @@ In closing, we briefly discuss several questions which remain open during the co
   As such, the variational EM has been referred to as obtaining pseudo- or quasi-ML estimates.
   The quasi-likelihood literature has results relating to efficiency of parameter estimates (adjustments to the information matrix is needed), and we wonder if these are applicable for variational inference.
   
-  Also, obtaining standard errors directly from an EM algorithm is of interest, especially under a variational EM setting.
+  Incidentally, obtaining standard errors directly from an EM algorithm is also of interest, especially under a variational EM setting.
   Though this is described in \citet[Ch. 4]{mclachlan2007algorithm}, we have not seen this implemented widely.
   
   \item \textbf{Comparison of logistic and probit links}.
