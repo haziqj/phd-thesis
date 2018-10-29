@@ -45,7 +45,7 @@ Our study advocates the I-prior methodology as being a simple, intuitive, and co
 ## Links
 
 - My PhD website - [link](http://phd.haziqj.ml)
-- Code for replciation - [link](http://myphdcode.haziqj.ml)
+- Code for replication - [link](http://myphdcode.haziqj.ml)
 - Viva presentation - [link](https://haziqj.github.io/phd-thesis/)
 - R/iprior - [GitHub](https://github.com/haziqj/iprior), [CRAN](https://cran.r-project.org/package=iprior)
 - R/iprobit - [GitHub](https://github.com/haziqj/iprobit)
