@@ -40,7 +40,7 @@ We broadly classify variable selection into three categories: 1) (pairwise) mode
 We understand that different categorisations and hence categories of model selection exist in the literature, but our focus is on the discussion of the three types as mentioned.
 
 \index{model selection}
-Model selection criteria, both from a frequentist and Bayesian standpoint, can either be of a predictive nature (e.g.  $R^2$, mean squared error of prediction (MSEP), $C_p$ \citep{mallows1973some}, $k$-fold cross-validation MSEP, etc.), or based on likelihood (e.g. likelihood ratios, Bayes factors, Akaike information criterion (AIC, \cite{akaike1973}), Bayesian information criterion (BIC, \cite{schwarz1978estimating}), etc.).
+Model selection criteria, both from a frequentist and Bayesian standpoint, can either be of a predictive nature (e.g.  $R^2$, mean squared error of prediction (MSEP), $C_p$ \citep{mallows1973some}, $k$-fold cross-validation MSEP, etc.), or be based on likelihood (e.g. likelihood ratios, Bayes factors, Akaike information criterion (AIC, \cite{akaike1973}), Bayesian information criterion (BIC, \cite{schwarz1978estimating}), etc.).
 Selecting a model based on either of these criteria requires comparison of all $2^p$ criteria, which is not feasible for large $p$.
 Typically, these criteria are used in conjunction with stepwise procedures such as forward-selection or backward-deletion to restrict attention to a smaller number of potential subsets \citep{George1993,miller2002subset}.
 
@@ -53,10 +53,11 @@ Additionally, the Lasso produces solutions for $\bbeta$ which are exactly zero.
 However, the Lasso in general produces estimates which are biased towards zero, are inconsistent, and have no valid standard errors \citep{friedman2001elements,kyung2010penalized}.
 Further criticisms of the Lasso include its inability to select more than $n$ predictors in a $p>n$ situation, and poor performance when multicollinearity exists among the covariates.
 
-From a Bayesian perspective, regularisation is akin to placing priors on the $\beta_k$'s to shrink the effects of the $\beta_k$'s: the ridge regression has a Bayesian interpretation of placing normal priors on the regression coefficients, while the Lasso a Laplace or double exponential prior \citep{park2008bayesian}.
+From a Bayesian perspective, regularisation is akin to placing priors on the $\beta_k$'s to shrink the effects of the $\beta_k$'s: the ridge regression has a Bayesian interpretation of placing normal priors on the regression coefficients, while for the Lasso, a Laplace or double exponential prior \citep{park2008bayesian}.
 The term adaptive shrinkage has been used for the method in which hyperpriors are placed on the scale parameter of the prior for the $\beta_k$'s.
 The idea is to adaptively shape the prior depending on the importance of the variable in the regression model.
-Bayesian shrinkage includes the task of specifying tuning parameters, which could potentially affect chain mixing in a Markov chain Monte Carlo method (MCMC) procedure, which is the estimation method that is commonly used.
+Bayesian shrinkage includes the task of specifying tuning parameters. 
+This could potentially affect chain mixing in a Markov chain Monte Carlo method (MCMC) procedure, the estimation method that is commonly used.
 
 \index{Bayesian model selection}
 True Bayesian model selection is probabilistic in nature: a priori, one assigns probabilities over the set of models, and then after observing the data, posterior model probabilities (PMPs) are used to discern which of the models was likeliest to have been behind the data generative process of the observed responses.
@@ -68,7 +69,7 @@ Unlike shrinkage methods, Bayesian model selection is able to quantify the amoun
 \thispagestyle{chaptersix}
 \index{Bayesian model averaging}
 Note that, in addition to model probabilities and inclusion probabilities, estimates of regression coefficients are obtained simultaneously in Bayesian variable selection.
-When several competing models have high posterior probabilities, regression coefficients from each model, or indeed any quantity of interest, may be combined and weighted using their posterior model probabilities, a technique known as \emph{Bayesian model averaging} \citep{madigan1994model,hoeting1999bayesian}.
+When several competing models have high posterior probabilities, regression coefficients from each model, or indeed any quantity of interest, may be combined and weighted by their posterior model probabilities---a technique known as \emph{Bayesian model averaging} \citep{madigan1994model,hoeting1999bayesian}.
 Averaging over a set of models takes into account the uncertainty surrounding model selection, which other standard statistical procedures ignore upon selection of a single model from which to do inference.
 It is known to be the case that predictive accuracy of the model-averaged quantity is improved, as measured by a logarithmic scoring rule \citep{raftery1997bayesian}.
 
@@ -135,7 +136,7 @@ In the coming sections, we shall see that this problem is alleviated by the use 
 
 \index{Bayesian variable selection}
 We shall loosely refer to a model as a subset of variables selected from the full set of variables $\{ X_1, \dots, X_p \}$. 
-It would be useful to be able to index each of these $2^p$ possible models somehow, and we achieve this by the use of indicator variables $\gamma \in \{0,1\}^p$.
+It would be useful to be able to index each of these $2^p$ possible models somehow, and we achieve this by the use of indicator variables $\gamma = (\gamma_1,\dots,\gamma_p) \in \{0,1\}^p$.
 Let $\gamma_j = 1$ if the variable $X_j$ is selected, and $\gamma_j = 0$ otherwise, for $j=1,\dots,p$.
 As an example, the full model, where all the variables are included in the model, is denoted by $\gamma = (1, \dots, 1)$, while the intercept only model is denoted by $\gamma = (0, \dots, 0)$.
 Note that we do not consider the intercept to be selectable. 
@@ -182,7 +183,7 @@ Note that as $c,d \to 0$ in the inverse gamma distribution we get the Jeffreys p
 \begin{remark}
   \index{spike-and-slab prior}
   The BVS model \cref{eq:km} together with the choice of Bernoulli priors on $\gamma$ and a normal prior $\N_p(\bzero,\bV_\beta)$ for $\bbeta$ can be seen a \emph{spike-and-slab prior} prior for linear regression models, a mixture of a point mass at zero and a normal density \citep{mitchell1988bayesian,geweke1996variable}.
-  Write $\btheta = (\gamma_1\beta_1,\dots,\gamma_p\beta_p)^\top$, which are interpreted as the ``model-specific'' regression coefficients.
+  Write $\btheta = (\gamma_1\beta_1,\dots,\gamma_p\beta_p)^\top$, which is interpreted as the ``model-specific'' regression coefficients.
   Then, the prior on $\btheta$ is equivalently written
   \[
     \btheta|\gamma \sim
@@ -302,7 +303,7 @@ In any case, the likelihood only provides sufficient information to identify the
   The intention of computing model-averaged regression coefficients $\btheta$ is solely for the inclusion of model uncertainty.  
   There is a strong agreement in the Bayesian variable selection literature that that such coefficients are practically meaningless when it comes to explanatory inferences.
   \citet{banner2017considerations} writes that ``regression coefficients... may not hold equivalent interpretations across all of the models in which they appear'', and one reason for this might be ``interpretation of partial regression coefficients can depend on other variables that have been included in the model''.
-  The use of model-averaged effect sizes may result in misleading inferences \citep{cade2015model}.
+  The use of model-averaged effect sizes may thus result in misleading inferences \citep{cade2015model}.
 \end{remark}
 
 Finally, any quantity of interest $\Delta$ can be incorporated as part of the Gibbs sampling procedure.
@@ -356,12 +357,15 @@ For clarity, the Lasso model employed in the simulations is of a frequentist reg
 We felt it interesting to compare the Lasso as it is widely used for variable selection of linear models.
 
 \index{signal-to-noise ratio (SNR)}
-The experiment is to select from $p=100$ variables of a $n=150$ sample size artificial dataset which has pairwise correlations between the variables. This was inspired by the studies done by \citet{George1993} and \citet{Kuo1998} in their respective papers, albeit on a larger scale (in theirs, $p=30$).
+The experiment is to select from a total of $p=100$ variables of an  artificial dataset of sample size $n=150$, which has pairwise correlations induced between the variables. 
+This was inspired by the studies done by \citet{George1993} and \citet{Kuo1998} in their respective papers, albeit on a larger scale (in theirs, $p=30$).
 Five different scenarios were looked at. 
 For each scenario, only $s$ out of 100 variables were selected to form the ``true'' model and generate the responses according to the linear model $\by\sim\N_{100}(\bX\bbeta,\sigma^2 \bI_{150})$. 
 The signal-to-noise ratio (SNR) as a percentage is defined as s\%, and the five scenarios are made up of varying SNR from high to low: 90\%, 75\%, 50\%, 25\%, and 10\%.
 Variables that were included in the model had true $\bbeta$ coefficients equal to one.
 That is, $\bbeta_\text{true}=(\bone_{s},\bzero_{100-s})^\top$, where $\bone_{s}$ is a row-vector of $s$ ones, and $\bzero_{100-s}$ is a row-vector of $100-s$ zeroes.
+
+\newpage
 The data generation process is summarised as follows:
 \begin{itemize}
 	\item Draw $\bZ_1, \dots, \bZ_{100} \iid \N_{150}(\bzero, \bI_{150})$.
@@ -417,6 +421,7 @@ False choices\hspace{0.5cm} & 90\%        & 75\%        & 50\%        & 25\%    
   \label{fig:simres}
 \end{figure}
 
+\newpage
 \index{Lasso}
 The simulation results seem to indicate that the I-prior performs consistently well across all five scenarios, making no more than five false choices out of 100 (i.e. a 95\% correct selection rate) in at least 82\% of the time in the worst scenario.
 We do not observe much difference between the $g$-prior and the independent prior, and while they behave poorly in high SNR scenarios, these two priors seem to perform extremely well in low SNR scenarios.
@@ -441,11 +446,13 @@ While the optimal $\pi_j$ corresponds directly to the true SNR (e.g. SNR = 10\% 
 
 \section{Examples}
 
+\vspace{-1mm}
 Now, we apply our I-prior Bayesian variable selection model to three real-world data sets that have all been previously analysed in the variable selection literature.
 All examples were analysed in \proglang{R} using our \pkg{ipriorBVS} package \citep{jamil2018ripriorBVS} which contains a wrapper to \proglang{JAGS} \citep{plummer2003jags}.
 Reproducible code is available at \url{http://myphdcode.haziqj.ml}.
-In all analyses, a two-stage procedure was conducted for the I-prior model, where each stage consists of obtaining 15,000 MCMC samples (including 5,000 for burn-in).
+In all analyses, a two-stage procedure was conducted for the I-prior model, where each stage consists of obtaining 10,000 MCMC samples.
 
+\vspace{-1mm}
 \subsection{Aerobic data set}
 \label{sec:aerobicbvs}
 \index{aerobic data set}
@@ -734,10 +741,12 @@ We discuss three areas to concentrate on for future research and improvement:
 \end{enumerate}
 
 Finally, it should be mentioned that more complex variable selection models can be coded with the $\gamma$ indicators.
-For instance, in selecting squared or interaction terms, we can insist on having the model select the main term if the squared or interaction term is selected:
+For instance, in selecting squared or interaction terms, we can insist on having the model select the main term if the squared or interaction term is selected, by specifying
+\vspace{-1mm}
 \[
-  y_i = \alpha + \gamma_1 \beta_1 x_{1i} + \gamma_2 \beta_2 x_{2i} + \gamma_1 \gamma_2\gamma_3 \beta_3 x_{1i}x_{2i}.
+  y_i = \alpha + \max(\gamma_1 ,\gamma_3) \beta_1 x_{1i} + \max(\gamma_2 ,\gamma_3) \beta_2 x_{2i} + \gamma_3 \beta_3 x_{1i}x_{2i}.
 \]
+\vspace{-1mm}
 Or perhaps, we could use a single $\gamma$ indicator for the dummy variables which make up a single categorical covariate, which we would then infer on the selection of the single covariate rather than each individual category of the covariate.
 
 \hClosingStuffStandalone
