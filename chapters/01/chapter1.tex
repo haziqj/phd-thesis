@@ -44,9 +44,9 @@ For subject $i \in \{1,\dots,n\}$, assume a real-valued response $y_i$ has been 
 Let $\cS = \{(y_1, x_1), \dots, (y_n,x_n)\}$ denote this observed sample of size $n$.
 Consider then the following regression model, which stipulates the dependence of the $y_i$'s on the $x_i$'s:
 \begin{align}\label{eq:model1}
-  y_i = \alpha + f(x_i) + \epsilon_i,
+  y_i = \alpha + f(x_i) + \epsilon_i.
 \end{align}
-where $f$ is some regression function to be estimated, and $\alpha$ is an intercept.
+Here, $f$ is a regression function to be estimated, and $\alpha$ is an intercept.
 Additionally, it is assumed that the errors $\epsilon_i$ are zero-meaned and normally distributed according to
 \begin{align}\label{eq:model1ass}
   (\epsilon_1, \dots, \epsilon_n)^\top \sim \N_n(\bzero, \bPsi^{-1}),
@@ -300,7 +300,7 @@ This thesis is structured as follows:
   We experiment with the use of I-priors to improve false selections, especially in the presence of multicollinearity.
 \end{itemize}
 
-\cref{chapter4,chapter5,chapter6} contain \proglang{R} computer implementations of the statistical methodologies described therein, and the code for replication are made available at \url{http://myphdcode.haziqj.ml}.
+\crefrange{chapter4}{chapter6} contain \proglang{R} computer implementations of the statistical methodologies described therein, and the code for replication are made available at \url{http://myphdcode.haziqj.ml}.
 
 \tikzstyle{block} = [draw, rectangle, text width=2.6cm, text centered, minimum height=1.5cm, minimum width=2.8cm, node distance=3.6cm,fill=white]
 \tikzstyle{method} = [draw=lsedpr, rectangle, text width=2.6cm, text centered, minimum height=1.5cm, minimum width=2.8cm, node distance=3.6cm,fill=lsedpr!20, thick]
@@ -384,8 +384,8 @@ This thesis is structured as follows:
 
 Familiarity with basic estimation concepts (maximum likelihood, Bayes, empirical Bayes) and their corresponding estimation methods (gradient-based methods, Newton, quasi-Newton methods, MCMC, EM algorithm) are assumed throughout.
 Brief supplementary chapters are attached for readers who wish to familiarise themselves with topics such as variational inference and Hamiltonian Monte Carlo, which are used in \cref{chapter4,chapter5}.
-These brief readings are designed to be supplementary in nature, and are not strictly essential for the chapters.
-Additionally, Appendices A--I contain references to several statistical distributions and their properties, proofs of various claims, and derivations of the algorithms described in this thesis.
+These brief readings are designed to be ancillary in nature, and are not strictly essential for the main chapters.
+Additionally, \crefrange{apx:funcder}{apx:gibbsbvs} contain references to several statistical distributions and their properties, proofs of various claims, and derivations of the algorithms described in this thesis.
 
 On a closing note, a dedicated website for this PhD project has been created, and it can be viewed at \url{http://phd.haziqj.ml}.
 
