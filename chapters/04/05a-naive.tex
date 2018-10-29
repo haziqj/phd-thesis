@@ -11,8 +11,8 @@ For $j=1,\dots,m$, we model
     (\epsilon_{i1},\dots,\epsilon_{im})^\top \iid \N_m(\bzero,\bPsi^{-1}).
   \end{gathered}
 \end{equation}
-The idea here being that we attempt to model the class responses $y_{ij}$ using class-specific regression functions, and the class responses are assumed to be independent among individuals, but may or may not be correlated among classes for each individual.
-The class correlations are manifest themselves in the variance of the errors $\bPsi^{-1}$, which is an $m\times m$ matrix.
+The idea here is to model the class responses $y_{ij}$ using class-specific regression functions, in which class responses are assumed to be independent among individuals, but may or may not be correlated among classes for each individual.
+The class correlations manifest themselves in the variance of the errors $\bPsi^{-1}$, which is an $m\times m$ matrix.
 
 \index{ANOVA!kernel/RKKS|)}
 Denote the regression function $f$ in \cref{eq:naiveclassmod} on the set $\cX\times\cM$ as $f(x_i,j) = \alpha_j + f_j(x_i)$.

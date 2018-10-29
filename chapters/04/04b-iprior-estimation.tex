@@ -132,7 +132,7 @@ To be explicit, the log-likelihood is given by
     \begin{split}
       L(\theta) 
       ={}& -\half[n]\log 2\pi - \half\sum_{i=1}^n\log(\psi u_i^2 + \psi^{-1}) \\
-      &- \half \tilde\by^\top \bV \, \text{diag} \left(\frac{1}{\psi u_1^2 + \psi^{-1}},\dots,\frac{1}{\psi u_n^2 + \psi^{-1}}\right) \, \bV^\top \tilde\by
+      &- \half \tilde\by^\top \bV \, \text{diag} \left(\frac{1}{\psi u_1^2 + \psi^{-1}},\dots,\frac{1}{\psi u_n^2 + \psi^{-1}}\right) \, \bV^\top \tilde\by.
     \end{split}
   \end{align}
 \endgroup
@@ -246,7 +246,7 @@ Instead, HMC should be used, which does not depend on model conjugacy.
 \label{sec:compareestimation}
 
 \index{smoothing model}
-Consider a one-dimensional smoothing example, for which $n=150$ data pairs $(y_i,x_i)$ have been generated according to the relationship 
+Consider a one-dimensional smoothing example, for which $n=150$ data pairs $\{(y_i,x_i)\}_{i=1}^n$ have been generated according to the relationship 
 \begin{align}\label{eq:examplesmoothingdata}
   \begin{gathered}
     y_i = \const + \myoverbrace{
@@ -256,7 +256,7 @@ Consider a one-dimensional smoothing example, for which $n=150$ data pairs $(y_i
   \end{gathered}
 \end{align}
 where $\phi(\cdot|\mu,\sigma^2)$ is the probability density function of a normal distribution with mean $\mu$ and variance $\sigma^2$.
-The observed $y_i$'s are thought to be noisy versions of the true points, in which $\epsilon_i$ follows an indescript, not necessarily normal, distribution.
+The observed $y_i$'s are thought to be noisy versions of the true points, in which $\epsilon_i$ follows an indescript, non-normal, distribution.
 The predictors $x_1,\dots,x_n$ have been sampled roughly from the interval $(-1,6)$, and the sampling was intentionally not uniform so that there is slight sparsity in the middle.
 \cref{fig:examplesmoothingdata} plots the sampled points and the true regression function.
 

@@ -29,7 +29,7 @@ knitr::opts_chunk$set(myspacing = TRUE)  # single spacing for code chunks
 
 \begin{document}
 
-We demonstrate I-prior modelling on a toy data set to illustrate the Nyström method, as well as three other real-data examples.
+We demonstrate I-prior modelling using three real-data examples, as well as on a toy data set to illustrate the Nyström method.
 All of the analyses were conducted in \proglang{R}, and I-prior model estimation was done using the \pkg{iprior} package \citep{jamil2017iprior}.
 The \pkg{iprior} package comes documented with usage examples in the vignette.
 The complete source code for replication is found at \url{http://myphdcode.haziqj.ml}.

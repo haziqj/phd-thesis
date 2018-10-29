@@ -67,7 +67,7 @@ Let $\cX\equiv\bbR^p$, and suppose that alongside the covariates, there is infor
 That is, every observation for unit $i$ is known to belong to a specific group $j$, and we write $\bx_i^{(j)}$ to indicate this.
 Let $n_j$ denote the sample size for cluster $j$, and the overall sample size be $n = \sum_{j=1}^m n_j$.
 When modelled linearly with the responses $y_i^{(j)}$, the model is known as a multilevel (linear) model, although it is known by many other names: random-effects models, random coefficient models, hierarchical models, and so on.
-As this model is seen as an extension of linear models, applications are plenty, especially in research designs for which the data varies at more than one level.
+As this model is seen as an extension of linear models, application is plentiful, especially in research designs for which the data varies at more than one level.
 
 \index{ANOVA!kernel/RKKS|(}
 Consider a functional ANOVA decomposition of the regression function as follows:
@@ -93,7 +93,7 @@ For the interested reader, the details are in \cref{misc:multilevelmodels} \colp
 The standard multilevel random effects assumption is that $(\beta_{0j},\boldsymbol{\beta}_{1j}^\top)^\top$ is normally distributed with mean zero and covariance matrix $\bPhi$.
 In total, there are $p+1$ regression coefficients and $(p+1)(p+2)/2$ covariance parameters in $\bPhi$ to be estimated.
 In contrast, the I-prior model is parameterised by only two RKKS scale parameters---one for $\cF_1$ and one for $\cF_2$---and the error precision $\bPsi$, which is usually proportional to the identity matrix.
-While the estimation procedure for $\bPhi$ in the standard multilevel model can result in non-positive covariance matrices, the I-prior model has the advantage that positive definiteness is taken care of automatically\footnote{By virtue of the estimate of the regression function belonging to $\cF_n$, an RKHS with a positive definite kernel equal to the Fisher information for $f$.}.
+While the estimation procedure for $\bPhi$ in the standard multilevel model can result in non-positive covariance matrices, the I-prior model has the advantage that positive definiteness is taken care of automatically\footnote{By virtue of the estimate of the regression function belonging to $\cF_n$, an RKHS with a positive definite kernel equal to the Fisher information for $f$. The first example in \cref{sec:ipriorexamples} is an instance of such cases.}.
 %This is seen from the calculations for $\Var \beta_{0j}$, $\Var \boldsymbol\beta_{1j}$ and the respective covariances.
 %An example of multilevel modelling using I-priors is given in \hltodo{Section 4.3.1}.
 
