@@ -6,7 +6,7 @@
 
 Haziq Jamil, 11 October 2018.
 
-A thesis submitted to the Department of Statistics of the London School of Economics and Political Science for the degree of Doctor of Philosophy.
+A thesis [submitted](http://etheses.lse.ac.uk/3828/) to the Department of Statistics of the London School of Economics and Political Science for the degree of Doctor of Philosophy.
 
 ## Citation
 
@@ -25,7 +25,7 @@ Please cite using the following BibTeX entry:
 ## Abstract
 
 Regression analysis is undoubtedly an important tool to understand the relationship between one or more explanatory and independent variables of interest. 
-In this thesis, we explore a novel methodology for fitting a wide range of parametric and nonparametric regression models, called the I-prior methodology [(Bergsma 2018)](https://arxiv.org/abs/1707.00274).
+In this thesis, we explore a novel methodology for fitting a wide range of parametric and nonparametric regression models, called the I-prior methodology [(Bergsma 2019)](https://doi.org/10.1016/j.ecosta.2019.10.002).
 
 We assume that the regression function belongs to a reproducing kernel Hilbert or Kreĭn space of functions, and by doing so, allows us to utilise the convenient topologies of these vector spaces. 
 This is important for the derivation of the Fisher information of the regression function, which might be infinite dimensional.
